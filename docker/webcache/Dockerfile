@@ -34,7 +34,7 @@ RUN a2enmod expires
 RUN a2enmod headers
 
 # Configure sites
-RUN mkdir -p /var/www/vhosts/sling-cms && mkdir -p /var/www/vhosts/sling
+RUN mkdir -p /var/www/vhosts/rtnext-cms && mkdir -p /var/www/vhosts/rtnext
 COPY *.conf /etc/apache2/sites-enabled/
 
 # Expose endpoints
