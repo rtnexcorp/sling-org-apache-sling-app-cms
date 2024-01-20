@@ -34,7 +34,7 @@ RUN a2enmod expires
 RUN a2enmod headers
 
 # Configure sites
-RUN mkdir -p /var/www/vhosts/rtnex-cms && mkdir -p /var/www/vhosts/rtnex
+RUN mkdir -p /var/www/vhosts/rtnex-cms && mkdir -p /var/www/vhosts/rtnex-corp
 COPY *.conf /etc/apache2/sites-enabled/
 
 # Expose endpoints
