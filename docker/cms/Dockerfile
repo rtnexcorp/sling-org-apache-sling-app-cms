@@ -12,12 +12,13 @@
 # Apache Sling CMS Dockerfile
 
 # Pull base image.
-FROM adoptopenjdk:11-jre-openj9
+FROM eclipse-temurin:11-jre
+
 
 ARG ADDITIONAL_FEATURE_COORDINATE=
 ARG CMS_GROUP_ID=org.apache.sling
 ARG CMS_ARTIFACT_ID=org.apache.sling.cms.feature
-ARG CMS_VERSION=1.1.0
+ARG CMS_VERSION=1.1.9-SNAPSHOT
 ARG LAUNCHER_VERSION=1.1.16
 ARG FM_SEED_CLASSIFIER=slingcms-composite-seed
 ARG RUNMODE=standalone
@@ -32,7 +33,13 @@ WORKDIR /opt/slingcms
 
 # Install Apache Maven
 RUN apt-get update && apt-get install maven jq -y
+
+# Create .m2 directory and copy settings
+RUN mkdir -p /root/.m2
 COPY settings.xml /root/.m2/
+
+# Copy local Maven repository if it exists
+COPY --from=local-m2 /root/.m2/repository /root/.m2/repository 2>/dev/null || true
 
 # Setup Sling CMS
 COPY download-dependencies.sh /opt/slingcms/setup/

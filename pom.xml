@@ -88,6 +88,7 @@
     <module>login</module>
     <module>ui</module>
     <module>reference</module>
+    <module>rtnex-rpgm</module>
     <module>feature</module>
     <module>archetype</module>
     <module>it</module>

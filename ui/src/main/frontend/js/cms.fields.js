@@ -226,6 +226,144 @@ rava.bind(".rte", {
   },
 });
 
+/* Support for multifield form fields */
+rava.bind(".multifield", {
+  callbacks: {
+    created() {
+      const multifield = this;
+      const baseName = multifield.dataset.baseName;
+      let itemCounter = multifield.querySelectorAll(".multifield__container > .multifield__item").length;
+
+      function updateItemIndices() {
+        const items = multifield.querySelectorAll(".multifield__container > .multifield__item");
+        items.forEach((item, index) => {
+          // Update item title
+          const titleEl = item.querySelector(".multifield__item-title");
+          if (titleEl) {
+            titleEl.textContent = `Item ${index + 1}`;
+          }
+          // Update field names to include item index
+          item.querySelectorAll("input, select, textarea").forEach((field) => {
+            const name = field.getAttribute("name");
+            if (name && !name.includes("@")) {
+              // Extract the field name (last part after /)
+              const fieldName = name.split("/").pop();
+              field.setAttribute("name", `${baseName}/item_${index}/${fieldName}`);
+            }
+          });
+          item.dataset.itemIndex = index;
+        });
+      }
+
+      // Add new item
+      multifield.querySelector(".multifield__add").addEventListener("click", (event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        
+        const template = multifield.querySelector(".multifield__template > .multifield__item");
+        if (template) {
+          const newItem = template.cloneNode(true);
+          // Enable all fields in the cloned item
+          newItem.querySelectorAll("[disabled]").forEach((el) => {
+            el.removeAttribute("disabled");
+          });
+          // Update field names with the new index
+          newItem.querySelectorAll("input, select, textarea").forEach((field) => {
+            const name = field.getAttribute("name");
+            if (name) {
+              const fieldName = name.split("/").pop() || name;
+              field.setAttribute("name", `${baseName}/item_${itemCounter}/${fieldName}`);
+            }
+          });
+          multifield.querySelector(".multifield__container").appendChild(newItem);
+          itemCounter++;
+          updateItemIndices();
+        }
+      });
+
+      // Initial index update for existing items
+      updateItemIndices();
+    },
+  },
+});
+
+/* Support for multifield item actions */
+rava.bind(".multifield__item", {
+  events: {
+    ":scope .multifield__remove": {
+      click(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        const item = this;
+        const multifield = item.closest(".multifield");
+        item.remove();
+        // Trigger re-indexing
+        if (multifield) {
+          const evt = new Event("multifield:reindex");
+          multifield.dispatchEvent(evt);
+        }
+      },
+    },
+    ":scope .multifield__move-up": {
+      click(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        const item = this;
+        const prev = item.previousElementSibling;
+        if (prev && prev.classList.contains("multifield__item")) {
+          item.parentNode.insertBefore(item, prev);
+          const multifield = item.closest(".multifield");
+          if (multifield) {
+            const evt = new Event("multifield:reindex");
+            multifield.dispatchEvent(evt);
+          }
+        }
+      },
+    },
+    ":scope .multifield__move-down": {
+      click(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        const item = this;
+        const next = item.nextElementSibling;
+        if (next && next.classList.contains("multifield__item")) {
+          item.parentNode.insertBefore(next, item);
+          const multifield = item.closest(".multifield");
+          if (multifield) {
+            const evt = new Event("multifield:reindex");
+            multifield.dispatchEvent(evt);
+          }
+        }
+      },
+    },
+  },
+});
+
+/* Listen for reindex events on multifield */
+rava.bind(".multifield", {
+  events: {
+    "multifield:reindex"() {
+      const multifield = this;
+      const baseName = multifield.dataset.baseName;
+      const items = multifield.querySelectorAll(".multifield__container > .multifield__item");
+      items.forEach((item, index) => {
+        const titleEl = item.querySelector(".multifield__item-title");
+        if (titleEl) {
+          titleEl.textContent = `Item ${index + 1}`;
+        }
+        item.querySelectorAll("input, select, textarea").forEach((field) => {
+          const name = field.getAttribute("name");
+          if (name && !name.includes("@")) {
+            const fieldName = name.split("/").pop();
+            field.setAttribute("name", `${baseName}/item_${index}/${fieldName}`);
+          }
+        });
+        item.dataset.itemIndex = index;
+      });
+    },
+  },
+});
+
 rava.bind('.field[data-events]:not([data-events=""])', {
   callbacks: {
     async created() {
