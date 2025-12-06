@@ -21,6 +21,15 @@
     <sling:getResource path="${slingRequest.requestPathInfo.suffix}" var="editedResource" />
     <c:set var="editProperties" value="${sling:adaptTo(editedResource,'org.apache.sling.api.resource.ValueMap')}" scope="request"/>
 </c:if>
+<%-- Handle multifield item context - get properties from the multifield item resource --%>
+<c:choose>
+    <c:when test="${not empty multifieldItemResource}">
+        <c:set var="itemProperties" value="${sling:adaptTo(multifieldItemResource,'org.apache.sling.api.resource.ValueMap')}" scope="request" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="itemProperties" value="${editProperties}" scope="request" />
+    </c:otherwise>
+</c:choose>
 <c:choose>
     <c:when test="${properties.required}">
         <c:set var="required" value="required='required'" scope="request" />
@@ -41,11 +50,20 @@
     <c:when test="${properties.skipload}">
         <c:set var="value" value="" scope="request" />
     </c:when>
-    <c:when test="${empty editProperties[properties.name] && properties.defaultValue}">
+    <c:when test="${empty itemProperties[properties.name] && properties.defaultValue}">
         <c:set var="value" value="${properties.defaultValue}" scope="request" />
     </c:when>
     <c:otherwise>
-        <c:set var="value" value="${editProperties[properties.name]}" scope="request" />
+        <c:set var="value" value="${itemProperties[properties.name]}" scope="request" />
+    </c:otherwise>
+</c:choose>
+<%-- Set the field name - prefix with multifield path if in multifield context --%>
+<c:choose>
+    <c:when test="${not empty multifieldBaseName && not empty multifieldItemName}">
+        <c:set var="fieldName" value="${multifieldBaseName}/${multifieldItemName}/${properties.name}" scope="request" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="fieldName" value="${properties.name}" scope="request" />
     </c:otherwise>
 </c:choose>
 <c:forEach var="event" items="${sling:getRelativeResource(resource,'./events').valueMap}">

@@ -1,0 +1,78 @@
+{
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "sling-cms/components/editor/slingform",
+    "button": "Save",
+    "fields": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/container",
+        "label": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Label",
+            "name": "label"
+        },
+        "name": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Name",
+            "name": "name",
+            "required": true,
+            "description": "The field name for the multifield data"
+        },
+        "description": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+            "label": "Description",
+            "name": "description",
+            "description": "Help text to display below the label"
+        },
+        "required": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/select",
+            "label": "Required",
+            "name": "required",
+            "options": {
+                "jcr:primaryType": "nt:unstructured",
+                "no": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "No",
+                    "value": "false"
+                },
+                "yes": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Yes",
+                    "value": "true"
+                }
+            }
+        },
+        "requiredTypeHint": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+            "name": "required@TypeHint",
+            "value": "Boolean"
+        },
+        "minItems": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Minimum Items",
+            "name": "minItems",
+            "type": "number",
+            "description": "Minimum number of items required (0 for no minimum)"
+        },
+        "maxItems": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Maximum Items",
+            "name": "maxItems",
+            "type": "number",
+            "description": "Maximum number of items allowed (-1 for unlimited)"
+        },
+        "addClasses": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Additional Classes",
+            "name": "addClasses",
+            "description": "CSS classes to add to the field container"
+        }
+    }
+}

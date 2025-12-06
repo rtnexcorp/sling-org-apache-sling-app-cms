@@ -88,7 +88,6 @@
     <module>login</module>
     <module>ui</module>
     <module>reference</module>
-    <module>rtnex-rpgm</module>
     <module>feature</module>
     <module>archetype</module>
     <module>it</module>
@@ -434,6 +433,8 @@
             <exclude>node/**/*</exclude>
             <exclude>node_modules/**/*</exclude>
             <exclude>**/node_modules/**/*</exclude>
+            <!-- Tracking file -->
+            <exclude>Project_Tracking.csv</exclude>
           </excludes>
         </configuration>
         <executions>

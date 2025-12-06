@@ -17,4 +17,13 @@
  * under the License.
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
-<input type="hidden" name="${sling:encode(properties.name,'HTML_ATTR')}" value="${sling:encode(properties.value,'HTML_ATTR')}" />
+<%-- Set the field name - prefix with multifield path if in multifield context --%>
+<c:choose>
+    <c:when test="${not empty multifieldBaseName && not empty multifieldItemName}">
+        <c:set var="fieldName" value="${multifieldBaseName}/${multifieldItemName}/${properties.name}" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="fieldName" value="${properties.name}" />
+    </c:otherwise>
+</c:choose>
+<input type="hidden" name="${sling:encode(fieldName,'HTML_ATTR')}" value="${sling:encode(properties.value,'HTML_ATTR')}" />

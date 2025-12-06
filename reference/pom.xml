@@ -216,4 +216,36 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <!-- Use this profile to install the OSGi bundle automatically during development -->
+            <id>autoInstallBundle</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.sling</groupId>
+                        <artifactId>sling-maven-plugin</artifactId>
+                        <version>3.0.2</version>
+                        <configuration>
+                            <slingUrl>http://localhost:8081/system/console</slingUrl>
+                            <user>admin</user>
+                            <password>admin</password>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install-bundle</id>
+                                <goals>
+                                    <goal>install</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

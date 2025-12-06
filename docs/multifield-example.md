@@ -2,6 +2,13 @@
 
 This example shows how to use the multifield widget in a component's edit dialog.
 
+## Real-World Example: Author Component
+
+The Author component (`/apps/reference/components/general/author`) uses multifield to manage social links. See the full implementation at:
+- Component: `reference/src/main/resources/jcr_root/apps/reference/components/general/author/`
+- Edit dialog: `edit.json`
+- JSP: `author.jsp`
+
 ## Example: Links Component Edit Dialog
 
 ```json
@@ -118,3 +125,61 @@ To render the multifield data in your component:
 - **Flexible Fields**: Each item can contain any combination of field types (text, select, path, textarea, etc.)
 - **Min/Max Items**: Optional constraints on the number of items allowed
 - **Visual Feedback**: Card-based layout with clear item numbering
+
+## Author Component Details
+
+The author component edit dialog (`edit.json`) demonstrates multifield with select and text fields:
+
+```json
+{
+    "socialLinks": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/editor/fields/multifield",
+        "label": "Social Links",
+        "name": "socialLinks",
+        "minItems": "0",
+        "maxItems": "10",
+        "template": {
+            "jcr:primaryType": "nt:unstructured",
+            "platform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/fields/select",
+                "label": "Platform",
+                "name": "platform",
+                "required": true,
+                "options": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "twitter": { "label": "Twitter / X", "value": "twitter" },
+                    "linkedin": { "label": "LinkedIn", "value": "linkedin" },
+                    "github": { "label": "GitHub", "value": "github" }
+                }
+            },
+            "url": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                "label": "Profile URL",
+                "name": "url",
+                "required": true
+            }
+        }
+    }
+}
+```
+
+### Rendering Multifield Data in JSP
+
+```jsp
+<c:set var="socialLinksResource" value="${sling:getRelativeResource(resource, 'socialLinks')}" />
+<c:if test="${socialLinksResource != null}">
+    <div class="author-social-links">
+        <c:forEach var="link" items="${sling:listChildren(socialLinksResource)}">
+            <c:set var="linkProps" value="${sling:adaptTo(link,'org.apache.sling.api.resource.ValueMap')}" />
+            <a href="${sling:encode(linkProps.url,'HTML_ATTR')}" 
+               class="social-link social-link--${sling:encode(linkProps.platform,'HTML_ATTR')}"
+               target="_blank" rel="noopener noreferrer">
+                <sling:encode value="${linkProps.platform}" mode="HTML" />
+            </a>
+        </c:forEach>
+    </div>
+</c:if>
+```

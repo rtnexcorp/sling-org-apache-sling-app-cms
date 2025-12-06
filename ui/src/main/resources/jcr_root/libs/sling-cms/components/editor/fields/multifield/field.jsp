@@ -87,13 +87,13 @@
                         <div class="card-content multifield__item-content">
                             <c:if test="${itemTemplate != null}">
                                 <%-- Store the current item's path for field value resolution --%>
-                                <c:set var="multifieldItemResource" value="${item}" scope="request" />
-                                <c:set var="multifieldBaseName" value="${baseName}" scope="request" />
-                                <c:set var="multifieldItemName" value="${item.name}" scope="request" />
+                                <% request.setAttribute("multifieldItemResource", pageContext.getAttribute("item")); %>
+                                <% request.setAttribute("multifieldBaseName", pageContext.getAttribute("baseName")); %>
+                                <% request.setAttribute("multifieldItemName", ((org.apache.sling.api.resource.Resource)pageContext.getAttribute("item")).getName()); %>
                                 <c:forEach var="field" items="${sling:listChildren(itemTemplate)}">
                                     <sling:include resource="${field}" />
                                 </c:forEach>
-                                <c:remove var="multifieldItemResource" scope="request" />
+                                <% request.removeAttribute("multifieldItemResource"); %>
                             </c:if>
                         </div>
                     </div>

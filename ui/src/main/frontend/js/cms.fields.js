@@ -387,3 +387,35 @@ rava.bind('.field[data-events]:not([data-events=""])', {
     },
   },
 });
+
+// Tabs field component handler
+rava.bind(".editor-tabs", {
+  callbacks: {
+    created() {
+      const tabsContainer = this;
+      const tabsId = tabsContainer.dataset.tabsId;
+      const tabItems = tabsContainer.querySelectorAll(".tabs ul li");
+      const tabContents = tabsContainer.querySelectorAll(".tab-content");
+
+      tabItems.forEach((tabItem) => {
+        tabItem.addEventListener("click", (e) => {
+          e.preventDefault();
+          const targetId = tabItem.dataset.tabTarget;
+
+          // Remove active class from all tabs
+          tabItems.forEach((item) => item.classList.remove("is-active"));
+          // Add active class to clicked tab
+          tabItem.classList.add("is-active");
+
+          // Hide all tab contents
+          tabContents.forEach((content) => content.classList.add("is-hidden"));
+          // Show target tab content
+          const targetContent = document.getElementById(targetId);
+          if (targetContent) {
+            targetContent.classList.remove("is-hidden");
+          }
+        });
+      });
+    },
+  },
+});
