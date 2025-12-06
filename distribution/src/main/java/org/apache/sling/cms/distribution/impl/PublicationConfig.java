@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.sling.cms.core.publication;
+package org.apache.sling.cms.distribution.impl;
 
 import org.apache.sling.cms.publication.INSTANCE_TYPE;
 import org.apache.sling.cms.publication.PUBLICATION_MODE;
@@ -35,6 +35,7 @@ public @interface PublicationConfig {
 
     @AttributeDefinition(name = "%publication.param.mode.name", description = "%publication.param.mode.description", options = {
             @Option(label = "Content Distribution", value = "CONTENT_DISTRIBUTION"),
+            @Option(label = "HTTP Distribution", value = "HTTP_DISTRIBUTION"),
             @Option(label = "Standalone", value = "STANDALONE") })
     PUBLICATION_MODE publicationMode() default PUBLICATION_MODE.STANDALONE;
 }

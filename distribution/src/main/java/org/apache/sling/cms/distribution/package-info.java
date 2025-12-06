@@ -14,15 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.sling.cms.core.publication;
 
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
-
-@ObjectClassDefinition(name = "%publicationpropprovider.config.name", description = "%publicationpropprovider.config.description", localization = "OSGI-INF/l10n/bundle")
-public @interface PublicationPropertyProviderConfig {
-
-    @AttributeDefinition(name = "%publicationpropprovider.param.endpointPath.name", description = "%publicationpropprovider.param.endpointPath.description")
-    String endpointPath() default "libs/sling/distribution/services/importers/default" ;
-
-}
+/**
+ * Content Distribution API for Apache Sling CMS.
+ * Provides services for replicating content from Author to Publisher instances.
+ */
+@org.osgi.annotation.versioning.Version("1.0.0")
+package org.apache.sling.cms.distribution;

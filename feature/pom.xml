@@ -118,6 +118,14 @@
               <includeClassifier>slingcms-standalone</includeClassifier>
             </archive>
             <archive>
+              <classifier>slingcms_author_far</classifier>
+              <includeClassifier>slingcms-author</includeClassifier>
+            </archive>
+            <archive>
+              <classifier>slingcms_renderer_far</classifier>
+              <includeClassifier>slingcms-renderer</includeClassifier>
+            </archive>
+            <archive>
               <classifier>slingcms_upgrade_far</classifier>
               <includeClassifier>slingcms-upgrade</includeClassifier>
             </archive>
@@ -143,27 +151,73 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
+          <!-- Standalone Assembly -->
           <execution>
+            <id>standalone</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <finalName>org.apache.sling.cms-${project.version}</finalName>
+              <archive>
+                <manifest>
+                  <mainClass>org.apache.sling.cms.feature.Main</mainClass>
+                  <classpathPrefix>lib/</classpathPrefix>
+                  <addClasspath>true</addClasspath>
+                </manifest>
+              </archive>
+              <descriptors>
+                <descriptor>src/main/assembly/standalone.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <!-- Author Assembly -->
+          <execution>
+            <id>author</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>true</appendAssemblyId>
+              <finalName>org.apache.sling.cms-${project.version}</finalName>
+              <archive>
+                <manifest>
+                  <mainClass>org.apache.sling.cms.feature.Main</mainClass>
+                  <classpathPrefix>lib/</classpathPrefix>
+                  <addClasspath>true</addClasspath>
+                </manifest>
+              </archive>
+              <descriptors>
+                <descriptor>src/main/assembly/author.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <!-- Renderer Assembly -->
+          <execution>
+            <id>renderer</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>true</appendAssemblyId>
+              <finalName>org.apache.sling.cms-${project.version}</finalName>
+              <archive>
+                <manifest>
+                  <mainClass>org.apache.sling.cms.feature.Main</mainClass>
+                  <classpathPrefix>lib/</classpathPrefix>
+                  <addClasspath>true</addClasspath>
+                </manifest>
+              </archive>
+              <descriptors>
+                <descriptor>src/main/assembly/renderer.xml</descriptor>
+              </descriptors>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
-          <finalName>org.apache.sling.cms-${project.version}</finalName>
-          <archive>
-            <manifest>
-              <mainClass>org.apache.sling.cms.feature.Main</mainClass>
-              <classpathPrefix>lib/</classpathPrefix>
-              <addClasspath>true</addClasspath>
-            </manifest>
-          </archive>
-          <descriptors>
-            <descriptor>src/main/assembly/standalone.xml</descriptor>
-          </descriptors>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

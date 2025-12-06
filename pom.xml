@@ -88,6 +88,7 @@
     <module>login</module>
     <module>ui</module>
     <module>reference</module>
+    <module>distribution</module>
     <module>feature</module>
     <module>archetype</module>
     <module>it</module>
@@ -435,6 +436,8 @@
             <exclude>**/node_modules/**/*</exclude>
             <!-- Tracking file -->
             <exclude>Project_Tracking.csv</exclude>
+            <!-- Deployment folder with running instances -->
+            <exclude>deployment/**/*</exclude>
           </excludes>
         </configuration>
         <executions>

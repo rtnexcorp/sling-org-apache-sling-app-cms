@@ -14,14 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.sling.cms.core.publication;
+package org.apache.sling.cms.distribution;
 
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+/**
+ * Package version information.
+ */
+public final class Version {
+    
+    private Version() {
+        // Utility class
+    }
 
-@ObjectClassDefinition(name = "%forwardagentsync.config.name", description = "%forwardagentsync.config.description", localization = "OSGI-INF/l10n/bundle")
-public @interface ForwardAgentEndpointSynchronizationConfig {
-
-    @AttributeDefinition(name = "%forwardagentsync.param.agentTarget.name", description = "%forwardagentsync.param.agentTarget.description")
-    String agentTarget();
+    public static final String VERSION = "1.0.0";
 }

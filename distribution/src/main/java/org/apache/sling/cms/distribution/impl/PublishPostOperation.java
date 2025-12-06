@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.sling.cms.core.publication;
+package org.apache.sling.cms.distribution.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +32,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Sling Post Operation to unpublish content
+ * A Sling Post Operation to publish content
  */
 @Component(immediate = true, service = { PostOperation.class }, property = PostOperation.PROP_OPERATION_NAME
-        + "=unpublish")
-public class UnpublishPostOperation implements PostOperation {
+        + "=publish")
+public class PublishPostOperation implements PostOperation {
 
-    private static final Logger log = LoggerFactory.getLogger(UnpublishPostOperation.class);
+    private static final Logger log = LoggerFactory.getLogger(PublishPostOperation.class);
 
     @Reference
     private PublicationManagerFactory publicationManagerFactory;
@@ -47,10 +47,9 @@ public class UnpublishPostOperation implements PostOperation {
     public void run(SlingHttpServletRequest request, PostResponse response, SlingPostProcessor[] processors) {
         final List<Modification> changes = new ArrayList<>();
         try {
-
             response.setPath(request.getResource().getPath());
             publicationManagerFactory.getPublicationManager()
-                    .unpublish(request.getResource().adaptTo(PublishableResource.class));
+                    .publish(request.getResource().adaptTo(PublishableResource.class));
 
             if (processors != null) {
                 for (SlingPostProcessor processor : processors) {
