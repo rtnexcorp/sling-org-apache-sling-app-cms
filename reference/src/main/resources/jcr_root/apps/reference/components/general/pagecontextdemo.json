@@ -1,0 +1,6 @@
+{
+    "jcr:primaryType": "sling:Component",
+    "componentType": "General",
+    "jcr:title": "Page Context Demo",
+    "jcr:description": "Demonstrates checking instance type and page mode using PageContext"
+}

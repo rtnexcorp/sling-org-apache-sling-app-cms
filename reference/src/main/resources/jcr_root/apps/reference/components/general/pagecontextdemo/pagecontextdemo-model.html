@@ -1,0 +1,120 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--
+    Page Context Demo Component (Using Sling Model)
+    
+    This component demonstrates how to check instance type and page mode
+    using a Sling Model that injects PageContext.
+-->
+
+<sly data-sly-use.demo="org.apache.sling.cms.reference.models.PageContextDemoModel"></sly>
+
+<div class="pagecontext-demo-model">
+    <h3>Page Context Demo (Sling Model)</h3>
+    
+    <!-- Display context summary -->
+    <div class="notification ${demo.instanceCssClass}">
+        <strong>Context:</strong> ${demo.contextSummary}
+    </div>
+    
+    <table class="table is-bordered is-striped">
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Page Mode -->
+            <tr>
+                <td>Is Edit Mode</td>
+                <td>
+                    <span class="tag ${demo.modeCssClass}">${demo.editMode}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Is Preview Mode</td>
+                <td>${demo.previewMode}</td>
+            </tr>
+            
+            <!-- Instance Type -->
+            <tr>
+                <td>Instance Type</td>
+                <td>
+                    <span class="tag ${demo.instanceCssClass}">${demo.instanceTypeName}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Is Author</td>
+                <td>${demo.author}</td>
+            </tr>
+            <tr>
+                <td>Is Renderer</td>
+                <td>${demo.renderer}</td>
+            </tr>
+            <tr>
+                <td>Is Standalone</td>
+                <td>${demo.standalone}</td>
+            </tr>
+            
+            <!-- Computed Properties -->
+            <tr>
+                <td>Should Show Edit Controls</td>
+                <td>${demo.shouldShowEditControls}</td>
+            </tr>
+            <tr>
+                <td>Is Serving End Users</td>
+                <td>${demo.servingEndUsers}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Conditional content using Sling Model -->
+    <div class="mt-4">
+        <h4>Conditional Content (via Sling Model):</h4>
+        
+        <sly data-sly-test="${demo.shouldShowEditControls}">
+            <div class="notification is-warning">
+                <strong>Authoring Enabled:</strong> 
+                Edit controls and authoring tools should be displayed here.
+            </div>
+        </sly>
+        
+        <sly data-sly-test="${demo.servingEndUsers}">
+            <div class="notification is-info">
+                <strong>Serving End Users:</strong> 
+                This is being served to end users (Renderer or Preview mode).
+            </div>
+        </sly>
+        
+        <sly data-sly-test="${demo.author}">
+            <div class="notification is-primary is-light">
+                <strong>Author Only:</strong> 
+                Content visible only on Author instance.
+            </div>
+        </sly>
+        
+        <sly data-sly-test="${demo.renderer}">
+            <div class="notification is-success is-light">
+                <strong>Renderer Only:</strong> 
+                Content visible only on Renderer instance.
+            </div>
+        </sly>
+    </div>
+</div>

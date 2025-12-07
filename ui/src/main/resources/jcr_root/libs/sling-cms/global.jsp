@@ -20,5 +20,5 @@
 %><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%
 %><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%
 %><%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %><%
-%><sling:defineObjects /><sling:adaptTo var="properties" adaptable="${resource}" adaptTo="org.apache.sling.api.resource.ValueMap" /><%
+%><sling:defineObjects /><sling:adaptTo var="properties" adaptable="${resource}" adaptTo="org.apache.sling.api.resource.ValueMap" /><sling:adaptTo var="slingPageContext" adaptable="${slingRequest}" adaptTo="org.apache.sling.cms.PageContext" /><%
 %><c:set var="branding" value="${sling:getResource(resourceResolver,'/mnt/overlay/sling-cms/content/branding').valueMap}" />

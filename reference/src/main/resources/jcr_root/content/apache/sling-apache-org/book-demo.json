@@ -1,0 +1,120 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Book Component Demo",
+    "sling:template": "/conf/asf/site/templates/base-page",
+    "sling:resourceType": "reference/components/pages/base",
+    "published": true,
+    "hideInSitemap": false,
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "intro": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h1>Book Component Demo</h1><p>This page demonstrates the <strong>Book Component</strong> with multifield author support. The component uses HTL with a Sling Model (<code>BookModel</code>) to render book information including multiple authors.</p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "book1": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/book",
+        "bookTitle": "Clean Code: A Handbook of Agile Software Craftsmanship",
+        "subtitle": "A Handbook of Agile Software Craftsmanship",
+        "publishingYear": "2008",
+        "isbn": "978-0132350884",
+        "publisher": "Prentice Hall",
+        "description": "Even bad code can function. But if code isn't clean, it can bring a development organization to its knees. This book is a must for any developer who wants to improve their code quality.",
+        "authors": {
+          "jcr:primaryType": "nt:unstructured",
+          "author1": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Robert C. Martin",
+            "email": "unclebob@example.com",
+            "role": "author",
+            "bio": "Robert Cecil Martin, known as Uncle Bob, is an American software engineer and author. He is a co-author of the Agile Manifesto.",
+            "website": "https://blog.cleancoder.com"
+          }
+        }
+      },
+      "divider1": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "book2": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/book",
+        "bookTitle": "Design Patterns: Elements of Reusable Object-Oriented Software",
+        "publishingYear": "1994",
+        "isbn": "978-0201633610",
+        "publisher": "Addison-Wesley Professional",
+        "description": "The Gang of Four's classic book on software design patterns that has influenced generations of software developers.",
+        "authors": {
+          "jcr:primaryType": "nt:unstructured",
+          "author1": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Erich Gamma",
+            "role": "author",
+            "bio": "Swiss computer scientist, known for his work on Design Patterns and Eclipse IDE."
+          },
+          "author2": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Richard Helm",
+            "role": "author",
+            "bio": "Computer scientist and co-author of the Gang of Four Design Patterns book."
+          },
+          "author3": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Ralph Johnson",
+            "role": "author",
+            "bio": "Professor at University of Illinois, expert in software frameworks and patterns."
+          },
+          "author4": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "John Vlissides",
+            "role": "author",
+            "bio": "Late computer scientist who made significant contributions to software patterns."
+          }
+        }
+      },
+      "divider2": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "book3": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/book",
+        "bookTitle": "The Pragmatic Programmer",
+        "subtitle": "Your Journey to Mastery, 20th Anniversary Edition",
+        "publishingYear": "2019",
+        "isbn": "978-0135957059",
+        "publisher": "Addison-Wesley Professional",
+        "description": "Written by two of the most seasoned software developers, this book examines the core programming process—taking a requirement and producing working, maintainable code.",
+        "authors": {
+          "jcr:primaryType": "nt:unstructured",
+          "author1": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "David Thomas",
+            "email": "dave@pragprog.com",
+            "role": "author",
+            "bio": "A founder of the Pragmatic Programmers and co-author of the Agile Manifesto.",
+            "website": "https://pragprog.com"
+          },
+          "author2": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Andrew Hunt",
+            "email": "andy@pragprog.com",
+            "role": "author",
+            "bio": "Co-founder of the Pragmatic Programmers and Agile Manifesto co-author.",
+            "website": "https://pragprog.com"
+          }
+        }
+      },
+      "usage-notes": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<hr/><h2>Implementation Notes</h2><h3>Component Structure</h3><ul><li><strong>BookModel</strong> (<code>org.apache.sling.cms.reference.models.BookModel</code>) - Sling Model that adapts from Resource</li><li><strong>Author</strong> (<code>org.apache.sling.cms.reference.beans.Author</code>) - Bean class for author data from multifield</li><li><strong>book.html</strong> - HTL template for rendering the component</li></ul><h3>Multifield Structure</h3><p>The authors multifield stores each author as a child resource with properties: <code>authorName</code>, <code>email</code>, <code>role</code>, <code>bio</code>, <code>website</code></p><h3>HTL Usage</h3><pre><code>&lt;sly data-sly-use.book=\"org.apache.sling.cms.reference.models.BookModel\"&gt;\n  &lt;h2&gt;${book.title}&lt;/h2&gt;\n  &lt;sly data-sly-list.author=\"${book.authors}\"&gt;\n    &lt;p&gt;${author.name}&lt;/p&gt;\n  &lt;/sly&gt;\n&lt;/sly&gt;</code></pre>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      }
+    }
+  }
+}

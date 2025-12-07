@@ -1,0 +1,6 @@
+{
+  "jcr:primaryType": "sling:Site",
+  "jcr:title": "Apache Sling",
+  "jcr:language": "en",
+  "sling:url": "https://sling.apache.org"
+}

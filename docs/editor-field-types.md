@@ -149,6 +149,48 @@ Renders a select field. This field can either specify a list of options in a pro
 - *options* - if set, this will be used to populate the options for the select field. These should be and array of strings in the format `{LABEL}={VALUE}`
 - *optionsScript* - the absolute path to a script to execute to get the select options
 
+## Tabs
+
+Renders a tabbed interface to organize dialog fields into logical groups. This improves the authoring experience for components with many configuration options.
+
+**Resource Type:** `sling-cms/components/editor/fields/tabs`
+
+**Structure**
+
+Each child node under the tabs node represents a tab panel. Tab nodes should have a `title` property and contain field nodes as children.
+
+**Tab Properties**
+
+- *title* - the display title of the tab shown in the tab bar
+
+**Example**
+
+```json
+{
+    "tabs": {
+        "sling:resourceType": "sling-cms/components/editor/fields/tabs",
+        "basicInfo": {
+            "title": "Basic Info",
+            "name": {
+                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                "label": "Name",
+                "name": "name"
+            }
+        },
+        "advancedTab": {
+            "title": "Advanced",
+            "cssClass": {
+                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                "label": "CSS Class",
+                "name": "cssClass"
+            }
+        }
+    }
+}
+```
+
+For more detailed documentation and examples, see [Dialog Tabs](dialog-tabs.md).
+
 ## Taxonomy
 
 Renders taxonomy selection field.

@@ -89,6 +89,39 @@ You can use any standard field type inside the multifield template:
 - `sling-cms/components/editor/fields/hidden` - Hidden field
 - `sling-cms/components/editor/fields/richtext` - Rich text editor
 
+## Reading Multifield Values in HTL
+
+### Simple Iteration
+
+```html
+<sly data-sly-use.templates="core/wcm/components/commons/v1/templates.html">
+<div data-sly-test="${resource.getChild('items')}" class="items-list">
+    <ul data-sly-list.item="${resource.getChild('items').listChildren}">
+        <li>
+            <strong>${item.valueMap.title}</strong>
+            <p>${item.valueMap.description}</p>
+        </li>
+    </ul>
+</div>
+</sly>
+```
+
+### Social Links in HTL
+
+```html
+<sly data-sly-test.socialLinks="${resource.getChild('socialLinks')}">
+    <div class="social-links">
+        <a data-sly-list.link="${socialLinks.listChildren}"
+           href="${link.valueMap.url}"
+           class="social-link social-link--${link.valueMap.platform}"
+           target="_blank" 
+           rel="noopener noreferrer">
+            ${link.valueMap.label || link.valueMap.platform}
+        </a>
+    </div>
+</sly>
+```
+
 ## Reading Multifield Values in JSP
 
 ### Simple Iteration
@@ -263,3 +296,14 @@ You can use any standard field type inside the multifield template:
 - Item names are auto-generated as `item_0`, `item_1`, etc.
 - When editing, existing values are automatically loaded into the form
 - The multifield handles deletion of items via the Sling POST Servlet
+
+## Demo Page
+
+A working multifield demo is available in the reference site:
+- **Demo Page**: `/content/apache/sling-apache-org/multifield-demo.html`
+- **Author Component**: `reference/src/main/resources/jcr_root/apps/reference/components/general/author/`
+
+## See Also
+
+- [Editor Field Types](editor-field-types.md) - Reference for all available field types
+- [Custom Components](custom-components.md) - Guide to creating custom components
