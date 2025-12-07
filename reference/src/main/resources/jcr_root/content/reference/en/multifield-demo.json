@@ -1,0 +1,42 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Multifield Component Demo",
+    "sling:template": "/conf/global/site/templates/base-page",
+    "sling:resourceType": "reference/components/pages/base",
+    "published": true,
+    "hideInSitemap": false,
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "intro": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h1>Multifield Component Demo</h1><p>This page demonstrates the Author and Book components with multifield functionality.</p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "author1": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/author",
+        "authorName": "Jane Doe",
+        "jobTitle": "Senior Software Engineer",
+        "bio": "Jane is a passionate software engineer with over 10 years of experience.",
+        "email": "jane.doe@example.com",
+        "socialLinks": {
+          "jcr:primaryType": "nt:unstructured",
+          "item_0": {
+            "jcr:primaryType": "nt:unstructured",
+            "platform": "twitter",
+            "url": "https://twitter.com/janedoe",
+            "label": "Follow me on X"
+          },
+          "item_1": {
+            "jcr:primaryType": "nt:unstructured",
+            "platform": "linkedin",
+            "url": "https://linkedin.com/in/janedoe",
+            "label": "Connect on LinkedIn"
+          }
+        }
+      }
+    }
+  }
+}

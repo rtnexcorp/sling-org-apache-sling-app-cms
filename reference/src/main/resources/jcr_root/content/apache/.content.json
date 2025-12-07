@@ -1,8 +1,0 @@
-{
-  "jcr:primaryType": "sling:OrderedFolder",
-  "sling:configRef": "/conf/asf",
-  "jcr:content": {
-    "jcr:primaryType": "nt:unstructured",
-    "jcr:title": "Apache Software Foundation"
-  }
-}

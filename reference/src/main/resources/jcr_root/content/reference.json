@@ -1,0 +1,12 @@
+{
+  "jcr:primaryType": "sling:Site",
+  "jcr:title": "Reference Site",
+  "jcr:language": "en",
+  "sling:url": "http://localhost:8083",
+  "sling:configRef": "/conf/global",
+  "en": {
+    "jcr:primaryType": "sling:OrderedFolder",
+    "jcr:title": "English",
+    "jcr:language": "en"
+  }
+}

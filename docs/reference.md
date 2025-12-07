@@ -38,7 +38,7 @@ These components are:
 In addition to these reference components, there are two general use components in the main ui project. These are found at `/libs/sling-cms/components/general` and are:
 
  - container - a container into which other components can be added. This is the most foundational component in Sling CMS allowing for component-driven content development
- - rte - a HTML based rich text editor using [wysihtml](http://wysihtml.com/) as the RTE
+ - rte - a HTML based rich text editor using [Quill](https://quilljs.com/) as the RTE. Supports toolbar configurations: 'minimal', 'default', 'full'
  - textelement - a block level text element which can be run through i18n
  
 ## Form Components

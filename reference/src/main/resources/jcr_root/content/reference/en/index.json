@@ -1,0 +1,19 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Apache Sling - Bringing Back the Fun!",
+    "sling:template": "/conf/global/site/templates/base-page",
+    "sling:resourceType": "reference/components/pages/base",
+    "published": true,
+    "hideInSitemap": false,
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "richtext": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<p>Apache Sling™ is a framework for RESTful web-applications based on an extensible content tree.</p><p>In a nutshell, Sling maps HTTP request URLs to content resources based on the request's path, extension and selectors. Using convention over configuration, requests are processed by scripts and servlets, dynamically selected based on the current resource.</p><p>Sling serves as basis for a variety of applications ranging from blogging engines all the way to enterprise content management systems.</p>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      }
+    }
+  }
+}

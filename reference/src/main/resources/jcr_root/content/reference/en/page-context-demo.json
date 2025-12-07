@@ -1,0 +1,27 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Page Context API Demo",
+    "sling:template": "/conf/global/site/templates/base-page",
+    "sling:resourceType": "reference/components/pages/base",
+    "published": true,
+    "hideInSitemap": false,
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "intro": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h1>Page Context API Demo</h1><p>This page demonstrates how to check <strong>Instance Type</strong> and <strong>Page Mode</strong> using the PageContext API.</p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "pagecontext-htl": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/pagecontextdemo-htl"
+      },
+      "pagecontext-model": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/pagecontextdemo-model"
+      }
+    }
+  }
+}
