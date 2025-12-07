@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/* global wysihtml, wysihtmlParserRules */
+/* TipTap editor is now initialized in cms.tiptap.js */
 
 rava.bind(".file", {
   callbacks: {
@@ -210,18 +210,6 @@ rava.bind(".repeating__item", {
         event.preventDefault();
         this.remove();
       },
-    },
-  },
-});
-
-rava.bind(".rte", {
-  callbacks: {
-    created() {
-      new wysihtml.Editor(this.querySelector(".rte-editor"), {
-        // eslint-disable-line no-new, new-cap
-        toolbar: this.querySelector(".rte-toolbar"),
-        parserRules: wysihtmlParserRules,
-      });
     },
   },
 });

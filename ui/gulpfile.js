@@ -23,6 +23,8 @@ const rename = require('gulp-rename');
 const terser = require('gulp-terser');
 const noop = require('gulp-noop');
 const streamqueue = require('streamqueue');
+const merge = require('merge-stream');
+const { exec } = require('child_process');
 
 let prod = false;
 
@@ -73,29 +75,41 @@ gulp.task('cms-assets', () => gulp.src([srcDir('img/*')])
 gulp.task('cms-fonts', () => gulp.src(['./node_modules/jam-icons/fonts/*', srcDir('fonts/*')])
   .pipe(gulp.dest(distDir('jcr_root/static/clientlibs/sling-cms/fonts'))));
 
-gulp.task('cms-js', () => streamqueue({ objectMode: true },
-  gulp.src([
-    './node_modules/rava/dist/rava.min.js',
-    './node_modules/wysihtml/dist/minified/wysihtml.min.js',
-    './node_modules/wysihtml/dist/minified/wysihtml.all-commands.min.js',
-    './node_modules/wysihtml/dist/minified/wysihtml.table_editing.min.js',
-    './node_modules/wysihtml/dist/minified/wysihtml.toolbar.min.js',
-    './node_modules/handlebars/dist/handlebars.min.js',
-    './node_modules/js-autocomplete/auto-complete.min.js',
-  ]),
-  gulp.src([
-    './node_modules/sorttable/sorttable.js',
-    './node_modules/wysihtml/parser_rules/advanced_and_extended.js',
-  ]).pipe(prod ? terser() : noop()),
-  gulp.src([
-    srcDir('js/cms.js'),
-    srcDir('js/cms.*.js'),
-  ])
-    .pipe(prod ? terser() : noop())
-    .pipe(concat('cms.js'))
-    .pipe(header(apache2License)))
+gulp.task('cms-js', () => {
+  return merge(
+    gulp.src([
+      './node_modules/rava/dist/rava.min.js',
+      './node_modules/handlebars/dist/handlebars.min.js',
+      './node_modules/js-autocomplete/auto-complete.min.js',
+    ]),
+    gulp.src([
+      './node_modules/sorttable/sorttable.js',
+    ]).pipe(prod ? terser() : noop()),
+    // Include TipTap bundle (must be built first via tiptap-bundle task)
+    gulp.src([
+      distDir('jcr_root/static/clientlibs/sling-cms/js/tiptap.bundle.min.js'),
+    ]),
+    gulp.src([
+      srcDir('js/cms.js'),
+      srcDir('js/cms.*.js'),
+    ])
+      .pipe(prod ? terser() : noop())
+      .pipe(concat('cms.js'))
+      .pipe(header(apache2License))
+  )
   .pipe(concat('scripts-all.min.js'))
-  .pipe(gulp.dest(distDir('jcr_root/static/clientlibs/sling-cms/js'))));
+  .pipe(gulp.dest(distDir('jcr_root/static/clientlibs/sling-cms/js')));
+});
+
+// Build TipTap bundle using Rollup
+gulp.task('tiptap-bundle', (done) => {
+  const env = prod ? 'NODE_ENV=production' : '';
+  exec(`${env} npx rollup -c rollup.config.mjs`, (err, stdout, stderr) => {
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+    done(err);
+  });
+});
 
 gulp.task('editor-fonts', () => gulp.src(['./node_modules/jam-icons/fonts/*', './src/fonts/*'])
   .pipe(gulp.dest(distDir('jcr_root/static/clientlibs/sling-cms-editor/fonts'))));
@@ -147,11 +161,12 @@ gulp.task('starter-styles', () => gulp.src(srcDir('scss/starter.scss'))
   .pipe(rename('bundle.css'))
   .pipe(gulp.dest(distDir('jcr_root/content/starter/css'))));
 
-gulp.task('set-prod', () => {
+gulp.task('set-prod', (done) => {
   prod = true;
+  done();
 });
 
-gulp.task('cms', gulp.series('cms-styles', 'cms-js', 'cms-assets', 'cms-fonts'));
+gulp.task('cms', gulp.series('cms-styles', 'tiptap-bundle', 'cms-js', 'cms-assets', 'cms-fonts'));
 
 gulp.task('editor', gulp.series('editor-styles', 'editor-js', 'editor-fonts'));
 

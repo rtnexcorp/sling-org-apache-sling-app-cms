@@ -17,8 +17,8 @@
  * under the License.
  */
 @use "bulma-config";
-@import "fonts";
-@import "overrides";
+@use "fonts";
+@use "overrides";
 
 // Bulma breakpoint
 $tablet: 769px;

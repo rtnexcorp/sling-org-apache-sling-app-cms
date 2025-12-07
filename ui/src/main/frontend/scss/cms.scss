@@ -18,8 +18,10 @@
  */
 @use "sass:color";
 @use "bulma-config";
-@import "fonts";
-@import "overrides";
+@use "fonts";
+@use "overrides";
+@use "tiptap";
+@use "variables" as *;
 
 // Bulma breakpoints (for compatibility)
 $tablet: 769px;
@@ -28,8 +30,12 @@ $mobile-max: 768px;
 // Brand colors for use in custom styles
 $primary: #9E2165;
 $gray: #6D6E71;
-$gray-light: color.adjust($gray, $lightness: 50%);
+$gray-light: color.scale($gray, $lightness: 50%);
 $grey-darker: hsl(0, 0%, 21%);
+$grey-lighter: hsl(0, 0%, 86%);
+$grey-light: hsl(0, 0%, 71%);
+$grey: hsl(0, 0%, 48%);
+$white: hsl(0, 0%, 100%);
 
 @media screen and (min-width: $tablet) {
   html {
@@ -294,6 +300,51 @@ nav .level-right {
   margin-bottom: 0.5em;
 }
 
+/* RTE Toolbar horizontal layout fixes */
+.rte-toolbar {
+  .level {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .level-left {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  
+  .level-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 0.5em;
+    margin-bottom: 0.25em;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    
+    &.has-addons {
+      .button {
+        margin-right: 0;
+        
+        &:not(:last-child) {
+          border-right: none;
+        }
+      }
+    }
+  }
+}
+
 .scroll-container {
   overflow-y: auto;
   height: calc(100vh - 205px);
@@ -365,6 +416,14 @@ table thead .sorting_desc:after {
   color: $grey-darker;
 }
 
+/* Toolbar button active state */
+.rte-toolbar .button.is-active,
+.rte-toolbar .button.is-selected {
+  background-color: $primary;
+  color: $white;
+}
+
+/* Legacy wysihtml sandbox styles - kept for backward compatibility */
 .wysihtml-sandbox {
   width: 100% !important;
   max-height: 600px !important;

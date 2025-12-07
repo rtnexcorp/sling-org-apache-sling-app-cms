@@ -1,4 +1,4 @@
-<%-- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,8 +15,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
-<%@include file="/libs/sling-cms/global.jsp"%>
-<a class="button is-small" data-tiptap-action="change_view">
-    <strong class="icon">&lt;/&gt;</strong>
-</a>
+ */
+// Helper for merge-stream import
+module.exports = require('merge-stream');

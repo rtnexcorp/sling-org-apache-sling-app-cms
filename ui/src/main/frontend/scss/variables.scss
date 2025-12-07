@@ -1,4 +1,4 @@
-<%-- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,8 +15,18 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
-<%@include file="/libs/sling-cms/global.jsp"%>
-<a class="button is-small" data-tiptap-action="change_view">
-    <strong class="icon">&lt;/&gt;</strong>
-</a>
+ */
+@use "sass:color";
+
+// Shared variables for CMS and TipTap
+$primary: #9E2165;
+$gray: #6D6E71;
+$gray-light: color.scale($gray, $lightness: 50%);
+$grey-darker: hsl(0, 0%, 21%);
+$grey-lighter: hsl(0, 0%, 86%);
+$grey-light: hsl(0, 0%, 71%);
+$grey: hsl(0, 0%, 48%);
+$white: hsl(0, 0%, 100%);
+$selected: #9E2165;
+$tablet: 769px;
+$mobile-max: 768px;

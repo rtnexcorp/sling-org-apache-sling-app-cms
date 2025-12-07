@@ -122,7 +122,7 @@ Renders a repeating set of fields.
 
 ## RichText
 
-Renders a rich text editor using Summernote.
+Renders a rich text editor using TipTap (ProseMirror-based editor).
 
 **Resource Type:** `sling-cms/components/editor/fields/richtext`
 
@@ -132,6 +132,23 @@ Renders a rich text editor using Summernote.
 - *label* - the label text for the field
 - *name* - the name attribute for the field
 - *required* - if set to true the field will be required
+- *toolbar* - optional path to a custom toolbar configuration
+
+**Features**
+
+The TipTap rich text editor supports:
+- Bold, Italic, Underline formatting
+- Headings (H1-H6)
+- Paragraph formatting
+- Text alignment (left, center, right)
+- Ordered and unordered lists
+- Indentation
+- Links with target selection
+- Image insertion
+- Blockquotes
+- Code blocks
+- Undo/Redo
+- Source view toggle
 
 ## Select
 

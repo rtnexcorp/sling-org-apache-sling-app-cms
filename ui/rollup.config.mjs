@@ -1,4 +1,4 @@
-<%-- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,8 +15,27 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
-<%@include file="/libs/sling-cms/global.jsp"%>
-<a class="button is-small" data-tiptap-action="change_view">
-    <strong class="icon">&lt;/&gt;</strong>
-</a>
+ */
+
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import terser from '@rollup/plugin-terser';
+
+const production = process.env.NODE_ENV === 'production';
+
+export default {
+  input: 'src/main/frontend/js/tiptap-bundle.js',
+  output: {
+    file: 'target/frontend/dist/jcr_root/static/clientlibs/sling-cms/js/tiptap.bundle.min.js',
+    format: 'iife',
+    name: 'TiptapBundle',
+    sourcemap: !production
+  },
+  plugins: [
+    resolve({
+      browser: true
+    }),
+    commonjs(),
+    production && terser()
+  ].filter(Boolean)
+};
