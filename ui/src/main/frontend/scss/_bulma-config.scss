@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-@charset "utf-8";
 
-@use "sass:color";
+// Bulma 1.0 Configuration
+// This file must be imported before Bulma to customize the framework
+
+@charset "utf-8";
 
 // Brand Colors
 $indigo: #282661;
@@ -27,10 +28,16 @@ $crimson: #CB2138;
 $orange: #B74500;
 $goldenrod: #F79A25;
 $gray: #6D6E71;
-$gray-light: color.adjust($gray, $lightness: 50%);
 $red: #D22128;
 
-// Bulma 1.0 CSS variable overrides
-// These will be applied after Bulma loads
-$selected: $violet;
-$menu-item-hover-background-color: hsl(0, 0%, 86%);
+// Bulma variable customization (Bulma 1.0 style)
+@use "../../../../node_modules/bulma/sass" with (
+  $family-sans-serif: ("Open Sans", sans-serif),
+  $link: $indigo,
+  $primary: $magenta,
+  $warning: $orange,
+  $danger: $crimson,
+  $navbar-height: 5rem,
+  $navbar-item-img-max-height: 4rem,
+  $modal-z: 2000
+);

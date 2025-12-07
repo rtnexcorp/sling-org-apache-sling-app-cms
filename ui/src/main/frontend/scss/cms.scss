@@ -16,9 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+@use "sass:color";
+@use "bulma-config";
 @import "fonts";
 @import "overrides";
-@import "../../../../node_modules/bulma/bulma.sass";
+
+// Bulma breakpoints (for compatibility)
+$tablet: 769px;
+$mobile-max: 768px;
+
+// Brand colors for use in custom styles
+$primary: #9E2165;
+$gray: #6D6E71;
+$gray-light: color.adjust($gray, $lightness: 50%);
+$grey-darker: hsl(0, 0%, 21%);
 
 @media screen and (min-width: $tablet) {
   html {
@@ -119,7 +130,7 @@ small.card-footer-item {
 .container {
   height: 100vh;
   overflow: hidden;
-  @media screen and (max-width: $tablet - 1px) {
+  @media screen and (max-width: $mobile-max) {
     height: 100%;
     overflow: visible;
   }
@@ -288,7 +299,7 @@ nav .level-right {
   height: calc(100vh - 205px);
   overflow-x: hidden;
   padding: 2px;
-  @media screen and (max-width: $tablet - 1px) {
+  @media screen and (max-width: $mobile-max) {
     height: 100%;
     overflow: visible;
     padding: 0;
@@ -350,7 +361,7 @@ table thead .sorting_desc:after {
 
 .menu .is-selected,
 .table tr.is-selected {
-  background-color: lighten($gray, 50%);
+  background-color: $gray-light;
   color: $grey-darker;
 }
 

@@ -16,11 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-.sling-cms-editor {
-  @import "fonts";
-  @import "overrides";
-  @import "../../../../node_modules/bulma/bulma.sass";
+@use "bulma-config";
+@import "fonts";
+@import "overrides";
 
+// Bulma breakpoint
+$tablet: 769px;
+
+// Brand color used in loader
+$primary: #9E2165;
+
+.sling-cms-editor {
   font-family: "Open Sans", sans-serif;
 
   * {
