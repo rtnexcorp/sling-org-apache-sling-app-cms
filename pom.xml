@@ -35,9 +35,9 @@
     <!-- renovate: depName=org.ow2.asm:asm -->
     <asm.version>9.6</asm.version>
     <!-- renovate: depName=org.apache.jackrabbit:jackrabbit-jcr-commons -->
-    <jackrabbit.version>2.20.12</jackrabbit.version>
+    <jackrabbit.version>2.22.2</jackrabbit.version>
     <!-- renovate: depName=org.apache.jackrabbit:oak-api -->
-    <oak.version>1.58.0</oak.version>
+    <oak.version>1.66.0</oak.version>
     <!-- renovate: depName=org.slf4j:slf4j-api -->
     <slf4j.version>1.7.36</slf4j.version>
     <!-- renovate: depName=com.composum.nodes:composum-nodes-commons -->
@@ -418,7 +418,7 @@
       <dependency>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.testing.sling-mock-oak</artifactId>
-        <version>3.1.2-1.40.0</version>
+        <version>4.1.0-1.86.0</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
