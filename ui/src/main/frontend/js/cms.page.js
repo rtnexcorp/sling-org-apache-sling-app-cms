@@ -66,7 +66,7 @@ rava.bind('.page-properties-container', {
                 document.querySelector('input[name=":content"]').value = template(data);
               }
             }
-            container.innerHTML = formHtml;
+            window.SlingCMS.safeSetInnerHTML(container, formHtml);
             document.querySelectorAll('input,textarea,select').forEach((el) => {
               el.addEventListener('change', updateContent);
             });

@@ -30,6 +30,7 @@
         "@tiptap/extension-underline": "^3.13.0",
         "@tiptap/pm": "^3.13.0",
         "bulma": "^1.0.4",
+        "dompurify": "^3.3.0",
         "handlebars": "^4.7.6",
         "jam-icons": "^2.0.0",
         "js-autocomplete": "^1.0.4",

@@ -15,13 +15,19 @@
  * limitations under the License.
  */
 
-// Import dependencies FIRST and make them globally available
+// Import utilities FIRST
+import { logger } from './logger.js';
+import { handleFetchError, fetchWithErrorHandling, handleResponseError, safeAsync } from './error-handler.js';
+import { sanitizeHTML, safeSetInnerHTML } from './sanitize.js';
+
+// Import dependencies and make them globally available
 import rava from 'rava';
 import autoComplete from 'js-autocomplete';
 
 // Make dependencies globally available BEFORE any modules that use them
 window.rava = rava;
 window.autoComplete = autoComplete;
+// Logger, error handlers, and sanitization utilities are auto-added to window.SlingCMS
 
 // Import SCSS
 import '../scss/editor.scss';
@@ -39,5 +45,5 @@ import './cms.tiptap.js';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('CMS Editor initialized with Vite');
+  logger.debug('CMS Editor initialized with Vite');
 });

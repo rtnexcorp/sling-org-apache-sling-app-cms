@@ -24,7 +24,7 @@ rava.bind("input.pathfield", {
     created() {
       // Ensure autoComplete is available before using it
       if (typeof window.autoComplete === 'undefined') {
-        console.error('autoComplete library not loaded yet');
+        window.SlingCMS.logger.error('autoComplete library not loaded yet');
         return;
       }
       
@@ -43,14 +43,21 @@ rava.bind("input.pathfield", {
           if (term === "/") {
             term = base;
           }
-          fetch(
+          window.SlingCMS.errorHandler.fetchWithErrorHandling(
             `/bin/cms/paths?path=${encodeURIComponent(
               term
             )}&type=${encodeURIComponent(type)}`
           )
-            .then((resp) => resp.json())
+            .then((resp) => {
+              window.SlingCMS.errorHandler.handleResponseError(resp, 'Fetch paths');
+              return resp.json();
+            })
             .then((data) => {
               response(data);
+            })
+            .catch((error) => {
+              window.SlingCMS.errorHandler.handleFetchError(error, 'Fetch paths');
+              response([]);
             });
         },
       });

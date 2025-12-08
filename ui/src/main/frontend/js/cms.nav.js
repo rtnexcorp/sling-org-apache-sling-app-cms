@@ -99,7 +99,9 @@ rava.bind('.contentnav .contentnav__item', {
       });
       this.classList.add('is-selected');
       if (document.querySelector('.actions-target') && this.querySelector('.cell-actions')){
-        document.querySelector('.actions-target').innerHTML = this.querySelector('.cell-actions').innerHTML;
+        const actionsTarget = document.querySelector('.actions-target');
+        const cellActions = this.querySelector('.cell-actions');
+        window.SlingCMS.safeSetInnerHTML(actionsTarget, cellActions.innerHTML);
       }
     },
     dblclick() {

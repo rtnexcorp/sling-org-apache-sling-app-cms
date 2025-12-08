@@ -28,7 +28,10 @@ rava.bind('.labelfield', {
         const val = context.querySelector('.labelfield__field input').value;
         let found = false;
         const title = context.querySelector(`option[value="${val}"]`).innerText;
-        tmp.innerHTML = context.querySelector('.labelfield__template').innerHTML;
+        const template = context.querySelector('.labelfield__template');
+        if (template) {
+          window.SlingCMS.safeSetInnerHTML(tmp, template.innerHTML);
+        }
         context.querySelectorAll('.labelfield__item input').forEach((el) => {
           if (el.value === val) {
             found = true;

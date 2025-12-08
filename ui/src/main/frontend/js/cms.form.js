@@ -47,18 +47,19 @@ rava.bind(".Form-Ajax", {
           !form.querySelector('input[name="jcr:content/jcr:lastModified"]')
         ) {
           const dateContainer = document.createElement("div");
+          // These are safe hardcoded HTML strings, but use sanitization for consistency
           if (jcrcontent) {
-            dateContainer.innerHTML =
+            window.SlingCMS.safeSetInnerHTML(dateContainer,
               '<input type="hidden" name="jcr:content/jcr:lastModified" />' +
               '<input type="hidden" name="jcr:content/jcr:lastModifiedBy" />' +
               '<input type="hidden" name="jcr:content/jcr:created" />' +
-              '<input type="hidden" name="jcr:content/jcr:createdBy" />';
+              '<input type="hidden" name="jcr:content/jcr:createdBy" />');
           } else {
-            dateContainer.innerHTML =
+            window.SlingCMS.safeSetInnerHTML(dateContainer,
               '<input type="hidden" name="jcr:lastModified" />' +
               '<input type="hidden" name="jcr:lastModifiedBy" />' +
               '<input type="hidden" name="jcr:created" />' +
-              '<input type="hidden" name="jcr:createdBy" />';
+              '<input type="hidden" name="jcr:createdBy" />');
           }
           form.appendChild(dateContainer);
         }
@@ -121,9 +122,12 @@ rava.bind(".get-form", {
         const request = await fetch(aurl);
         if (Sling.CMS.utils.ok(request)) {
           const tmp = document.createElement("div");
-          tmp.innerHTML = await request.text();
+          window.SlingCMS.safeSetInnerHTML(tmp, await request.text());
           const target = document.querySelector(form.dataset.target);
-          target.innerHTML = tmp.querySelector(form.dataset.load).innerHTML;
+          const loadedContent = tmp.querySelector(form.dataset.load);
+          if (loadedContent) {
+            window.SlingCMS.safeSetInnerHTML(target, loadedContent.innerHTML);
+          }
           tmp.remove();
           if (wrapper) {
             wrapper.disabled = false;

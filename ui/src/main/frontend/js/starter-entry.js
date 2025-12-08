@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+// Import logger utility
+import { logger } from './logger.js';
+
 // Import SCSS
 import '../scss/starter.scss';
 
@@ -24,5 +27,5 @@ import 'jam-icons/css/jam.min.css';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('CMS Starter initialized with Vite');
+  logger.debug('CMS Starter initialized with Vite');
 });

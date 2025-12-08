@@ -30,7 +30,7 @@ rava.bind('.job-properties-container', {
         const response = await fetch(container.dataset.path + config);
         if (Sling.CMS.utils.ok(response)) {
           const formHtml = await response.text();
-          container.innerHTML = formHtml;
+          window.SlingCMS.safeSetInnerHTML(container, formHtml);
           sourceSelect.disabled = false;
         }
       }

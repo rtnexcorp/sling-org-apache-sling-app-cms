@@ -78,11 +78,11 @@ rava.bind(".file", {
                 meter.classList.add("is-success");
               } else {
                 meter.classList.add("is-danger");
-                console.warn(
-                  "Failed to upload %s, recieved message %s",
+                window.SlingCMS.logger.warn(
+                  "Failed to upload %s, received message %s",
                   file.name,
                   text
-                ); // eslint-disable-line no-console
+                );
               }
             }
           },
@@ -97,9 +97,15 @@ rava.bind(".file", {
           .closest(".control")
           .querySelector(".file-item-container");
         let meter = null;
-        it.innerHTML = document.querySelector(".file-item-template").innerHTML;
+        const template = document.querySelector(".file-item-template");
+        if (template) {
+          window.SlingCMS.safeSetInnerHTML(it, template.innerHTML);
+        }
         meter = it.querySelector(".progress");
-        it.querySelector(".file-item-name").innerText = file.name;
+        const fileItemName = it.querySelector(".file-item-name");
+        if (fileItemName) {
+          fileItemName.innerText = file.name;
+        }
         ctr.classList.remove("is-hidden");
         ctr.appendChild(it);
         uploadFile(meter, scope.closest("form").action, file);
@@ -245,7 +251,7 @@ rava.bind(".multifield", {
 
       // Add new item
       multifield.querySelector(".multifield__add").addEventListener("click", (event) => {
-        console.log("Multifield add button clicked");
+        window.SlingCMS.logger.debug("Multifield add button clicked");
         event.stopPropagation();
         event.preventDefault();
         
@@ -281,7 +287,7 @@ rava.bind(".multifield__item", {
   events: {
     ":scope .multifield__remove": {
       click(event) {
-        console.log("Multifield remove button clicked");
+        window.SlingCMS.logger.debug("Multifield remove button clicked");
         event.stopPropagation();
         event.preventDefault();
         const item = this;
@@ -296,7 +302,7 @@ rava.bind(".multifield__item", {
     },
     ":scope .multifield__move-up": {
       click(event) {
-        console.log("Multifield move-up button clicked");
+        window.SlingCMS.logger.debug("Multifield move-up button clicked");
         event.stopPropagation();
         event.preventDefault();
         const item = this;
@@ -313,7 +319,7 @@ rava.bind(".multifield__item", {
     },
     ":scope .multifield__move-down": {
       click(event) {
-        console.log("Multifield move-down button clicked");
+        window.SlingCMS.logger.debug("Multifield move-down button clicked");
         event.stopPropagation();
         event.preventDefault();
         const item = this;
@@ -359,22 +365,30 @@ rava.bind(".multifield", {
 rava.bind('.field[data-events]:not([data-events=""])', {
   callbacks: {
     async created() {
-      const events = this.dataset.events.split(",").filter((e) => e !== "");
-      const res = await fetch(`${this.dataset.path}/events.json`, {
-        cache: "no-cache",
-        headers: {
-          Accept: "application/json",
-        },
-      });
-      const handlers = await res.json();
-      for (var event of events) {
-        this.querySelectorAll("input,select,textarea").forEach((el) => {
-          if (event === "load") {
-            Function(handlers[event])();
-          } else {
-            el.addEventListener(event, Function(handlers[event]));
+      try {
+        const events = this.dataset.events.split(",").filter((e) => e !== "");
+        const res = await window.SlingCMS.errorHandler.fetchWithErrorHandling(
+          `${this.dataset.path}/events.json`,
+          {
+            cache: "no-cache",
+            headers: {
+              Accept: "application/json",
+            },
           }
-        });
+        );
+        window.SlingCMS.errorHandler.handleResponseError(res, 'Load field events');
+        const handlers = await res.json();
+        for (var event of events) {
+          this.querySelectorAll("input,select,textarea").forEach((el) => {
+            if (event === "load") {
+              Function(handlers[event])();
+            } else {
+              el.addEventListener(event, Function(handlers[event]));
+            }
+          });
+        }
+      } catch (error) {
+        window.SlingCMS.errorHandler.handleFetchError(error, 'Load field events');
       }
     },
   },

@@ -29,18 +29,21 @@ rava.bind('a.Fetch-Modal', {
     getModal(title, link, button) {
       const modal = Sling.CMS.ui.loaderModal();
       async function loadModal() {
-        const controller = new AbortController();
-        const request = await fetch(link, {
-          signal: controller.signal,
-        });
-        if (Sling.CMS.utils.ok(request)) {
+        try {
+          const request = await window.SlingCMS.errorHandler.fetchWithErrorHandling(link);
+          window.SlingCMS.errorHandler.handleResponseError(request, 'Load modal');
+          
           const responseText = await request.text();
-          modal.innerHTML = responseText;
-        }
-        modal.querySelector('.modal-background').addEventListener('click', () => {
-          controller.abort();
+          window.SlingCMS.safeSetInnerHTML(modal, responseText);
+          
+          modal.querySelector('.modal-background').addEventListener('click', () => {
+            button.removeAttribute('disabled');
+          });
+        } catch (error) {
+          window.SlingCMS.errorHandler.handleFetchError(error, 'Load modal');
+          modal.remove();
           button.removeAttribute('disabled');
-        });
+        }
       }
       if (window.self !== window.top && window.parent.parent) {
         window.parent.parent.postMessage({
@@ -74,16 +77,20 @@ window.addEventListener('message', async (event) => {
   if (event.data.action === 'slingcms.openmodal') {
     Sling.CMS.pathfield = event.source;
     const modal = Sling.CMS.ui.loaderModal();
-    const controller = new AbortController();
-    const request = await fetch(event.data.url, {
-      signal: controller.signal,
-    });
-    if (Sling.CMS.utils.ok(request)) {
+    
+    try {
+      const request = await window.SlingCMS.errorHandler.fetchWithErrorHandling(event.data.url);
+      window.SlingCMS.errorHandler.handleResponseError(request, 'Open modal');
+      
       const responseText = await request.text();
-      modal.innerHTML = responseText;
+      window.SlingCMS.safeSetInnerHTML(modal, responseText);
+      
+      modal.querySelector('.modal-background').addEventListener('click', () => {
+        modal.remove();
+      });
+    } catch (error) {
+      window.SlingCMS.errorHandler.handleFetchError(error, 'Open modal');
+      modal.remove();
     }
-    modal.querySelector('.modal-background').addEventListener('click', () => {
-      controller.abort();
-    });
   }
 }, false);

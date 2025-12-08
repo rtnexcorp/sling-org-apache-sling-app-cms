@@ -20,7 +20,7 @@
 import { defineConfig } from 'vite';
 import sass from 'sass';
 import { resolve } from 'path';
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync, readFileSync, readdirSync as readDir, unlinkSync, statSync } from 'fs';
 
 // Apache License header
 const apacheLicense = `/*
@@ -124,6 +124,30 @@ export default defineConfig({
   },
   
   plugins: [
+    // Clean old chunk files before build
+    {
+      name: 'clean-old-chunks',
+      buildStart() {
+        const jsDir = resolve(__dirname, 'src/main/resources/jcr_root/static/sling-cms/js');
+        try {
+          const files = readdirSync(jsDir);
+          // Remove old chunk files (with hash in name)
+          files.forEach(file => {
+            if (file.includes('-') && file.endsWith('.min.js')) {
+              const filePath = resolve(jsDir, file);
+              try {
+                unlinkSync(filePath);
+                console.log(`Cleaned old chunk: ${file}`);
+              } catch (e) {
+                // Ignore errors for files that can't be deleted
+              }
+            }
+          });
+        } catch (e) {
+          // Directory doesn't exist yet, ignore
+        }
+      }
+    },
     // Copy Open Sans fonts from source
     {
       name: 'copy-open-sans-fonts',

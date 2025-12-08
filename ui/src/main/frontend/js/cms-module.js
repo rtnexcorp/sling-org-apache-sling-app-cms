@@ -52,7 +52,9 @@ window.Sling.CMS = {
   ui: {
     confirmMessage(title, message, complete) {
       const modal = document.createElement('div');
-      modal.innerHTML = `<div class="modal-background"></div><div class="is-draggable modal-content"><div class="box"><h3 class="modal-title"></h3><p class="modal-message"></p><br/><button type="button" class="close-modal button is-primary">OK</button></div></div><button class="modal-close is-large" aria-label="close"></button>`;
+      // This is safe hardcoded HTML, but use sanitization for consistency
+      window.SlingCMS.safeSetInnerHTML(modal, 
+        `<div class="modal-background"></div><div class="is-draggable modal-content"><div class="box"><h3 class="modal-title"></h3><p class="modal-message"></p><br/><button type="button" class="close-modal button is-primary">OK</button></div></div><button class="modal-close is-large" aria-label="close"></button>`);
       modal.querySelector('.modal-title').textContent = title;
       modal.querySelector('.modal-message').textContent = message;
       document.body.appendChild(modal);
@@ -89,7 +91,9 @@ window.Sling.CMS = {
     loaderModal() {
       const modal = document.createElement('div');
       modal.classList.add('modal');
-      modal.innerHTML = `<div class="modal-background"></div><div class="loader is-loading"></div>`;
+      // This is safe hardcoded HTML, but use sanitization for consistency
+      window.SlingCMS.safeSetInnerHTML(modal, 
+        `<div class="modal-background"></div><div class="loader is-loading"></div>`);
       document.querySelector('body').appendChild(modal);
       modal.classList.add('is-active');
       return modal;
@@ -118,8 +122,11 @@ window.Sling.CMS = {
           if (Sling.CMS.utils.ok(response)) {
             const responseText = await response.text();
             const tmp = document.createElement('div');
-            tmp.innerHTML = responseText;
-            container.replaceWith(tmp.querySelector('.reload-container'));
+            window.SlingCMS.safeSetInnerHTML(tmp, responseText);
+            const reloadContainer = tmp.querySelector('.reload-container');
+            if (reloadContainer) {
+              container.replaceWith(reloadContainer);
+            }
             tmp.remove();
             count -= 1;
             if (count === 0) {
@@ -202,7 +209,7 @@ rava.bind('.sling-cms-include-config', {
           const response = await fetch(config + container.closest('form').attributes.action.value);
           if (Sling.CMS.utils.ok(response)) {
             const markup = await response.text();
-            container.innerHTML = markup;
+            window.SlingCMS.safeSetInnerHTML(container, markup);
           }
           window.parent.parent.postMessage({
             action: 'slingcms.openmodal',
