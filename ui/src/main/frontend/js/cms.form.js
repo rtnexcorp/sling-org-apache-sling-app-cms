@@ -17,6 +17,8 @@ w * Licensed to the Apache Software Foundation (ASF) under one
  * under the License.
  */
 
+const rava = window.rava;
+
 rava.bind(".Form-Ajax", {
   events: {
     ":scope .close": {
@@ -122,11 +124,12 @@ rava.bind(".get-form", {
         const request = await fetch(aurl);
         if (Sling.CMS.utils.ok(request)) {
           const tmp = document.createElement("div");
-          window.SlingCMS.safeSetInnerHTML(tmp, await request.text());
+          // Use trustedSetInnerHTML for CMS server content
+          window.SlingCMS.trustedSetInnerHTML(tmp, await request.text());
           const target = document.querySelector(form.dataset.target);
           const loadedContent = tmp.querySelector(form.dataset.load);
           if (loadedContent) {
-            window.SlingCMS.safeSetInnerHTML(target, loadedContent.innerHTML);
+            window.SlingCMS.trustedSetInnerHTML(target, loadedContent.innerHTML);
           }
           tmp.remove();
           if (wrapper) {

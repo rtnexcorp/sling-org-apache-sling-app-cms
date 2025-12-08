@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+const rava = window.rava;
 /* TipTap editor is now initialized in cms.tiptap.js */
 
 rava.bind(".file", {

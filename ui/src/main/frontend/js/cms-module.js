@@ -17,6 +17,7 @@
  * under the License.
  */
 
+const rava = window.rava;
 
 window.Sling = window.Sling || {};
 const {

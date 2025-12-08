@@ -17,6 +17,7 @@
  * under the License.
  */
 
+const rava = window.rava;
 
 rava.bind('.navbar-burger', {
   events: {

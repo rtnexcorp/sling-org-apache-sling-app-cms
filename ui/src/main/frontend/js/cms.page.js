@@ -17,6 +17,8 @@
  * under the License.
  */
 
+const rava = window.rava;
+
 rava.bind('.page-properties-container', {
   callbacks: {
     created() {

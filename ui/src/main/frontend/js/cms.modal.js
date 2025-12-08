@@ -17,6 +17,8 @@
  * under the License.
  */
 
+const rava = window.rava;
+
 rava.bind('a.Fetch-Modal', {
   events: {
     click(event) {
@@ -34,7 +36,8 @@ rava.bind('a.Fetch-Modal', {
           window.SlingCMS.errorHandler.handleResponseError(request, 'Load modal');
           
           const responseText = await request.text();
-          window.SlingCMS.safeSetInnerHTML(modal, responseText);
+          // Use trustedSetInnerHTML for CMS server content (dialogs, forms)
+          window.SlingCMS.trustedSetInnerHTML(modal, responseText);
           
           modal.querySelector('.modal-background').addEventListener('click', () => {
             button.removeAttribute('disabled');
@@ -83,7 +86,8 @@ window.addEventListener('message', async (event) => {
       window.SlingCMS.errorHandler.handleResponseError(request, 'Open modal');
       
       const responseText = await request.text();
-      window.SlingCMS.safeSetInnerHTML(modal, responseText);
+      // Use trustedSetInnerHTML for CMS server content (dialogs, forms)
+      window.SlingCMS.trustedSetInnerHTML(modal, responseText);
       
       modal.querySelector('.modal-background').addEventListener('click', () => {
         modal.remove();

@@ -28,25 +28,16 @@ export function sanitizeHTML(dirty, config = {}) {
     return '';
   }
   
-  // Default configuration allows common HTML elements
+  // For trusted internal CMS content, use permissive settings
+  // This allows all standard HTML elements needed for dialogs and forms
   const defaultConfig = {
-    ALLOWED_TAGS: [
-      'div', 'span', 'p', 'a', 'button', 'input', 'label', 'form',
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-      'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody',
-      'br', 'hr', 'img', 'strong', 'em', 'b', 'i', 'u',
-      'select', 'option', 'textarea', 'fieldset', 'legend',
-      'section', 'article', 'header', 'footer', 'nav', 'aside',
-      'time', 'code', 'pre', 'blockquote'
-    ],
-    ALLOWED_ATTR: [
-      'class', 'id', 'href', 'title', 'alt', 'src', 'type', 'name', 'value',
-      'placeholder', 'required', 'disabled', 'readonly', 'checked', 'selected',
-      'data-*', 'aria-*', 'role', 'tabindex', 'style', 'target', 'rel',
-      'width', 'height', 'colspan', 'rowspan'
-    ],
+    ADD_TAGS: ['iframe', 'sly', 'template'],
+    ADD_ATTR: ['target', 'data-*', 'aria-*', 'for', 'action', 'method', 'enctype', 'autocomplete', 'maxlength', 'minlength', 'pattern', 'min', 'max', 'step', 'multiple', 'accept', 'cols', 'rows', 'wrap', 'size', 'list', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget', 'dirname', 'spellcheck', 'contenteditable', 'draggable', 'dropzone', 'hidden', 'lang', 'translate', 'accesskey', 'autofocus', 'nonce', 'slot', 'part', 'exportparts', 'inputmode', 'is', 'itemid', 'itemprop', 'itemref', 'itemscope', 'itemtype', 'enterkeyhint', 'loading', 'decoding', 'fetchpriority', 'referrerpolicy', 'sandbox', 'allow', 'allowfullscreen', 'frameborder', 'scrolling', 'srcdoc', 'xmlns', 'xml:lang', 'xml:base', 'onload', 'onerror'],
     ALLOW_DATA_ATTR: true,
     ALLOW_ARIA_ATTR: true,
+    WHOLE_DOCUMENT: false,
+    RETURN_DOM: false,
+    RETURN_DOM_FRAGMENT: false,
     ...config
   };
   
@@ -68,7 +59,23 @@ export function safeSetInnerHTML(element, html, config = {}) {
   element.innerHTML = sanitizeHTML(html, config);
 }
 
+/**
+ * Set innerHTML without sanitization - USE ONLY FOR TRUSTED INTERNAL CONTENT
+ * This should only be used for content loaded from the CMS server itself
+ * @param {HTMLElement} element - The element to set innerHTML on
+ * @param {string} html - The trusted HTML string to set
+ */
+export function trustedSetInnerHTML(element, html) {
+  if (!element || !(element instanceof HTMLElement)) {
+    console.error('trustedSetInnerHTML: Invalid element provided');
+    return;
+  }
+  
+  element.innerHTML = html;
+}
+
 // Make it available globally for backward compatibility
 window.SlingCMS = window.SlingCMS || {};
 window.SlingCMS.sanitizeHTML = sanitizeHTML;
 window.SlingCMS.safeSetInnerHTML = safeSetInnerHTML;
+window.SlingCMS.trustedSetInnerHTML = trustedSetInnerHTML;
