@@ -22,10 +22,14 @@ import '../scss/cms.scss';
 import 'bulma/css/bulma.min.css';
 import 'jam-icons/css/jam.min.css';
 import rava from 'rava';
+import autoComplete from 'js-autocomplete';
 import './tiptap-bundle.js';
 
 // Make rava globally available
 window.rava = rava;
+
+// Make autoComplete globally available
+window.autoComplete = autoComplete;
 
 // Import CMS modules
 import './cms-module.js';

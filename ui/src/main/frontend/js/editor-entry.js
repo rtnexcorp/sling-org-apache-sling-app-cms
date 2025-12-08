@@ -21,9 +21,17 @@ import '../scss/editor.scss';
 // Import dependencies
 import 'bulma/css/bulma.min.css';
 import 'jam-icons/css/jam.min.css';
+import rava from 'rava';
+import autoComplete from 'js-autocomplete';
+import './tiptap-bundle.js';
 
-// Import editor module
+// Make dependencies globally available
+window.rava = rava;
+window.autoComplete = autoComplete;
+
+// Import editor modules
 import './editor.js';
+import './cms.tiptap.js';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {

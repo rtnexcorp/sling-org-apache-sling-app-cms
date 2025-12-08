@@ -58,9 +58,24 @@ export default defineConfig({
         starter: resolve(__dirname, 'src/main/frontend/js/starter-entry.js'),
       },
       output: {
+        // Output format: ES modules for modern browsers (requires type="module" in script tags)
+        format: 'es',
+        
         // JS bundles
         entryFileNames: 'js/[name].bundle.min.js',
         chunkFileNames: 'js/[name]-[hash].min.js',
+        
+        // Manual chunks for code splitting
+        manualChunks: (id) => {
+          // TipTap and its extensions in separate chunk
+          if (id.includes('@tiptap')) {
+            return 'cms.tiptap';
+          }
+          // Bulma CSS framework in separate chunk
+          if (id.includes('bulma')) {
+            return 'bulma';
+          }
+        },
         
         // CSS, fonts, images
         assetFileNames: (assetInfo) => {

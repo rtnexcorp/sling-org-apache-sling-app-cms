@@ -18,7 +18,7 @@
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
 <c:if test="${cmsEditEnabled == 'true'}">
-    <script src="/static/sling-cms/js/editor.bundle.min.js"></script>
+    <script type="module" src="/static/sling-cms/js/editor.bundle.min.js"></script>
     <div class="sling-cms-editor sling-cms-editor-final">
         
     </div>

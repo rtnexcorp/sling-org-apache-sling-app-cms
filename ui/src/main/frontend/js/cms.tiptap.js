@@ -172,13 +172,21 @@
    * Initialize TipTap editor
    */
   function initTiptapEditor(rteContainer) {
+    console.log('[TipTap] Initializing editor for container:', rteContainer);
     const textarea = rteContainer.querySelector('.rte-editor');
     const toolbar = rteContainer.querySelector('.rte-toolbar');
     
-    if (!textarea || !window.TiptapEditor) {
-      console.warn('TipTap editor dependencies not loaded');
+    if (!textarea) {
+      console.error('[TipTap] No textarea found with class .rte-editor');
       return null;
     }
+    
+    if (!window.TiptapEditor) {
+      console.error('[TipTap] window.TiptapEditor not found - bundle not loaded');
+      return null;
+    }
+    
+    console.log('[TipTap] Found textarea and TiptapEditor, creating editor...');
 
     // Create editor element
     const editorElement = document.createElement('div');
@@ -235,13 +243,18 @@
    * Supports both data-tiptap-* and data-wysihtml-* attributes for backward compatibility
    */
   function setupToolbarHandlers(rteContainer, editor) {
-    rteContainer.querySelectorAll('[data-tiptap-command], [data-wysihtml-command]').forEach(btn => {
+    const buttons = rteContainer.querySelectorAll('[data-tiptap-command], [data-wysihtml-command]');
+    console.log('[TipTap] Setting up', buttons.length, 'toolbar buttons');
+    
+    buttons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         
         const command = btn.getAttribute('data-tiptap-command') || btn.getAttribute('data-wysihtml-command');
         const value = btn.getAttribute('data-tiptap-command-value') || btn.getAttribute('data-wysihtml-command-value');
+        
+        console.log('[TipTap] Button clicked:', command, value);
         
         // Handle special dialog commands
         if (command === 'createLink') {
@@ -404,14 +417,32 @@
   }
 
   // Bind to .rte elements using rava
+  console.log('[TipTap] Binding to .rte elements with rava');
+  
+  // Check if rava is available
+  if (typeof rava === 'undefined') {
+    console.error('[TipTap] rava is not defined! Cannot bind RTE elements.');
+    return;
+  }
+  
   rava.bind('.rte', {
     callbacks: {
       created() {
+        console.log('[TipTap] Rava callback: created');
         initTiptapEditor(this);
       },
       removed() {
+        console.log('[TipTap] Rava callback: removed');
         destroyEditor(this);
       }
+    }
+  });
+  
+  // Also initialize any .rte elements that already exist in the DOM
+  document.querySelectorAll('.rte').forEach(rteContainer => {
+    if (!editorInstances.has(rteContainer)) {
+      console.log('[TipTap] Initializing existing .rte element');
+      initTiptapEditor(rteContainer);
     }
   });
 
