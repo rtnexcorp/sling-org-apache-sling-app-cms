@@ -11,7 +11,7 @@
             "start-order":"5"
         },
         {
-            "id":"commons-codec:commons-codec:1.16.0",
+            "id":"commons-codec:commons-codec:1.17.1",
             "start-order":"5"
         },
         {
@@ -143,7 +143,7 @@
             "start-order":"5"
         },
         {
-            "id":"commons-io:commons-io:2.15.0",
+            "id":"commons-io:commons-io:2.18.0",
             "start-order":"5"
         },
         {
@@ -163,7 +163,7 @@
             "start-order":"5"
         },
         {
-            "id":"org.apache.felix:org.apache.felix.http.jetty:5.1.2",
+            "id":"org.apache.felix:org.apache.felix.http.jetty:5.1.26",
             "start-order":"5"
         },
         {
