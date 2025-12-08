@@ -18,6 +18,8 @@
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
 <link rel="stylesheet"
+    href="/static/sling-cms/css/jam.min.css" />
+<link rel="stylesheet"
     href="/static/sling-cms/css/editor.min.css" />
 <sling:call script="/libs/sling-cms/components/editor/scripts/init.jsp" />
 <div class="sling-cms-editor">
