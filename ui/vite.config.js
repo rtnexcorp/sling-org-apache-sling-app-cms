@@ -18,7 +18,7 @@
  */
 
 import { defineConfig } from 'vite';
-import sass from 'sass';
+import * as sass from 'sass-embedded';
 import { resolve } from 'path';
 import { readdirSync, readFileSync, readdirSync as readDir, unlinkSync, statSync } from 'fs';
 
@@ -117,8 +117,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        implementation: sass,
-        quietDeps: true,
+        api: 'modern-compiler',
+        silenceDeprecations: ['legacy-js-api'],
       },
     },
   },

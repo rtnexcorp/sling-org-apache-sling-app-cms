@@ -87,8 +87,8 @@
     <tika-version>1.28.5</tika-version>
 
     <!-- Node version -->
-    <node.version>v16.20.2</node.version>
-    <npm.version>8.19.4</npm.version>
+    <node.version>v20.18.1</node.version>
+    <npm.version>10.8.2</npm.version>
     
   </properties>
   <modules>
