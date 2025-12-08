@@ -245,6 +245,7 @@ rava.bind(".multifield", {
 
       // Add new item
       multifield.querySelector(".multifield__add").addEventListener("click", (event) => {
+        console.log("Multifield add button clicked");
         event.stopPropagation();
         event.preventDefault();
         
@@ -280,6 +281,7 @@ rava.bind(".multifield__item", {
   events: {
     ":scope .multifield__remove": {
       click(event) {
+        console.log("Multifield remove button clicked");
         event.stopPropagation();
         event.preventDefault();
         const item = this;
@@ -294,6 +296,7 @@ rava.bind(".multifield__item", {
     },
     ":scope .multifield__move-up": {
       click(event) {
+        console.log("Multifield move-up button clicked");
         event.stopPropagation();
         event.preventDefault();
         const item = this;
@@ -310,6 +313,7 @@ rava.bind(".multifield__item", {
     },
     ":scope .multifield__move-down": {
       click(event) {
+        console.log("Multifield move-down button clicked");
         event.stopPropagation();
         event.preventDefault();
         const item = this;

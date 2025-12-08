@@ -14,34 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-Light.woff2') format('woff2');
-    font-weight: 300;
-    font-style: normal;
-    font-display: fallback;
-}
 
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: fallback;
-}
+// Import SCSS
+import '../scss/starter.scss';
 
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-SemiBold.woff2') format('woff2');
-    font-weight: 600;
-    font-style: normal;
-    font-display: fallback;
-}
+// Import dependencies
+import 'bulma/css/bulma.min.css';
+import 'jam-icons/css/jam.min.css';
 
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: fallback;
-}
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('CMS Starter initialized with Vite');
+});

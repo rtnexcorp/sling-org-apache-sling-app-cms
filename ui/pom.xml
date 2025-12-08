@@ -52,6 +52,8 @@ License. -->
         <configuration>
           <excludes>
             <exclude>**/*.webmanifest</exclude>
+            <!-- Generated/compiled frontend files from Vite build -->
+            <exclude>**/jcr_root/static/sling-cms/**</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -63,6 +65,8 @@ License. -->
           </execution>
         </executions>
       </plugin>
+      <!-- Maven resource copy disabled - Vite handles frontend source directly -->
+      <!-- 
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
@@ -77,43 +81,45 @@ License. -->
               <resources>
                 <resource>
                   <directory>src/main/frontend</directory>
+                  <filtering>false</filtering>
                 </resource>
               </resources>
             </configuration>
           </execution>
         </executions>
       </plugin>
+      -->
       <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.14.2</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
         <executions>
           <execution>
-            <id>install node and npm</id>
+            <id>npm ci</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>install-node-and-npm</goal>
+              <goal>exec</goal>
             </goals>
             <configuration>
-              <nodeVersion>${node.version}</nodeVersion>
-              <npmVersion>${npm.version}</npmVersion>
+              <executable>sh</executable>
+              <arguments>
+                <argument>-c</argument>
+                <argument>npm ci</argument>
+              </arguments>
             </configuration>
           </execution>
           <execution>
-            <id>npm install</id>
+            <id>npm run build:prod</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>npm</goal>
+              <goal>exec</goal>
             </goals>
             <configuration>
-              <arguments>ci</arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>gulp build</id>
-            <goals>
-              <goal>gulp</goal>
-            </goals>
-            <configuration>
-              <arguments>${frontend.mode}</arguments>
+              <executable>sh</executable>
+              <arguments>
+                <argument>-c</argument>
+                <argument>npm run build:prod</argument>
+              </arguments>
             </configuration>
           </execution>
         </executions>
@@ -135,14 +141,11 @@ License. -->
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <versionRange>[1.0.0,)</versionRange>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <versionRange>[3.0.0,)</versionRange>
                     <goals>
-                      <goal>install-node-and-npm</goal>
-                      <goal>npm</goal>
-                      <goal>npm rebuild node-sass</goal>
-                      <goal>gulp</goal>
+                      <goal>exec</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>

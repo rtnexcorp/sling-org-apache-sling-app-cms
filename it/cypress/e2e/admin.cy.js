@@ -164,7 +164,7 @@ describe("Reference Component Tests", () => {
     });
 
     it("Static", () => {
-      cy.visit("/cms/static/content.html/static/clientlibs/sling-cms");
+      cy.visit("/cms/static/content.html/static/sling-cms");
       cy.get('a[data-title="Add File"]').should("be.visible");
       cy.get('a[data-title="Add Folder"]').should("be.visible");
     });

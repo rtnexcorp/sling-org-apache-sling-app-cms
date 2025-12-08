@@ -26,7 +26,7 @@ const production = process.env.NODE_ENV === 'production';
 export default {
   input: 'src/main/frontend/js/tiptap-bundle.js',
   output: {
-    file: 'target/frontend/dist/jcr_root/static/clientlibs/sling-cms/js/tiptap.bundle.min.js',
+    file: 'src/main/resources/jcr_root/static/sling-cms/js/tiptap.bundle.min.js',
     format: 'iife',
     name: 'TiptapBundle',
     sourcemap: !production

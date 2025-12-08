@@ -1,19 +1,23 @@
 {
     "jcr:primaryType": "nt:unstructured",
     "appName": "Apache Sling CMS",
-    "appleTouchIcon": "/static/clientlibs/sling-cms/img/apple-touch-icon.png",
-    "appleMaskIcon": "/static/clientlibs/sling-cms/img/safari-pinned-tab.svg",
-    "favicon32": "/static/clientlibs/sling-cms/img/favicon-32x32.png",
-    "favicon16": "/static/clientlibs/sling-cms/img/favicon-16x16.png",
-    "favicon": "/static/clientlibs/sling-cms/img/favicon.ico",
+    "appleTouchIcon": "/static/sling-cms/img/apple-touch-icon.png",
+    "appleMaskIcon": "/static/sling-cms/img/safari-pinned-tab.svg",
+    "favicon32": "/static/sling-cms/img/favicon-32x32.png",
+    "favicon16": "/static/sling-cms/img/favicon-16x16.png",
+    "favicon": "/static/sling-cms/img/favicon.ico",
     "gridIconsBase": "/static/sling-cms/thumbnails",
     "helpLink": "https://github.com/apache/sling-org-apache-sling-app-cms",
-    "logo": "/static/clientlibs/sling-cms/img/sling-logo.svg",
+    "logo": "/static/sling-cms/img/sling-logo.svg",
     "logoLink": "https://sling.apache.org",
     "tileColor": "#662f8f",
-    "browserConfig": "/static/clientlibs/sling-cms/img/browserconfig.xml",
-    "webManifest": "/static/clientlibs/sling-cms/img/site.webmanifest",
-    "css": "/static/clientlibs/sling-cms/css/styles.min.css",
+    "browserConfig": "/static/sling-cms/img/browserconfig.xml",
+    "webManifest": "/static/sling-cms/img/site.webmanifest",
+    "css": "/static/sling-cms/css/style.min.css",
+    "js": [
+        "/static/sling-cms/js/cms.bundle.min.js",
+        "/static/sling-cms/js/editor.bundle.min.js"
+    ],
     "security:acl": [
         {
             "principal": "everyone",

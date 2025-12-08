@@ -14,34 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-Light.woff2') format('woff2');
-    font-weight: 300;
-    font-style: normal;
-    font-display: fallback;
-}
 
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: fallback;
-}
+// Import SCSS (will be bundled into CSS)
+import '../scss/cms.scss';
 
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-SemiBold.woff2') format('woff2');
-    font-weight: 600;
-    font-style: normal;
-    font-display: fallback;
-}
+// Import dependencies
+import 'bulma/css/bulma.min.css';
+import 'jam-icons/css/jam.min.css';
+import rava from 'rava';
+import './tiptap-bundle.js';
 
-@font-face {
-    font-family: 'Open Sans';
-    src: url('../fonts/OpenSans-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: fallback;
-}
+// Make rava globally available
+window.rava = rava;
+
+// Import CMS modules
+import './cms-module.js';
+import './cms.draggable.js';
+import './cms.fields.js';
+import './cms.form.js';
+import './cms.job.js';
+import './cms.labelfield.js';
+import './cms.modal.js';
+import './cms.nav.js';
+import './cms.page.js';
+import './cms.pathfield.js';
+import './cms.tiptap.js';
+import './cms.toggle.js';
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('CMS initialized with Vite');
+});

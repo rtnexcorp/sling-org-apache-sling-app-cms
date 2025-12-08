@@ -17,4 +17,19 @@
  * under the License.
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
-<script src="/static/clientlibs/sling-cms/js/scripts-all.min.js" async></script>
+<%-- Load all three JavaScript bundles --%>
+<c:forEach var="jsFile" items="${branding.js}">
+    <script src="${sling:encode(jsFile, 'HTML_ATTR')}" async></script>
+</c:forEach>
+<%-- Fallback for cms.bundle if js array is not defined --%>
+<c:if test="${empty branding.js}">
+    <script src="/static/sling-cms/js/cms.bundle.min.js" async></script>
+ <script
+      src="/static/sling-cms/js/editor.bundle.min.js"
+      async
+    ></script>
+    <script
+      src="/static/sling-cms/js/starter.bundle.min.js"
+      async
+    ></script>
+</c:if>

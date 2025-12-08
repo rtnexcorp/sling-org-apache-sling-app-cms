@@ -18,7 +18,7 @@
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
 <link rel="stylesheet"
-    href="/static/clientlibs/sling-cms-editor/css/editor.min.css" />
+    href="/static/sling-cms/css/editor.min.css" />
 <sling:call script="/libs/sling-cms/components/editor/scripts/init.jsp" />
 <div class="sling-cms-editor">
     <div class="level has-background-grey">
