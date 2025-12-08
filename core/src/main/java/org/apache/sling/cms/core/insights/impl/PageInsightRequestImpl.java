@@ -18,14 +18,14 @@
  */
 package org.apache.sling.cms.core.insights.impl;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -69,7 +69,7 @@ public class PageInsightRequestImpl implements PageInsightRequest {
     public Element getPageBodyElement() throws IOException {
         Document doc = getPageDocument();
         Elements main = doc.getElementsByTag("main");
-        if(!main.isEmpty()){
+        if (!main.isEmpty()) {
             return main.first();
         } else {
             return doc.body();
@@ -112,7 +112,7 @@ public class PageInsightRequestImpl implements PageInsightRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -120,5 +120,4 @@ public class PageInsightRequestImpl implements PageInsightRequest {
         return "PageInsightRequestImpl [markupCache=" + markupCache + ", page=" + page + ", requestProcessor="
                 + requestProcessor + ", resourceResolver=" + resourceResolver + "]";
     }
-
 }

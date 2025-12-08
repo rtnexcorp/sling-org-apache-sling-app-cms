@@ -28,9 +28,10 @@ public interface NameFilter {
 
     /**
      * Filter the provided name.
-     * 
+     *
      * @param name a String name
      * @return the Sling-compatible name
      */
-    @NotNull String filter(@NotNull String name);
+    @NotNull
+    String filter(@NotNull String name);
 }

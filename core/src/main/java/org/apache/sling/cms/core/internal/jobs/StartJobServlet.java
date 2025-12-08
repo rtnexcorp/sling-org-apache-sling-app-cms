@@ -1,26 +1,27 @@
-
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.jobs;
 
-import java.io.IOException;
-
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
+
+import java.io.IOException;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -33,8 +34,9 @@ import org.apache.sling.event.jobs.Job;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-@Component(service = Servlet.class, property = { "sling.servlet.paths=/bin/cms/startjob",
-        "sling.servlet.methods=" + HttpConstants.METHOD_POST })
+@Component(
+        service = Servlet.class,
+        property = {"sling.servlet.paths=/bin/cms/startjob", "sling.servlet.methods=" + HttpConstants.METHOD_POST})
 public class StartJobServlet extends SlingAllMethodsServlet {
 
     private static final long serialVersionUID = -8860513787587588985L;
@@ -51,9 +53,9 @@ public class StartJobServlet extends SlingAllMethodsServlet {
         CMSJobManager jobMgr = request.adaptTo(CMSJobManager.class);
         if (jobMgr != null) {
             Job job = jobMgr.startJob();
-            if(job != null) {
+            if (job != null) {
                 message = dictionary.get("Job Started");
-            }else {
+            } else {
                 message = dictionary.get("Failed to start job");
                 response.sendError(500, message);
             }

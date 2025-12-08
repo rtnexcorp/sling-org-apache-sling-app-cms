@@ -18,11 +18,11 @@
  */
 package org.apache.sling.cms.core.insights.impl;
 
-import java.util.Enumeration;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
+
+import java.util.Enumeration;
 
 /**
  * A fake session to use for making server-side requests.
@@ -114,5 +114,4 @@ public class FakeHttpSession implements HttpSession {
     public boolean isNew() {
         throw new UnsupportedOperationException();
     }
-
 }

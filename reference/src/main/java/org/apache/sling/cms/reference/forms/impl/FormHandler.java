@@ -1,28 +1,30 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
@@ -47,8 +49,14 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(service = Servlet.class, property = { "sling.servlet.resourceTypes=reference/components/forms/form",
-        "sling.servlet.methods=POST", "sling.servlet.extensions=html", "sling.servlet.selectors=allowpost" })
+@Component(
+        service = Servlet.class,
+        property = {
+            "sling.servlet.resourceTypes=reference/components/forms/form",
+            "sling.servlet.methods=POST",
+            "sling.servlet.extensions=html",
+            "sling.servlet.selectors=allowpost"
+        })
 public class FormHandler extends SlingAllMethodsServlet {
 
     private static final Logger log = LoggerFactory.getLogger(FormHandler.class);
@@ -68,7 +76,8 @@ public class FormHandler extends SlingAllMethodsServlet {
         ValueMap properties = request.getResource().getValueMap();
 
         String pagePath = Optional.ofNullable(request.getResource().adaptTo(PageManager.class))
-                .map(PageManager::getPage).map(Page::getPath)
+                .map(PageManager::getPage)
+                .map(Page::getPath)
                 .orElse(StringUtils.substringBefore(request.getResource().getPath(), "/" + JcrConstants.JCR_CONTENT));
         String successPage = null;
         String errorPage = pagePath;
@@ -126,12 +135,15 @@ public class FormHandler extends SlingAllMethodsServlet {
         if (actions == null) {
             throw new FormException("No actions provided to handle this form submission");
         }
-        List<Resource> actionResources = ResourceTree.stream(actions).map(ResourceTree::getResource)
-                .collect(Collectors.toList());
+        List<Resource> actionResources =
+                ResourceTree.stream(actions).map(ResourceTree::getResource).collect(Collectors.toList());
 
         for (Resource actionResource : actionResources) {
             log.debug("Finding action handler for: {}", actionResource);
-            FormAction action = formActions.stream().filter(fa -> fa.handles(actionResource)).findFirst().orElse(null);
+            FormAction action = formActions.stream()
+                    .filter(fa -> fa.handles(actionResource))
+                    .findFirst()
+                    .orElse(null);
             if (action != null) {
                 FormActionResult result = action.handleForm(actionResource, formRequest);
                 if (!result.isSucceeded()) {
@@ -170,5 +182,4 @@ public class FormHandler extends SlingAllMethodsServlet {
             throw new FormException("Unable to adapt to a form request");
         }
     }
-
 }

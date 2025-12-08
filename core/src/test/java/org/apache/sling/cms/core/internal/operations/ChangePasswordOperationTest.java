@@ -1,29 +1,28 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.operations;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.Collections;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
+
+import java.util.Collections;
 
 import org.apache.jackrabbit.api.security.user.User;
 import org.apache.sling.cms.core.helpers.SlingCMSTestHelper;
@@ -36,6 +35,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class ChangePasswordOperationTest {
 
@@ -59,29 +60,25 @@ public class ChangePasswordOperationTest {
         PostResponse response = new JSONResponse();
 
         context.currentResource(USER_PATH);
-        context.request().setParameterMap(
-                Collections.singletonMap(CreateUserOperation.PN_PASSWORD, "test1"));
+        context.request().setParameterMap(Collections.singletonMap(CreateUserOperation.PN_PASSWORD, "test1"));
 
-        operation.run(context.request(), response, new SlingPostProcessor[] { Mockito.mock(SlingPostProcessor.class) });
+        operation.run(context.request(), response, new SlingPostProcessor[] {Mockito.mock(SlingPostProcessor.class)});
 
         assertNull(response.getError());
 
         Mockito.verify(user).changePassword("test1");
-
     }
-    
+
     @Test
     public void testGroup() throws RepositoryException {
         ChangePasswordOperation operation = new ChangePasswordOperation();
         PostResponse response = new JSONResponse();
 
         context.currentResource("/home/groups/sling-cms/authors");
-        context.request().setParameterMap(
-                Collections.singletonMap(CreateUserOperation.PN_PASSWORD, "test1"));
+        context.request().setParameterMap(Collections.singletonMap(CreateUserOperation.PN_PASSWORD, "test1"));
 
         operation.run(context.request(), response, null);
 
         assertNotNull(response.getError());
     }
-
 }

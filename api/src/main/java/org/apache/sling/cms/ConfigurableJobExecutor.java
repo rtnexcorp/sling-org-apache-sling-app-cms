@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms;
 
@@ -41,7 +43,7 @@ public abstract class ConfigurableJobExecutor implements JobExecutor {
 
     /**
      * A method for Configurable Job Executors to extend.
-     * 
+     *
      * @param job      the job configuration
      * @param context  the job context
      * @param resolver an impersonated resource resolver for the user
@@ -51,7 +53,7 @@ public abstract class ConfigurableJobExecutor implements JobExecutor {
 
     /**
      * Get the path to the resource to configure a job invocation.
-     * 
+     *
      * @return the path to the resource to configure a resource invocation
      */
     public abstract String getConfigurationPath();
@@ -59,14 +61,14 @@ public abstract class ConfigurableJobExecutor implements JobExecutor {
     /**
      * A method to get the resource resolver factory, should be injected as a
      * service.
-     * 
+     *
      * @return the resource resolver factory
      */
     public abstract ResourceResolverFactory getResolverFactory();
 
     /**
      * Get the i18n key for this job.
-     * 
+     *
      * @return the job title i18n key
      */
     public abstract String getTitleKey();
@@ -74,7 +76,7 @@ public abstract class ConfigurableJobExecutor implements JobExecutor {
     /**
      * Gets the topic of the job. This will be used as the Sling Job Topic for
      * invoking the job.
-     * 
+     *
      * @return the Sling Job Topic
      */
     public abstract String getTopic();

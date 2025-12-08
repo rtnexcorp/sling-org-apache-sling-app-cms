@@ -31,7 +31,7 @@ public interface PageInsightRequest extends InsightRequest {
 
     /**
      * Gets the page backing this request
-     * 
+     *
      * @return the page
      */
     public Page getPage();
@@ -39,7 +39,7 @@ public interface PageInsightRequest extends InsightRequest {
     /**
      * Gets a JSoup Element of the body of the page, not the full page (e.g. no
      * header).
-     * 
+     *
      * @return the HTML of the body
      * @throws IOException an exception occurs retrieving the content
      */
@@ -47,7 +47,7 @@ public interface PageInsightRequest extends InsightRequest {
 
     /**
      * Gets the HTML of the body of the page, not the full page (e.g. no header).
-     * 
+     *
      * @return the HTML of the body
      * @throws IOException an exception occurs retrieving the content
      */
@@ -55,7 +55,7 @@ public interface PageInsightRequest extends InsightRequest {
 
     /**
      * Gets the page HTML as a JSoup Document.
-     * 
+     *
      * @return the page HTML
      * @throws IOException an exception occurs retrieving the content
      */
@@ -64,7 +64,7 @@ public interface PageInsightRequest extends InsightRequest {
     /**
      * Gets the page HTML. Loads the HTML lazily so the initial request may take a
      * bit but others will be quick.
-     * 
+     *
      * @return a string representation of the HTML for a page
      * @throws IOException an exception occurs retrieving the content
      */

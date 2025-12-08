@@ -16,11 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-/**
- * Package with all of the core models used to support the Sling reference CMS
- */
 package org.apache.sling.cms.core.models;
+
+import javax.jcr.query.Query;
 
 import java.util.Calendar;
 import java.util.Iterator;
@@ -31,8 +29,6 @@ import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import javax.jcr.query.Query;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -63,29 +59,31 @@ public class StartContent {
         return getTenResults(
                 "SELECT * FROM [nt:hierarchyNode] AS s WHERE ISDESCENDANTNODE([/content]) AND CONTAINS(s.*,'"
                         + escape(term).replaceAll("[\\Q+-&|!(){}[]^\"~*?:\\/\\E]", "") + "')");
-
     }
 
     public List<Resource> getRecentDrafts() {
-        return Stream.concat(getTenResults("SELECT * FROM [sling:Page] WHERE [jcr:content/jcr:lastModifiedBy] = '"
-                + escape(resolver.getUserID())
-                + "' AND ISDESCENDANTNODE([/content]) AND [jcr:content/sling:published] = false ORDER BY [jcr:content/jcr:lastModified] DESC")
-                .stream(),
-                getTenResults("SELECT * FROM [sling:Page] WHERE [jcr:content/jcr:lastModifiedBy] = '"
-                        + escape(resolver.getUserID())
-                        + "' AND ISDESCENDANTNODE([/content]) AND [jcr:content/sling:published] IS NULL ORDER BY [jcr:content/jcr:lastModified] DESC")
-                        .stream())
-                .sorted((r1, r2) -> r2.getValueMap().get("jcr:content/jcr:lastModified", Calendar.class)
-                        .compareTo(r1.getValueMap().get("jcr:content/jcr:lastModified", Calendar.class))
-
-                ).limit(10).collect(Collectors.toList());
+        return Stream.concat(
+                        getTenResults(
+                                "SELECT * FROM [sling:Page] WHERE [jcr:content/jcr:lastModifiedBy] = '"
+                                        + escape(resolver.getUserID())
+                                        + "' AND ISDESCENDANTNODE([/content]) AND [jcr:content/sling:published] = false ORDER BY [jcr:content/jcr:lastModified] DESC")
+                                .stream(),
+                        getTenResults(
+                                "SELECT * FROM [sling:Page] WHERE [jcr:content/jcr:lastModifiedBy] = '"
+                                        + escape(resolver.getUserID())
+                                        + "' AND ISDESCENDANTNODE([/content]) AND [jcr:content/sling:published] IS NULL ORDER BY [jcr:content/jcr:lastModified] DESC")
+                                .stream())
+                .sorted((r1, r2) -> r2.getValueMap()
+                        .get("jcr:content/jcr:lastModified", Calendar.class)
+                        .compareTo(r1.getValueMap().get("jcr:content/jcr:lastModified", Calendar.class)))
+                .limit(10)
+                .collect(Collectors.toList());
     }
 
     public List<Resource> getRecentContent() {
-        return getTenResults(
-                "SELECT * FROM [nt:hierarchyNode] WHERE [jcr:content/jcr:lastModifiedBy] = '"
-                        + escape(resolver.getUserID())
-                        + "' AND ISDESCENDANTNODE([/content]) ORDER BY [jcr:content/jcr:lastModified] DESC");
+        return getTenResults("SELECT * FROM [nt:hierarchyNode] WHERE [jcr:content/jcr:lastModifiedBy] = '"
+                + escape(resolver.getUserID())
+                + "' AND ISDESCENDANTNODE([/content]) ORDER BY [jcr:content/jcr:lastModified] DESC");
     }
 
     private String escape(String str) {
@@ -94,10 +92,9 @@ public class StartContent {
 
     private List<Resource> getTenResults(String query) {
         log.debug("Executing query: {}", query);
-        Iterator<Resource> it = resolver.findResources(query,
-                Query.JCR_SQL2);
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(it, Spliterator.NONNULL), false).limit(10)
+        Iterator<Resource> it = resolver.findResources(query, Query.JCR_SQL2);
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(it, Spliterator.NONNULL), false)
+                .limit(10)
                 .collect(Collectors.toList());
     }
-
 }

@@ -1,32 +1,34 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.servlets;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -43,8 +45,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Servlet which includes the content of the page when the page is accessed.
  */
-@Component(service = { Servlet.class }, property = { "sling.servlet.paths=/bin/cms/paths",
-        "sling.servlet.methods=" + HttpConstants.METHOD_GET })
+@Component(
+        service = {Servlet.class},
+        property = {"sling.servlet.paths=/bin/cms/paths", "sling.servlet.methods=" + HttpConstants.METHOD_GET})
 @Designate(ocd = PathSuggestionServletConfig.class)
 public class PathSuggestionServlet extends SlingSafeMethodsServlet {
 
@@ -76,7 +79,7 @@ public class PathSuggestionServlet extends SlingSafeMethodsServlet {
         if (log.isDebugEnabled()) {
             log.debug("Finding valid paths under {}", CommonUtils.escapeLogMessage(path));
         }
-        
+
         String type = request.getParameter("type");
         if (!typeFilters.containsKey(type)) {
             type = "all";

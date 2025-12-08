@@ -25,11 +25,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -63,9 +62,14 @@ public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
     public static final String I18N_KEY_HTMLVALIDATOR_WARN = "There were {0} validation warnings";
     public static final String I18N_KEY_HTMLVALIDATOR_SUCCESS = "HTML Validation successful!";
 
-    @ObjectClassDefinition(name = "%htmlvalidator.config.name", description = "%htmlvalidator.config.description", localization = "OSGI-INF/l10n/bundle")
+    @ObjectClassDefinition(
+            name = "%htmlvalidator.config.name",
+            description = "%htmlvalidator.config.description",
+            localization = "OSGI-INF/l10n/bundle")
     public @interface Config {
-        @AttributeDefinition(name = "%htmlvalidator.param.enabled.name", description = "%htmlvalidator.param.enabled.description")
+        @AttributeDefinition(
+                name = "%htmlvalidator.param.enabled.name",
+                description = "%htmlvalidator.param.enabled.description")
         boolean enabled() default true;
     }
 
@@ -94,7 +98,8 @@ public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
         HttpEntity htmlEntity = new ByteArrayEntity(html.getBytes(StandardCharsets.UTF_8));
         httpPost.setEntity(htmlEntity);
 
-        I18NDictionary dictionary = i18nProvider.getDictionary(request.getResource().getResourceResolver());
+        I18NDictionary dictionary =
+                i18nProvider.getDictionary(request.getResource().getResourceResolver());
 
         CloseableHttpResponse response = null;
         JsonReader reader = null;
@@ -117,7 +122,8 @@ public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
                         insight.addMessage(Message.danger(messageStr));
                         msgSet.add(messageStr);
                     }
-                } else if ("info".equals(message.getString("type")) && message.containsKey("subtype")
+                } else if ("info".equals(message.getString("type"))
+                        && message.containsKey("subtype")
                         && "warning".equals(message.getString("subtype"))) {
                     warnings++;
                     String messageStr = message.getString("message");
@@ -137,24 +143,25 @@ public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
         return insight;
     }
 
-    private void updateInsight(Insight insight, PageInsightRequest pageRequest, I18NDictionary dictionary, int errors,
-            int warnings) throws UnsupportedEncodingException {
+    private void updateInsight(
+            Insight insight, PageInsightRequest pageRequest, I18NDictionary dictionary, int errors, int warnings)
+            throws UnsupportedEncodingException {
         double score;
         if (errors > 5) {
-            insight.setPrimaryMessage(Message
-                    .danger(dictionary.get(I18N_KEY_HTMLVALIDATOR_DANGER, new Object[] { errors, warnings })));
+            insight.setPrimaryMessage(
+                    Message.danger(dictionary.get(I18N_KEY_HTMLVALIDATOR_DANGER, new Object[] {errors, warnings})));
             score = 0.2;
         } else if (errors > 0) {
-            insight.setPrimaryMessage(Message
-                    .danger(dictionary.get(I18N_KEY_HTMLVALIDATOR_DANGER, new Object[] { errors, warnings })));
+            insight.setPrimaryMessage(
+                    Message.danger(dictionary.get(I18N_KEY_HTMLVALIDATOR_DANGER, new Object[] {errors, warnings})));
             score = 0.4;
         } else if (warnings > 5) {
             insight.setPrimaryMessage(
-                    Message.warn(dictionary.get(I18N_KEY_HTMLVALIDATOR_WARN, new Object[] { warnings })));
+                    Message.warn(dictionary.get(I18N_KEY_HTMLVALIDATOR_WARN, new Object[] {warnings})));
             score = 0.6;
         } else if (warnings > 0) {
             insight.setPrimaryMessage(
-                    Message.warn(dictionary.get(I18N_KEY_HTMLVALIDATOR_WARN, new Object[] { warnings })));
+                    Message.warn(dictionary.get(I18N_KEY_HTMLVALIDATOR_WARN, new Object[] {warnings})));
             score = 0.8;
         } else {
             insight.setPrimaryMessage(Message.success(dictionary.get(I18N_KEY_HTMLVALIDATOR_SUCCESS)));
@@ -187,5 +194,4 @@ public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
         }
         return true;
     }
-
 }

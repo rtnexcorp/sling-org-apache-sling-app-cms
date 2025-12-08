@@ -1,27 +1,29 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.models;
+
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -69,7 +71,6 @@ public class ContentBreadcrumb {
         } else {
             rootTitle = null;
         }
-
     }
 
     public String getCurrentItem() {
@@ -82,8 +83,12 @@ public class ContentBreadcrumb {
 
     private String getLink(Resource resource) {
         log.debug("Getting link for {} from {}", resource, associationProvider.getAssociations());
-        return associationProvider.getAssociations().stream().filter(a -> a.matches(resource)).findFirst()
-                .map(ResourceEditorAssociation::getEditor).orElse("/bin/browser.html") + resource.getPath();
+        return associationProvider.getAssociations().stream()
+                        .filter(a -> a.matches(resource))
+                        .findFirst()
+                        .map(ResourceEditorAssociation::getEditor)
+                        .orElse("/bin/browser.html")
+                + resource.getPath();
     }
 
     public List<Pair<String, String>> getParents() {
@@ -107,7 +112,8 @@ public class ContentBreadcrumb {
             ps.clear();
         }
 
-        List<Pair<String, String>> parents = ps.stream().map(p -> new ImmutablePair<>(getLink(p), getTitle(p)))
+        List<Pair<String, String>> parents = ps.stream()
+                .map(p -> new ImmutablePair<>(getLink(p), getTitle(p)))
                 .collect(Collectors.toList());
         if (!parents.isEmpty() && StringUtils.isNotBlank(rootTitle)) {
             parents.set(0, new ImmutablePair<>(parents.get(0).getLeft(), rootTitle));
@@ -126,5 +132,4 @@ public class ContentBreadcrumb {
         }
         return resource.getName();
     }
-
 }

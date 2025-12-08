@@ -1,24 +1,27 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.helpers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import javax.jcr.AccessDeniedException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.UnsupportedRepositoryOperationException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,11 +32,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import javax.jcr.AccessDeniedException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.jackrabbit.api.JackrabbitSession;
 import org.apache.jackrabbit.api.security.user.Authorizable;
@@ -48,6 +46,10 @@ import org.apache.sling.cms.i18n.I18NDictionary;
 import org.apache.sling.cms.i18n.I18NProvider;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SlingCMSTestHelper {
 
@@ -80,38 +82,38 @@ public class SlingCMSTestHelper {
 
         AUTH_REGISTRY.clear();
 
-        ResourceTree.stream(context.resourceResolver().getResource("/home/users"), "rep:User").forEach(u -> {
-
-            User user = Mockito.mock(User.class);
-            try {
-                Mockito.when(user.getID()).thenReturn(u.getResource().getValueMap().get("rep:principalName", ""));
-                Mockito.when(user.getPath()).thenReturn(u.getResource().getPath());
-                Mockito.when(user.declaredMemberOf()).thenAnswer((ans) -> {
-                    final List<Group> groups = new ArrayList<>();
-                    AUTH_REGISTRY.values().forEach(a -> {
-                        if (a instanceof Group) {
-                            try {
-                                ((Group) a).getDeclaredMembers().forEachRemaining(m -> {
-                                    if (m == user) {
-                                        groups.add((Group) a);
+        ResourceTree.stream(context.resourceResolver().getResource("/home/users"), "rep:User")
+                .forEach(u -> {
+                    User user = Mockito.mock(User.class);
+                    try {
+                        Mockito.when(user.getID())
+                                .thenReturn(u.getResource().getValueMap().get("rep:principalName", ""));
+                        Mockito.when(user.getPath()).thenReturn(u.getResource().getPath());
+                        Mockito.when(user.declaredMemberOf()).thenAnswer((ans) -> {
+                            final List<Group> groups = new ArrayList<>();
+                            AUTH_REGISTRY.values().forEach(a -> {
+                                if (a instanceof Group) {
+                                    try {
+                                        ((Group) a).getDeclaredMembers().forEachRemaining(m -> {
+                                            if (m == user) {
+                                                groups.add((Group) a);
+                                            }
+                                        });
+                                    } catch (RepositoryException e) {
+                                        throw new RuntimeException(e);
                                     }
-                                });
-                            } catch (RepositoryException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    });
-                    return groups.iterator();
+                                }
+                            });
+                            return groups.iterator();
+                        });
+                    } catch (RepositoryException e) {
+                        throw new RuntimeException(e);
+                    }
+                    AUTH_REGISTRY.put(u.getResource().getPath(), user);
                 });
-            } catch (RepositoryException e) {
-                throw new RuntimeException(e);
-            }
-            AUTH_REGISTRY.put(u.getResource().getPath(), user);
-        });
 
         ResourceTree.stream(context.resourceResolver().getResource("/home/groups/sling-cms"), "rep:Group")
                 .forEach(g -> {
-
                     Group group = Mockito.mock(Group.class);
                     try {
                         Mockito.when(group.getID())

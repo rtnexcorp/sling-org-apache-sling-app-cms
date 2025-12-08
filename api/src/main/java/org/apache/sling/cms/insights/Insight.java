@@ -162,7 +162,7 @@ public class Insight {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -171,5 +171,4 @@ public class Insight {
                 + ", score=" + score + ", scored=" + scored + ", scoreDetails=" + scoreDetails + ", skip=" + skip
                 + ", moreDetailsLink=" + moreDetailsLink + ", succeeded=" + succeeded + "]";
     }
-
 }

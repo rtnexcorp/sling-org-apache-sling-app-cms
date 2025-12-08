@@ -1,27 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.distribution.impl;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -30,6 +25,15 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
@@ -53,17 +57,11 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 /**
  * Implementation of ContentDistributionService that uses HTTP to push content
  * to publisher instances.
  */
-@Component(
-    service = ContentDistributionService.class,
-    immediate = true
-)
+@Component(service = ContentDistributionService.class, immediate = true)
 @Designate(ocd = ContentDistributionConfig.class)
 public class ContentDistributionServiceImpl implements ContentDistributionService {
 
@@ -82,22 +80,20 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
     @Modified
     protected void activate(ContentDistributionConfig config) {
         this.config = config;
-        
+
         RequestConfig requestConfig = RequestConfig.custom()
-            .setConnectTimeout(config.connectionTimeout())
-            .setSocketTimeout(config.socketTimeout())
-            .build();
-        
-        this.httpClient = HttpClients.custom()
-            .setDefaultRequestConfig(requestConfig)
-            .build();
-        
+                .setConnectTimeout(config.connectionTimeout())
+                .setSocketTimeout(config.socketTimeout())
+                .build();
+
+        this.httpClient =
+                HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
+
         if (config.asyncDistribution()) {
             this.executorService = Executors.newFixedThreadPool(3);
         }
-        
-        LOG.info("Content Distribution Service activated. Endpoints: {}", 
-            Arrays.toString(config.publisherEndpoints()));
+
+        LOG.info("Content Distribution Service activated. Endpoints: {}", Arrays.toString(config.publisherEndpoints()));
     }
 
     @Deactivate
@@ -122,21 +118,19 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
     @Override
     public DistributionResult publish(String path, boolean deep) {
         if (!isAvailable()) {
-            return new DistributionResult(Status.NOT_AVAILABLE, 
-                "Distribution service not available or not configured", path);
+            return new DistributionResult(
+                    Status.NOT_AVAILABLE, "Distribution service not available or not configured", path);
         }
 
         if (!isPathAllowed(path)) {
-            return new DistributionResult(Status.FAILURE, 
-                "Path not in allowed roots: " + path, path);
+            return new DistributionResult(Status.FAILURE, "Path not in allowed roots: " + path, path);
         }
 
         LOG.info("Publishing content: {} (deep={})", path, deep);
 
         if (config.asyncDistribution()) {
             executorService.submit(() -> doPublish(path, deep));
-            return new DistributionResult(Status.SUCCESS, 
-                "Distribution queued for async processing", path);
+            return new DistributionResult(Status.SUCCESS, "Distribution queued for async processing", path);
         } else {
             return doPublish(path, deep);
         }
@@ -145,7 +139,7 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
     private DistributionResult doPublish(String path, boolean deep) {
         String[] endpoints = config.publisherEndpoints();
         DistributionResult result = new DistributionResult(Status.SUCCESS, "Published successfully", path);
-        
+
         int successCount = 0;
         int failureCount = 0;
 
@@ -167,22 +161,22 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
         }
 
         if (failureCount == 0) {
-            return new DistributionResult(Status.SUCCESS, 
-                "Published to " + successCount + " endpoint(s)", path);
+            return new DistributionResult(Status.SUCCESS, "Published to " + successCount + " endpoint(s)", path);
         } else if (successCount > 0) {
-            return new DistributionResult(Status.PARTIAL_SUCCESS, 
-                "Published to " + successCount + " of " + (successCount + failureCount) + " endpoints", path);
+            return new DistributionResult(
+                    Status.PARTIAL_SUCCESS,
+                    "Published to " + successCount + " of " + (successCount + failureCount) + " endpoints",
+                    path);
         } else {
-            return new DistributionResult(Status.FAILURE, 
-                "Failed to publish to all endpoints", path);
+            return new DistributionResult(Status.FAILURE, "Failed to publish to all endpoints", path);
         }
     }
 
     @Override
     public DistributionResult unpublish(String path) {
         if (!isAvailable()) {
-            return new DistributionResult(Status.NOT_AVAILABLE, 
-                "Distribution service not available or not configured", path);
+            return new DistributionResult(
+                    Status.NOT_AVAILABLE, "Distribution service not available or not configured", path);
         }
 
         LOG.info("Unpublishing content: {}", path);
@@ -204,8 +198,10 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
         if (successCount == endpoints.length) {
             return new DistributionResult(Status.SUCCESS, "Unpublished successfully", path);
         } else if (successCount > 0) {
-            return new DistributionResult(Status.PARTIAL_SUCCESS, 
-                "Unpublished from " + successCount + " of " + endpoints.length + " endpoints", path);
+            return new DistributionResult(
+                    Status.PARTIAL_SUCCESS,
+                    "Unpublished from " + successCount + " of " + endpoints.length + " endpoints",
+                    path);
         } else {
             return new DistributionResult(Status.FAILURE, "Failed to unpublish", path);
         }
@@ -219,13 +215,12 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
     @Override
     public DistributionResult distribute(ResourceResolver resolver, String path, boolean deep) {
         if (!isAvailable()) {
-            return new DistributionResult(Status.NOT_AVAILABLE, 
-                "Distribution service not available or not configured", path);
+            return new DistributionResult(
+                    Status.NOT_AVAILABLE, "Distribution service not available or not configured", path);
         }
 
         if (!isPathAllowed(path)) {
-            return new DistributionResult(Status.FAILURE, 
-                "Path not in allowed roots: " + path, path);
+            return new DistributionResult(Status.FAILURE, "Path not in allowed roots: " + path, path);
         }
 
         LOG.info("Distributing content with resolver: {} (deep={})", path, deep);
@@ -236,7 +231,7 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
     private DistributionResult doDistribute(ResourceResolver resolver, String path, boolean deep) {
         String[] endpoints = config.publisherEndpoints();
         DistributionResult result = new DistributionResult(Status.SUCCESS, "Distributed successfully", path);
-        
+
         int successCount = 0;
         int failureCount = 0;
 
@@ -258,22 +253,22 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
         }
 
         if (failureCount == 0) {
-            return new DistributionResult(Status.SUCCESS, 
-                "Distributed to " + successCount + " endpoint(s)", path);
+            return new DistributionResult(Status.SUCCESS, "Distributed to " + successCount + " endpoint(s)", path);
         } else if (successCount > 0) {
-            return new DistributionResult(Status.PARTIAL_SUCCESS, 
-                "Distributed to " + successCount + " of " + (successCount + failureCount) + " endpoints", path);
+            return new DistributionResult(
+                    Status.PARTIAL_SUCCESS,
+                    "Distributed to " + successCount + " of " + (successCount + failureCount) + " endpoints",
+                    path);
         } else {
-            return new DistributionResult(Status.FAILURE, 
-                "Failed to distribute to all endpoints", path);
+            return new DistributionResult(Status.FAILURE, "Failed to distribute to all endpoints", path);
         }
     }
 
     @Override
     public DistributionResult delete(ResourceResolver resolver, String path) {
         if (!isAvailable()) {
-            return new DistributionResult(Status.NOT_AVAILABLE, 
-                "Distribution service not available or not configured", path);
+            return new DistributionResult(
+                    Status.NOT_AVAILABLE, "Distribution service not available or not configured", path);
         }
 
         LOG.info("Deleting content from publishers: {}", path);
@@ -295,18 +290,21 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
         if (successCount == endpoints.length) {
             return new DistributionResult(Status.SUCCESS, "Deleted successfully", path);
         } else if (successCount > 0) {
-            return new DistributionResult(Status.PARTIAL_SUCCESS, 
-                "Deleted from " + successCount + " of " + endpoints.length + " endpoints", path);
+            return new DistributionResult(
+                    Status.PARTIAL_SUCCESS,
+                    "Deleted from " + successCount + " of " + endpoints.length + " endpoints",
+                    path);
         } else {
             return new DistributionResult(Status.FAILURE, "Failed to delete", path);
         }
     }
 
-    private boolean sendToPublisherWithResolver(String endpoint, ResourceResolver resolver, String path, boolean deep, String action) throws Exception {
+    private boolean sendToPublisherWithResolver(
+            String endpoint, ResourceResolver resolver, String path, boolean deep, String action) throws Exception {
         String url = endpoint + IMPORT_ENDPOINT;
-        
+
         HttpPost post = new HttpPost(url);
-        
+
         // Add basic authentication
         String auth = config.publisherUsername() + ":" + config.publisherPassword();
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
@@ -330,7 +328,7 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
 
         HttpResponse response = httpClient.execute(post);
         int statusCode = response.getStatusLine().getStatusCode();
-        
+
         String responseBody = "";
         if (response.getEntity() != null) {
             responseBody = EntityUtils.toString(response.getEntity());
@@ -356,9 +354,9 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
 
     private boolean sendToPublisher(String endpoint, String path, boolean deep, String action) throws Exception {
         String url = endpoint + IMPORT_ENDPOINT;
-        
+
         HttpPost post = new HttpPost(url);
-        
+
         // Add basic authentication
         String auth = config.publisherUsername() + ":" + config.publisherPassword();
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
@@ -382,7 +380,7 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
 
         HttpResponse response = httpClient.execute(post);
         int statusCode = response.getStatusLine().getStatusCode();
-        
+
         String responseBody = "";
         if (response.getEntity() != null) {
             responseBody = EntityUtils.toString(response.getEntity());
@@ -396,8 +394,8 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
     private String exportContentAsJson(String path, boolean deep) {
         try {
             ResourceResolver resolver = resolverFactory.getServiceResourceResolver(
-                java.util.Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, "distribution"));
-            
+                    java.util.Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, "distribution"));
+
             try {
                 Resource resource = resolver.getResource(path);
                 if (resource != null) {
@@ -416,7 +414,7 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
     private JsonObject resourceToJson(Resource resource, int depth) {
         JsonObject json = new JsonObject();
         json.addProperty("jcr:path", resource.getPath());
-        
+
         // Add properties
         Node node = resource.adaptTo(Node.class);
         if (node != null) {
@@ -425,7 +423,7 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
                 while (props.hasNext()) {
                     Property prop = props.nextProperty();
                     String name = prop.getName();
-                    
+
                     if (prop.isMultiple()) {
                         com.google.gson.JsonArray array = new com.google.gson.JsonArray();
                         for (Value val : prop.getValues()) {
@@ -468,10 +466,10 @@ public class ContentDistributionServiceImpl implements ContentDistributionServic
 
     @Override
     public boolean isAvailable() {
-        return config != null && 
-               config.enabled() && 
-               config.publisherEndpoints() != null && 
-               config.publisherEndpoints().length > 0;
+        return config != null
+                && config.enabled()
+                && config.publisherEndpoints() != null
+                && config.publisherEndpoints().length > 0;
     }
 
     @Override

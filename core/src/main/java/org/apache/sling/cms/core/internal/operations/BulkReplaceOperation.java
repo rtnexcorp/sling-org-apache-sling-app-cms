@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.operations;
 
@@ -45,8 +47,10 @@ import org.slf4j.LoggerFactory;
  * applicable to the supplied parameters under the resource for the operation,
  * replacing the find string with the replacement value.
  */
-@Component(immediate = true, service = { PostOperation.class }, property = PostOperation.PROP_OPERATION_NAME
-        + "=bulkreplace")
+@Component(
+        immediate = true,
+        service = {PostOperation.class},
+        property = PostOperation.PROP_OPERATION_NAME + "=bulkreplace")
 public class BulkReplaceOperation implements PostOperation {
 
     private static final Logger log = LoggerFactory.getLogger(BulkReplaceOperation.class);
@@ -57,7 +61,8 @@ public class BulkReplaceOperation implements PostOperation {
     public static final String PN_REPLACE = "replace";
     public static final String PN_MODE = "mode";
 
-    @SuppressWarnings("javasecurity:S2631") // ignoring warning since this servlet can only be executed by privileged users
+    @SuppressWarnings(
+            "javasecurity:S2631") // ignoring warning since this servlet can only be executed by privileged users
     @Override
     public void run(SlingHttpServletRequest request, PostResponse response, SlingPostProcessor[] processors) {
 
@@ -83,7 +88,7 @@ public class BulkReplaceOperation implements PostOperation {
                 log.debug("Searching for {}", CommonUtils.escapeLogMessage(find));
             }
             String replace = request.getParameter(PN_REPLACE);
-            
+
             if (log.isDebugEnabled()) {
                 log.debug("Replacing with {}", CommonUtils.escapeLogMessage(replace));
             }
@@ -117,12 +122,17 @@ public class BulkReplaceOperation implements PostOperation {
 
             log.error("Exception during response processing.", e);
             response.setError(e);
-
         }
     }
 
-    private void updateProperties(Resource resource, Pattern updateProperties, Pattern rfind, String find,
-            String replace, PostResponse response, List<Modification> changes) {
+    private void updateProperties(
+            Resource resource,
+            Pattern updateProperties,
+            Pattern rfind,
+            String find,
+            String replace,
+            PostResponse response,
+            List<Modification> changes) {
         ModifiableValueMap properties = resource.adaptTo(ModifiableValueMap.class);
         boolean updated = false;
 
@@ -145,8 +155,14 @@ public class BulkReplaceOperation implements PostOperation {
         }
     }
 
-    private boolean updateProperty(Resource resource, Pattern rfind, String find, String replace,
-            ModifiableValueMap properties, boolean updated, Entry<String, Object> entry) {
+    private boolean updateProperty(
+            Resource resource,
+            Pattern rfind,
+            String find,
+            String replace,
+            ModifiableValueMap properties,
+            boolean updated,
+            Entry<String, Object> entry) {
         log.trace("Checking property {}@{}", resource.getPath(), entry.getKey());
         if (properties.get(entry.getKey()) instanceof String) {
             String value = (String) entry.getValue();

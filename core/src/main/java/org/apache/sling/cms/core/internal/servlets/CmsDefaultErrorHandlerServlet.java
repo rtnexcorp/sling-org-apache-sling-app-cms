@@ -1,30 +1,32 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.servlets;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Optional;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.spi.security.user.UserConstants;
@@ -52,11 +54,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Servlet which includes the content of the page when the page is accessed.
  */
-@Component(service = Servlet.class, property = {
-        "sling.servlet.paths=sling/servlet/errorhandler/default",
-        "sling.servlet.prefix=-1",
-        Constants.SERVICE_RANKING + ":Integer=1"
-})
+@Component(
+        service = Servlet.class,
+        property = {
+            "sling.servlet.paths=sling/servlet/errorhandler/default",
+            "sling.servlet.prefix=-1",
+            Constants.SERVICE_RANKING + ":Integer=1"
+        })
 public class CmsDefaultErrorHandlerServlet extends SlingSafeMethodsServlet {
 
     private static class GetRequest extends SlingHttpServletRequestWrapper {
@@ -113,7 +117,6 @@ public class CmsDefaultErrorHandlerServlet extends SlingSafeMethodsServlet {
         public Resource getSuffixResource() {
             return null;
         }
-
     }
 
     private static final Logger log = LoggerFactory.getLogger(CmsDefaultErrorHandlerServlet.class);
@@ -146,8 +149,7 @@ public class CmsDefaultErrorHandlerServlet extends SlingSafeMethodsServlet {
     }
 
     @Override
-    public void service(ServletRequest req, ServletResponse res)
-            throws IOException {
+    public void service(ServletRequest req, ServletResponse res) throws IOException {
         if (req instanceof SlingHttpServletRequest) {
             handleError((SlingHttpServletRequest) req, (SlingHttpServletResponse) res);
         } else {
@@ -164,7 +166,9 @@ public class CmsDefaultErrorHandlerServlet extends SlingSafeMethodsServlet {
         log.debug("Calculating error handling scripts for resource {} and error code {}", resource, errorCode);
 
         if (slingRequest.getAttribute(SlingConstants.ERROR_EXCEPTION) != null) {
-            log.warn("Handing exception of type {} {}", errorCode,
+            log.warn(
+                    "Handing exception of type {} {}",
+                    errorCode,
                     slingRequest.getAttribute(SlingConstants.ERROR_EXCEPTION));
         }
 
@@ -211,14 +215,16 @@ public class CmsDefaultErrorHandlerServlet extends SlingSafeMethodsServlet {
     private int getErrorCode(SlingHttpServletRequest slingRequest, ResourceResolver resolver) {
 
         int errorCode = Optional.ofNullable(slingRequest.getAttribute(SlingConstants.ERROR_STATUS))
-                .map(val -> Integer.parseInt(val.toString())).orElse(500);
+                .map(val -> Integer.parseInt(val.toString()))
+                .orElse(500);
         if (errorCode == HttpServletResponse.SC_NOT_FOUND) {
             log.debug("Validating the resource does not exist for all users");
             ResourceResolver adminResolver = null;
             try {
                 adminResolver = factory.getServiceResourceResolver(
                         Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, SERVICE_USER_NAME));
-                Resource pResource = adminResolver.resolve(slingRequest, slingRequest.getResource().getPath());
+                Resource pResource = adminResolver.resolve(
+                        slingRequest, slingRequest.getResource().getPath());
                 if (!CMSUtils.isPublished(pResource) || pResource.isResourceType(Resource.RESOURCE_TYPE_NON_EXISTING)) {
                     errorCode = HttpServletResponse.SC_NOT_FOUND;
                 } else if (UserConstants.DEFAULT_ANONYMOUS_ID.equals(resolver.getUserID())) {
@@ -237,8 +243,8 @@ public class CmsDefaultErrorHandlerServlet extends SlingSafeMethodsServlet {
         return errorCode;
     }
 
-    private void doInclude(SlingHttpServletRequest slingRequest, SlingHttpServletResponse slingResponse,
-            Resource handler) {
+    private void doInclude(
+            SlingHttpServletRequest slingRequest, SlingHttpServletResponse slingResponse, Resource handler) {
 
         Resource handlerContent = handler.getChild(JcrConstants.JCR_CONTENT);
         if (handlerContent != null) {

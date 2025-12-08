@@ -18,6 +18,12 @@
  */
 package org.apache.sling.cms.core.insights.impl;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,22 +35,16 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 /**
  * Simple class for faking a HttpServletRequest
  */
 public class FakeRequest implements HttpServletRequest {
 
-    private final Map<String,Object> attributes;
+    private final Map<String, Object> attributes;
 
     private final String method;
 
-    private final Map<String,Object> parameters;
+    private final Map<String, Object> parameters;
 
     private final String path;
 
@@ -58,21 +58,18 @@ public class FakeRequest implements HttpServletRequest {
         session = new FakeHttpSession();
     }
 
-    public FakeRequest(String method, String path, Map<String,Object> params) {
+    public FakeRequest(String method, String path, Map<String, Object> params) {
         this.method = method;
         this.path = path;
         attributes = new HashMap<>();
         parameters = new HashMap<>();
         session = new FakeHttpSession();
-        for (Iterator<String> iterator = params.keySet().iterator(); iterator.hasNext();) {
+        for (Iterator<String> iterator = params.keySet().iterator(); iterator.hasNext(); ) {
             String key = iterator.next();
             Object value = params.get(key);
-            if (params.get(key) instanceof String[])
-                parameters.put(key, (String[]) value);
-            else
-                parameters.put(key, new String[] { value.toString() });
+            if (params.get(key) instanceof String[]) parameters.put(key, (String[]) value);
+            else parameters.put(key, new String[] {value.toString()});
         }
-
     }
 
     @Override
@@ -190,7 +187,7 @@ public class FakeRequest implements HttpServletRequest {
     }
 
     @Override
-    public Map<String,Object> getParameterMap() {
+    public Map<String, Object> getParameterMap() {
         return parameters;
     }
 
@@ -333,18 +330,22 @@ public class FakeRequest implements HttpServletRequest {
     public boolean isSecure() {
         return false;
     }
+
     @Override
     public boolean isUserInRole(String role) {
         return false;
     }
+
     @Override
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
+
     @Override
     public void setAttribute(String name, Object o) {
         attributes.put(name, o);
     }
+
     @Override
     public void setCharacterEncoding(String s) throws UnsupportedEncodingException {
         // do nothing

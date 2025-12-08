@@ -1,32 +1,27 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.servlets;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+
+import java.io.IOException;
 
 import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -43,6 +38,13 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class CmsDefaultErrorHandlerServletTest {
 
@@ -72,15 +74,13 @@ public class CmsDefaultErrorHandlerServletTest {
                 .thenReturn(requestDispatcher);
 
         spiedResponse = spy(context.response());
-
     }
 
     @Test
     public void testDefault() throws IOException, ServletException {
 
         context.create().resource("/static/sling-cms/errorhandling/default");
-        context.create()
-                .resource("/static/sling-cms/errorhandling/default/jcr:content");
+        context.create().resource("/static/sling-cms/errorhandling/default/jcr:content");
 
         servlet.service(context.request(), spiedResponse);
 
@@ -88,19 +88,20 @@ public class CmsDefaultErrorHandlerServletTest {
         verify(spiedResponse).setContentType("text/html");
         verify(spiedResponse).setStatus(500);
 
-        verify(requestDispatcherFactory).getRequestDispatcher(
-                argThat((Resource res) -> "/static/sling-cms/errorhandling/default/jcr:content".equals(res.getPath())),
-                any(RequestDispatcherOptions.class));
-        verify(requestDispatcher).include(any(SlingHttpServletRequestWrapper.class),
-                any(SlingHttpServletResponse.class));
+        verify(requestDispatcherFactory)
+                .getRequestDispatcher(
+                        argThat((Resource res) ->
+                                "/static/sling-cms/errorhandling/default/jcr:content".equals(res.getPath())),
+                        any(RequestDispatcherOptions.class));
+        verify(requestDispatcher)
+                .include(any(SlingHttpServletRequestWrapper.class), any(SlingHttpServletResponse.class));
     }
 
     @Test
     public void testErrorCodeSet() throws IOException, ServletException {
 
         context.create().resource("/static/sling-cms/errorhandling/403");
-        context.create()
-                .resource("/static/sling-cms/errorhandling/403/jcr:content");
+        context.create().resource("/static/sling-cms/errorhandling/403/jcr:content");
 
         context.request().setAttribute(SlingConstants.ERROR_STATUS, 403);
 
@@ -110,11 +111,13 @@ public class CmsDefaultErrorHandlerServletTest {
         verify(spiedResponse).setContentType("text/html");
         verify(spiedResponse).setStatus(403);
 
-        verify(requestDispatcherFactory).getRequestDispatcher(
-                argThat((Resource res) -> "/static/sling-cms/errorhandling/403/jcr:content".equals(res.getPath())),
-                any(RequestDispatcherOptions.class));
-        verify(requestDispatcher).include(any(SlingHttpServletRequestWrapper.class),
-                any(SlingHttpServletResponse.class));
+        verify(requestDispatcherFactory)
+                .getRequestDispatcher(
+                        argThat((Resource res) ->
+                                "/static/sling-cms/errorhandling/403/jcr:content".equals(res.getPath())),
+                        any(RequestDispatcherOptions.class));
+        verify(requestDispatcher)
+                .include(any(SlingHttpServletRequestWrapper.class), any(SlingHttpServletResponse.class));
     }
 
     @Test
@@ -122,8 +125,7 @@ public class CmsDefaultErrorHandlerServletTest {
 
         Resource siteResource = context.create().resource("/content/site");
         context.create().resource("/content/site/errors/default");
-        context.create()
-                .resource("/content/site/errors/default/jcr:content");
+        context.create().resource("/content/site/errors/default/jcr:content");
 
         context.request().setAttribute(SlingConstants.ERROR_STATUS, 403);
         Resource resource = mock(Resource.class);
@@ -142,21 +144,20 @@ public class CmsDefaultErrorHandlerServletTest {
         verify(spiedResponse).setContentType("text/html");
         verify(spiedResponse).setStatus(403);
 
-        verify(requestDispatcherFactory).getRequestDispatcher(
-                argThat((Resource res) -> "/content/site/errors/default/jcr:content".equals(res.getPath())),
-                any(RequestDispatcherOptions.class));
-        verify(requestDispatcher).include(any(SlingHttpServletRequestWrapper.class),
-                any(SlingHttpServletResponse.class));
+        verify(requestDispatcherFactory)
+                .getRequestDispatcher(
+                        argThat((Resource res) -> "/content/site/errors/default/jcr:content".equals(res.getPath())),
+                        any(RequestDispatcherOptions.class));
+        verify(requestDispatcher)
+                .include(any(SlingHttpServletRequestWrapper.class), any(SlingHttpServletResponse.class));
     }
-
 
     @Test
     public void testSiteNoErrorPages() throws IOException, ServletException {
 
         Resource siteResource = context.create().resource("/content/site");
         context.create().resource("/static/sling-cms/errorhandling/403");
-        context.create()
-                .resource("/static/sling-cms/errorhandling/403/jcr:content");
+        context.create().resource("/static/sling-cms/errorhandling/403/jcr:content");
 
         context.request().setAttribute(SlingConstants.ERROR_STATUS, 403);
         Resource resource = mock(Resource.class);
@@ -175,11 +176,12 @@ public class CmsDefaultErrorHandlerServletTest {
         verify(spiedResponse).setContentType("text/html");
         verify(spiedResponse).setStatus(403);
 
-        verify(requestDispatcherFactory).getRequestDispatcher(
-                argThat((Resource res) -> "/static/sling-cms/errorhandling/403/jcr:content".equals(res.getPath())),
-                any(RequestDispatcherOptions.class));
-        verify(requestDispatcher).include(any(SlingHttpServletRequestWrapper.class),
-                any(SlingHttpServletResponse.class));
+        verify(requestDispatcherFactory)
+                .getRequestDispatcher(
+                        argThat((Resource res) ->
+                                "/static/sling-cms/errorhandling/403/jcr:content".equals(res.getPath())),
+                        any(RequestDispatcherOptions.class));
+        verify(requestDispatcher)
+                .include(any(SlingHttpServletRequestWrapper.class), any(SlingHttpServletResponse.class));
     }
-
 }

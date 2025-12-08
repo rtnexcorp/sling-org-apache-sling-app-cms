@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.insights.impl.providers;
 
@@ -45,8 +47,10 @@ import org.slf4j.LoggerFactory;
 public class ReadabilityInsightProvider extends BaseInsightProvider {
 
     public static final String I18N_KEY_READABILITY_RESULT_DANGER = "Failed to calculate readability for {1}";
-    public static final String I18N_KEY_READABILITY_RESULT_SUCCESS = "Readability grade {2} is between expected range: ({0}-{1})";
-    public static final String I18N_KEY_READABILITY_RESULT_WARN = "Readability grade {2} is outside expected range: ({0}-{1})";
+    public static final String I18N_KEY_READABILITY_RESULT_SUCCESS =
+            "Readability grade {2} is between expected range: ({0}-{1})";
+    public static final String I18N_KEY_READABILITY_RESULT_WARN =
+            "Readability grade {2} is outside expected range: ({0}-{1})";
     public static final String I18N_KEY_READABILITY_STATS = "Found {0} sentences with {1} words and {2} complex words";
 
     private static final Logger log = LoggerFactory.getLogger(ReadabilityInsightProvider.class);
@@ -69,7 +73,7 @@ public class ReadabilityInsightProvider extends BaseInsightProvider {
     /**
      * Method for the extending classes to implement, this can safely throw
      * exceptions and this will trigger a failure result to be returned.
-     * 
+     *
      * @param request the request to evaluate
      * @return the result of evaluation
      * @throws Exception any exception
@@ -86,32 +90,40 @@ public class ReadabilityInsightProvider extends BaseInsightProvider {
             site = smgr.getSite();
         }
 
-        Resource readabilityResource = caResolver.getResource(pageRequest.getPage().getResource(),
-                CMSConstants.INSIGHTS_CA_CONFIG_BUCKET, READABILITY_CA_CONFIG);
+        Resource readabilityResource = caResolver.getResource(
+                pageRequest.getPage().getResource(), CMSConstants.INSIGHTS_CA_CONFIG_BUCKET, READABILITY_CA_CONFIG);
         ReadabilitySiteConfig config = null;
         if (readabilityResource != null) {
             log.debug("Using readability configuration {}", readabilityResource);
             config = readabilityResource.adaptTo(ReadabilitySiteConfig.class);
         }
 
-        I18NDictionary dictionary = i18nProvider.getDictionary(request.getResource().getResourceResolver());
+        I18NDictionary dictionary =
+                i18nProvider.getDictionary(request.getResource().getResourceResolver());
         if (site != null && config != null) {
             executeReadabilityCheck(insight, pageRequest, text, site, config, dictionary);
 
         } else {
-            log.warn("Failed to get readability for resource {} site or config were null",
+            log.warn(
+                    "Failed to get readability for resource {} site or config were null",
                     pageRequest.getPage().getResource());
             insight.setScored(false);
             insight.setSucceeded(false);
-            insight.setPrimaryMessage(Message.danger(dictionary.get(I18N_KEY_READABILITY_RESULT_DANGER,
-                    new Object[] { pageRequest.getPage().getPath() })));
+            insight.setPrimaryMessage(Message.danger(dictionary.get(
+                    I18N_KEY_READABILITY_RESULT_DANGER,
+                    new Object[] {pageRequest.getPage().getPath()})));
         }
 
         return insight;
     }
 
-    private void executeReadabilityCheck(Insight insight, PageInsightRequest pageRequest, String text, Site site,
-            ReadabilitySiteConfig config, I18NDictionary dictionary) {
+    private void executeReadabilityCheck(
+            Insight insight,
+            PageInsightRequest pageRequest,
+            String text,
+            Site site,
+            ReadabilitySiteConfig config,
+            I18NDictionary dictionary) {
         ReadabilityService svc = factory.getReadabilityService(site.getLocale());
 
         double score = svc.calculateAverageGradeLevel(text);
@@ -122,11 +134,14 @@ public class ReadabilityInsightProvider extends BaseInsightProvider {
         log.debug("Calculating readability of page {}", pageRequest.getPage());
 
         if (score > config.getMaxGradeLevel() || score < config.getMinGradeLevel()) {
-            log.debug("Retrieved out of bounds readability {} based on range {}-{}", score,
-                    config.getMinGradeLevel(), config.getMaxGradeLevel());
+            log.debug(
+                    "Retrieved out of bounds readability {} based on range {}-{}",
+                    score,
+                    config.getMinGradeLevel(),
+                    config.getMaxGradeLevel());
 
             StandardDeviation sd = new StandardDeviation(false);
-            double stddev = sd.evaluate(new double[] { config.getMinGradeLevel(), config.getMaxGradeLevel() });
+            double stddev = sd.evaluate(new double[] {config.getMinGradeLevel(), config.getMaxGradeLevel()});
             double dev;
             if (score > config.getMaxGradeLevel()) {
                 dev = score - config.getMaxGradeLevel();
@@ -139,19 +154,25 @@ public class ReadabilityInsightProvider extends BaseInsightProvider {
             } else {
                 insight.setScore(0.0);
             }
-            insight.setPrimaryMessage(Message.warn(dictionary.get(I18N_KEY_READABILITY_RESULT_WARN,
-                    new Object[] { config.getMinGradeLevel(), config.getMaxGradeLevel(), scoreStr })));
+            insight.setPrimaryMessage(Message.warn(dictionary.get(
+                    I18N_KEY_READABILITY_RESULT_WARN,
+                    new Object[] {config.getMinGradeLevel(), config.getMaxGradeLevel(), scoreStr})));
         } else {
-            log.debug("Retrieved in bounds readability {} based on range {}-{}", score, config.getMinGradeLevel(),
+            log.debug(
+                    "Retrieved in bounds readability {} based on range {}-{}",
+                    score,
+                    config.getMinGradeLevel(),
                     config.getMaxGradeLevel());
             insight.setScore(1.0);
-            insight.setPrimaryMessage(Message.success(dictionary.get(I18N_KEY_READABILITY_RESULT_SUCCESS,
-                    new Object[] { config.getMinGradeLevel(), config.getMaxGradeLevel(), scoreStr })));
+            insight.setPrimaryMessage(Message.success(dictionary.get(
+                    I18N_KEY_READABILITY_RESULT_SUCCESS,
+                    new Object[] {config.getMinGradeLevel(), config.getMaxGradeLevel(), scoreStr})));
         }
         Text t = svc.extractSentences(text);
 
-        insight.getScoreDetails().add(Message.defaultMsg(dictionary.get(I18N_KEY_READABILITY_STATS,
-                new Object[] { t.getSentences().size(), t.getWordCount(), t.getComplexWordCount() })));
+        insight.getScoreDetails().add(Message.defaultMsg(dictionary.get(I18N_KEY_READABILITY_STATS, new Object[] {
+            t.getSentences().size(), t.getWordCount(), t.getComplexWordCount()
+        })));
         addDetail(insight, svc.calculateARI(t), "ARI");
         addDetail(insight, svc.calculateColemanLiauIndex(t), "Coleman-Liau Index");
         addDetail(insight, svc.calculateFleschKincaidGradeLevel(t), "Flesch-Kincaid Grade Level");

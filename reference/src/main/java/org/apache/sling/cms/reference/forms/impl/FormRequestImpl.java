@@ -1,28 +1,30 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl;
+
+import javax.inject.Inject;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -43,7 +45,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of a Form Request
  */
-@Model(adaptables = { SlingHttpServletRequest.class, Resource.class }, adapters = FormRequest.class)
+@Model(
+        adaptables = {SlingHttpServletRequest.class, Resource.class},
+        adapters = FormRequest.class)
 public class FormRequestImpl implements FormRequest {
 
     private static final Logger log = LoggerFactory.getLogger(FormRequestImpl.class);
@@ -56,7 +60,8 @@ public class FormRequestImpl implements FormRequest {
 
     @Inject
     @SuppressWarnings("unchecked")
-    public FormRequestImpl(@Self SlingHttpServletRequest request,
+    public FormRequestImpl(
+            @Self SlingHttpServletRequest request,
             @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL) List<FormValueProvider> formValueProvider,
             @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL) List<FieldHandler> fieldHandlers) {
         this.request = request;
@@ -71,7 +76,8 @@ public class FormRequestImpl implements FormRequest {
 
     private void loadProviders(List<FormValueProvider> formValueProvider) {
         List<Resource> providers = ResourceTree.stream(getFormResource().getChild("providers"))
-                .map(ResourceTree::getResource).collect(Collectors.toList());
+                .map(ResourceTree::getResource)
+                .collect(Collectors.toList());
         for (Resource provider : providers) {
             log.debug("Looking for handler for: {}", provider);
             if (formValueProvider != null) {
@@ -102,7 +108,8 @@ public class FormRequestImpl implements FormRequest {
     }
 
     public boolean initFields() {
-        List<Resource> fields = ResourceTree.stream(getFormResource().getChild("fields")).map(ResourceTree::getResource)
+        List<Resource> fields = ResourceTree.stream(getFormResource().getChild("fields"))
+                .map(ResourceTree::getResource)
                 .collect(Collectors.toList());
         boolean successful = true;
         for (Resource field : fields) {
@@ -131,7 +138,7 @@ public class FormRequestImpl implements FormRequest {
 
     @Override
     public String getSessionId() {
-        return "errorval-" + Optional.ofNullable(getFormResource()).map(Resource::getPath).orElse("null");
+        return "errorval-"
+                + Optional.ofNullable(getFormResource()).map(Resource::getPath).orElse("null");
     }
-
 }

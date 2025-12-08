@@ -18,13 +18,13 @@
  */
 package org.apache.sling.cms.core.insights.impl;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Collection;
-
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collection;
 
 import org.apache.felix.webconsole.AbstractWebConsolePlugin;
 import org.apache.felix.webconsole.WebConsoleConstants;
@@ -37,19 +37,23 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * Simple web console plugin for listing out the available insight provider
  */
-@Component(property = { Constants.SERVICE_DESCRIPTION + "=Web Console Plugin for Apache Sling CMS Insights API",
-        Constants.SERVICE_VENDOR + "=The Apache Software Foundation",
-        WebConsoleConstants.PLUGIN_LABEL + "=" + InsightsWebConsole.CONSOLE_LABEL,
-        WebConsoleConstants.PLUGIN_TITLE + "=" + InsightsWebConsole.CONSOLE_TITLE,
-        WebConsoleConstants.CONFIG_PRINTER_MODES + "=always",
-        WebConsoleConstants.PLUGIN_CATEGORY + "=Status" }, service = { Servlet.class })
+@Component(
+        property = {
+            Constants.SERVICE_DESCRIPTION + "=Web Console Plugin for Apache Sling CMS Insights API",
+            Constants.SERVICE_VENDOR + "=The Apache Software Foundation",
+            WebConsoleConstants.PLUGIN_LABEL + "=" + InsightsWebConsole.CONSOLE_LABEL,
+            WebConsoleConstants.PLUGIN_TITLE + "=" + InsightsWebConsole.CONSOLE_TITLE,
+            WebConsoleConstants.CONFIG_PRINTER_MODES + "=always",
+            WebConsoleConstants.PLUGIN_CATEGORY + "=Status"
+        },
+        service = {Servlet.class})
 public class InsightsWebConsole extends AbstractWebConsolePlugin {
 
     private static final long serialVersionUID = 4819043498961127418L;
     public static final String CONSOLE_LABEL = "slingcms-insights";
     public static final String CONSOLE_TITLE = "Sling CMS Insights";
 
-    @SuppressWarnings({ "squid:S2078", "squid:S2226" }) // ignore since this field is is injected by OSGi
+    @SuppressWarnings({"squid:S2078", "squid:S2226"}) // ignore since this field is is injected by OSGi
     @Reference
     private InsightFactory insightFactory;
 
@@ -82,5 +86,4 @@ public class InsightsWebConsole extends AbstractWebConsolePlugin {
         pw.println("</pre>");
         pw.println("</div>");
     }
-
 }

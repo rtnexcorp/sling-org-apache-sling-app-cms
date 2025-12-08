@@ -18,14 +18,14 @@
  */
 package org.apache.sling.cms.core.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.Resource;
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * Returns all of the versions for a Resource. At the moment only JCR nodes are
  * supported.
  */
-@Model(adaptables = { Resource.class })
+@Model(adaptables = {Resource.class})
 public class VersionInfo {
 
     private static final Logger log = LoggerFactory.getLogger(VersionInfo.class);
@@ -53,9 +53,9 @@ public class VersionInfo {
         final Node node = resource.adaptTo(Node.class);
         try {
             if (node != null && node.isNodeType(JcrConstants.MIX_VERSIONABLE)) {
-                final VersionHistory history = node.getSession().getWorkspace().getVersionManager()
-                        .getVersionHistory(node.getPath());
-                for (final VersionIterator it = history.getAllVersions(); it.hasNext();) {
+                final VersionHistory history =
+                        node.getSession().getWorkspace().getVersionManager().getVersionHistory(node.getPath());
+                for (final VersionIterator it = history.getAllVersions(); it.hasNext(); ) {
                     final Version v = it.nextVersion();
                     versions.add(v);
                 }

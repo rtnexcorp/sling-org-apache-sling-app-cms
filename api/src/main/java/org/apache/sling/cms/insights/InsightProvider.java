@@ -25,7 +25,7 @@ public interface InsightProvider {
 
     /**
      * Evaluate the request and return a response with the details.
-     * 
+     *
      * @param request the request to evaluate
      * @return the insights gathered
      */
@@ -34,21 +34,21 @@ public interface InsightProvider {
     /**
      * Get the ID for a particular Insight Provider. This should be human readable
      * and URL-safe.
-     * 
+     *
      * @return the check ID
      */
     String getId();
 
     /**
      * The title of the Insight Provider
-     * 
+     *
      * @return the user-displayed title
      */
     String getTitle();
 
     /**
      * Returns true if the provider is enabled for this request and false otherwise.
-     * 
+     *
      * @param request the request to evaluate
      * @return true if enabled, false otherwise
      */

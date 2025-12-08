@@ -1,30 +1,32 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.providers;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.jackrabbit.api.JackrabbitSession;
 import org.apache.jackrabbit.api.security.user.User;
@@ -53,10 +55,11 @@ public class UserProfileFormValueProvider implements FormValueProvider {
             if (session != null) {
                 UserManager userManager = session.getUserManager();
                 User user = (User) userManager.getAuthorizable(userId);
-                
+
                 formData.put("userId", user.getID());
 
-                String subpath = providerResource.getValueMap().get(FormConstants.PN_SUBPATH, FormConstants.PATH_PROFILE);
+                String subpath =
+                        providerResource.getValueMap().get(FormConstants.PN_SUBPATH, FormConstants.PATH_PROFILE);
                 log.debug("Loading profile data from: {}/{}", user.getPath(), subpath);
 
                 Iterator<String> keys = user.getPropertyNames(subpath);
@@ -79,14 +82,17 @@ public class UserProfileFormValueProvider implements FormValueProvider {
         try {
             Value[] v = user.getProperty(subpath + "/" + key);
             if (v.length > 1) {
-                value = Arrays.stream(v).map(t -> {
-                    try {
-                        return t.getString();
-                    } catch (IllegalStateException | RepositoryException e) {
-                        log.warn("Failed to get string value for " + key, e);
-                        return null;
-                    }
-                }).collect(Collectors.toList()).toArray(new String[0]);
+                value = Arrays.stream(v)
+                        .map(t -> {
+                            try {
+                                return t.getString();
+                            } catch (IllegalStateException | RepositoryException e) {
+                                log.warn("Failed to get string value for " + key, e);
+                                return null;
+                            }
+                        })
+                        .collect(Collectors.toList())
+                        .toArray(new String[0]);
             } else if (v[0].getType() == PropertyType.LONG) {
                 value = v[0].getLong();
             } else if (v[0].getType() == PropertyType.DOUBLE) {

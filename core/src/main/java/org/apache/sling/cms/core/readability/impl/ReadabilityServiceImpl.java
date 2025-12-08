@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.readability.impl;
 
@@ -65,7 +67,9 @@ public class ReadabilityServiceImpl implements ReadabilityService {
     @Override
     public double calculateARI(Text text) {
         int wordCount = text.getWordCount();
-        return 4.71 * text.getCharacterCount() / wordCount + 0.5 * wordCount / text.getSentences().size() - 21.43;
+        return 4.71 * text.getCharacterCount() / wordCount
+                + 0.5 * wordCount / text.getSentences().size()
+                - 21.43;
     }
 
     @Override
@@ -75,8 +79,13 @@ public class ReadabilityServiceImpl implements ReadabilityService {
 
     @Override
     public double calculateAverageGradeLevel(Text text) {
-        double[] results = new double[] { this.calculateARI(text), this.calculateColemanLiauIndex(text),
-                this.calculateFleschKincaidGradeLevel(text), this.calculateGunningFog(text), this.calculateSMOG(text) };
+        double[] results = new double[] {
+            this.calculateARI(text),
+            this.calculateColemanLiauIndex(text),
+            this.calculateFleschKincaidGradeLevel(text),
+            this.calculateGunningFog(text),
+            this.calculateSMOG(text)
+        };
 
         double sum = 0.0;
         for (double result : results) {
@@ -93,7 +102,8 @@ public class ReadabilityServiceImpl implements ReadabilityService {
     @Override
     public double calculateColemanLiauIndex(Text text) {
         int wordCount = text.getWordCount();
-        return (5.89 * text.getCharacterCount() / wordCount) - (30 * text.getSentences().size() / (double) wordCount)
+        return (5.89 * text.getCharacterCount() / wordCount)
+                - (30 * text.getSentences().size() / (double) wordCount)
                 - 15.8;
     }
 
@@ -106,7 +116,8 @@ public class ReadabilityServiceImpl implements ReadabilityService {
     public double calculateFleschKincaidGradeLevel(Text text) {
         int wordCount = text.getWordCount();
         return 0.39 * (wordCount / (double) text.getSentences().size())
-                + 11.8 * (text.getSyllableCount() / (double) wordCount) - 15.59;
+                + 11.8 * (text.getSyllableCount() / (double) wordCount)
+                - 15.59;
     }
 
     @Override
@@ -128,8 +139,9 @@ public class ReadabilityServiceImpl implements ReadabilityService {
     @Override
     public double calculateGunningFog(Text text) {
         int wordCount = text.getWordCount();
-        return .4 * (((double) wordCount / text.getSentences().size())
-                + 100 * ((double) text.getComplexWordCount() / wordCount));
+        return .4
+                * (((double) wordCount / text.getSentences().size())
+                        + 100 * ((double) text.getComplexWordCount() / wordCount));
     }
 
     @Override
@@ -139,7 +151,10 @@ public class ReadabilityServiceImpl implements ReadabilityService {
 
     @Override
     public double calculateSMOG(Text text) {
-        return 1.043 * Math.sqrt(text.getComplexWordCount() * (30.0 / text.getSentences().size())) + 3.1291;
+        return 1.043
+                        * Math.sqrt(text.getComplexWordCount()
+                                * (30.0 / text.getSentences().size()))
+                + 3.1291;
     }
 
     private int countSylables(String word) {
@@ -173,7 +188,8 @@ public class ReadabilityServiceImpl implements ReadabilityService {
         for (int end = breakIterator.next(); end != BreakIterator.DONE; start = end, end = breakIterator.next()) {
             sentenceStrs.add(input.substring(start, end));
         }
-        return new Text(input,
+        return new Text(
+                input,
                 sentenceStrs.stream().map(s -> new Sentence(s, extractWords(s))).collect(Collectors.toList()));
     }
 
@@ -190,7 +206,8 @@ public class ReadabilityServiceImpl implements ReadabilityService {
             wordStr = stripWordStem(wordStr);
             wordStr = wordStr.trim();
             int sylables = countSylables(wordStr);
-            if (!wordStr.isEmpty() && (sylables != 0 || isWordExpression.matcher(wordStr).matches())) {
+            if (!wordStr.isEmpty()
+                    && (sylables != 0 || isWordExpression.matcher(wordStr).matches())) {
                 if (sylables == 0) {
                     sylables = 1;
                 }
@@ -218,5 +235,4 @@ public class ReadabilityServiceImpl implements ReadabilityService {
         }
         return wordStr;
     }
-
 }

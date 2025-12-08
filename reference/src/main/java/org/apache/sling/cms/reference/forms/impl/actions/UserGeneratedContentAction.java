@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.actions;
 
@@ -73,30 +75,36 @@ public class UserGeneratedContentAction implements FormAction {
             bucketConfig.setAction(
                     APPROVE_ACTION.valueOf(properties.get("approveAction", APPROVE_ACTION.PUBLISH.toString())));
             bucketConfig.setBucket(sub.replace(properties.get("bucket", String.class)));
-            bucketConfig
-                    .setContentType(CONTENT_TYPE.valueOf(properties.get("contentType", CONTENT_TYPE.OTHER.toString())));
+            bucketConfig.setContentType(
+                    CONTENT_TYPE.valueOf(properties.get("contentType", CONTENT_TYPE.OTHER.toString())));
             bucketConfig.setPathDepth(properties.get("pathDepth", 0));
             log.debug("Creating UGC at with configuration:  {}", bucketConfig);
 
             Map<String, Object> contentProperties = new HashMap<>();
             contentProperties.put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED);
-            Arrays.stream(properties.get("additionalProperties", new String[0])).map(v -> {
-                if (v.contains("=")) {
-                    String[] vs = v.split("\\=");
-                    return new ImmutablePair<String, String>(vs[0], vs[1]);
-                } else {
-                    log.warn("Invalid value: {}", v);
-                    return null;
-                }
-            }).filter(Objects::nonNull).forEach(v -> {
-                log.debug("Adding additional property: {}", v);
-                contentProperties.put(v.getLeft(), v.getRight());
-            });
+            Arrays.stream(properties.get("additionalProperties", new String[0]))
+                    .map(v -> {
+                        if (v.contains("=")) {
+                            String[] vs = v.split("\\=");
+                            return new ImmutablePair<String, String>(vs[0], vs[1]);
+                        } else {
+                            log.warn("Invalid value: {}", v);
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .forEach(v -> {
+                        log.debug("Adding additional property: {}", v);
+                        contentProperties.put(v.getLeft(), v.getRight());
+                    });
             contentProperties.putAll(request.getFormData());
             log.debug("Persisting properties: {}", contentProperties);
 
-            Resource container = ugcService.createUGCContainer(request.getOriginalRequest(), bucketConfig,
-                    sub.replace(properties.get("preview", "")), properties.get("targetPath", ""));
+            Resource container = ugcService.createUGCContainer(
+                    request.getOriginalRequest(),
+                    bucketConfig,
+                    sub.replace(properties.get("preview", "")),
+                    properties.get("targetPath", ""));
             log.debug("Using container: {}", container);
             ResourceResolver resolver = container.getResourceResolver();
 
@@ -105,8 +113,12 @@ public class UserGeneratedContentAction implements FormAction {
 
             if (properties.get("wrapPage", false)) {
                 log.debug("Wrapping with page");
-                Resource page = container.getResourceResolver().create(container, name,
-                        Collections.singletonMap(JcrConstants.JCR_PRIMARYTYPE, CMSConstants.NT_PAGE));
+                Resource page = container
+                        .getResourceResolver()
+                        .create(
+                                container,
+                                name,
+                                Collections.singletonMap(JcrConstants.JCR_PRIMARYTYPE, CMSConstants.NT_PAGE));
                 resolver.create(page, JcrConstants.JCR_CONTENT, contentProperties);
             } else {
                 log.debug("Creating as direct child");
@@ -127,5 +139,4 @@ public class UserGeneratedContentAction implements FormAction {
     public boolean handles(Resource actionResource) {
         return "reference/components/forms/actions/usergeneratedcontent".equals(actionResource.getResourceType());
     }
-
 }

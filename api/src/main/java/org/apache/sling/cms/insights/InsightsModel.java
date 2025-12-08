@@ -27,9 +27,8 @@ public interface InsightsModel {
 
     /**
      * Retrieve the insights for the current resource.
-     * 
+     *
      * @return the insights for the resource
      */
     List<Insight> getInsights();
-
 }

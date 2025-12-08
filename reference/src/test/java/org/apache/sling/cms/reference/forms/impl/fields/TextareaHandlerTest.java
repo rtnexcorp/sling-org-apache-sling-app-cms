@@ -1,25 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.fields;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -36,10 +33,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 public class TextareaHandlerTest {
 
     @Rule
     public final SlingContext context = new SlingContext();
+
     private TextareaHandler handler;
     private ResourceResolver resolver;
 
@@ -58,22 +61,21 @@ public class TextareaHandlerTest {
 
             @Override
             public String[] supportedTypes() {
-                return new String[] { TextareaHandler.DEFAULT_RESOURCE_TYPE };
+                return new String[] {TextareaHandler.DEFAULT_RESOURCE_TYPE};
             }
-
         });
     }
 
     @Test
     public void testHandles() {
 
-        assertTrue(handler
-                .handles(resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea")));
+        assertTrue(handler.handles(
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea")));
 
         assertFalse(handler.handles(resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields")));
 
-        assertFalse(handler
-                .handles(resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield")));
+        assertFalse(handler.handles(
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield")));
     }
 
     @Test
@@ -83,8 +85,8 @@ public class TextareaHandlerTest {
         context.request().getParameterMap().put("textarea", new String[] {});
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea");
         handler.handleField(context.request(), fieldResource, formData);
         assertFalse(formData.containsKey("textarea"));
     }
@@ -93,12 +95,11 @@ public class TextareaHandlerTest {
     public void testNotRequiredWithValue() throws FormException {
         ResourceResolver resolver = context.resourceResolver();
 
-        context.request()
-                .setParameterMap(Collections.singletonMap("textarea", "Hello World"));
+        context.request().setParameterMap(Collections.singletonMap("textarea", "Hello World"));
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea");
         handler.handleField(context.request(), fieldResource, formData);
         assertEquals("Hello World", formData.get("textarea"));
     }
@@ -110,8 +111,8 @@ public class TextareaHandlerTest {
         context.request().getParameterMap().put("textarea", new String[0]);
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextarea");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextarea");
         try {
             handler.handleField(context.request(), fieldResource, formData);
             fail();
@@ -124,12 +125,11 @@ public class TextareaHandlerTest {
     public void testRequiresWithValue() throws FormException {
         ResourceResolver resolver = context.resourceResolver();
 
-        context.request()
-                .setParameterMap(Collections.singletonMap("requiredtextarea", "Hello World"));
+        context.request().setParameterMap(Collections.singletonMap("requiredtextarea", "Hello World"));
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextarea");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextarea");
         handler.handleField(context.request(), fieldResource, formData);
         assertEquals("Hello World", formData.get("requiredtextarea"));
     }

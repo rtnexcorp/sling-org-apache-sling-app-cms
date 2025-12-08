@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
         Licensed to the Apache Software Foundation (ASF) under one or more contributor license
         agreements. See the NOTICE file distributed with this work for additional information
@@ -14,8 +14,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>org.apache.sling.cms</artifactId>
         <groupId>org.apache.sling</groupId>
+        <artifactId>org.apache.sling.cms</artifactId>
         <version>1.1.9-SNAPSHOT</version>
     </parent>
 
@@ -27,6 +27,22 @@
     </properties>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <!-- Extend RAT configuration from parent pom -->
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <configuration>
+                        <excludes combine.children="append">
+                            <!-- Exclude sling instance -->
+                            <exclude>sling/**</exclude>
+                            <exclude>launcher/**</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -44,22 +60,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <!-- Extend RAT configuration from parent pom -->
-                    <groupId>org.apache.rat</groupId>
-                    <artifactId>apache-rat-plugin</artifactId>
-                    <configuration>
-                        <excludes combine.children="append">
-                            <!-- Exclude sling instance -->
-                            <exclude>sling/**</exclude>
-                            <exclude>launcher/**</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
     <profiles>
         <profile>
@@ -123,17 +123,17 @@
                         <executions>
                             <execution>
                                 <id>start-sling</id>
-                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>start</goal>
                                 </goals>
+                                <phase>pre-integration-test</phase>
                             </execution>
                             <execution>
                                 <id>stop-sling</id>
-                                <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>stop</goal>
                                 </goals>
+                                <phase>post-integration-test</phase>
                             </execution>
                         </executions>
                     </plugin>
@@ -145,10 +145,10 @@
                         <executions>
                             <execution>
                                 <id>install node and npm</id>
-                                <phase>validate</phase>
                                 <goals>
                                     <goal>install-node-and-npm</goal>
                                 </goals>
+                                <phase>validate</phase>
                                 <configuration>
                                     <nodeVersion>${node.version}</nodeVersion>
                                     <npmVersion>${npm.version}</npmVersion>
@@ -156,10 +156,10 @@
                             </execution>
                             <execution>
                                 <id>npm install</id>
-                                <phase>validate</phase>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
+                                <phase>validate</phase>
                                 <configuration>
                                     <arguments>ci</arguments>
                                 </configuration>
@@ -176,10 +176,10 @@
                             </execution>
                             <execution>
                                 <id>wait for sling</id>
-                                <phase>integration-test</phase>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
+                                <phase>integration-test</phase>
                                 <configuration>
                                     <arguments>run wait-for-ready</arguments>
                                     <environmentVariables>

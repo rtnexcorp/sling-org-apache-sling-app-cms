@@ -18,9 +18,9 @@
  */
 package org.apache.sling.cms.core.models;
 
-import java.util.Iterator;
-
 import javax.jcr.query.Query;
+
+import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
