@@ -67,6 +67,12 @@ export default defineConfig({
         
         // Manual chunks for code splitting
         manualChunks: (id) => {
+          // Keep rava and autoComplete in the main bundle (no chunking)
+          // This ensures they're available before any code tries to use them
+          if (id.includes('node_modules/rava') || id.includes('node_modules/js-autocomplete')) {
+            return undefined; // Keep in entry chunk
+          }
+          
           // TipTap and its extensions in separate chunk
           if (id.includes('@tiptap')) {
             return 'cms.tiptap';

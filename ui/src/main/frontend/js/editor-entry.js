@@ -15,21 +15,25 @@
  * limitations under the License.
  */
 
-// Import SCSS
-import '../scss/editor.scss';
-
-// Import dependencies
-import 'bulma/css/bulma.min.css';
-import 'jam-icons/css/jam.min.css';
+// Import dependencies FIRST and make them globally available
 import rava from 'rava';
 import autoComplete from 'js-autocomplete';
-import './tiptap-bundle.js';
 
-// Make dependencies globally available
+// Make dependencies globally available BEFORE any modules that use them
 window.rava = rava;
 window.autoComplete = autoComplete;
 
-// Import editor modules
+// Import SCSS
+import '../scss/editor.scss';
+
+// Import CSS dependencies
+import 'bulma/css/bulma.min.css';
+import 'jam-icons/css/jam.min.css';
+
+// Import TipTap bundle
+import './tiptap-bundle.js';
+
+// Import editor modules (these can now safely use window.rava and window.autoComplete)
 import './editor.js';
 import './cms.tiptap.js';
 

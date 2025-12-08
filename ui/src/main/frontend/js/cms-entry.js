@@ -15,23 +15,25 @@
  * limitations under the License.
  */
 
+// Import dependencies FIRST and make them globally available
+import rava from 'rava';
+import autoComplete from 'js-autocomplete';
+
+// Make dependencies globally available BEFORE any modules that use them
+window.rava = rava;
+window.autoComplete = autoComplete;
+
 // Import SCSS (will be bundled into CSS)
 import '../scss/cms.scss';
 
-// Import dependencies
+// Import CSS dependencies
 import 'bulma/css/bulma.min.css';
 import 'jam-icons/css/jam.min.css';
-import rava from 'rava';
-import autoComplete from 'js-autocomplete';
+
+// Import TipTap bundle
 import './tiptap-bundle.js';
 
-// Make rava globally available
-window.rava = rava;
-
-// Make autoComplete globally available
-window.autoComplete = autoComplete;
-
-// Import CMS modules
+// Import CMS modules (these can now safely use window.rava and window.autoComplete)
 import './cms-module.js';
 import './cms.draggable.js';
 import './cms.fields.js';

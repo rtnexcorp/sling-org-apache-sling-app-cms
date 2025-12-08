@@ -22,10 +22,16 @@ Sling.CMS.pathfield = null;
 rava.bind("input.pathfield", {
   callbacks: {
     created() {
+      // Ensure autoComplete is available before using it
+      if (typeof window.autoComplete === 'undefined') {
+        console.error('autoComplete library not loaded yet');
+        return;
+      }
+      
       const { base, type } = this.dataset;
       const field = this;
       // eslint-disable-line no-new, new-cap
-      new autoComplete({
+      new window.autoComplete({
         minChars: 1,
         selector: this,
         debounce: 100,
