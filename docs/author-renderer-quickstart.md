@@ -4,7 +4,7 @@ This guide helps you quickly set up an Author-Renderer deployment of Apache Slin
 
 ## Prerequisites
 
-- Java 11 or higher
+- Java 21 or higher
 - Maven 3.6 or higher
 - At least 4GB RAM available
 
