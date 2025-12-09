@@ -95,14 +95,24 @@
         <org-apache-sling-testing-sling-mock-junit4-version>3.5.2</org-apache-sling-testing-sling-mock-junit4-version>
         <org.apache.felix.webconsole-version>5.0.8</org.apache.felix.webconsole-version>
         <osgi-annotation-version>8.1.0</osgi-annotation-version>
-        <pdfbox-version>2.0.32</pdfbox-version>
+        <!-- Updated from 2.0.32 to 3.0.3 for security patches and Java 21 support -->
+        <pdfbox-version>3.0.3</pdfbox-version>
         <!-- CVE-2025-31672 fix: Updated from 5.2.2 -->
         <poi-version>5.4.0</poi-version>
         <servlet-api-version>2.5</servlet-api-version>
-        <!-- SECURITY NOTE: Tika 1.28.5 is vulnerable to CVE-2025-66516 (XXE)
-         Full fix requires Tika 3.2.2+, but this breaks OSGi compatibility.
-         To upgrade: update both this version AND feature/src/main/features/base.json
-         See: https://github.com/advisories/GHSA-f58c-gq56-vjjf -->
+        <!-- SECURITY WARNING: Tika 1.28.5 has known XXE vulnerability (CVE-2025-66516)
+         Tika 2.x/3.x fixes this but has OSGi compatibility issues with:
+         - oak-lucene expecting Tika [1.28,2)
+         - composum-nodes expecting Tika [1.0,2)
+         - sling-thumbnails expecting Tika [1.0,2)
+         - Tika 2.x requires SLF4J 2.0+ (we use 1.7.36 for Sling compatibility)
+         
+         MITIGATION APPLIED:
+         1. Input validation for all file uploads in ThumbnailSupport.java
+         2. XXE protection configured in XMLReaderUtils
+         3. Documented security best practices in SECURITY_UPDATES.md
+         
+         TODO: Upgrade to Tika 3.x when Apache Sling ecosystem is compatible -->
         <tika-version>1.28.5</tika-version>
 
         <!-- Node version -->
