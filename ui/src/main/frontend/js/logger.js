@@ -19,19 +19,43 @@
 
 /**
  * Centralized logging utility with debug mode control
- * To enable debug mode: localStorage.setItem('slingcms:debug', 'true')
+ * 
+ * To enable debug mode:
+ *   1. URL parameter: Add ?slingcms=debug to the URL
+ *   2. localStorage: localStorage.setItem('slingcms:debug', 'true')
+ *   3. Console: SlingCMS.logger.enableDebug()
+ * 
  * To disable debug mode: localStorage.removeItem('slingcms:debug')
  */
 
 const DEBUG_KEY = 'slingcms:debug';
 
 /**
- * Check if debug mode is enabled
+ * Check if debug mode is enabled via URL query parameter
+ * @returns {boolean}
+ */
+function isDebugEnabledViaUrl() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isEnabled = urlParams.get('slingcms') === 'debug';
+    if (isEnabled) {
+      console.log('[Logger] Debug enabled via URL parameter');
+    }
+    return isEnabled;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Check if debug mode is enabled (via localStorage or URL parameter)
+ * URL parameter: ?slingcms=debug
+ * localStorage: localStorage.setItem('slingcms:debug', 'true')
  * @returns {boolean}
  */
 function isDebugEnabled() {
   try {
-    return localStorage.getItem(DEBUG_KEY) === 'true';
+    return localStorage.getItem(DEBUG_KEY) === 'true' || isDebugEnabledViaUrl();
   } catch (e) {
     return false;
   }

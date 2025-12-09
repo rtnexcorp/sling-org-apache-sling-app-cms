@@ -101,6 +101,13 @@
                                     "icon": "cog",
                                     "prefix": "/cms/file/edit.html"
                                 },
+                                "preview": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Preview Image",
+                                    "icon": "eye",
+                                    "prefix": "/cms/file/imagepreview.html"
+                                },
                                 "optimize": {
                                     "jcr:primaryType": "nt:unstructured",
                                     "sling:resourceType": "sling-cms/components/cms/actions/modal",
