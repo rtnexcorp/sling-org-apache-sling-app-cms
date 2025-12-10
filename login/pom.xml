@@ -22,6 +22,10 @@ License. -->
                 <groupId>biz.aQute.bnd</groupId>
                 <artifactId>bnd-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>sling-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 </project>

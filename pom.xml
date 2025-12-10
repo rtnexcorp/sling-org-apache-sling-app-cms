@@ -38,7 +38,7 @@
         <legal.dir>${basedir}</legal.dir>
         <sling.protocol>http</sling.protocol>
         <sling.host>localhost</sling.host>
-        <sling.port>8080</sling.port>
+        <sling.port>8082</sling.port>
         <sling.username>admin</sling.username>
         <sling.password>admin</sling.password>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -513,4 +513,173 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- ============================================================ -->
+        <!-- AUTO-DEPLOY PROFILE WITH FILE WATCHER                         -->
+        <!-- ============================================================ -->
+        <!-- 
+            HOT DEPLOYMENT - Module-specific file watchers
+            
+            Default port: 8082 (author instance)
+            
+            Usage: Run the watcher for specific module from module directory
+            
+            Examples:
+            - cd core && mvn fizzed-watcher:run -P autoInstallBundle
+            - cd ui && mvn fizzed-watcher:run -P autoInstallBundle
+            
+            Or use the watch.sh script (recommended):
+            - ./deployment/watch.sh
+            
+            Or run all watchers from root (deploys only changed module):
+            - mvn fizzed-watcher:run -P watch-all
+        -->
+        <profile>
+            <id>autoInstallBundle</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- Sling Maven Plugin for bundle deployment -->
+                        <plugin>
+                            <groupId>org.apache.sling</groupId>
+                            <artifactId>sling-maven-plugin</artifactId>
+                            <version>3.0.2</version>
+                            <configuration>
+                                <slingUrl>${sling.protocol}://${sling.host}:${sling.port}/system/console</slingUrl>
+                                <user>${sling.username}</user>
+                                <password>${sling.password}</password>
+                                <deploymentMethod>WebConsole</deploymentMethod>
+                                <failOnError>false</failOnError>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>install-bundle</id>
+                                    <phase>install</phase>
+                                    <goals>
+                                        <goal>install</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <!-- File Watcher - runs from each module directory -->
+                        <plugin>
+                            <groupId>com.fizzed</groupId>
+                            <artifactId>fizzed-watcher-maven-plugin</artifactId>
+                            <version>1.0.6</version>
+                            <configuration>
+                                <touchFile>target/watcher.touchfile</touchFile>
+                                <watches>
+                                    <watch>
+                                        <directory>src</directory>
+                                    </watch>
+                                </watches>
+                                <goals>
+                                    <goal>clean</goal>
+                                    <goal>install</goal>
+                                </goals>
+                                <profiles>
+                                    <profile>autoInstallBundle</profile>
+                                </profiles>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <!-- Watch all modules from root - uses fswatch/entr for true module detection -->
+        <profile>
+            <id>watch-all</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument><![CDATA[
+echo "🔄 Starting Sling CMS Hot Deploy Watcher..."
+echo "   Target: ${sling.protocol}://${sling.host}:${sling.port}"
+echo "   Press Ctrl+C to stop"
+echo ""
+
+# Function to deploy a module
+deploy_module() {
+    local module=$1
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🚀 Deploying: $module"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    mvn clean install -P autoInstallBundle -pl "$module" -DskipTests -Dbnd.baseline.skip=true -q
+    if [ $? -eq 0 ]; then
+        echo "✅ $module deployed successfully!"
+    else
+        echo "❌ $module deployment failed!"
+    fi
+}
+
+# Watch for changes using fswatch (macOS) or inotifywait (Linux)
+if command -v fswatch &> /dev/null; then
+    fswatch -0 -r --exclude='target' --exclude='node_modules' --exclude='\.git' \
+        api/src core/src login/src ui/src reference/src thumbnails/src 2>/dev/null | while read -d "" event; do
+        # Extract module name from path
+        module=$(echo "$event" | sed -n 's|^\./\{0,1\}\([^/]*\)/src/.*|\1|p')
+        if [ -n "$module" ]; then
+            deploy_module "$module"
+        fi
+    done
+else
+    echo "⚠️  fswatch not found. Install with: brew install fswatch"
+    echo "   Falling back to polling mode..."
+    while true; do
+        for module in api core login ui reference thumbnails; do
+            if [ -f "$module/target/watcher.touchfile" ]; then
+                current=$(stat -f %m "$module/target/watcher.touchfile" 2>/dev/null || echo 0)
+                last_var="last_$module"
+                last=${!last_var:-0}
+                if [ "$current" != "$last" ]; then
+                    eval "last_$module=$current"
+                    deploy_module "$module"
+                fi
+            fi
+        done
+        sleep 2
+    done
+fi
+                                ]]></argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Deploy to author instance (port 8082) - same as default, kept for explicit usage -->
+        <profile>
+            <id>author</id>
+            <properties>
+                <sling.port>8082</sling.port>
+            </properties>
+        </profile>
+
+        <!-- Deploy to renderer/publisher instance (port 8083) -->
+        <profile>
+            <id>renderer</id>
+            <properties>
+                <sling.port>8083</sling.port>
+            </properties>
+        </profile>
+
+        <!-- Deploy to standalone instance (port 8080) -->
+        <profile>
+            <id>standalone</id>
+            <properties>
+                <sling.port>8080</sling.port>
+            </properties>
+        </profile>
+    </profiles>
 </project>
