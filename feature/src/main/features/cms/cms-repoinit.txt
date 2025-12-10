@@ -81,6 +81,12 @@ set ACL for sling-cms-transformer
     allow   jcr:write,jcr:nodeTypeManagement,jcr:versionManagement    on /static
     allow   jcr:read    on /
 end
+create service user sling-thumbnails
+set ACL for sling-thumbnails
+    allow   jcr:write,jcr:nodeTypeManagement,jcr:versionManagement    on /content
+    allow   jcr:write,jcr:nodeTypeManagement,jcr:versionManagement    on /static
+    allow   jcr:read    on /
+end
 create service user sling-cms-ugc
 set ACL for sling-cms-ugc
     allow   jcr:write,jcr:nodeTypeManagement,jcr:versionManagement    on /etc/usergenerated

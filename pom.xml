@@ -25,6 +25,7 @@
         <module>distribution</module>
         <module>feature</module>
         <module>archetype</module>
+        <module>thumbnails</module>
         <module>it</module>
     </modules>
     <scm>
@@ -56,7 +57,7 @@
         <!-- renovate: depName=org.apache.jackrabbit:jackrabbit-jcr-commons -->
         <jackrabbit.version>2.22.2</jackrabbit.version>
         <!-- renovate: depName=org.apache.jackrabbit:oak-api -->
-        <oak.version>1.72.0</oak.version>
+        <oak.version>1.78.0</oak.version>
         <!-- renovate: depName=org.slf4j:slf4j-api -->
         <slf4j.version>1.7.36</slf4j.version>
         <!-- renovate: depName=com.composum.nodes:composum-nodes-commons -->
@@ -73,7 +74,7 @@
         <!-- Common Versions -->
         <cms-version>${project.parent.version}</cms-version>
         <cocoon-serializers-charsets-version>1.0.2</cocoon-serializers-charsets-version>
-        <!-- CVE-2024-47554 fix: Updated from 2.11.0 -->
+        <!-- CVE-2024-47554 fix: Updated for Oak 1.88.0 compatibility -->
         <commons-io-version>2.18.0</commons-io-version>
         <commons-lang3-version>3.17.0</commons-lang3-version>
         <commons-text-version>1.13.0</commons-text-version>

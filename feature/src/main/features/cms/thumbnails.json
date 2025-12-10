@@ -1,8 +1,9 @@
 {
-  "prototype": {
-    "id": "org.apache.sling:org.apache.sling.thumbnails:slingosgifeature:default:1.0.2"
-  },
   "bundles": [
+    {
+      "id": "org.apache.sling:org.apache.sling.thumbnails:1.1.9-SNAPSHOT",
+      "start-order": "20"
+    },
     {
       "id": "org.apache.servicemix.bundles:org.apache.servicemix.bundles.batik:1.14_1",
       "start-order": "20"
