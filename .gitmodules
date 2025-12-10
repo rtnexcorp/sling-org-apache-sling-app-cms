@@ -1,0 +1,3 @@
+[submodule "thumbnails"]
+	path = thumbnails
+	url = https://github.com/apache/sling-org-apache-sling-thumbnails.git
