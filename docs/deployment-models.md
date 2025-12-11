@@ -12,7 +12,48 @@
 
 # Deployment Models
 
-Apache Sling CMS provides a number of deployment models for your solution needs. 
+Apache Sling CMS provides a number of deployment models for your solution needs.
+
+## Quick Start
+
+```bash
+# Build the project (using Bun for faster builds)
+mvn clean install -P bun,fast -DskipTests -Dbnd.baseline.skip=true
+
+# Start standalone instance
+./deployment/start-standalone.sh
+```
+
+Access the CMS at http://localhost:8080/cms/start.html (admin/admin)
+
+---
+
+## Build Profiles
+
+| Profile | Description | Build Time | Output |
+|---------|-------------|------------|--------|
+| (default) | Full build with all features | ~22s | 3 JARs (~621 MB) |
+| `fast` | Standalone only, skip analysis | ~10s | 1 JAR (~207 MB) |
+| `unified` | All modes in single JAR | ~13s | 1 JAR (~590 MB) |
+| `bun` | Use Bun for frontend builds | -3s | Faster frontend |
+
+### Examples
+
+```bash
+# Development: Fast build (standalone only)
+mvn clean install -P fast -DskipTests -Dbnd.baseline.skip=true
+
+# Production: All separate JARs
+mvn clean install -DskipTests
+
+# Single unified JAR (all modes)
+mvn clean install -P unified -DskipTests -Dbnd.baseline.skip=true
+
+# Fastest full build (Bun + fast profile)
+mvn clean install -P bun,fast -DskipTests -Dbnd.baseline.skip=true
+```
+
+---
 
 ## Instance Types
 
@@ -32,9 +73,12 @@ org.apache.sling:org.apache.sling.cms.feature:slingosgifeature:slingcms-standalo
 **Installation:**
 ```bash
 # Build the project
-mvn clean install -DskipTests
+mvn clean install -P fast -DskipTests
 
-# Create a directory and start
+# Option 1: Use the start script (recommended)
+./deployment/start-standalone.sh
+
+# Option 2: Manual start
 mkdir -p standalone && cd standalone
 java -Xmx1g -Dorg.osgi.service.http.port=8080 \
     -jar ../feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT.jar
@@ -59,10 +103,13 @@ org.apache.sling:org.apache.sling.cms.feature:slingosgifeature:slingcms-author:[
 
 **Installation:**
 ```bash
-# Build the project
+# Build the project (full build needed for author JAR)
 mvn clean install -DskipTests
 
-# Create a directory and start on port 8082
+# Option 1: Use the start script (recommended)
+./deployment/start-author.sh
+
+# Option 2: Manual start
 mkdir -p author && cd author
 java -Xmx1g -Dorg.osgi.service.http.port=8082 \
     -Dsling.run.modes=author \
@@ -94,10 +141,13 @@ org.apache.sling:org.apache.sling.cms.feature:slingosgifeature:slingcms-renderer
 
 **Installation:**
 ```bash
-# Build the project
+# Build the project (full build needed for renderer JAR)
 mvn clean install -DskipTests
 
-# Create a directory and start on port 8083
+# Option 1: Use the start script (recommended)
+./deployment/start-publisher.sh
+
+# Option 2: Manual start
 mkdir -p renderer && cd renderer
 java -Xmx1g -Dorg.osgi.service.http.port=8083 \
     -Dsling.run.modes=renderer \
@@ -178,6 +228,117 @@ Once both instances are running:
    ```
 
 For detailed information about content distribution, see [Content Distribution Guide](content-distribution.md).
+
+---
+
+## Unified JAR Deployment
+
+The **unified** profile creates a single JAR containing all three modes (standalone, author, renderer) with runtime profile selection.
+
+### Building Unified JAR
+
+```bash
+mvn clean install -pl feature -P unified -DskipTests -Dbnd.baseline.skip=true
+```
+
+**Output:** `feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT.jar` (~590 MB)
+
+### Running with Profile Selection
+
+```bash
+# Standalone mode (default)
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar
+
+# Author mode
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar -P author
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar --profile author
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar --profile=author
+
+# Renderer mode
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar -P renderer
+
+# With custom port
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar -P author \
+    -D org.osgi.service.http.port=8082
+```
+
+### Help
+
+```bash
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar --help
+```
+
+### Benefits
+
+| Approach | JARs | Total Size | Use Case |
+|----------|------|------------|----------|
+| Default (3 JARs) | 3 | ~621 MB | Production with separate instances |
+| Unified (1 JAR) | 1 | ~590 MB | Simplified deployment, Docker |
+| Fast (standalone) | 1 | ~207 MB | Development only |
+
+---
+
+## Deployment Scripts
+
+The [deployment](../deployment) directory contains ready-to-use scripts:
+
+| Script | Port | Mode | Description |
+|--------|------|------|-------------|
+| `start-standalone.sh` | 8080 | standalone | Single instance for development |
+| `start-author.sh` | 8082 | author | Author instance for content editing |
+| `start-renderer.sh` | 8083 | renderer | Renderer instance for content delivery |
+| `stop-all.sh` | - | - | Stop all running instances |
+| `clean.sh` | - | - | Clean all instance data |
+| `watch.sh` | - | - | Hot-deploy file watcher |
+
+### Usage
+
+```bash
+cd deployment
+
+# Start standalone for development
+./start-standalone.sh
+
+# Or start author-renderer pair
+./start-renderer.sh     # Start renderer FIRST
+# Wait 60 seconds
+./start-author.sh       # Then start author
+
+# Stop all instances
+./stop-all.sh
+
+# Clean and start fresh
+./clean.sh
+```
+
+### Instance Directories
+
+Each script creates its own launcher directory:
+- `deployment/standalone/` - Standalone instance data
+- `deployment/author/` - Author instance data  
+- `deployment/publisher/` - Renderer instance data
+
+---
+
+## Hot Deployment (Development)
+
+For active development, use the `watch.sh` script to auto-deploy changes:
+
+```bash
+# Start your instance first
+./deployment/start-standalone.sh
+
+# In another terminal, start the watcher
+./deployment/watch.sh
+```
+
+The watcher:
+- Monitors `src` directories in api, core, login, ui, reference, thumbnails, frontend
+- Auto-detects and uses Bun for frontend builds if available
+- Deploys only the changed module
+- Typical deploy time: 2-6 seconds per module
+
+For more details, see [Build Analysis](build-analysis.md).
 
 ---
 

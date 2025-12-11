@@ -21,13 +21,28 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 RENDERER_JAR="$PROJECT_DIR/feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT-renderer.jar"
+UNIFIED_JAR="$PROJECT_DIR/feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT.jar"
 PUBLISHER_DIR="$SCRIPT_DIR/publisher"
 PORT=8083
+USE_UNIFIED=false
 
-# Check if renderer JAR exists
-if [ ! -f "$RENDERER_JAR" ]; then
-    echo "Error: Renderer JAR not found at $RENDERER_JAR"
-    echo "Please build the project first: mvn clean install -DskipTests"
+# Check if renderer JAR exists, fallback to unified JAR
+if [ -f "$RENDERER_JAR" ]; then
+    JAR_TO_USE="$RENDERER_JAR"
+    JAR_TYPE="Renderer JAR"
+elif [ -f "$UNIFIED_JAR" ]; then
+    JAR_TO_USE="$UNIFIED_JAR"
+    JAR_TYPE="Unified JAR (with -P renderer)"
+    USE_UNIFIED=true
+else
+    echo "Error: No suitable JAR found!"
+    echo "Looked for:"
+    echo "  1. Renderer JAR: $RENDERER_JAR"
+    echo "  2. Unified JAR: $UNIFIED_JAR"
+    echo ""
+    echo "Please build the project first:"
+    echo "  mvn clean install -DskipTests                    # For separate JARs"
+    echo "  mvn clean install -P unified -DskipTests         # For unified JAR"
     exit 1
 fi
 
@@ -41,7 +56,7 @@ echo "Mode: RENDERER"
 echo "Port: $PORT"
 echo "Admin URL: http://localhost:$PORT/cms"
 echo "Credentials: admin / admin"
-echo "Renderer JAR: $RENDERER_JAR"
+echo "JAR: $JAR_TYPE"
 echo "============================================"
 echo ""
 echo "Press Ctrl+C to stop"
@@ -50,7 +65,15 @@ echo ""
 cd "$PUBLISHER_DIR"
 
 # Start the renderer instance
-java -Xmx1g \
-    -Dsling.run.modes=renderer \
-    -Dorg.osgi.service.http.port=$PORT \
-    -jar "$RENDERER_JAR"
+if [ "$USE_UNIFIED" = true ]; then
+    java -Xmx1g \
+        -Dorg.osgi.service.http.port=$PORT \
+        -jar "$JAR_TO_USE" \
+        -P renderer \
+        -p "$PUBLISHER_DIR/launcher"
+else
+    java -Xmx1g \
+        -Dsling.run.modes=renderer \
+        -Dorg.osgi.service.http.port=$PORT \
+        -jar "$JAR_TO_USE"
+fi

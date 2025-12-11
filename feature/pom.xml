@@ -339,6 +339,190 @@
         </plugins>
     </build>
     <profiles>
+        <!-- Fast build profile - skips analysis and extra assemblies -->
+        <profile>
+            <id>fast</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.sling</groupId>
+                        <artifactId>slingfeature-maven-plugin</artifactId>
+                        <configuration>
+                            <aggregates>
+                                <!-- Only build standalone for fast development -->
+                                <aggregate>
+                                    <classifier>slingcms-standalone</classifier>
+                                    <filesInclude>**/*.json</filesInclude>
+                                    <filesExclude>oak/node-store/composite-*.json</filesExclude>
+                                    <filesExclude>runmodes/author.json</filesExclude>
+                                    <filesExclude>runmodes/renderer.json</filesExclude>
+                                    <title>Sling CMS - Standalone</title>
+                                </aggregate>
+                            </aggregates>
+                            <!-- Skip scans for faster builds -->
+                            <scans combine.self="override">
+                                <scan>
+                                    <includeClassifier>slingcms-standalone</includeClassifier>
+                                </scan>
+                            </scans>
+                            <!-- Only standalone archive -->
+                            <archives combine.self="override">
+                                <archive>
+                                    <classifier>slingcms_standalone_far</classifier>
+                                    <includeClassifier>slingcms-standalone</includeClassifier>
+                                </archive>
+                            </archives>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>aggregate-features</id>
+                                <goals>
+                                    <goal>aggregate-features</goal>
+                                    <goal>attach-features</goal>
+                                    <goal>attach-featurearchives</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Only build standalone assembly -->
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>author</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>renderer</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Skip feature module entirely during development -->
+        <profile>
+            <id>skip-feature</id>
+            <properties>
+                <maven.main.skip>true</maven.main.skip>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+
+        <!-- Unified JAR profile - builds single JAR with all profiles -->
+        <profile>
+            <id>unified</id>
+            <build>
+                <plugins>
+                    <!-- Only build the 3 required aggregates (skip composite-seed, composite-runtime, upgrade) -->
+                    <plugin>
+                        <groupId>org.apache.sling</groupId>
+                        <artifactId>slingfeature-maven-plugin</artifactId>
+                        <configuration>
+                            <!-- Only build standalone, author, renderer aggregates -->
+                            <aggregates combine.self="override">
+                                <aggregate>
+                                    <classifier>slingcms-standalone</classifier>
+                                    <filesInclude>**/*.json</filesInclude>
+                                    <filesExclude>oak/node-store/composite-*.json</filesExclude>
+                                    <filesExclude>runmodes/author.json</filesExclude>
+                                    <filesExclude>runmodes/renderer.json</filesExclude>
+                                    <title>Sling CMS - Standalone</title>
+                                </aggregate>
+                                <aggregate>
+                                    <classifier>slingcms-author</classifier>
+                                    <filesInclude>**/*.json</filesInclude>
+                                    <filesExclude>oak/node-store/composite-*.json</filesExclude>
+                                    <filesExclude>runmodes/standalone.json</filesExclude>
+                                    <filesExclude>runmodes/renderer.json</filesExclude>
+                                    <title>Sling CMS - Author</title>
+                                </aggregate>
+                                <aggregate>
+                                    <classifier>slingcms-renderer</classifier>
+                                    <filesInclude>**/*.json</filesInclude>
+                                    <filesExclude>oak/node-store/composite-*.json</filesExclude>
+                                    <filesExclude>runmodes/standalone.json</filesExclude>
+                                    <filesExclude>runmodes/author.json</filesExclude>
+                                    <title>Sling CMS - Renderer</title>
+                                </aggregate>
+                            </aggregates>
+                            <!-- Only scan the 3 required aggregates -->
+                            <scans combine.self="override">
+                                <scan>
+                                    <includeClassifier>slingcms-standalone</includeClassifier>
+                                </scan>
+                                <scan>
+                                    <includeClassifier>slingcms-author</includeClassifier>
+                                </scan>
+                                <scan>
+                                    <includeClassifier>slingcms-renderer</includeClassifier>
+                                </scan>
+                            </scans>
+                            <!-- Only the 3 required archives -->
+                            <archives combine.self="override">
+                                <archive>
+                                    <classifier>slingcms_standalone_far</classifier>
+                                    <includeClassifier>slingcms-standalone</includeClassifier>
+                                </archive>
+                                <archive>
+                                    <classifier>slingcms_author_far</classifier>
+                                    <includeClassifier>slingcms-author</includeClassifier>
+                                </archive>
+                                <archive>
+                                    <classifier>slingcms_renderer_far</classifier>
+                                    <includeClassifier>slingcms-renderer</includeClassifier>
+                                </archive>
+                            </archives>
+                        </configuration>
+                    </plugin>
+                    <!-- Build unified assembly instead of separate JARs -->
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <!-- Disable individual assemblies -->
+                            <execution>
+                                <id>standalone</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>author</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>renderer</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- Create unified assembly -->
+                            <execution>
+                                <id>unified</id>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <finalName>org.apache.sling.cms-${project.version}</finalName>
+                                    <archive>
+                                        <manifest>
+                                            <mainClass>org.apache.sling.cms.feature.Main</mainClass>
+                                            <classpathPrefix>lib/</classpathPrefix>
+                                            <addClasspath>true</addClasspath>
+                                        </manifest>
+                                    </archive>
+                                    <descriptors>
+                                        <descriptor>src/main/assembly/unified.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <id>run-smoke-test</id>
             <activation>

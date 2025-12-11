@@ -20,23 +20,23 @@
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-FEATURE_FAR="$PROJECT_DIR/feature/target/org.apache.sling.cms.feature-1.1.9-SNAPSHOT-slingcms_standalone_far.far"
-FEATURE_LAUNCHER="$HOME/.m2/repository/org/apache/sling/org.apache.sling.feature.launcher/1.3.2/org.apache.sling.feature.launcher-1.3.2.jar"
+# Both standalone JAR and unified JAR work for standalone mode
+STANDALONE_JAR="$PROJECT_DIR/feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT.jar"
 STANDALONE_DIR="$SCRIPT_DIR/standalone"
 PORT=8080
 
-# Check if feature archive exists
-if [ ! -f "$FEATURE_FAR" ]; then
-    echo "Error: Standalone Feature Archive not found at $FEATURE_FAR"
-    echo "Please build the project first: mvn clean install -DskipTests"
+# Check if JAR exists (unified JAR is the default for standalone)
+if [ -f "$STANDALONE_JAR" ]; then
+    JAR_TO_USE="$STANDALONE_JAR"
+    JAR_TYPE="Standalone/Unified JAR"
+else
+    echo "Error: Sling CMS JAR not found at $STANDALONE_JAR"
+    echo ""
+    echo "Please build the project first:"
+    echo "  mvn clean install -P fast -DskipTests            # For standalone only (fastest)"
+    echo "  mvn clean install -P unified -DskipTests         # For unified JAR"
+    echo "  mvn clean install -DskipTests                    # For all separate JARs"
     exit 1
-fi
-
-# Check if feature launcher exists
-if [ ! -f "$FEATURE_LAUNCHER" ]; then
-    echo "Error: Feature Launcher not found at $FEATURE_LAUNCHER"
-    echo "Downloading feature launcher..."
-    mvn dependency:get -Dartifact=org.apache.sling:org.apache.sling.feature.launcher:1.3.2
 fi
 
 # Create standalone directory
@@ -50,16 +50,15 @@ echo "Mode: STANDALONE"
 echo "Port: $PORT"
 echo "Admin URL: http://localhost:$PORT/cms"
 echo "Credentials: admin / admin"
-echo "Feature Archive: $FEATURE_FAR"
+echo "JAR: $JAR_TYPE"
 echo "============================================"
 echo ""
 echo "Press Ctrl+C to stop"
 echo ""
 
-# Start standalone instance using feature launcher
-java -Xmx512m \
-    -jar "$FEATURE_LAUNCHER" \
-    -f "$FEATURE_FAR" \
+# Start standalone instance using the assembled JAR
+java -Xmx1g \
+    -jar "$JAR_TO_USE" \
     -p "$STANDALONE_DIR/launcher" \
     -D org.osgi.service.http.port=$PORT \
     -D sling.run.modes=standalone

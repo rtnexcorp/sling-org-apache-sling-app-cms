@@ -20,6 +20,7 @@ node_modules/
 node/
 author/
 publisher/
+standalone/
 .vscode/
 pom.xml.releaseBackup
 pom.xml.tag

@@ -21,13 +21,28 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 AUTHOR_JAR="$PROJECT_DIR/feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT-author.jar"
+UNIFIED_JAR="$PROJECT_DIR/feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT.jar"
 AUTHOR_DIR="$SCRIPT_DIR/author"
 PORT=8082
+USE_UNIFIED=false
 
-# Check if author JAR exists
-if [ ! -f "$AUTHOR_JAR" ]; then
-    echo "Error: Author JAR not found at $AUTHOR_JAR"
-    echo "Please build the project first: mvn clean install -DskipTests"
+# Check if author JAR exists, fallback to unified JAR
+if [ -f "$AUTHOR_JAR" ]; then
+    JAR_TO_USE="$AUTHOR_JAR"
+    JAR_TYPE="Author JAR"
+elif [ -f "$UNIFIED_JAR" ]; then
+    JAR_TO_USE="$UNIFIED_JAR"
+    JAR_TYPE="Unified JAR (with -P author)"
+    USE_UNIFIED=true
+else
+    echo "Error: No suitable JAR found!"
+    echo "Looked for:"
+    echo "  1. Author JAR: $AUTHOR_JAR"
+    echo "  2. Unified JAR: $UNIFIED_JAR"
+    echo ""
+    echo "Please build the project first:"
+    echo "  mvn clean install -DskipTests                    # For separate JARs"
+    echo "  mvn clean install -P unified -DskipTests         # For unified JAR"
     exit 1
 fi
 
@@ -41,7 +56,7 @@ echo "Mode: AUTHOR"
 echo "Port: $PORT"
 echo "Admin URL: http://localhost:$PORT/cms"
 echo "Credentials: admin / admin"
-echo "Author JAR: $AUTHOR_JAR"
+echo "JAR: $JAR_TYPE"
 echo "============================================"
 echo ""
 echo "Press Ctrl+C to stop"
@@ -50,7 +65,15 @@ echo ""
 cd "$AUTHOR_DIR"
 
 # Start the author instance
-java -Xmx1g \
-    -Dsling.run.modes=author \
-    -Dorg.osgi.service.http.port=$PORT \
-    -jar "$AUTHOR_JAR"
+if [ "$USE_UNIFIED" = true ]; then
+    java -Xmx1g \
+        -Dorg.osgi.service.http.port=$PORT \
+        -jar "$JAR_TO_USE" \
+        -P author \
+        -p "$AUTHOR_DIR/launcher"
+else
+    java -Xmx1g \
+        -Dsling.run.modes=author \
+        -Dorg.osgi.service.http.port=$PORT \
+        -jar "$JAR_TO_USE"
+fi

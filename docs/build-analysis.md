@@ -1,180 +1,261 @@
-# Apache Sling CMS - Build Analysis
+# Apache Sling CMS Build Analysis
 
-This document provides an analysis of the build times for each module in the Apache Sling CMS project.
+This document provides a comprehensive analysis of build and deployment times for the Apache Sling CMS project.
+
+For deployment instructions, see [Deployment Models](deployment-models.md).
+
+## Quick Reference
+
+| Build Tool | Total Time | Frontend Time | Feature Time | Improvement |
+|------------|------------|---------------|--------------|-------------|
+| **npm** (default) | 42.58s | 6.60s | 19.96s | baseline |
+| **Bun** | 33.88s | 3.44s | 18.96s | **20% faster** |
+| **Bun + Fast** | 22.17s | 3.44s | 6.92s | **48% faster** |
 
 ## Build Environment
 
 - **Date**: December 11, 2025
 - **Java Version**: 21
 - **Maven Version**: 3.x
+- **Node.js Version**: v20.18.1
+- **Bun Version**: 1.3.4
 - **Build Command**: `mvn clean install -DskipTests -Dbnd.baseline.skip=true`
-- **Machine**: macOS
+- **Machine**: macOS (arm64 / Apple Silicon)
 
-## Module Build Times
+## Full Project Build Comparison
+
+| Build Tool | Total Time | Frontend Time | Improvement |
+|------------|------------|---------------|-------------|
+| **npm** (default) | 42.58s | 6.60s | baseline |
+| **Bun** | 33.88s | 3.44s | **20% faster overall** |
+
+## Module Build Times (with Bun)
 
 | # | Module | Build Time | % of Total | Description |
 |---|--------|------------|------------|-------------|
-| 1 | **Apache Sling - CMS** (Parent POM) | 2.991s | 7.7% | Parent POM with shared configuration |
-| 2 | **Apache Sling - CMS API** | 1.423s | 3.7% | API interfaces and models (58 Java files) |
-| 3 | **Apache Sling - CMS Core** | 2.006s | 5.1% | Core implementation (97 Java files) |
-| 4 | **Apache Sling - Login Fragment** | 0.068s | 0.2% | Login UI fragment |
-| 5 | **Apache Sling - CMS Frontend** | 6.123s | 15.7% | Frontend assets (JS, CSS, Vite build) |
-| 6 | **Apache Sling - CMS UI** | 0.543s | 1.4% | UI components and HTL templates |
-| 7 | **Apache Sling - CMS Reference** | 1.269s | 3.3% | Reference implementation |
-| 8 | **Apache Sling - CMS Distribution** | 0.264s | 0.7% | Content distribution module |
-| 9 | **Apache Sling Thumbnail Support** | 1.992s | 5.1% | Thumbnail generation |
-| 10 | **Apache Sling - CMS Feature Model** | 19.956s | 51.2% | Feature aggregation and packaging |
-| 11 | **Apache Sling - CMS Archetype** | 0.871s | 2.2% | Maven archetype |
-| 12 | **Apache Sling - CMS Integration Tests** | 0.072s | 0.2% | Integration tests (skipped) |
+| 1 | **Apache Sling - CMS** (Parent POM) | 2.67s | 7.9% | Parent POM with shared configuration |
+| 2 | **Apache Sling - CMS API** | 1.43s | 4.2% | API interfaces and models (58 Java files) |
+| 3 | **Apache Sling - CMS Core** | 1.85s | 5.5% | Core implementation (97 Java files) |
+| 4 | **Apache Sling - Login Fragment** | 0.07s | 0.2% | Login UI fragment |
+| 5 | **Apache Sling - CMS Frontend** | 3.44s | 10.2% | Frontend assets (JS, CSS, Vite build) |
+| 6 | **Apache Sling - CMS UI** | 0.40s | 1.2% | UI components and HTL templates |
+| 7 | **Apache Sling - CMS Reference** | 1.12s | 3.3% | Reference implementation |
+| 8 | **Apache Sling - CMS Distribution** | 0.21s | 0.6% | Content distribution module |
+| 9 | **Apache Sling Thumbnail Support** | 1.55s | 4.6% | Thumbnail generation |
+| 10 | **Apache Sling - CMS Feature Model** | 18.96s | 56.0% | Feature aggregation and packaging |
+| 11 | **Apache Sling - CMS Archetype** | 0.78s | 2.3% | Maven archetype |
+| 12 | **Apache Sling - CMS Integration Tests** | 0.08s | 0.2% | Integration tests (skipped) |
 
-## Total Build Time
-
-| Metric | Value |
-|--------|-------|
-| **Total Build Time** | **38.961 seconds** |
-| **Modules Built** | 12 |
-| **Average per Module** | 3.25 seconds |
-
-## Build Time Distribution
+## Build Time Distribution (Bun)
 
 ```
-Feature Model  ████████████████████████████████████████████████████ 51.2%
-Frontend       ████████████████ 15.7%
-Parent POM     ████████ 7.7%
-Core           █████ 5.1%
-Thumbnails     █████ 5.1%
-API            ████ 3.7%
+Feature Model  ████████████████████████████████████████████████████████ 56.0%
+Frontend       ██████████ 10.2%
+Parent POM     ████████ 7.9%
+Core           ██████ 5.5%
+Thumbnails     █████ 4.6%
+API            ████ 4.2%
 Reference      ███ 3.3%
-Archetype      ██ 2.2%
-UI             █ 1.4%
-Distribution   █ 0.7%
+Archetype      ██ 2.3%
+UI             █ 1.2%
+Distribution   █ 0.6%
 Login          ▏ 0.2%
 IT             ▏ 0.2%
 ```
 
-## Analysis & Observations
+## Single Module Deployment Times
 
-### 1. Feature Model (51.2% - 19.96s)
-The **Feature Model** module takes the most time because it:
-- Aggregates multiple feature JSON files
-- Analyzes features for dependencies and capabilities
-- Creates multiple feature archives (standalone, author, renderer, upgrade)
-- Builds multiple assembly JARs
+Hot deployment to running Sling server (port 8082):
 
-### 2. Frontend (15.7% - 6.12s)
-The **Frontend** module is the second slowest because it:
-- Installs Node.js and npm (if needed)
-- Runs `npm ci` to install dependencies
-- Executes Vite build for production (`npm run build:prod`)
-- Compiles SCSS to CSS
-- Bundles JavaScript modules
+| Module | npm Time | Bun Time | Improvement |
+|--------|----------|----------|-------------|
+| **Frontend** | 8.78s | 6.17s | **30% faster** |
+| **Core** | 2.90s | - | Java only |
+| **UI** | 2.76s | - | Java only |
+| **API** | 2.59s | - | Java only |
 
-### 3. Fast Modules (<1s)
-Several modules build very quickly:
-- **Login Fragment** (0.068s) - Minimal resources
-- **Integration Tests** (0.072s) - Tests skipped
-- **Distribution** (0.264s) - Small codebase
-- **UI** (0.543s) - HTL templates only
+## Watch.sh Auto-Deploy Performance
 
-### 4. Java Compilation Modules
-Modules with Java code compile quickly:
-- **API** (1.42s) - 58 Java files
-- **Core** (2.01s) - 97 Java files
-- **Reference** (1.27s) - Moderate codebase
-- **Thumbnails** (1.99s) - Image processing code
+When using `watch.sh` for development:
+
+### Frontend Module (with Bun ⚡)
+| Step | Time |
+|------|------|
+| bun install (cached) | 28-82ms |
+| Vite build | ~1.7s |
+| Maven packaging | ~2s |
+| Sling deploy | ~1s |
+| **Total** | **~5-6s** |
+
+### Java Modules (Core, API, UI, etc.)
+| Step | Time |
+|------|------|
+| spotless:apply | ~0.5s |
+| Java compile | ~1s |
+| Package bundle | ~0.5s |
+| Sling deploy | ~0.5s |
+| **Total** | **~2.5-3s** |
+
+## Frontend Build Breakdown
+
+### Package Installation
+| Tool | Fresh Install | Cached |
+|------|---------------|--------|
+| npm ci | ~2-3s | ~1s |
+| bun install | ~100ms | ~28ms |
+
+### Vite Build Output
+| Asset Type | Size | Gzipped |
+|------------|------|---------|
+| CSS (cms.min.css) | 698.58 kB | 69.03 kB |
+| CSS (bulma.min.css) | 678.76 kB | 66.44 kB |
+| JS (tiptap chunk) | 352.89 kB | 109.37 kB |
+| JS (cms.bundle.min.js) | 23.15 kB | 6.28 kB |
+| Fonts (jam-icons) | ~900 kB | 186 kB |
 
 ## Optimization Recommendations
 
-### Quick Wins
-
-1. **Skip Feature Model during development**
-   ```bash
-   mvn clean install -pl !feature -DskipTests
-   ```
-   This can save ~20 seconds per build.
-
-2. **Build only changed modules**
-   ```bash
-   mvn install -pl core -DskipTests -Dbnd.baseline.skip=true
-   ```
-
-3. **Use the dev profile for Frontend**
-   ```bash
-   mvn install -pl frontend -P dev -DskipTests
-   ```
-   Uses development build instead of production.
-
-4. **Use Bun for faster Frontend builds** ⚡
-   ```bash
-   mvn install -pl frontend -P bun -DskipTests -Dbnd.baseline.skip=true
-   ```
-   Bun provides faster package installation and script execution.
-
-### Bun vs npm Comparison
-
-| Build Type | npm Time | Bun Time | Improvement |
-|------------|----------|----------|-------------|
-| Clean build (fresh install) | 10.7s | 9.4s | **~12% faster** |
-| Incremental build (cached) | 8.0s | 5.3s | **~34% faster** |
-
-**Why Bun is faster:**
-- Global module cache with hard links
-- Parallel dependency downloads
-- Native TypeScript/JSX transpiler
-- Faster startup time
-
-**To install Bun:**
+### 1. Use Bun for Frontend (20% overall improvement)
 ```bash
-curl -fsSL https://bun.sh/install | bash
+mvn clean install -P bun -DskipTests -Dbnd.baseline.skip=true
 ```
 
-**Available Bun profiles:**
-- `-P bun` - Production build with Bun
-- `-P bun-dev` - Development build with Bun
+### 2. Skip Feature Model During Development (saves ~19s)
+```bash
+mvn install -pl !feature -DskipTests -Dbnd.baseline.skip=true
+```
 
-### Module-Specific Builds
+### 3. Build Only Changed Module
+```bash
+# Frontend with Bun
+mvn install -pl frontend -P autoInstallBundle,bun -DskipTests -Dbnd.baseline.skip=true
 
-| Use Case | Command | Time Saved |
-|----------|---------|------------|
-| API changes | `mvn install -pl api -DskipTests` | ~37s |
-| Core changes | `mvn install -pl core -DskipTests` | ~36s |
-| UI changes | `mvn install -pl ui -DskipTests` | ~38s |
-| Frontend changes | `mvn install -pl frontend -DskipTests` | ~33s |
+# Java modules
+mvn install -pl core -P autoInstallBundle -DskipTests -Dbnd.baseline.skip=true
+```
 
-### VS Code Tasks
+### 4. Use watch.sh for Automatic Deployment
+```bash
+./deployment/watch.sh
+```
+- Detects file changes automatically
+- Uses Bun for frontend if available
+- Deploys only the changed module
+
+## VS Code Tasks
 
 Use the pre-configured VS Code tasks for hot deployment:
-- **Auto Deploy - Core** - Deploys core module
-- **Auto Deploy - UI** - Deploys UI module
-- **Auto Deploy - Frontend** - Deploys frontend module
-- **Deploy All Modules** - Deploys api, core, login, ui, reference, thumbnails
+
+| Task | Module | Build Tool | Approx Time |
+|------|--------|------------|-------------|
+| Auto Deploy - API | api | Maven | ~2.6s |
+| Auto Deploy - Core | core | Maven | ~2.9s |
+| Auto Deploy - UI | ui | Maven | ~2.8s |
+| Auto Deploy - Login | login | Maven | ~1s |
+| Auto Deploy - Frontend | frontend | npm | ~8.8s |
+| Auto Deploy - Frontend (Bun) ⚡ | frontend | Bun | ~6.2s |
+| Auto Deploy - Reference | reference | Maven | ~3s |
+| Auto Deploy - Thumbnails | thumbnails | Maven | ~3s |
+| Deploy All Modules | all | Maven | ~15s |
 
 ## Build Profiles
 
 | Profile | Description |
 |---------|-------------|
 | `autoInstallBundle` | Deploy bundle to running server |
-| `dev` | Development build (frontend) |
+| `dev` | Development build (frontend) - no minification |
 | `watch` | Watch mode for frontend changes |
 | `bun` | Use Bun for production frontend build ⚡ |
 | `bun-dev` | Use Bun for development frontend build ⚡ |
+| `fast` | Fast feature model build (standalone only) ⚡ |
+| `unified` | Single JAR with all profiles (standalone, author, renderer) ⚡ |
 
-## Full Build vs Incremental
+## Build Scenarios
 
-| Build Type | Command | Time |
-|------------|---------|------|
-| Full Clean Build | `mvn clean install -DskipTests` | ~39s |
-| Incremental Build | `mvn install -DskipTests` | ~25s* |
-| Single Module | `mvn install -pl <module> -DskipTests` | 1-7s |
+| Scenario | Command | Time |
+|----------|---------|------|
+| Full Clean Build (npm) | `mvn clean install -DskipTests` | ~42s |
+| Full Clean Build (Bun) | `mvn clean install -P bun -DskipTests` | ~34s |
+| **Full Build (Bun + Fast)** | `mvn clean install -P bun,fast -DskipTests` | **~22s** |
+| **Unified JAR Build** | `mvn clean install -P bun,unified -DskipTests` | **~16s** |
+| Skip Feature Model | `mvn install -pl !feature -DskipTests` | ~15s |
+| Single Java Module | `mvn install -pl core -DskipTests` | ~3s |
+| Single Frontend (npm) | `mvn install -pl frontend -DskipTests` | ~9s |
+| Single Frontend (Bun) | `mvn install -pl frontend -P bun -DskipTests` | ~6s |
 
-*Incremental builds are faster because Maven skips unchanged modules.
+## Unified JAR (Multi-Profile)
 
-## Recommendations for Developers
+Instead of building 3 separate JARs (~207 MB each), use the `unified` profile to build a single JAR with all profiles:
 
-1. **During active development**: Build only the module you're working on
-2. **Before committing**: Run full build to ensure no regressions
-3. **For frontend work**: Use `npm run dev` in the frontend directory for hot reload
-4. **For testing deployment**: Use VS Code tasks with `autoInstallBundle` profile
+```bash
+# Build unified JAR
+mvn clean install -pl feature -P unified -DskipTests
+
+# Output: feature/target/org.apache.sling.cms-1.1.9-SNAPSHOT.jar (~590 MB)
+```
+
+### Running Different Profiles
+
+```bash
+# Default: standalone mode
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar
+
+# Author mode
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar -P author
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar --profile author
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar --profile=author
+
+# Renderer mode
+java -jar org.apache.sling.cms-1.1.9-SNAPSHOT.jar -P renderer
+```
+
+### Profile Comparison
+
+| Approach | JARs Created | Total Size | Use Case |
+|----------|--------------|------------|----------|
+| Default Build | 3 (standalone, author, renderer) | ~621 MB | Production distribution |
+| `fast` Profile | 1 (standalone only) | ~207 MB | Development |
+| `unified` Profile | 1 (all modes) | ~590 MB | Simplified deployment |
+
+## Bottleneck Analysis
+
+### Feature Model (56% → 31% with fast profile)
+The biggest bottleneck. Default build:
+- Processes 30 feature JSON files
+- Creates 6 aggregated features (standalone, author, renderer, composite-seed, composite-runtime, upgrade)
+- Runs 5 feature scans (analyse-features)
+- Creates 4 feature archives (FAR files)
+- Builds 3 large assembly JARs (~207 MB each!)
+
+**Optimization**: Use `-P fast` profile for development:
+```bash
+mvn clean install -P fast -DskipTests
+```
+
+The `fast` profile:
+- Builds only standalone aggregate
+- Skips analyse-features goal
+- Skips author and renderer assembly JARs
+- **Reduces from ~19s to ~7s (63% faster)**
+
+### Frontend (10% with Bun, 16% with npm)
+Second slowest module due to:
+- Package installation (npm ci / bun install)
+- Vite build and bundling
+- SCSS compilation
+- Asset optimization
+
+**Recommendation**: Use Bun profile for 30-48% improvement
+
+## Developer Workflow Recommendations
+
+| Activity | Recommended Approach | Time |
+|----------|---------------------|------|
+| Active Java development | Use watch.sh | ~3s per change |
+| Active frontend development | Use watch.sh with Bun | ~5-6s per change |
+| Quick test | Build single module | ~3-9s |
+| Pre-commit validation | Full build with Bun | ~34s |
+| CI/CD pipeline | Full build | ~42s |
 
 ---
 
