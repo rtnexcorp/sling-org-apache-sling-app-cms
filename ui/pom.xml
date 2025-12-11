@@ -15,8 +15,6 @@ License. -->
     <description>A bundle providing the User Interface for the Apache Sling Reference CMS Application</description>
 
     <properties>
-        <frontend.target>target/frontend</frontend.target>
-        <frontend.mode>dev</frontend.mode>
         <legal.dir>${basedir}/..</legal.dir>
     </properties>
 
@@ -45,34 +43,6 @@ License. -->
 
     <build>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.codehaus.mojo</groupId>
-                                        <artifactId>exec-maven-plugin</artifactId>
-                                        <versionRange>[3.0.0,)</versionRange>
-                                        <goals>
-                                            <goal>exec</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
 
             <plugin>
@@ -81,8 +51,6 @@ License. -->
                 <configuration>
                     <excludes>
                         <exclude>**/*.webmanifest</exclude>
-                        <!-- Generated/compiled frontend files from Vite build -->
-                        <exclude>**/jcr_root/static/sling-cms/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -91,65 +59,6 @@ License. -->
                             <goal>check</goal>
                         </goals>
                         <phase>verify</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Maven resource copy disabled - Vite handles frontend source directly -->
-            <!-- 
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/${frontend.target}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/frontend</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>npm ci</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <executable>sh</executable>
-                            <arguments>
-                                <argument>-c</argument>
-                                <argument>npm ci</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm run build:prod</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <executable>sh</executable>
-                            <arguments>
-                                <argument>-c</argument>
-                                <argument>npm run build:prod</argument>
-                            </arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -164,12 +73,4 @@ License. -->
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>release</id>
-            <properties>
-                <frontend.mode>prod</frontend.mode>
-            </properties>
-        </profile>
-    </profiles>
 </project>

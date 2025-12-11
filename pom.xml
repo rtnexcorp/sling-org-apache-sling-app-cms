@@ -20,6 +20,7 @@
         <module>api</module>
         <module>core</module>
         <module>login</module>
+        <module>frontend</module>
         <module>ui</module>
         <module>reference</module>
         <module>distribution</module>
@@ -555,10 +556,10 @@
                             <executions>
                                 <execution>
                                     <id>install-bundle</id>
-                                    <phase>install</phase>
                                     <goals>
                                         <goal>install</goal>
                                     </goals>
+                                    <phase>install</phase>
                                 </execution>
                             </executions>
                         </plugin>

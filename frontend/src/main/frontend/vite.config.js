@@ -44,18 +44,18 @@ const apacheLicense = `/*
 `;
 
 export default defineConfig({
-  root: 'src/main/frontend',
+  root: '.',
   base: '/static/sling-cms/',
   build: {
-    // Output to JCR resources directory
-    outDir: resolve(__dirname, 'src/main/resources/jcr_root/static/sling-cms'),
-    emptyOutDir: false,
+    // Output directly to resources/jcr_root/static/sling-cms for JCR content package
+    outDir: resolve(__dirname, '../resources/jcr_root/static/sling-cms'),
+    emptyOutDir: false, // Don't empty - preserve errorhandling, thumbnails, etc.
     
     rollupOptions: {
       input: {
-        cms: resolve(__dirname, 'src/main/frontend/js/cms-entry.js'),
-        editor: resolve(__dirname, 'src/main/frontend/js/editor-entry.js'),
-        starter: resolve(__dirname, 'src/main/frontend/js/starter-entry.js'),
+        cms: resolve(__dirname, 'js/cms-entry.js'),
+        editor: resolve(__dirname, 'js/editor-entry.js'),
+        starter: resolve(__dirname, 'js/starter-entry.js'),
       },
       output: {
         // Output format: ES modules for modern browsers (requires type="module" in script tags)
@@ -128,7 +128,7 @@ export default defineConfig({
     {
       name: 'clean-old-chunks',
       buildStart() {
-        const jsDir = resolve(__dirname, 'src/main/resources/jcr_root/static/sling-cms/js');
+        const jsDir = resolve(__dirname, '../resources/jcr_root/static/sling-cms/js');
         try {
           const files = readdirSync(jsDir);
           // Remove old chunk files (with hash in name)
@@ -153,10 +153,10 @@ export default defineConfig({
       name: 'copy-open-sans-fonts',
       generateBundle() {
         try {
-          const fontFiles = readdirSync('src/main/frontend/fonts');
+          const fontFiles = readdirSync('fonts');
           fontFiles.forEach(file => {
             if (/\.(woff2|woff|ttf|eot|svg)$/.test(file)) {
-              const source = readFileSync(`src/main/frontend/fonts/${file}`);
+              const source = readFileSync(`fonts/${file}`);
               this.emitFile({
                 type: 'asset',
                 fileName: `fonts/${file}`,
@@ -193,10 +193,10 @@ export default defineConfig({
       name: 'copy-image-assets',
       generateBundle() {
         try {
-          const imageFiles = readdirSync('src/main/frontend/img');
+          const imageFiles = readdirSync('img');
           imageFiles.forEach(file => {
             if (/\.(jpg|jpeg|png|gif|svg|ico|webmanifest|xml)$/.test(file)) {
-              const source = readFileSync(`src/main/frontend/img/${file}`);
+              const source = readFileSync(`img/${file}`);
               this.emitFile({
                 type: 'asset',
                 fileName: `img/${file}`,

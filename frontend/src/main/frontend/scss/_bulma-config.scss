@@ -31,7 +31,7 @@ $gray: #6D6E71;
 $red: #D22128;
 
 // Bulma variable customization (Bulma 1.0 style)
-@use "../../../../node_modules/bulma/sass" with (
+@use "../node_modules/bulma/sass" with (
   $family-sans-serif: ("Open Sans", sans-serif),
   $link: $indigo,
   $primary: $magenta,
