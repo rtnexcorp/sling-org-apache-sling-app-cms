@@ -4,7 +4,8 @@
     "description": "Scripts to power the front-end of Apache Sling's CMS example.",
     "engines": {
         "node": ">=20.0.0",
-        "npm": ">=10.0.0"
+        "npm": ">=10.0.0",
+        "bun": ">=1.0.0"
     },
     "scripts": {
         "dev": "vite --host",

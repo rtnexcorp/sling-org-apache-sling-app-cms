@@ -15,7 +15,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "🔥 Sling CMS Hot Deploy Watcher"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📍 Target: http://localhost:${SLING_PORT}"
-echo "📁 Watching: api, core, login, ui, reference, thumbnails"
+echo "📁 Watching: api, core, login, ui, frontend, reference, thumbnails"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Press Ctrl+C to stop"
@@ -29,16 +29,27 @@ deploy_module() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "📦 Change detected in: $module"
     echo "📄 File: $file"
-    echo "� Applying code format..."
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     
     cd "$PROJECT_DIR"
     
-    # Apply spotless formatting first
-    mvn spotless:apply -pl "$module" -q 2>/dev/null
-    
-    echo "🚀 Deploying $module..."
-    mvn install -P autoInstallBundle -pl "$module" -DskipTests -Dbnd.baseline.skip=true -q
+    # Use Bun for frontend module if available
+    if [ "$module" = "frontend" ]; then
+        if command -v bun &> /dev/null; then
+            echo "⚡ Deploying $module with Bun..."
+            mvn install -P autoInstallBundle,bun -pl "$module" -DskipTests -Dbnd.baseline.skip=true -q
+        else
+            echo "🚀 Deploying $module with npm..."
+            mvn install -P autoInstallBundle -pl "$module" -DskipTests -Dbnd.baseline.skip=true -q
+        fi
+    else
+        # Apply spotless formatting for Java modules
+        echo "🎨 Applying code format..."
+        mvn spotless:apply -pl "$module" -q 2>/dev/null
+        
+        echo "🚀 Deploying $module..."
+        mvn install -P autoInstallBundle -pl "$module" -DskipTests -Dbnd.baseline.skip=true -q
+    fi
     
     if [ $? -eq 0 ]; then
         echo "✅ $module deployed successfully!"
@@ -54,19 +65,27 @@ if ! command -v fswatch &> /dev/null; then
     brew install fswatch
 fi
 
-# Watch all module src directories
+# Watch all module src directories (including frontend)
+# For frontend, only watch src/main/frontend (source), NOT src/main/resources (build output)
 fswatch -0 -r -l 1 \
     --exclude='.*target.*' \
     --exclude='.*node_modules.*' \
+    --exclude='.*node/.*' \
     --exclude='.*\.git.*' \
     --exclude='.*\.class$' \
+    --exclude='.*bun\.lock.*' \
+    --exclude='.*jcr_root.*' \
+    --exclude='.*\.min\.js$' \
+    --exclude='.*\.min\.css$' \
+    --exclude='.*resources/jcr_root.*' \
     --include='.*\.java$' \
     --include='.*\.xml$' \
     --include='.*\.json$' \
     --include='.*\.html$' \
     --include='.*\.js$' \
     --include='.*\.css$' \
-    api/src core/src login/src ui/src reference/src thumbnails/src 2>/dev/null | while read -d "" event; do
+    --include='.*\.scss$' \
+    api/src core/src login/src ui/src frontend/src/main/frontend reference/src thumbnails/src 2>/dev/null | while read -d "" event; do
     
     # Extract module name from path
     module=$(echo "$event" | sed -n 's|.*/\([^/]*\)/src/.*|\1|p')

@@ -18,6 +18,8 @@ bin
 *.iml
 src/main/frontend/node_modules/
 src/main/frontend/node/
+src/main/frontend/bun.lockb
+src/main/frontend/bun.lock
 .vscode/
 pom.xml.releaseBackup
 pom.xml.tag

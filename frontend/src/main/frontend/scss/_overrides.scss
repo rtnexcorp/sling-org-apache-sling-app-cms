@@ -30,6 +30,18 @@ $gray: #6D6E71;
 $gray-light: color.adjust($gray, $lightness: 50%);
 $red: #D22128;
 
+// Rainbow Gradient for banners
+$rainbow-gradient: linear-gradient(
+    90deg,
+    #FF0000 0%,      // Red
+    #FF7F00 16.67%,  // Orange
+    #FFFF00 33.33%,  // Yellow
+    #00FF00 50%,     // Green
+    #0000FF 66.67%,  // Blue
+    #4B0082 83.33%,  // Indigo
+    #9400D3 100%     // Violet
+);
+
 // Bulma 1.0 CSS variable overrides
 // These will be applied after Bulma loads
 $selected: $violet;

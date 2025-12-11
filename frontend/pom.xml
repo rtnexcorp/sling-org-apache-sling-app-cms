@@ -89,6 +89,9 @@
                         <exclude>**/node/**</exclude>
                         <exclude>**/node_modules/**</exclude>
                         <exclude>**/package-lock.json</exclude>
+                        <!-- Bun related -->
+                        <exclude>**/bun.lockb</exclude>
+                        <exclude>**/bun.lock</exclude>
                         <!-- Build output -->
                         <exclude>target/**</exclude>
                         <!-- Generated/compiled frontend files -->
@@ -170,6 +173,141 @@
                                 <id>npm-build</id>
                                 <configuration>
                                     <arguments>run dev</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Bun profile for faster builds (requires Bun installed on system) -->
+        <profile>
+            <id>bun</id>
+            <build>
+                <plugins>
+                    <!-- Disable frontend-maven-plugin when using Bun -->
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-node-and-npm</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>npm-ci</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>npm-build</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Use exec-maven-plugin for Bun -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.4.1</version>
+                        <executions>
+                            <!-- Install dependencies with Bun -->
+                            <execution>
+                                <id>bun-install</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <executable>bun</executable>
+                                    <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                                    <arguments>
+                                        <argument>install</argument>
+                                        <argument>--frozen-lockfile</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- Build frontend assets with Bun -->
+                            <execution>
+                                <id>bun-build</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <executable>bun</executable>
+                                    <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                                    <arguments>
+                                        <argument>run</argument>
+                                        <argument>build:prod</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Bun development profile -->
+        <profile>
+            <id>bun-dev</id>
+            <build>
+                <plugins>
+                    <!-- Disable frontend-maven-plugin when using Bun -->
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-node-and-npm</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>npm-ci</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>npm-build</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Use exec-maven-plugin for Bun -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.4.1</version>
+                        <executions>
+                            <execution>
+                                <id>bun-install</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <executable>bun</executable>
+                                    <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                                    <arguments>
+                                        <argument>install</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>bun-build</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <executable>bun</executable>
+                                    <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
+                                    <arguments>
+                                        <argument>run</argument>
+                                        <argument>build</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>
