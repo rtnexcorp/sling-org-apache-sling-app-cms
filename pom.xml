@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>sling-bundle-parent</artifactId>
-        <version>62</version>
+        <version>64</version>
     </parent>
     <artifactId>org.apache.sling.cms</artifactId>
     <version>1.1.9-SNAPSHOT</version>
@@ -75,31 +75,31 @@
         <!-- Common Versions (alphabetical) -->
         <cms-version>${project.parent.version}</cms-version>
         <cocoon-serializers-charsets-version>1.0.2</cocoon-serializers-charsets-version>
-        <commons-io-version>2.18.0</commons-io-version>
+        <commons-io-version>2.21.0</commons-io-version>
         <!-- CVE-2024-47554 fix -->
-        <commons-lang3-version>3.17.0</commons-lang3-version>
+        <commons-lang3-version>3.20.0</commons-lang3-version>
         <commons-math-version>2.2</commons-math-version>
-        <commons-text-version>1.13.0</commons-text-version>
-        <felix-webconsole-version>5.0.8</felix-webconsole-version>
+        <commons-text-version>1.15.0</commons-text-version>
+        <felix-webconsole-version>5.0.18</felix-webconsole-version>
         <geronimo-atinject-version>1.2</geronimo-atinject-version>
-        <handlebars-version>4.4.0</handlebars-version>
+        <handlebars-version>4.5.0</handlebars-version>
         <httpclient-version>4.5.14</httpclient-version>
         <jakarta-activation-version>2.1.0</jakarta-activation-version>
         <jakarta-mail-version>2.1.0</jakarta-mail-version>
         <javax-annotation-version>1.3.2</javax-annotation-version>
         <javax-mail-version>1.6.2</javax-mail-version>
         <javax-mgmt-j2ee-version>1.1.2</javax-mgmt-j2ee-version>
-        <jetbrains-annotations-version>24.1.0</jetbrains-annotations-version>
-        <jsoup-version>1.18.3</jsoup-version>
+        <jetbrains-annotations-version>26.0.2-1</jetbrains-annotations-version>
+        <jsoup-version>1.21.2</jsoup-version>
         <jsp-api-version>2.0</jsp-api-version>
         <jstl-version>1.2_1</jstl-version>
-        <mockito-version>5.14.2</mockito-version>
+        <mockito-version>5.21.0</mockito-version>
         <sling-mock-version>3.5.6</sling-mock-version>
         <junit-version>5.11.3</junit-version>
         <osgi-annotation-version>8.1.0</osgi-annotation-version>
-        <pdfbox-version>3.0.3</pdfbox-version>
+        <pdfbox-version>3.0.6</pdfbox-version>
         <!-- CVE fix: was 2.0.32 -->
-        <poi-version>5.4.0</poi-version>
+        <poi-version>5.5.1</poi-version>
         <!-- CVE-2025-31672 fix -->
         <servlet-api-version>2.5</servlet-api-version>
         <sling-api-version>2.27.6</sling-api-version>
@@ -111,7 +111,7 @@
         <sling-event-version>1.0.4</sling-event-version>
         <sling-fileoptim-version>0.9.4</sling-fileoptim-version>
         <sling-i18n-version>2.5.18</sling-i18n-version>
-        <sling-jcr-resource-version>3.3.2</sling-jcr-resource-version>
+        <sling-jcr-resource-version>3.3.6</sling-jcr-resource-version>
         <sling-johnzon-version>2.0.0</sling-johnzon-version>
         <sling-messaging-version>1.0.2</sling-messaging-version>
         <sling-messaging-mail-version>2.0.0</sling-messaging-mail-version>
@@ -121,7 +121,7 @@
         <sling-scripting-api-version>2.2.2</sling-scripting-api-version>
         <sling-scripting-jsp-taglib-version>2.4.2</sling-scripting-jsp-taglib-version>
         <sling-servlets-post-version>2.5.0</sling-servlets-post-version>
-        <thumbnailator-version>0.4.20</thumbnailator-version>
+        <thumbnailator-version>0.4.21</thumbnailator-version>
         <!-- Tika 1.x: XXE vuln mitigated via input validation (see SECURITY_UPDATES.md) -->
         <tika-version>1.28.5</tika-version>
         <!-- Frontend build -->
