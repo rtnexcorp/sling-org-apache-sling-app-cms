@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.function.Function;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 
 public class ContextHelper {
 

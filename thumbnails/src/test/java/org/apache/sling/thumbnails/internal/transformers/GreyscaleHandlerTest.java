@@ -25,11 +25,11 @@ import java.util.Collections;
 
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.models.TransformationHandlerConfigImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class GreyscaleHandlerTest {
 
@@ -37,7 +37,7 @@ public class GreyscaleHandlerTest {
     private InputStream inputStream;
     private GreyscaleHandler decolorizer;
 
-    @Before
+    @BeforeEach
     public void init() {
         inputStream = getClass().getClassLoader().getResourceAsStream("apache.png");
         outputStream = new ByteArrayOutputStream();

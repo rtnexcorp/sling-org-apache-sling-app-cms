@@ -36,24 +36,26 @@ import org.apache.sling.cms.reference.forms.impl.fields.SelectionHandler;
 import org.apache.sling.cms.reference.forms.impl.fields.TextareaHandler;
 import org.apache.sling.cms.reference.forms.impl.fields.TextfieldHandler;
 import org.apache.sling.commons.messaging.mail.MailService;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 
+@ExtendWith(SlingContextExtension.class)
 public class FormHandlerTest {
-    @Rule
-    public final SlingContext context = new SlingContext();
+
+    public SlingContext context = new SlingContext();
 
     private FormHandler formHandler;
     private MailService mailService;
     private FormRequestImpl formRequest;
 
-    @Before
+    @BeforeEach
     public void init() throws NoSuchFieldException, SecurityException, FormException {
         SlingContextHelper.initContext(context);
         context.request().setMethod("POST");

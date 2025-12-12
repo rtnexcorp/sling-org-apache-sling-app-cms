@@ -29,29 +29,31 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.thumbnails.RenditionSupport;
 import org.apache.sling.thumbnails.ThumbnailSupport;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class RenditionSupportImplTest {
 
     private RenditionSupport renditionSupport;
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
     private @NotNull Resource slingFolderResource;
 
@@ -61,7 +63,7 @@ public class RenditionSupportImplTest {
 
     private TransformationServiceUser tsu;
 
-    @Before
+    @BeforeEach
     public void init() throws IllegalAccessException, LoginException {
 
         ContextHelper.initContext(context);
@@ -149,11 +151,13 @@ public class RenditionSupportImplTest {
         assertNotNull(renditionSupport.listRenditions(ntFileresource));
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void testLoginFailure() throws PersistenceException, LoginException {
 
         when(tsu.getTransformationServiceUser()).thenThrow(new LoginException("I'm sorry, I can't do that Dave"));
-        renditionSupport.setRendition(
-                slingFileResource, "myrendition.png", new ByteArrayInputStream(new byte[] {0, 1}));
+        assertThrows(
+                PersistenceException.class,
+                () -> renditionSupport.setRendition(
+                        slingFileResource, "myrendition.png", new ByteArrayInputStream(new byte[] {0, 1})));
     }
 }

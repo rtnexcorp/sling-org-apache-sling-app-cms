@@ -27,11 +27,12 @@ import java.util.Map;
 import org.apache.sling.thumbnails.BadRequestException;
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.models.TransformationHandlerConfigImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ResizeHandlerTest {
 
@@ -39,7 +40,7 @@ public class ResizeHandlerTest {
     private ByteArrayOutputStream outputStream;
     private ResizeHandler sizer;
 
-    @Before
+    @BeforeEach
     public void init() {
         inputStream = getClass().getClassLoader().getResourceAsStream("apache.png");
         outputStream = new ByteArrayOutputStream();
@@ -81,7 +82,7 @@ public class ResizeHandlerTest {
         assertNotNull(outputStream.toByteArray());
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidHuge() throws IOException {
 
         Map<String, Object> properties = new HashMap<>();
@@ -89,6 +90,6 @@ public class ResizeHandlerTest {
         properties.put(ResizeHandler.PN_HEIGHT, Integer.MAX_VALUE);
 
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        sizer.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> sizer.handle(inputStream, outputStream, config));
     }
 }

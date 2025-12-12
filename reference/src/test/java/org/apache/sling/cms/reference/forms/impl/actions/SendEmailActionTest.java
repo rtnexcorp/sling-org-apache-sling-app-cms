@@ -26,25 +26,26 @@ import org.apache.sling.cms.reference.forms.impl.FormRequestImpl;
 import org.apache.sling.cms.reference.forms.impl.MockMessageBuilder;
 import org.apache.sling.cms.reference.forms.impl.SlingContextHelper;
 import org.apache.sling.commons.messaging.mail.MailService;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SlingContextExtension.class)
 public class SendEmailActionTest {
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
     private SendEmailAction action;
     private ResourceResolver resolver;
     private MailService mailService;
 
-    @Before
+    @BeforeEach
     public void init() throws NoSuchFieldException, SecurityException {
         SlingContextHelper.initContext(context);
         context.request().setResource(context.resourceResolver().getResource("/form/jcr:content/container/form"));

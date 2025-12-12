@@ -29,7 +29,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.cms.core.insights.impl.FakeRequest;
 import org.apache.sling.engine.SlingRequestProcessor;
 import org.apache.sling.engine.impl.request.SlingRequestPathInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 

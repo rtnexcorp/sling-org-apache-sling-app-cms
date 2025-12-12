@@ -35,13 +35,13 @@ import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.cms.CMSConstants;
 import org.apache.sling.cms.reference.forms.FormException;
 import org.apache.sling.cms.reference.forms.FormRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DeleteUserGeneratedContentActionTest {
 

@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.thumbnails.BadRequestException;
 import org.apache.sling.thumbnails.OutputFileFormat;
 import org.apache.sling.thumbnails.ThumbnailSupport;
@@ -41,21 +42,23 @@ import org.apache.sling.thumbnails.internal.providers.ImageThumbnailProvider;
 import org.apache.sling.thumbnails.internal.providers.PdfThumbnailProvider;
 import org.apache.sling.thumbnails.internal.transformers.CropHandler;
 import org.apache.sling.thumbnails.internal.transformers.ResizeHandler;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class TransformerImplTest {
-    @Rule
-    public final SlingContext context = new SlingContext();
+
+    public SlingContext context = new SlingContext();
 
     private Transformer transformer;
 
-    @Before
+    @BeforeEach
     public void init() {
         ContextHelper.initContext(context);
 
@@ -99,7 +102,7 @@ public class TransformerImplTest {
         assertNotNull(baos);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testNotFile() throws IOException {
         context.currentResource("/content/apache/sling-apache-org/index");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -117,6 +120,8 @@ public class TransformerImplTest {
         handlers.add(new TransformationHandlerConfigImpl(CropHandler.RESOURCE_TYPE, crop));
 
         TransformationImpl transformation = new TransformationImpl(handlers);
-        transformer.transform(context.currentResource(), transformation, OutputFileFormat.PNG, baos);
+        assertThrows(
+                BadRequestException.class,
+                () -> transformer.transform(context.currentResource(), transformation, OutputFileFormat.PNG, baos));
     }
 }

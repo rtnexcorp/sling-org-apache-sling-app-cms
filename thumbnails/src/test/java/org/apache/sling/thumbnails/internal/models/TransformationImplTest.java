@@ -23,26 +23,27 @@ import javax.jcr.LoginException;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.thumbnails.Transformation;
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.ContextHelper;
 import org.apache.sling.thumbnails.internal.transformers.RotateHandler;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SlingContextExtension.class)
 public class TransformationImplTest {
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
-    @Before
+    @BeforeEach
     public void init() throws IllegalAccessException, LoginException {
         ContextHelper.initContext(context);
         context.addModelsForPackage("org.apache.sling.thumbnails.internal.models");

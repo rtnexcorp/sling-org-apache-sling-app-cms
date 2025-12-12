@@ -30,25 +30,26 @@ import java.util.Collections;
 
 import org.apache.sling.cms.core.helpers.SlingCMSTestHelper;
 import org.apache.sling.cms.i18n.I18NProvider;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(SlingContextExtension.class)
 public class EditIncludeFilterTest {
 
-    @Rule
     public SlingContext context = new SlingContext();
 
     private EditIncludeFilter includeFilter;
 
-    @Before
+    @BeforeEach
     public void init()
             throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException, IOException {
         SlingCMSTestHelper.initAuthContext(context);

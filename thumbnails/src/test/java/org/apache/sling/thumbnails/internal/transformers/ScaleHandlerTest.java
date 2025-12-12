@@ -27,11 +27,12 @@ import java.util.Map;
 import org.apache.sling.thumbnails.BadRequestException;
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.models.TransformationHandlerConfigImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ScaleHandlerTest {
 
@@ -39,7 +40,7 @@ public class ScaleHandlerTest {
     private ByteArrayOutputStream outputStream;
     private ScaleHandler scaler;
 
-    @Before
+    @BeforeEach
     public void init() {
         inputStream = getClass().getClassLoader().getResourceAsStream("apache.png");
         outputStream = new ByteArrayOutputStream();
@@ -74,33 +75,33 @@ public class ScaleHandlerTest {
         assertNotEquals(0, outputStream.toByteArray().length);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidScale() throws IOException {
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(ResizeHandler.PN_WIDTH, 2);
 
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        scaler.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> scaler.handle(inputStream, outputStream, config));
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidScaleWidth() throws IOException {
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(ResizeHandler.PN_HEIGHT, 2);
 
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        scaler.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> scaler.handle(inputStream, outputStream, config));
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidHugeScale() throws IOException {
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(ScaleHandler.PN_BOTH, Integer.MAX_VALUE);
 
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        scaler.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> scaler.handle(inputStream, outputStream, config));
     }
 }

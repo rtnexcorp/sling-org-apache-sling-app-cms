@@ -26,14 +26,14 @@ import java.lang.annotation.Annotation;
 import java.util.stream.Collectors;
 
 import org.apache.sling.cms.readability.Text;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReadabilityServiceImplTest {
 
@@ -51,7 +51,7 @@ public class ReadabilityServiceImplTest {
                 .collect(Collectors.joining("\n"));
     }
 
-    @Before
+    @BeforeEach
     public void init() throws IOException {
         this.readabilityService = new ReadabilityServiceImpl();
         this.readabilityService.activate(new ReadabilityConfig() {

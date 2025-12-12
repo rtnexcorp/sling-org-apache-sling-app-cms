@@ -28,18 +28,19 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.servlets.post.Modification;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class CheckoutPostOperationTest {
 
-    @Rule
     public SlingContext context = new SlingContext();
 
     private CheckoutPostOperation operation = new CheckoutPostOperation();

@@ -32,12 +32,13 @@ import org.apache.sling.api.wrappers.SlingHttpServletRequestWrapper;
 import org.apache.sling.cms.Site;
 import org.apache.sling.cms.SiteManager;
 import org.apache.sling.servlethelpers.MockRequestDispatcherFactory;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -46,10 +47,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class CmsDefaultErrorHandlerServletTest {
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
     private CmsDefaultErrorHandlerServlet servlet;
 
@@ -61,7 +62,7 @@ public class CmsDefaultErrorHandlerServletTest {
 
     private RequestDispatcher requestDispatcher;
 
-    @Before
+    @BeforeEach
     public void before() {
         factory = mock(ResourceResolverFactory.class);
         servlet = new CmsDefaultErrorHandlerServlet(factory);

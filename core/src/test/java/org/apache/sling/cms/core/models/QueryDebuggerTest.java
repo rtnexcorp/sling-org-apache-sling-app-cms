@@ -21,13 +21,14 @@ package org.apache.sling.cms.core.models;
 import javax.jcr.query.Query;
 
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests for QueryDebugger model.
@@ -39,13 +40,13 @@ import static org.junit.Assert.assertNull;
  *
  * See: https://issues.apache.org/jira/browse/SLING-12345
  */
+@ExtendWith(SlingContextExtension.class)
 public class QueryDebuggerTest {
 
-    @Rule
     public SlingContext context = new SlingContext(ResourceResolverType.RESOURCERESOLVER_MOCK);
 
     @Test
-    @Ignore("Requires JCR_OAK which has compatibility issues with Oak 1.62+ and Java Security API")
+    @Disabled("Requires JCR_OAK which has compatibility issues with Oak 1.62+ and Java Security API")
     public void testNoParams() {
         // This test requires JCR_OAK to test actual query functionality
         QueryDebugger debugger = new QueryDebugger(context.request());
@@ -58,7 +59,7 @@ public class QueryDebuggerTest {
     }
 
     @Test
-    @Ignore("Requires JCR_OAK which has compatibility issues with Oak 1.62+ and Java Security API")
+    @Disabled("Requires JCR_OAK which has compatibility issues with Oak 1.62+ and Java Security API")
     public void testExplain() {
         context.request().addRequestParameter("statement", "SELECT * FROM [nt:base]");
         context.request().addRequestParameter("language", Query.JCR_SQL2);
@@ -70,7 +71,7 @@ public class QueryDebuggerTest {
     }
 
     @Test
-    @Ignore("Requires JCR_OAK which has compatibility issues with Oak 1.62+ and Java Security API")
+    @Disabled("Requires JCR_OAK which has compatibility issues with Oak 1.62+ and Java Security API")
     public void testFailure() {
         context.request().addRequestParameter("statement", "SELECT * FROM [nt:base]");
         context.request().addRequestParameter("language", Query.XPATH);

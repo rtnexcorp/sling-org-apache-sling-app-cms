@@ -44,7 +44,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.cms.ResourceTree;
 import org.apache.sling.cms.i18n.I18NDictionary;
 import org.apache.sling.cms.i18n.I18NProvider;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.mockito.Mockito;
 
 import static org.mockito.ArgumentMatchers.any;

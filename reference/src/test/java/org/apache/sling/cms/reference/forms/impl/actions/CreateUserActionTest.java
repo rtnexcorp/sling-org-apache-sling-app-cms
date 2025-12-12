@@ -43,12 +43,12 @@ import org.apache.sling.cms.reference.forms.FormRequest;
 import org.apache.sling.cms.reference.forms.impl.FormRequestImpl;
 import org.apache.sling.servlethelpers.MockSlingHttpServletRequest;
 import org.apache.sling.testing.resourceresolver.MockResource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateUserActionTest {
 
@@ -56,7 +56,7 @@ public class CreateUserActionTest {
     private ResourceResolver resolver;
     private MockResource actionResource;
 
-    @Before
+    @BeforeEach
     public void init()
             throws FormException, LoginException, AccessDeniedException, UnsupportedRepositoryOperationException,
                     RepositoryException {

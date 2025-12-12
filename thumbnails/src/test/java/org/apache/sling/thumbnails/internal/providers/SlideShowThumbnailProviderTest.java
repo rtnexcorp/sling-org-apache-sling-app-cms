@@ -22,28 +22,29 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.thumbnails.ThumbnailSupport;
 import org.apache.sling.thumbnails.extension.ThumbnailProvider;
 import org.apache.sling.thumbnails.internal.ContextHelper;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class SlideShowThumbnailProviderTest {
 
     private static final Logger log = LoggerFactory.getLogger(SlideShowThumbnailProviderTest.class);
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
     private Resource docxFile;
     private Resource pptFile;
@@ -51,7 +52,7 @@ public class SlideShowThumbnailProviderTest {
 
     private ThumbnailProvider provider;
 
-    @Before
+    @BeforeEach
     public void init() {
         ContextHelper.initContext(context);
         docxFile = context.resourceResolver().getResource("/content/apache/sling-apache-org/index/Sling.docx");

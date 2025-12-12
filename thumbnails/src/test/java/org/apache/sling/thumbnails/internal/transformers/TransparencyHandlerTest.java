@@ -27,11 +27,12 @@ import java.util.Map;
 import org.apache.sling.thumbnails.BadRequestException;
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.models.TransformationHandlerConfigImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TransparencyHandlerTest {
 
@@ -39,7 +40,7 @@ public class TransparencyHandlerTest {
     private InputStream inputStream;
     private TransparencyHandler transparent;
 
-    @Before
+    @BeforeEach
     public void init() {
         inputStream = getClass().getClassLoader().getResourceAsStream("apache.png");
         outputStream = new ByteArrayOutputStream();
@@ -70,19 +71,19 @@ public class TransparencyHandlerTest {
         assertNotEquals(0, outputStream.toByteArray().length);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidAlpha() throws IOException {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ColorizeHandler.PN_ALPHA, -.8);
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        transparent.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> transparent.handle(inputStream, outputStream, config));
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidLargeAlpha() throws IOException {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ColorizeHandler.PN_ALPHA, 2.0);
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        transparent.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> transparent.handle(inputStream, outputStream, config));
     }
 }

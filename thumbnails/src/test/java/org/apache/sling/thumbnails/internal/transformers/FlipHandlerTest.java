@@ -27,10 +27,11 @@ import java.util.Map;
 import org.apache.sling.thumbnails.BadRequestException;
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.models.TransformationHandlerConfigImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FlipHandlerTest {
 
@@ -38,7 +39,7 @@ public class FlipHandlerTest {
     private ByteArrayOutputStream outputStream;
     private FlipHandler flop;
 
-    @Before
+    @BeforeEach
     public void init() {
         inputStream = getClass().getClassLoader().getResourceAsStream("apache.png");
         outputStream = new ByteArrayOutputStream();
@@ -63,11 +64,11 @@ public class FlipHandlerTest {
         assertNotEquals(0, outputStream.toByteArray().length);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidDirection() throws IOException {
         Map<String, Object> properties = new HashMap<>();
         properties.put(FlipHandler.PN_DIRECTION, "asdf");
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        flop.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> flop.handle(inputStream, outputStream, config));
     }
 }

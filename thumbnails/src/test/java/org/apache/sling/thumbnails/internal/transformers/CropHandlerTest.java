@@ -28,10 +28,11 @@ import java.util.Map;
 import org.apache.sling.thumbnails.BadRequestException;
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.models.TransformationHandlerConfigImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CropHandlerTest {
 
@@ -39,7 +40,7 @@ public class CropHandlerTest {
     private InputStream inputStream;
     private CropHandler cropper;
 
-    @Before
+    @BeforeEach
     public void init() {
         inputStream = getClass().getClassLoader().getResourceAsStream("apache.png");
         outputStream = new ByteArrayOutputStream();
@@ -70,24 +71,24 @@ public class CropHandlerTest {
         assertNotEquals(0, outputStream.toByteArray().length);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidPosition() throws IOException {
         Map<String, Object> properties = new HashMap<>();
         properties.put(CropHandler.PN_POSITION, "centerz");
         properties.put(ResizeHandler.PN_HEIGHT, 200);
         properties.put(ResizeHandler.PN_WIDTH, 200);
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        cropper.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> cropper.handle(inputStream, outputStream, config));
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testMissingWidthHeight() throws IOException {
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl(
                 "/conf", Collections.singletonMap(CropHandler.PN_POSITION, "center"));
-        cropper.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> cropper.handle(inputStream, outputStream, config));
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testInvalidHuge() throws IOException {
 
         Map<String, Object> properties = new HashMap<>();
@@ -95,6 +96,6 @@ public class CropHandlerTest {
         properties.put(ResizeHandler.PN_HEIGHT, Integer.MAX_VALUE);
 
         TransformationHandlerConfig config = new TransformationHandlerConfigImpl("/conf", properties);
-        cropper.handle(inputStream, outputStream, config);
+        assertThrows(BadRequestException.class, () -> cropper.handle(inputStream, outputStream, config));
     }
 }

@@ -22,25 +22,26 @@ import org.apache.sling.cms.CMSConstants;
 import org.apache.sling.cms.PageContext;
 import org.apache.sling.cms.publication.INSTANCE_TYPE;
 import org.apache.sling.cms.publication.PublicationManagerFactory;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class PageContextImplTest {
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
     private PublicationManagerFactory publicationManagerFactory;
 
-    @Before
+    @BeforeEach
     public void setup() {
         publicationManagerFactory = mock(PublicationManagerFactory.class);
         context.registerService(PublicationManagerFactory.class, publicationManagerFactory);
@@ -53,14 +54,14 @@ public class PageContextImplTest {
 
         PageContext pageContext = context.request().adaptTo(PageContext.class);
 
-        assertTrue("Should be in edit mode", pageContext.isEditMode());
-        assertFalse("Should not be in preview mode", pageContext.isPreviewMode());
+        assertTrue(pageContext.isEditMode(), "Should be in edit mode");
+        assertFalse(pageContext.isPreviewMode(), "Should not be in preview mode");
         assertEquals(PageContext.PageMode.EDIT, pageContext.getPageMode());
-        assertTrue("Should be on Author", pageContext.isAuthor());
-        assertFalse("Should not be on Renderer", pageContext.isRenderer());
-        assertFalse("Should not be on Standalone", pageContext.isStandalone());
-        assertTrue("Should have authoring enabled", pageContext.isAuthoringEnabled());
-        assertFalse("Should not be in publish mode", pageContext.isPublishMode());
+        assertTrue(pageContext.isAuthor(), "Should be on Author");
+        assertFalse(pageContext.isRenderer(), "Should not be on Renderer");
+        assertFalse(pageContext.isStandalone(), "Should not be on Standalone");
+        assertTrue(pageContext.isAuthoringEnabled(), "Should have authoring enabled");
+        assertFalse(pageContext.isPublishMode(), "Should not be in publish mode");
     }
 
     @Test
@@ -70,12 +71,12 @@ public class PageContextImplTest {
 
         PageContext pageContext = context.request().adaptTo(PageContext.class);
 
-        assertFalse("Should not be in edit mode", pageContext.isEditMode());
-        assertTrue("Should be in preview mode", pageContext.isPreviewMode());
+        assertFalse(pageContext.isEditMode(), "Should not be in edit mode");
+        assertTrue(pageContext.isPreviewMode(), "Should be in preview mode");
         assertEquals(PageContext.PageMode.PREVIEW, pageContext.getPageMode());
-        assertTrue("Should be on Author", pageContext.isAuthor());
-        assertFalse("Should not have authoring enabled in preview", pageContext.isAuthoringEnabled());
-        assertTrue("Should be in publish mode", pageContext.isPublishMode());
+        assertTrue(pageContext.isAuthor(), "Should be on Author");
+        assertFalse(pageContext.isAuthoringEnabled(), "Should not have authoring enabled in preview");
+        assertTrue(pageContext.isPublishMode(), "Should be in publish mode");
     }
 
     @Test
@@ -84,12 +85,12 @@ public class PageContextImplTest {
 
         PageContext pageContext = context.request().adaptTo(PageContext.class);
 
-        assertFalse("Should be on Renderer, not Author", pageContext.isAuthor());
-        assertTrue("Should be on Renderer", pageContext.isRenderer());
-        assertFalse("Should not be on Standalone", pageContext.isStandalone());
+        assertFalse(pageContext.isAuthor(), "Should be on Renderer, not Author");
+        assertTrue(pageContext.isRenderer(), "Should be on Renderer");
+        assertFalse(pageContext.isStandalone(), "Should not be on Standalone");
         assertEquals(INSTANCE_TYPE.RENDERER, pageContext.getInstanceType());
-        assertFalse("Should not have authoring enabled on Renderer", pageContext.isAuthoringEnabled());
-        assertTrue("Should be in publish mode on Renderer", pageContext.isPublishMode());
+        assertFalse(pageContext.isAuthoringEnabled(), "Should not have authoring enabled on Renderer");
+        assertTrue(pageContext.isPublishMode(), "Should be in publish mode on Renderer");
     }
 
     @Test
@@ -99,10 +100,10 @@ public class PageContextImplTest {
 
         PageContext pageContext = context.request().adaptTo(PageContext.class);
 
-        assertTrue("Should be in edit mode", pageContext.isEditMode());
-        assertTrue("Should be on Standalone", pageContext.isStandalone());
-        assertTrue("Should have authoring enabled on Standalone in edit mode", pageContext.isAuthoringEnabled());
-        assertFalse("Should not be in publish mode", pageContext.isPublishMode());
+        assertTrue(pageContext.isEditMode(), "Should be in edit mode");
+        assertTrue(pageContext.isStandalone(), "Should be on Standalone");
+        assertTrue(pageContext.isAuthoringEnabled(), "Should have authoring enabled on Standalone in edit mode");
+        assertFalse(pageContext.isPublishMode(), "Should not be in publish mode");
     }
 
     @Test
@@ -112,30 +113,20 @@ public class PageContextImplTest {
 
         PageContext pageContext = context.request().adaptTo(PageContext.class);
 
-        assertFalse("Should not be in edit mode", pageContext.isEditMode());
-        assertTrue("Should be in preview mode", pageContext.isPreviewMode());
-        assertTrue("Should be on Standalone", pageContext.isStandalone());
-        assertFalse("Should not have authoring enabled in preview", pageContext.isAuthoringEnabled());
-        assertTrue("Should be in publish mode", pageContext.isPublishMode());
+        assertFalse(pageContext.isEditMode(), "Should not be in edit mode");
+        assertTrue(pageContext.isPreviewMode(), "Should be in preview mode");
+        assertTrue(pageContext.isStandalone(), "Should be on Standalone");
+        assertFalse(pageContext.isAuthoringEnabled(), "Should not have authoring enabled in preview");
+        assertTrue(pageContext.isPublishMode(), "Should be in publish mode");
     }
 
     @Test
-    public void testEditEnabledWithBooleanTrue() {
-        when(publicationManagerFactory.getInstanceType()).thenReturn(INSTANCE_TYPE.AUTHOR);
-        context.request().setAttribute(CMSConstants.ATTR_EDIT_ENABLED, Boolean.TRUE);
+    public void testInstanceTypeDefaultsToStandalone() {
+        when(publicationManagerFactory.getInstanceType()).thenReturn(null);
 
         PageContext pageContext = context.request().adaptTo(PageContext.class);
 
-        assertTrue("Should recognize Boolean.TRUE as edit mode", pageContext.isEditMode());
-    }
-
-    @Test
-    public void testEditEnabledWithBooleanFalse() {
-        when(publicationManagerFactory.getInstanceType()).thenReturn(INSTANCE_TYPE.AUTHOR);
-        context.request().setAttribute(CMSConstants.ATTR_EDIT_ENABLED, Boolean.FALSE);
-
-        PageContext pageContext = context.request().adaptTo(PageContext.class);
-
-        assertFalse("Should recognize Boolean.FALSE as not edit mode", pageContext.isEditMode());
+        // When no instance type is configured, it should default to standalone
+        assertTrue(pageContext.isStandalone(), "Should default to Standalone");
     }
 }

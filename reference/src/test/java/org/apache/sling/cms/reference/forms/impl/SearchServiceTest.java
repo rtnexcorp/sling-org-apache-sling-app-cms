@@ -30,8 +30,8 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.cms.reference.SearchService;
 import org.apache.sling.cms.reference.impl.SearchServiceImpl;
 import org.apache.sling.cms.reference.impl.SearchServiceImpl.Config;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class SearchServiceTest {
@@ -40,7 +40,7 @@ public class SearchServiceTest {
     private SlingHttpServletRequest request;
     private ResourceResolver resolver;
 
-    @Before
+    @BeforeEach
     public void init() {
         factory = Mockito.mock(ResourceResolverFactory.class);
         request = Mockito.mock(SlingHttpServletRequest.class);

@@ -22,19 +22,19 @@ import java.lang.annotation.Annotation;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.cms.CMSConstants;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResourceEditorAssociationTest {
 
     private ResourceEditorAssociation rea;
 
-    @Before
+    @BeforeEach
     public void init() {
         rea = new ResourceEditorAssociation();
         rea.activate(new ResourceEditorAssociationConfig() {

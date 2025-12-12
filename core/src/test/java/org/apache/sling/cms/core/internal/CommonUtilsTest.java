@@ -21,11 +21,11 @@ package org.apache.sling.cms.core.internal;
 import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CommonUtilsTest {
 

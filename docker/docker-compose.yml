@@ -13,29 +13,23 @@ version: '3.4'
 services:
   author:
     build: 
-      context: .
-      dockerfile: cms/Dockerfile
+      context: cms
       args:
         RUNMODE: author
-        USE_LOCAL_BUILD: "true"
     ports:
       - "8080:8080"
     volumes:
-      - sling-author:/opt/slingcms/launcher/composite/repository-global
-      # Mount your local Maven repository
+      - sling-author:/opt/slingcms/sling
       - ~/.m2:/root/.m2:ro
   renderer:
     build: 
-      context: .
-      dockerfile: cms/Dockerfile
+      context: cms
       args:
         RUNMODE: renderer
-        USE_LOCAL_BUILD: "true"
     ports:
       - "8090:8080"
     volumes:
-      - sling-renderer:/opt/slingcms/launcher/composite/repository-global
-      # Mount your local Maven repository
+      - sling-renderer:/opt/slingcms/sling
       - ~/.m2:/root/.m2:ro
   webcache:
     environment: 

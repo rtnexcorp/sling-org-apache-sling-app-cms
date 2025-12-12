@@ -33,7 +33,8 @@ import java.util.Set;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.thumbnails.ThumbnailSupport;
 import org.apache.sling.thumbnails.Transformation;
 import org.apache.sling.thumbnails.TransformationHandlerConfig;
@@ -45,25 +46,25 @@ import org.apache.sling.thumbnails.internal.providers.ImageThumbnailProvider;
 import org.apache.sling.thumbnails.internal.providers.PdfThumbnailProvider;
 import org.apache.sling.thumbnails.internal.transformers.CropHandler;
 import org.apache.sling.thumbnails.internal.transformers.ResizeHandler;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class DynamicTransformServletTest {
 
     private DynamicTransformServlet dts;
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
-    @Before
+    @BeforeEach
     public void init() throws IllegalAccessException, LoginException {
 
         ContextHelper.initContext(context);

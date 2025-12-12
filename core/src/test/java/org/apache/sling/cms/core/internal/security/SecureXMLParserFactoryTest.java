@@ -26,17 +26,17 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Unit tests for {@link SecureXMLParserFactory}.
@@ -65,27 +65,27 @@ public class SecureXMLParserFactoryTest {
     @Test
     public void testCreateSecureDocumentBuilderFactory() throws Exception {
         DocumentBuilderFactory factory = SecureXMLParserFactory.createSecureDocumentBuilderFactory();
-        assertNotNull("Factory should not be null", factory);
+        assertNotNull(factory, "Factory should not be null");
 
         // Verify security features are enabled
         assertTrue(
-                "Secure processing should be enabled",
-                factory.getFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING));
-        assertFalse("XInclude should be disabled", factory.isXIncludeAware());
-        assertFalse("Namespace aware should be disabled", factory.isNamespaceAware());
-        assertFalse("Entity references should not be expanded", factory.isExpandEntityReferences());
+                factory.getFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING),
+                "Secure processing should be enabled");
+        assertFalse(factory.isXIncludeAware(), "XInclude should be disabled");
+        assertFalse(factory.isNamespaceAware(), "Namespace aware should be disabled");
+        assertFalse(factory.isExpandEntityReferences(), "Entity references should not be expanded");
     }
 
     @Test
     public void testCreateSecureSAXParserFactory() throws Exception {
         SAXParserFactory factory = SecureXMLParserFactory.createSecureSAXParserFactory();
-        assertNotNull("Factory should not be null", factory);
+        assertNotNull(factory, "Factory should not be null");
 
         // Verify security features are enabled
         assertTrue(
-                "Secure processing should be enabled",
-                factory.getFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING));
-        assertFalse("Namespace aware should be disabled", factory.isNamespaceAware());
+                factory.getFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING),
+                "Secure processing should be enabled");
+        assertFalse(factory.isNamespaceAware(), "Namespace aware should be disabled");
     }
 
     @Test
@@ -99,8 +99,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXParseException e) {
             // Expected - DOCTYPE should be blocked
             assertTrue(
-                    "Error message should mention DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error message should mention DOCTYPE");
         }
     }
 
@@ -115,8 +115,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXParseException e) {
             // Expected - DOCTYPE should be blocked
             assertTrue(
-                    "Error message should mention DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error message should mention DOCTYPE");
         }
     }
 
@@ -131,8 +131,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXParseException e) {
             // Expected - DOCTYPE should be blocked
             assertTrue(
-                    "Error message should mention DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error message should mention DOCTYPE");
         }
     }
 
@@ -143,11 +143,8 @@ public class SecureXMLParserFactoryTest {
 
         try (InputStream is = new ByteArrayInputStream(VALID_XML_NO_DOCTYPE.getBytes())) {
             Document doc = builder.parse(is);
-            assertNotNull("Document should be parsed successfully", doc);
-            assertEquals(
-                    "Root element should be 'root'",
-                    "root",
-                    doc.getDocumentElement().getNodeName());
+            assertNotNull(doc, "Document should be parsed successfully");
+            assertEquals("root", doc.getDocumentElement().getNodeName(), "Root element should be 'root'");
         }
     }
 
@@ -162,8 +159,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXException e) {
             // Expected - DOCTYPE should be blocked
             assertTrue(
-                    "Error message should mention DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error message should mention DOCTYPE");
         }
     }
 
@@ -178,8 +175,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXException e) {
             // Expected - DOCTYPE should be blocked
             assertTrue(
-                    "Error message should mention DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error message should mention DOCTYPE");
         }
     }
 
@@ -194,8 +191,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXException e) {
             // Expected - DOCTYPE should be blocked
             assertTrue(
-                    "Error message should mention DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error message should mention DOCTYPE");
         }
     }
 
@@ -222,16 +219,16 @@ public class SecureXMLParserFactoryTest {
 
             // Verify system properties were set
             String docFactory = System.getProperty("javax.xml.parsers.DocumentBuilderFactory");
-            assertNotNull("DocumentBuilderFactory should be set", docFactory);
+            assertNotNull(docFactory, "DocumentBuilderFactory should be set");
             assertTrue(
-                    "DocumentBuilderFactory should be Xerces implementation",
-                    docFactory.contains("xerces") || docFactory.contains("DocumentBuilderFactoryImpl"));
+                    docFactory.contains("xerces") || docFactory.contains("DocumentBuilderFactoryImpl"),
+                    "DocumentBuilderFactory should be Xerces implementation");
 
             String saxFactory = System.getProperty("javax.xml.parsers.SAXParserFactory");
-            assertNotNull("SAXParserFactory should be set", saxFactory);
+            assertNotNull(saxFactory, "SAXParserFactory should be set");
             assertTrue(
-                    "SAXParserFactory should be Xerces implementation",
-                    saxFactory.contains("xerces") || saxFactory.contains("SAXParserFactoryImpl"));
+                    saxFactory.contains("xerces") || saxFactory.contains("SAXParserFactoryImpl"),
+                    "SAXParserFactory should be Xerces implementation");
 
         } finally {
             // Restore original values
@@ -257,8 +254,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXParseException e) {
             // Expected
             assertTrue(
-                    "Error should be about DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error should be about DOCTYPE");
         }
     }
 
@@ -275,8 +272,8 @@ public class SecureXMLParserFactoryTest {
         } catch (SAXException e) {
             // Expected
             assertTrue(
-                    "Error should be about DOCTYPE",
-                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"));
+                    e.getMessage().contains("DOCTYPE") || e.getMessage().contains("doctype"),
+                    "Error should be about DOCTYPE");
         }
     }
 
@@ -287,14 +284,14 @@ public class SecureXMLParserFactoryTest {
         // Verify critical security features
         try {
             boolean disallowDoctype = factory.getFeature("http://apache.org/xml/features/disallow-doctype-decl");
-            assertTrue("DOCTYPE should be disallowed", disallowDoctype);
+            assertTrue(disallowDoctype, "DOCTYPE should be disallowed");
         } catch (Exception e) {
             // Feature might not be queryable on all parsers, skip
         }
 
         try {
             boolean externalGeneral = factory.getFeature("http://xml.org/sax/features/external-general-entities");
-            assertFalse("External general entities should be disabled", externalGeneral);
+            assertFalse(externalGeneral, "External general entities should be disabled");
         } catch (Exception e) {
             // Feature might not be queryable on all parsers, skip
         }
@@ -307,14 +304,14 @@ public class SecureXMLParserFactoryTest {
         // Verify critical security features
         try {
             boolean disallowDoctype = factory.getFeature("http://apache.org/xml/features/disallow-doctype-decl");
-            assertTrue("DOCTYPE should be disallowed", disallowDoctype);
+            assertTrue(disallowDoctype, "DOCTYPE should be disallowed");
         } catch (Exception e) {
             // Feature might not be queryable on all parsers, skip
         }
 
         try {
             boolean externalGeneral = factory.getFeature("http://xml.org/sax/features/external-general-entities");
-            assertFalse("External general entities should be disabled", externalGeneral);
+            assertFalse(externalGeneral, "External general entities should be disabled");
         } catch (Exception e) {
             // Feature might not be queryable on all parsers, skip
         }

@@ -11,35 +11,20 @@
 #
 # Apache Sling CMS Web Cache Dockerfile
 
-# Pull base image.
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
-# Avoid interaction with tzdata
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Install Apache
-RUN apt-get update && apt-get install apache2 -y
-
-# Configure mod_rewrite
-RUN a2enmod rewrite
-
-# Configure mod_proxy
-RUN a2enmod proxy
-RUN a2enmod proxy_http
-
-# Configure mod_cache and mod_expire
-RUN a2enmod cache
-RUN a2enmod cache_disk
-RUN a2enmod expires
-RUN a2enmod headers
+# Install Apache and enable required modules
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends apache2 && \
+    a2enmod rewrite proxy proxy_http cache cache_disk expires headers && \
+    rm -rf /var/lib/apt/lists/*
 
 # Configure sites
-RUN mkdir -p /var/www/vhosts/sling-cms && mkdir -p /var/www/vhosts/sling
+RUN mkdir -p /var/www/vhosts/sling-cms /var/www/vhosts/sling
 COPY *.conf /etc/apache2/sites-enabled/
 
-# Expose endpoints
 EXPOSE 80
 
-# Start Apache httpd
-RUN service apache-htcacheclean start
-CMD ["/usr/sbin/apache2ctl", "-DFOREGROUND"]
+CMD ["apachectl", "-D", "FOREGROUND"]

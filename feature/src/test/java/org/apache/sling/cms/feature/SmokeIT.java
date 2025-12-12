@@ -38,31 +38,30 @@ import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.hamcrest.CoreMatchers;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class SmokeIT {
 
     private static final int LAUNCHPAD_PORT = Integer.getInteger("sling.http.port", 8080);
     private static final int EXPECTED_BUNDLES_COUNT = Integer.getInteger("IT.expected.bundles.count", 240);
 
-    @ClassRule
-    public static LaunchpadReadyRule LAUNCHPAD = new LaunchpadReadyRule(LAUNCHPAD_PORT);
+    @RegisterExtension
+    static LaunchpadReadyRule LAUNCHPAD = new LaunchpadReadyRule(LAUNCHPAD_PORT);
 
     private HttpClientContext httpClientContext;
 
-    @Before
+    @BeforeEach
     public void prepareHttpContext() {
 
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
@@ -101,7 +100,7 @@ public class SmokeIT {
                 }
 
                 Header contentType = response.getFirstHeader("Content-Type");
-                assertThat("Content-Type header", contentType.getValue(), CoreMatchers.startsWith("application/json"));
+                assertTrue(contentType.getValue().startsWith("application/json"), "Content-Type header");
 
                 Map<String, Object> obj = new JSONParser(response.getEntity().getContent()).getParsed();
 
@@ -167,7 +166,7 @@ public class SmokeIT {
                 }
 
                 Header contentType = response.getFirstHeader("Content-Type");
-                assertThat("Content-Type header", contentType.getValue(), equalTo("text/xml"));
+                assertEquals("text/xml", contentType.getValue(), "Content-Type header");
 
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 dbf.setNamespaceAware(true);
@@ -178,8 +177,8 @@ public class SmokeIT {
                 NamedNodeMap attrs = docElement.getAttributes();
 
                 Node nameAttr = attrs.getNamedItemNS("http://www.jcp.org/jcr/sv/1.0", "name");
-                assertThat("no 'name' attribute found", nameAttr, notNullValue());
-                assertThat("Invalid name attribute value", nameAttr.getNodeValue(), equalTo("content"));
+                assertNotNull(nameAttr, "no 'name' attribute found");
+                assertEquals("content", nameAttr.getNodeValue(), "Invalid name attribute value");
             }
         }
     }

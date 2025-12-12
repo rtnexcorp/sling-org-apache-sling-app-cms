@@ -20,10 +20,10 @@ package org.apache.sling.cms.publication;
 
 import org.apache.sling.api.SlingConstants;
 import org.apache.sling.cms.PublishableResource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PublicationEventTest {
 

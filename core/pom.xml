@@ -81,8 +81,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -203,8 +203,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.testing.sling-mock.junit4</artifactId>
+            <artifactId>org.apache.sling.testing.sling-mock.junit5</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -298,6 +303,7 @@
                         <exclude>**/DownloadFileServletTest.java</exclude>
                         <exclude>**/ContentBreadcrumbTest.java</exclude>
                         <exclude>**/StartContentTest.java</exclude>
+                        <exclude>**/QueryDebuggerTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

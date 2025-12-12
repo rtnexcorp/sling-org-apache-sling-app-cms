@@ -29,9 +29,10 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class LaunchpadReadyRule extends ExternalResource {
+public class LaunchpadReadyRule implements BeforeAllCallback {
 
     private static final int TRIES = 60;
     private static final int WAIT_BETWEEN_TRIES_MILLIS = 1000;
@@ -62,7 +63,7 @@ public class LaunchpadReadyRule extends ExternalResource {
     }
 
     @Override
-    protected void before() throws Throwable {
+    public void beforeAll(ExtensionContext context) throws Exception {
 
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             for (Check check : checks) {

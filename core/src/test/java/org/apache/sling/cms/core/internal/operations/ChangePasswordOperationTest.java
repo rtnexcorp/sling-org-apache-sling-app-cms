@@ -29,25 +29,26 @@ import org.apache.sling.cms.core.helpers.SlingCMSTestHelper;
 import org.apache.sling.servlets.post.JSONResponse;
 import org.apache.sling.servlets.post.PostResponse;
 import org.apache.sling.servlets.post.SlingPostProcessor;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+@ExtendWith(SlingContextExtension.class)
 public class ChangePasswordOperationTest {
 
-    @Rule
     public SlingContext context = new SlingContext();
 
     private User user;
 
     public static final String USER_PATH = "/home/users/test";
 
-    @Before
+    @BeforeEach
     public void init() throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException {
         SlingCMSTestHelper.initAuthContext(context);
 

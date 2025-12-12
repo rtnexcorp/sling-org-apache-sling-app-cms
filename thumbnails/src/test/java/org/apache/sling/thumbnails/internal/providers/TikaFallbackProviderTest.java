@@ -21,28 +21,29 @@ package org.apache.sling.thumbnails.internal.providers;
 import java.io.IOException;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.thumbnails.internal.ContextHelper;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(SlingContextExtension.class)
 public class TikaFallbackProviderTest {
 
     private static final Logger log = LoggerFactory.getLogger(TikaFallbackProviderTest.class);
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
     private Resource docxFile;
 
     private Resource largeFile;
 
-    @Before
+    @BeforeEach
     public void init() {
         ContextHelper.initContext(context);
         docxFile = context.resourceResolver().getResource("/content/apache/sling-apache-org/index/Sling.docx");

@@ -28,7 +28,8 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.resource.LoginException;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.thumbnails.ThumbnailSupport;
 import org.apache.sling.thumbnails.extension.ThumbnailProvider;
 import org.apache.sling.thumbnails.extension.TransformationHandler;
@@ -36,22 +37,22 @@ import org.apache.sling.thumbnails.internal.providers.ImageThumbnailProvider;
 import org.apache.sling.thumbnails.internal.providers.PdfThumbnailProvider;
 import org.apache.sling.thumbnails.internal.transformers.CropHandler;
 import org.apache.sling.thumbnails.internal.transformers.ResizeHandler;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SlingContextExtension.class)
 public class ThumbnailsWebConsoleTest {
 
     private ThumbnailsWebConsole wc;
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
 
-    @Before
+    @BeforeEach
     public void init() throws IllegalAccessException, LoginException {
 
         List<TransformationHandler> th = new ArrayList<>();

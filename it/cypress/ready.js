@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-const fetch = require("node-fetch-commonjs");
+// Using native fetch (Node 18+)
 
 const url = process.env.CYPRESS_BASE_URL;
 const auth = Buffer.from("admin:admin").toString("base64");
