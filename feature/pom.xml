@@ -253,7 +253,7 @@
                         </goals>
                         <phase>prepare-package</phase>
                         <configuration>
-                            <replacePropertyVariables>asm.version,org-apache-sling-api-version,org-apache-sling-scripting-jsp-taglib-version,cms-version,composum.nodes.version,groovy.version,guava-version,jackrabbit.version,jackson.version,oak.version,slf4j.version,cocoon-serializers-charsets-version,org.apache.felix.webconsole-version,commons-lang3-version,jstl-version,org-apache-sling-models-api-version,org.apache.sling.scripting.jsp.taglib,geronimo-atinject_1-0_spec-version,commons-io-version,pdfbox-version,httpclient-version,org-apache-sling-caconfig-api-version,jsoup-version,org-apache-sling-fileoptim-version,org-apache-sling-engine-version,org-apache-sling-commons-johnzon-version,commons-text-version,org-apache-sling-scripting-api-version</replacePropertyVariables>
+                            <replacePropertyVariables>asm.version,sling-api-version,sling-scripting-jsp-taglib-version,cms-version,composum.nodes.version,groovy.version,guava-version,jackrabbit.version,jackson.version,oak.version,slf4j.version,cocoon-serializers-charsets-version,felix-webconsole-version,commons-lang3-version,jstl-version,sling-models-version,geronimo-atinject-version,commons-io-version,pdfbox-version,httpclient-version,sling-caconfig-version,jsoup-version,sling-fileoptim-version,sling-engine-version,sling-johnzon-version,commons-text-version,sling-scripting-api-version</replacePropertyVariables>
                         </configuration>
                     </execution>
                 </executions>

@@ -53,7 +53,7 @@
       "start-order":"15"
     },
     {
-      "id":"org.apache.sling:org.apache.sling.fileoptim:${org-apache-sling-fileoptim-version}",
+      "id":"org.apache.sling:org.apache.sling.fileoptim:${sling-fileoptim-version}",
       "start-order":"20"
     },
     {
