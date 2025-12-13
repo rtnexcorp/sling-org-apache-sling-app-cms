@@ -44,9 +44,15 @@ rava.bind('.contentnav', {
       const resourceParam = urlParams.get('resource');
       const searchParam = urlParams.get('search');
       const cnav = this;
-      const search = document.querySelector('.contentnav-search input[name=search]');
-      const typeFilter = document.querySelector('[data-content-type-filter]');
-      const tagFilter = document.querySelector('[data-content-tag-filter]');
+      // Support both contentnav-search and asset filter bar search inputs
+      const search = document.querySelector('.contentnav-search input[name=search]') 
+        || document.querySelector('[data-asset-search]');
+      // Support both content-filter and asset-filter-bar type filters
+      const typeFilter = document.querySelector('[data-content-type-filter]') 
+        || document.querySelector('[data-asset-type-filter]');
+      // Support both content-filter and asset-filter-bar tag filters
+      const tagFilter = document.querySelector('[data-content-tag-filter]') 
+        || document.querySelector('[data-asset-tag-filter]');
       
       function attrContains(ctx, attr) {
         let matches = false;
@@ -93,9 +99,16 @@ rava.bind('.contentnav', {
           
           // Tag filter match
           let matchesTag = true;
-          if (tagValue && !isFolder) {
-            const taxonomyPaths = taxonomy.split(',').filter(t => t.trim());
-            matchesTag = taxonomyPaths.some(path => path === tagValue || path.startsWith(tagValue + '/'));
+          if (tagValue) {
+            if (isFolder) {
+              // Folders always match tag filter (they contain items that might have tags)
+              matchesTag = true;
+            } else {
+              // For files, check if taxonomy matches the selected tag
+              const taxonomyPaths = taxonomy.split(',').filter(t => t.trim());
+              matchesTag = taxonomyPaths.length > 0 && 
+                taxonomyPaths.some(path => path === tagValue || path.startsWith(tagValue + '/'));
+            }
           }
           
           // Show/hide item
