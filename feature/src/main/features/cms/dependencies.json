@@ -42,11 +42,11 @@
     },
     {
       "id":"org.apache.jackrabbit:oak-auth-external:${oak.version}",
-      "start-order":"15"
+      "start-order":"20"
     },
     {
       "id":"org.apache.jackrabbit:oak-auth-ldap:${oak.version}",
-      "start-order":"15"
+      "start-order":"20"
     },
     {
       "id":"org.apache.servicemix.bundles:org.apache.servicemix.bundles.xmlbeans:3.1.0_2",

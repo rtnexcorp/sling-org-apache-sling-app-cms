@@ -94,12 +94,26 @@ public class TikaFallbackProvider implements ThumbnailProvider {
         try {
             parser.parse(is, bHandler, md, context);
         } catch (SAXException se) {
-            if (woHandler.isWriteLimitReached(se)) {
+            if (isWriteLimitReached(se)) {
                 log.debug("Reached write limit for preview generation");
             } else {
                 throw se;
             }
         }
         return bHandler.toString();
+    }
+
+    private static boolean isWriteLimitReached(SAXException se) {
+        // Tika 2/3 have changed how this is surfaced. Avoid compile-time linkage
+        // to helper APIs by looking for the well-known exception type.
+        Throwable t = se;
+        while (t != null) {
+            if ("org.apache.tika.sax.WriteOutContentHandler$WriteLimitReachedException"
+                    .equals(t.getClass().getName())) {
+                return true;
+            }
+            t = t.getCause();
+        }
+        return false;
     }
 }
