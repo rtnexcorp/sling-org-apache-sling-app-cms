@@ -4,7 +4,6 @@
         "sling:resourceType": "sling-cms/components/pages/modal",
         "jcr:title": "Asset Metadata",
         "jcr:primaryType": "nt:unstructured",
-        "modalSize": "is-large",
         "container": {
             "jcr:primaryType": "nt:unstructured",
             "sling:resourceType": "sling-cms/components/general/container",
