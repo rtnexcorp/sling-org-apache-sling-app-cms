@@ -187,13 +187,72 @@ public class PageManagerImpl implements PageManager { ... }
 </sly>
 ```
 
-❌ **Do NOT create new JSP files**
+❌ **Do NOT create new JSP files** - This is strictly enforced!
+
+**New Component File Structure**:
+When creating a new component, always create:
+1. `.content.xml` - Component definition
+2. `<componentname>.html` - HTL template (NOT `.jsp`)
+3. Sling Model in appropriate module for business logic
+
+**Example - Creating a new component**:
+```
+ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/mycomponent/
+├── .content.xml          # Component definition
+└── mycomponent.html      # HTL template (REQUIRED - not JSP!)
+```
 
 **JSP to HTL Migration**: When modifying existing JSP files, convert them to HTL:
 - Look for opportunities during bug fixes or feature additions
 - JSP files are located under `/libs/sling-cms/components/`
 - Create equivalent `.html` HTL file and remove the `.jsp`
 - Use Sling Models for business logic instead of scriptlets
+
+### SCSS/CSS Organization (REQUIRED)
+**Create separate SCSS files for new components. Never add styles inline or to existing large files.**
+
+✅ **Create separate SCSS files** for each new component:
+```
+frontend/src/main/frontend/scss/
+├── cms.scss              # Main entry - imports all partials
+├── _variables.scss       # Variables and mixins
+├── _base.scss            # Base styles
+├── _assets.scss          # Asset browser/grid styles
+├── _mycomponent.scss     # NEW: Separate file for new component
+└── ...
+```
+
+**Steps for adding component styles**:
+1. Create new file: `frontend/src/main/frontend/scss/_mycomponent.scss`
+2. Add `@import 'mycomponent';` to `cms.scss`
+3. Use BEM naming convention: `.my-component`, `.my-component__element`, `.my-component--modifier`
+
+**Example - New component SCSS file** (`_contentfilter.scss`):
+```scss
+// Content Filter Component
+// Provides filtering UI for content navigation
+
+.content-filter {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  
+  &__controls {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  &__label {
+    font-size: 0.875rem;
+    color: #666;
+  }
+}
+```
+
+❌ **Do NOT**:
+- Add new component styles directly to `_assets.scss` or other existing files
+- Use inline styles in HTL templates
+- Create monolithic CSS files
 
 ### Embedding Non-OSGi Libraries
 For libraries without OSGi metadata (e.g., thumbnailator), embed in bundle via `bnd.bnd`:

@@ -43,6 +43,7 @@ Sling.CMS.AssetBrowser = {
   initBrowser: function(browser) {
     const searchInput = browser.querySelector('[data-asset-search]');
     const typeFilter = browser.querySelector('[data-asset-type-filter]');
+    const tagFilter = browser.querySelector('[data-asset-tag-filter]');
     const viewButtons = browser.querySelectorAll('.asset-view-btn');
     const assetGrid = browser.querySelector('.asset-grid');
     const countDisplay = browser.querySelector('[data-asset-count]');
@@ -73,6 +74,13 @@ Sling.CMS.AssetBrowser = {
     // Type filter
     if (typeFilter) {
       typeFilter.addEventListener('change', () => {
+        this.filterAssets(browser);
+      });
+    }
+
+    // Tag filter
+    if (tagFilter) {
+      tagFilter.addEventListener('change', () => {
         this.filterAssets(browser);
       });
     }
@@ -113,6 +121,7 @@ Sling.CMS.AssetBrowser = {
   filterAssets: function(browser) {
     const searchInput = browser.querySelector('[data-asset-search]');
     const typeFilter = browser.querySelector('[data-asset-type-filter]');
+    const tagFilter = browser.querySelector('[data-asset-tag-filter]');
     const items = browser.querySelectorAll('.asset-item');
     const countDisplay = browser.querySelector('[data-asset-count]');
     const emptyState = browser.querySelector('.asset-grid__empty');
@@ -120,6 +129,7 @@ Sling.CMS.AssetBrowser = {
     
     const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
     const typeFilters = typeFilter ? typeFilter.value.split(',').filter(t => t) : [];
+    const tagFilterValue = tagFilter ? tagFilter.value : '';
     
     let visibleCount = 0;
     
@@ -127,6 +137,7 @@ Sling.CMS.AssetBrowser = {
       const name = item.dataset.name || '';
       const mimeType = item.dataset.mimeType || '';
       const isFolder = item.dataset.isFolder === 'true';
+      const taxonomy = item.dataset.taxonomy || '';
       
       // Search match
       const matchesSearch = !searchTerm || name.includes(searchTerm);
@@ -137,8 +148,15 @@ Sling.CMS.AssetBrowser = {
         matchesType = typeFilters.some(filter => mimeType.startsWith(filter));
       }
       
+      // Tag filter match
+      let matchesTag = true;
+      if (tagFilterValue && !isFolder) {
+        const taxonomyPaths = taxonomy.split(',').filter(t => t.trim());
+        matchesTag = taxonomyPaths.some(path => path === tagFilterValue || path.startsWith(tagFilterValue + '/'));
+      }
+      
       // Show/hide item
-      const isVisible = matchesSearch && matchesType;
+      const isVisible = matchesSearch && matchesType && matchesTag;
       item.style.display = isVisible ? '' : 'none';
       
       if (isVisible) {

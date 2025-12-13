@@ -36,7 +36,30 @@
                 </c:if>
             </c:forEach>
             <c:if test="${showCard}">
-                <div class="column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd contentnav__item">
+                <%-- Get MIME type for files --%>
+                <c:set var="mimeType" value="${child.valueMap['jcr:content/jcr:mimeType']}" />
+                <c:set var="isFolder" value="${child.resourceType == 'sling:OrderedFolder' || child.resourceType == 'sling:Folder' || child.resourceType == 'nt:folder'}" />
+                
+                <%-- Get taxonomy --%>
+                <c:set var="assetTaxonomy" value="${child.valueMap['jcr:content/sling:taxonomy']}" />
+                <c:set var="taxonomyStr" value="" />
+                <c:if test="${not empty assetTaxonomy}">
+                    <c:choose>
+                        <c:when test="${assetTaxonomy.class.array}">
+                            <c:forEach var="tax" items="${assetTaxonomy}" varStatus="taxStatus">
+                                <c:set var="taxonomyStr" value="${taxonomyStr}${taxStatus.first ? '' : ','}${tax}" />
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="taxonomyStr" value="${assetTaxonomy}" />
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+                
+                <div class="column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd contentnav__item"
+                     data-mime-type="${sling:encode(mimeType,'HTML_ATTR')}"
+                     data-is-folder="${isFolder}"
+                     data-taxonomy="${sling:encode(taxonomyStr,'HTML_ATTR')}">
                     <sling:getResource base="${resource}" path="types/${child.valueMap['jcr:primaryType']}/columns/name" var="nameConfig" />
                     <c:choose>
                         <c:when test="${not empty child.valueMap['jcr:content/jcr:title']}">

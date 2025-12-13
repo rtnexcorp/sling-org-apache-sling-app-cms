@@ -21,6 +21,7 @@ package org.apache.sling.thumbnails;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.cms.TaxonomyItem;
 
 /**
  * Interface for asset metadata information used in the DAM metadata editor.
@@ -137,4 +138,24 @@ public interface AssetMetadata {
     String getSource();
 
     String getKeywords();
+
+    /**
+     * @return array of taxonomy paths assigned to this asset
+     */
+    String[] getTaxonomy();
+
+    /**
+     * @return true if the asset has taxonomy tags
+     */
+    boolean hasTaxonomy();
+
+    /**
+     * @return list of available taxonomy options for selection
+     */
+    List<TaxonomyItem> getTaxonomyOptions();
+
+    /**
+     * @return list of currently assigned taxonomy items with details
+     */
+    List<TaxonomyItem> getAssignedTaxonomyItems();
 }

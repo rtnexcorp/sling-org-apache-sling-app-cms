@@ -68,6 +68,23 @@ $asset-badge-color: #fff;
   }
 }
 
+/* Content Filter - for static content console */
+.content-filter {
+  margin-bottom: 1rem;
+  padding: 0.75rem 0;
+
+  &__controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .select {
+    min-width: 120px;
+  }
+}
+
 /* Asset Grid */
 .asset-grid {
   &[data-view="list"] {

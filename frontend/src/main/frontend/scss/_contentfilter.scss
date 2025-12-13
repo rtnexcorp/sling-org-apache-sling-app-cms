@@ -17,11 +17,48 @@
  * under the License.
  */
 
-/**
- * Package with all of the common models used to access content in the Sling
- * reference CMS
- *
- * @since 0.10.0
- */
-@org.osgi.annotation.versioning.Version("2.3.0")
-package org.apache.sling.cms;
+/* Content Filter Component - Provides type and taxonomy filtering UI for content navigation */
+
+.content-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    color: #666;
+    margin-right: 0.25rem;
+  }
+
+  // Compact select styling
+  .select {
+    &.is-small select {
+      font-size: 0.75rem;
+      padding-right: 2rem;
+    }
+  }
+}
+
+// Responsive adjustments
+@media screen and (max-width: 768px) {
+  .content-filter {
+    &__controls {
+      flex-basis: 100%;
+    }
+
+    .select {
+      flex: 1;
+      min-width: 120px;
+    }
+  }
+}

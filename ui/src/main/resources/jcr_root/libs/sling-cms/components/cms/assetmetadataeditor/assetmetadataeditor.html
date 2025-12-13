@@ -126,6 +126,54 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!--/* Taxonomy / Tags field */-->
+                        <div class="column is-12">
+                            <div class="field">
+                                <label class="label is-small">${'Tags' @ i18n}</label>
+                                <div class="labelfield">
+                                    <fieldset disabled="disabled" class="labelfield__template is-hidden">
+                                        <a class="tag labelfield__item" title="">
+                                            <input type="hidden" name="sling:taxonomy" value="" />
+                                            <span class="labelfield__title"></span>
+                                            <button class="delete is-small">
+                                                <span class="is-sr-only">${'Delete' @ i18n}</span>
+                                            </button>
+                                        </a>
+                                    </fieldset>
+                                    <div class="labelfield__field field has-addons">
+                                        <div class="control is-expanded">
+                                            <input class="input is-small" type="text" id="taxonomy-field" list="taxonomy-options" autocomplete="off"/>
+                                        </div>
+                                        <div class="control">
+                                            <button class="labelfield__add button is-small">
+                                                <span class="jam jam-plus">
+                                                    <span class="is-sr-only">${'Add' @ i18n}</span>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="labelfield__container tags are-medium mt-2">
+                                        <sly data-sly-list.item="${meta.assignedTaxonomyItems}">
+                                            <a class="tag labelfield__item is-info" title="${item.path}">
+                                                <input type="hidden" name="sling:taxonomy" value="${item.path}"/>
+                                                <span class="labelfield__title">${item.title}</span>
+                                                <button class="delete is-small">
+                                                    <span class="is-sr-only">${'Delete' @ i18n}</span>
+                                                </button>
+                                            </a>
+                                        </sly>
+                                    </div>
+                                    <datalist id="taxonomy-options">
+                                        <sly data-sly-list.option="${meta.taxonomyOptions}">
+                                            <option value="${option.path}">${option.title}</option>
+                                        </sly>
+                                    </datalist>
+                                    <input type="hidden" name="sling:taxonomy@TypeHint" value="String[]"/>
+                                    <input type="hidden" name="sling:taxonomy@Delete" value="delete"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="field is-grouped mt-3">

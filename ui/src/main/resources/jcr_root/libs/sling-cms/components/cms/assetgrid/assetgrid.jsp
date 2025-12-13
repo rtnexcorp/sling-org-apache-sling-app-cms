@@ -65,10 +65,27 @@
                         </c:otherwise>
                     </c:choose>
                     
+                    <%-- Get taxonomy --%>
+                    <c:set var="assetTaxonomy" value="${child.valueMap['jcr:content/sling:taxonomy']}" />
+                    <c:set var="taxonomyStr" value="" />
+                    <c:if test="${not empty assetTaxonomy}">
+                        <c:choose>
+                            <c:when test="${assetTaxonomy.class.array}">
+                                <c:forEach var="tax" items="${assetTaxonomy}" varStatus="taxStatus">
+                                    <c:set var="taxonomyStr" value="${taxonomyStr}${taxStatus.first ? '' : ','}${tax}" />
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="taxonomyStr" value="${assetTaxonomy}" />
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                    
                     <div class="column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd contentnav__item asset-item" 
                          data-name="${sling:encode(fn:toLowerCase(child.name),'HTML_ATTR')}" 
                          data-mime-type="${sling:encode(mimeType,'HTML_ATTR')}"
-                         data-is-folder="${isFolder}">
+                         data-is-folder="${isFolder}"
+                         data-taxonomy="${sling:encode(taxonomyStr,'HTML_ATTR')}">
                         <div class="card is-linked asset-card" title="${sling:encode(title,'HTML_ATTR')}" data-value="${sling:encode(child.path,'HTML_ATTR')}">
                             <div class="card-image">
                                 <figure class="image is-5by4">

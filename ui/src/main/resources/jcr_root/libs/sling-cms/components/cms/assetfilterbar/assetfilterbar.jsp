@@ -22,6 +22,7 @@
 <fmt:message key="Images" var="images" />
 <fmt:message key="Videos" var="videos" />
 <fmt:message key="Documents" var="documents" />
+<fmt:message key="All Tags" var="allTags" />
 <fmt:message key="Grid View" var="gridView" />
 <fmt:message key="List View" var="listView" />
 
@@ -43,6 +44,17 @@
                 <option value="image/">${sling:encode(images,'HTML')}</option>
                 <option value="video/">${sling:encode(videos,'HTML')}</option>
                 <option value="application/pdf,application/msword,application/vnd">${sling:encode(documents,'HTML')}</option>
+            </select>
+        </div>
+        
+        <%-- Taxonomy Filter --%>
+        <div class="select">
+            <select data-asset-tag-filter aria-label="Filter by tag">
+                <option value="">${sling:encode(allTags,'HTML')}</option>
+                <c:set var="taxonomyQuery" value="SELECT * FROM [sling:Taxonomy] WHERE ISDESCENDANTNODE([/etc/taxonomy])" />
+                <c:forEach var="taxonomy" items="${sling:findResources(resourceResolver,taxonomyQuery,'JCR-SQL2')}">
+                    <option value="${sling:encode(taxonomy.path,'HTML_ATTR')}">${sling:encode(taxonomy.valueMap['jcr:title'],'HTML')}</option>
+                </c:forEach>
             </select>
         </div>
     </div>

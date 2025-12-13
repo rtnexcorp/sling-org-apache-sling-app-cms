@@ -26,11 +26,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.cms.TaxonomyItem;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.thumbnails.AssetMetadata;
@@ -249,5 +251,60 @@ public class AssetMetadataModel implements AssetMetadata {
     @Override
     public String getKeywords() {
         return contentProps != null ? contentProps.get("keywords", "") : "";
+    }
+
+    @Override
+    public String[] getTaxonomy() {
+        if (contentProps == null) {
+            return new String[0];
+        }
+        String[] taxonomy = contentProps.get("sling:taxonomy", String[].class);
+        return taxonomy != null ? taxonomy : new String[0];
+    }
+
+    @Override
+    public boolean hasTaxonomy() {
+        return getTaxonomy().length > 0;
+    }
+
+    @Override
+    public List<TaxonomyItem> getTaxonomyOptions() {
+        List<TaxonomyItem> options = new ArrayList<>();
+        if (request.getResourceResolver() == null) {
+            return options;
+        }
+
+        // Query all taxonomy items from /etc/taxonomy
+        String query = "SELECT * FROM [sling:Taxonomy] WHERE ISDESCENDANTNODE([/etc/taxonomy])";
+        try {
+            Iterator<Resource> resources = request.getResourceResolver().findResources(query, "JCR-SQL2");
+            while (resources.hasNext()) {
+                Resource taxRes = resources.next();
+                TaxonomyItem item = taxRes.adaptTo(TaxonomyItem.class);
+                if (item != null) {
+                    options.add(item);
+                }
+            }
+        } catch (Exception e) {
+            // Log error but don't fail
+        }
+        return options;
+    }
+
+    @Override
+    public List<TaxonomyItem> getAssignedTaxonomyItems() {
+        List<TaxonomyItem> items = new ArrayList<>();
+        String[] taxonomyPaths = getTaxonomy();
+
+        for (String path : taxonomyPaths) {
+            Resource taxRes = request.getResourceResolver().getResource(path);
+            if (taxRes != null) {
+                TaxonomyItem item = taxRes.adaptTo(TaxonomyItem.class);
+                if (item != null) {
+                    items.add(item);
+                }
+            }
+        }
+        return items;
     }
 }

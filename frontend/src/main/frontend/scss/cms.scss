@@ -22,6 +22,7 @@
 @use "overrides";
 @use "tiptap";
 @use "assets";
+@use "contentfilter";
 @use "variables" as *;
 
 // Bulma breakpoints (for compatibility)

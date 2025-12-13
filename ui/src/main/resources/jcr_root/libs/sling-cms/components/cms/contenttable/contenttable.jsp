@@ -48,7 +48,32 @@
                 <c:set var="type" value="${not empty child.valueMap['jcr:primaryType'] ? child.valueMap['jcr:primaryType'] : fn:replace(child.resourceType,'/','-')}" />
                 <sling:getResource var="typeConfig" base="${resource}" path="types/${type}" />
                 <c:if test="${typeConfig != null && !fn:contains(child.name,':')}">
-                    <tr class="contentnav__item sortable__row" data-resource="${sling:encode(child.path,'HTML_ATTR')}" data-type="${sling:encode(typeConfig.path,'HTML_ATTR')}">
+                    <%-- Get MIME type for files --%>
+                    <c:set var="mimeType" value="${child.valueMap['jcr:content/jcr:mimeType']}" />
+                    <c:set var="isFolder" value="${type == 'sling:OrderedFolder' || type == 'sling:Folder' || type == 'nt:folder'}" />
+                    
+                    <%-- Get taxonomy --%>
+                    <c:set var="assetTaxonomy" value="${child.valueMap['jcr:content/sling:taxonomy']}" />
+                    <c:set var="taxonomyStr" value="" />
+                    <c:if test="${not empty assetTaxonomy}">
+                        <c:choose>
+                            <c:when test="${assetTaxonomy.class.array}">
+                                <c:forEach var="tax" items="${assetTaxonomy}" varStatus="taxStatus">
+                                    <c:set var="taxonomyStr" value="${taxonomyStr}${taxStatus.first ? '' : ','}${tax}" />
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="taxonomyStr" value="${assetTaxonomy}" />
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                    
+                    <tr class="contentnav__item sortable__row" 
+                        data-resource="${sling:encode(child.path,'HTML_ATTR')}" 
+                        data-type="${sling:encode(typeConfig.path,'HTML_ATTR')}"
+                        data-mime-type="${sling:encode(mimeType,'HTML_ATTR')}"
+                        data-is-folder="${isFolder}"
+                        data-taxonomy="${sling:encode(taxonomyStr,'HTML_ATTR')}">
                         <td class="Cell-Static" title="# ${status.index + 1}" data-sort-value="<fmt:formatNumber pattern="0000" value="${count}" />">
                             ${count}
                         </td>

@@ -100,6 +100,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.cms.api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.commons.classloader</artifactId>
             <scope>provided</scope>
         </dependency>

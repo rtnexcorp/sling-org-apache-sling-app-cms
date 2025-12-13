@@ -45,9 +45,12 @@ rava.bind('.contentnav', {
       const searchParam = urlParams.get('search');
       const cnav = this;
       const search = document.querySelector('.contentnav-search input[name=search]');
+      const typeFilter = document.querySelector('[data-content-type-filter]');
+      const tagFilter = document.querySelector('[data-content-tag-filter]');
+      
       function attrContains(ctx, attr) {
         let matches = false;
-        const value = search.value.toLowerCase();
+        const value = search ? search.value.toLowerCase() : '';
         ctx.querySelectorAll(`*[${attr}]`).forEach((it) => {
           if (it.getAttribute(attr).indexOf(value) !== -1) {
             matches = true;
@@ -55,26 +58,68 @@ rava.bind('.contentnav', {
         });
         return matches;
       }
+      
       function filter(event) {
         if (event) {
           event.stopPropagation();
           event.preventDefault();
         }
-        const value = search.value.toLowerCase();
+        const searchValue = search ? search.value.toLowerCase() : '';
+        const typeValue = typeFilter ? typeFilter.value : '';
+        const tagValue = tagFilter ? tagFilter.value : '';
+        const typeFilters = typeValue ? typeValue.split(',').filter(t => t) : [];
+        
         cnav.querySelectorAll('.contentnav__item').forEach((item) => {
-          if (item.innerText.toLowerCase().indexOf(value) === -1
-            && !attrContains(item, 'title')
-            && !attrContains(item, 'data-value')) {
-            item.classList.add('is-hidden');
-          } else {
+          // Get item attributes
+          const mimeType = item.dataset.mimeType || '';
+          const isFolder = item.dataset.isFolder === 'true' || item.dataset.type === 'folder';
+          const taxonomy = item.dataset.taxonomy || '';
+          
+          // Search match
+          const matchesSearch = !searchValue || 
+            item.innerText.toLowerCase().indexOf(searchValue) !== -1 ||
+            attrContains(item, 'title') ||
+            attrContains(item, 'data-value');
+          
+          // Type filter match
+          let matchesType = true;
+          if (typeFilters.length > 0) {
+            if (typeFilters.includes('folder')) {
+              matchesType = isFolder;
+            } else if (!isFolder) {
+              matchesType = typeFilters.some(filter => mimeType.startsWith(filter));
+            }
+          }
+          
+          // Tag filter match
+          let matchesTag = true;
+          if (tagValue && !isFolder) {
+            const taxonomyPaths = taxonomy.split(',').filter(t => t.trim());
+            matchesTag = taxonomyPaths.some(path => path === tagValue || path.startsWith(tagValue + '/'));
+          }
+          
+          // Show/hide item
+          if (matchesSearch && matchesType && matchesTag) {
             item.classList.remove('is-hidden');
+          } else {
+            item.classList.add('is-hidden');
           }
         });
       }
+      
       if (search) {
         search.addEventListener('keyup', filter);
         search.addEventListener('change', filter);
       }
+      
+      if (typeFilter) {
+        typeFilter.addEventListener('change', filter);
+      }
+      
+      if (tagFilter) {
+        tagFilter.addEventListener('change', filter);
+      }
+      
       if (resourceParam) {
         cnav.querySelectorAll('.contentnav__item').forEach((item) => {
           if (item.querySelector(`*[data-value="${resourceParam}"]`)) {
@@ -84,9 +129,13 @@ rava.bind('.contentnav', {
             item.classList.add('is-hidden');
           }
         });
-        document.querySelector('.contentnav-search input[name=search]').value = resourceParam;
+        if (search) {
+          search.value = resourceParam;
+        }
       } else if (searchParam) {
-        document.querySelector('.contentnav-search input[name=search]').value = searchParam;
+        if (search) {
+          search.value = searchParam;
+        }
         filter();
       }
     },
