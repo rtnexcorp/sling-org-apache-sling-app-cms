@@ -74,14 +74,14 @@ fswatch -0 -r -l 1 \
     --exclude='.*\.git.*' \
     --exclude='.*\.class$' \
     --exclude='.*bun\.lock.*' \
-    --exclude='.*jcr_root.*' \
     --exclude='.*\.min\.js$' \
     --exclude='.*\.min\.css$' \
-    --exclude='.*resources/jcr_root.*' \
+    --exclude='.*frontend/src/main/resources.*' \
     --include='.*\.java$' \
     --include='.*\.xml$' \
     --include='.*\.json$' \
     --include='.*\.html$' \
+    --include='.*\.jsp$' \
     --include='.*\.js$' \
     --include='.*\.css$' \
     --include='.*\.scss$' \

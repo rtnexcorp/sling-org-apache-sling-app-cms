@@ -299,39 +299,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.sling</groupId>
-                <artifactId>slingfeature-maven-plugin</artifactId>
-                <version>1.4.18</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <framework>
-                        <groupId>org.apache.felix</groupId>
-                        <artifactId>org.apache.felix.framework</artifactId>
-                        <version>6.0.3</version>
-                    </framework>
-                    <aggregates>
-                        <aggregate>
-                            <classifier>default</classifier>
-                            <filesInclude>**/*.json</filesInclude>
-                            <title>Apache Sling Thumbnails - Default</title>
-                        </aggregate>
-                    </aggregates>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-features</id>
-                        <goals>
-                            <goal>aggregate-features</goal>
-                            <goal>attach-features</goal>
-                        </goals>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <replacePropertyVariables>project.version</replacePropertyVariables>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>

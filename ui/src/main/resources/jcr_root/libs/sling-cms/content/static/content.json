@@ -94,6 +94,13 @@
                             "actions": {
                                 "jcr:primaryType": "nt:unstructured",
                                 "sling:resourceType": "sling-cms/components/cms/columns/actions",
+                                "metadata": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Asset Metadata",
+                                    "icon": "document",
+                                    "prefix": "/cms/file/metadata.html"
+                                },
                                 "edit": {
                                     "jcr:primaryType": "nt:unstructured",
                                     "sling:resourceType": "sling-cms/components/cms/actions/modal",

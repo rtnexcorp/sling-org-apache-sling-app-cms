@@ -53,6 +53,7 @@ import './cms.pathfield.js';
 import './cms.tiptap.js';
 import './cms.toggle.js';
 import './cms.imagepreview.js';
+import './cms.assetbrowser.js';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
