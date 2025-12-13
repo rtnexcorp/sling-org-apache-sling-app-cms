@@ -113,7 +113,7 @@
             "start-order":"20"
         },
         {
-            "id":"org.apache.sling:org.apache.sling.jcr.webdav:2.3.8",
+            "id":"org.apache.sling:org.apache.sling.jcr.webdav:2.3.10",
             "start-order":"20"
         },
         {
