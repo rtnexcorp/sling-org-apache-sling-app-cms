@@ -18,25 +18,24 @@
  */
 package org.apache.sling.cms.core.models;
 
-import javax.inject.Inject;
-
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 /**
- * Sling Model for the Name Column component
+ * Sling Model for the text column component.
+ * Displays a property value from the resource with optional link.
  */
-@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
-public class NameColumnModel {
+@Model(adaptables = SlingHttpServletRequest.class)
+public class TextColumnModel {
 
-    @SlingObject
+    @Self
     private SlingHttpServletRequest request;
 
-    @Inject
+    @SlingObject
     private Resource resource;
 
     private Resource colConfig;
@@ -56,21 +55,52 @@ public class NameColumnModel {
         return colConfigValueMap;
     }
 
-    public String getName() {
-        return resource.getName();
+    /**
+     * @return the property name from colConfig
+     */
+    public String getProperty() {
+        ValueMap vm = getColConfigValueMap();
+        return vm != null ? vm.get("property", String.class) : null;
     }
 
-    public String getPath() {
+    /**
+     * @return the property value from the resource
+     */
+    public String getPropertyValue() {
+        String property = getProperty();
+        if (property != null) {
+            return resource.getValueMap().get(property, String.class);
+        }
+        return null;
+    }
+
+    /**
+     * @return the resource path
+     */
+    public String getResourcePath() {
         return resource.getPath();
     }
 
+    /**
+     * @return true if link should be displayed
+     */
     public boolean isLink() {
         ValueMap vm = getColConfigValueMap();
         return vm != null && vm.get("link", false);
     }
 
+    /**
+     * @return the link prefix
+     */
     public String getPrefix() {
         ValueMap vm = getColConfigValueMap();
         return vm != null ? vm.get("prefix", "") : "";
+    }
+
+    /**
+     * @return the full link href
+     */
+    public String getLinkHref() {
+        return getPrefix() + resource.getPath();
     }
 }

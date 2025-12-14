@@ -18,25 +18,27 @@
  */
 package org.apache.sling.cms.core.models;
 
-import javax.inject.Inject;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 /**
- * Sling Model for the Name Column component
+ * Sling Model for the lastmodified column component.
+ * Displays the last modified date and user.
  */
-@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
-public class NameColumnModel {
+@Model(adaptables = SlingHttpServletRequest.class)
+public class LastModifiedColumnModel {
 
-    @SlingObject
+    @Self
     private SlingHttpServletRequest request;
 
-    @Inject
+    @SlingObject
     private Resource resource;
 
     private Resource colConfig;
@@ -56,21 +58,53 @@ public class NameColumnModel {
         return colConfigValueMap;
     }
 
-    public String getName() {
-        return resource.getName();
-    }
-
-    public String getPath() {
-        return resource.getPath();
-    }
-
-    public boolean isLink() {
+    private String getSubPath() {
         ValueMap vm = getColConfigValueMap();
-        return vm != null && vm.get("link", false);
+        return vm != null ? vm.get("subPath", "") : "";
     }
 
-    public String getPrefix() {
-        ValueMap vm = getColConfigValueMap();
-        return vm != null ? vm.get("prefix", "") : "";
+    /**
+     * @return the formatted last modified date
+     */
+    public String getLastModified() {
+        try {
+            String property = getSubPath() + "jcr:lastModified";
+            Calendar cal = resource.getValueMap().get(property, Calendar.class);
+            if (cal != null) {
+                DateFormat df =
+                        DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, request.getLocale());
+                return df.format(cal.getTime());
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return "";
+    }
+
+    /**
+     * @return the last modified by user
+     */
+    public String getLastModifiedBy() {
+        String property = getSubPath() + "jcr:lastModifiedBy";
+        return resource.getValueMap().get(property, "");
+    }
+
+    /**
+     * @return the combined title value
+     */
+    public String getTitleValue() {
+        String date = getLastModified();
+        String user = getLastModifiedBy();
+        if (!date.isEmpty() && !user.isEmpty()) {
+            return date + " - " + user;
+        }
+        return date + user;
+    }
+
+    /**
+     * @return true if date is valid
+     */
+    public boolean hasDate() {
+        return !getLastModified().isEmpty();
     }
 }
