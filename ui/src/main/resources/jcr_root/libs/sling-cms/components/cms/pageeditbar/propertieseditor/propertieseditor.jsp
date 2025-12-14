@@ -17,5 +17,25 @@
  * under the License.
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
-<sling:adaptTo adaptable="${sling:getRelativeResource(slingRequest.requestPathInfo.suffixResource,'jcr:content')}" adaptTo="org.apache.sling.cms.EditableResource" var="editable" />
-<sling:include path="${editable.editPath}" resourceType="sling-cms/components/editor/slingform" replaceSuffix="${editable.resource.path}" />
+
+<%-- NOTE: Guard against missing suffix resource / jcr:content to avoid NPEs during include. --%>
+<c:set var="contentResource" value="${sling:getRelativeResource(slingRequest.requestPathInfo.suffixResource,'jcr:content')}" />
+
+<c:choose>
+    <c:when test="${contentResource != null}">
+        <sling:adaptTo adaptable="${contentResource}" adaptTo="org.apache.sling.cms.EditableResource" var="editable" />
+        <c:if test="${editable != null && not empty editable.editPath}">
+            <sling:include path="${editable.editPath}" resourceType="sling-cms/components/editor/slingform" replaceSuffix="${editable.resource.path}" />
+        </c:if>
+        <c:if test="${editable == null || empty editable.editPath}">
+            <div class="notification is-warning is-light">
+                <fmt:message key="Unable to open properties editor for this resource." />
+            </div>
+        </c:if>
+    </c:when>
+    <c:otherwise>
+        <div class="notification is-warning is-light">
+            <fmt:message key="Unable to open properties editor: no resource selected." />
+        </div>
+    </c:otherwise>
+</c:choose>

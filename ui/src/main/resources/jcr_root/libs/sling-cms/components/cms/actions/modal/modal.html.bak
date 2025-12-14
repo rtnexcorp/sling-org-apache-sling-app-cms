@@ -1,4 +1,4 @@
-<!--
+<!--/*
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
   ~ distributed with this work for additional information
@@ -15,15 +15,18 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
-  -->
-<a class="button Fetch-Modal" 
-   data-title="${properties.title @ context='attribute'}" 
-   data-path="${(properties.ajaxPath || '.Main-Content form') @ context='attribute'}" 
-   href="${properties.prefix @ context='attribute'}${resource.path @ context='attribute'}${properties.suffix @ context='attribute'}" 
-   title="${properties.title @ context='attribute'}">
-    <span class="jam jam-${properties.icon @ context='attribute'}">
+*/-->
+
+<sly data-sly-use.action="org.apache.sling.cms.core.models.ModalActionModel" />
+
+<a class="button Fetch-Modal"
+   data-title="${action.title @ context='attribute'}"
+   data-path="${action.ajaxPath @ context='attribute'}"
+   href="${action.href @ context='attribute'}"
+   title="${action.title @ context='attribute'}">
+    <span class="jam jam-${action.icon @ context='attribute'}">
         <span class="is-sr-only">
-            ${properties.title @ context='html'}
+            ${action.title @ context='html'}
         </span>
     </span>
 </a>

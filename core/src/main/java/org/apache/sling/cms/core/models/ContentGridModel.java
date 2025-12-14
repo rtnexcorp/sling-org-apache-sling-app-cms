@@ -230,9 +230,9 @@ public class ContentGridModel {
         private String getBrandingGridIconsBase() {
             Resource brandingResource = resolver.getResource("/conf/global/sling-cms/branding");
             if (brandingResource != null) {
-                return brandingResource.getValueMap().get("gridIconsBase", "/static/clientlibs/sling-cms/img");
+                return brandingResource.getValueMap().get("gridIconsBase", "/static/sling-cms/thumbnails");
             }
-            return "/static/clientlibs/sling-cms/img";
+            return "/static/sling-cms/thumbnails";
         }
 
         public List<Action> getActions() {
