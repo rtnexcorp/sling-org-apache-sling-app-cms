@@ -73,6 +73,7 @@ if [ "$USE_UNIFIED" = true ]; then
         -p "$AUTHOR_DIR/launcher"
 else
     java -Xmx1g \
+        --add-opens java.base/java.lang=ALL-UNNAMED \
         -Dsling.run.modes=author \
         -Dorg.osgi.service.http.port=$PORT \
         -jar "$JAR_TO_USE"

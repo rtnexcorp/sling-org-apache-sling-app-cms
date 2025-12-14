@@ -57,7 +57,7 @@
                     <c:set var="taxonomyStr" value="" />
                     <c:if test="${not empty assetTaxonomy}">
                         <c:choose>
-                            <c:when test="${assetTaxonomy.class.array}">
+                            <c:when test="${fn:contains(assetTaxonomy.class.name, '[')}">
                                 <c:forEach var="tax" items="${assetTaxonomy}" varStatus="taxStatus">
                                     <c:set var="taxonomyStr" value="${taxonomyStr}${taxStatus.first ? '' : ','}${tax}" />
                                 </c:forEach>

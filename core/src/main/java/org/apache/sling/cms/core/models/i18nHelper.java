@@ -34,7 +34,7 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 @Model(adaptables = Resource.class)
-public class i18nHelper {
+public class I18nHelper {
 
     private Resource resource;
 
@@ -42,7 +42,7 @@ public class i18nHelper {
 
     private Random rand = new Random();
 
-    public i18nHelper(Resource resource) {
+    public I18nHelper(Resource resource) {
         this.resource = resource;
     }
 
