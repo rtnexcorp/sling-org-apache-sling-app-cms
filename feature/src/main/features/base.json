@@ -10,10 +10,6 @@
             "start-order":"5"
         },
         {
-            "id":"org.slf4j:slf4j-simple:${slf4j.version}",
-            "start-order":"5"
-        },
-        {
             "id":"org.owasp.encoder:encoder:1.2.3",
             "start-order":"5"
         },
@@ -251,7 +247,7 @@
             "org.apache.sling.commons.log.packagingDataEnabled":true,
             "org.apache.sling.commons.log.pattern":"%d{dd.MM.yyyy HH:mm:ss.SSS} *%level* [%thread] %logger %msg%n",
             "org.apache.sling.commons.log.level":"info",
-            "org.apache.sling.commons.log.file":"logs/error.log",
+            "org.apache.sling.commons.log.file":"${sling.home}/logs/error.log",
             "org.apache.sling.commons.log.file.number:Integer":"7",
             "org.apache.sling.commons.log.file.size":"'.'yyyy-MM-dd"
         },
@@ -275,7 +271,7 @@
                 "log.access"
             ],
             "org.apache.sling.commons.log.level":"info",
-            "org.apache.sling.commons.log.file":"logs/access.log"
+            "org.apache.sling.commons.log.file":"${sling.home}/logs/access.log"
         },
         "org.apache.sling.commons.log.LogManager.factory.config~request.log":{
             "org.apache.sling.commons.log.pattern":"%msg%n",
@@ -283,7 +279,7 @@
                 "log.request"
             ],
             "org.apache.sling.commons.log.level":"info",
-            "org.apache.sling.commons.log.file":"logs/request.log"
+            "org.apache.sling.commons.log.file":"${sling.home}/logs/request.log"
         },
         "org.apache.sling.commons.scheduler.impl.QuartzScheduler":{
             "allowedPoolNames":[
