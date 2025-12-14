@@ -61,7 +61,7 @@ public class PageEditBarActionsModel {
         }
 
         List<ActionItem> actions = new ArrayList<>();
-        it.forEachRemaining(r -> actions.add(new ActionItem(r)));
+        it.forEachRemaining(r -> actions.add(new ActionItem(r, request)));
         return actions;
     }
 
@@ -83,9 +83,11 @@ public class PageEditBarActionsModel {
      */
     public static class ActionItem {
         private final Resource config;
+        private final SlingHttpServletRequest request;
 
-        public ActionItem(Resource config) {
+        public ActionItem(Resource config, SlingHttpServletRequest request) {
             this.config = config;
+            this.request = request;
         }
 
         public String getResourceType() {
@@ -94,6 +96,21 @@ public class PageEditBarActionsModel {
 
         public Resource getConfig() {
             return config;
+        }
+
+        /**
+         * Sets the actionConfig request attribute and returns the suffix path.
+         * This is used by HTL to set the request attribute before including the action component.
+         *
+         * @return suffix path for the resource include
+         */
+        public String getSuffixPathWithConfig() {
+            request.setAttribute("actionConfig", config);
+            if (request.getRequestPathInfo() == null) {
+                return "";
+            }
+            String suffix = request.getRequestPathInfo().getSuffix();
+            return suffix != null ? suffix : "";
         }
     }
 }

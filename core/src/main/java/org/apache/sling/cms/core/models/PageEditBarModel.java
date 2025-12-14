@@ -25,7 +25,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,11 +35,8 @@ public class PageEditBarModel {
     private static final Logger LOG = LoggerFactory.getLogger(PageEditBarModel.class);
     private static final String BRANDING_RESOURCE_PATH = "/mnt/overlay/sling-cms/content/branding";
 
-    @SlingObject
+    @Self
     private SlingHttpServletRequest request;
-
-    @SlingObject
-    private ResourceResolver resourceResolver;
 
     public String getAppName() {
         String value = StringUtils.defaultString(getBranding().get("appName", String.class));
@@ -54,6 +51,12 @@ public class PageEditBarModel {
     }
 
     private ValueMap getBranding() {
+        if (request == null) {
+            LOG.warn("PageEditBarModel: request is null");
+            return ValueMap.EMPTY;
+        }
+
+        ResourceResolver resourceResolver = request.getResourceResolver();
         if (resourceResolver == null) {
             LOG.warn("PageEditBarModel: resourceResolver is null");
             return ValueMap.EMPTY;
