@@ -259,5 +259,21 @@ public class ContentTableModel {
         public boolean hasResourceType() {
             return StringUtils.isNotBlank(getResourceType());
         }
+
+        public Resource getResource() {
+            return resource;
+        }
+
+        public boolean isLink() {
+            return properties.get("link", false);
+        }
+
+        public String getPrefix() {
+            return properties.get("prefix", "");
+        }
+
+        public ValueMap getProperties() {
+            return properties;
+        }
     }
 }

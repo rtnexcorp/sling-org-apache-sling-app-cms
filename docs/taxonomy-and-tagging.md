@@ -11,8 +11,8 @@ This guide demonstrates the complete workflow for using the taxonomy system to t
 ## Part 1: Create Taxonomy Structure
 
 ### Step 1.1: Access Taxonomy Manager
-1. Navigate to: `http://localhost:8082/cms/taxonomy/content.html/etc/taxonomy`
-2. Click **"+ Taxonomy"** button
+1. Navigate to: `http://localhost:8082/cms/taxonomy/list.html/etc/taxonomy`
+2. Click **"+ Taxonomy Item"** button
 3. Enter taxonomy details:
    - **Name**: `product-categories`
    - **Title**: `Product Categories`

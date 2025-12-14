@@ -254,6 +254,231 @@ frontend/src/main/frontend/scss/
 - Use inline styles in HTL templates
 - Create monolithic CSS files
 
+### CSS Framework Abstraction (REQUIRED)
+**Current framework: Bulma CSS + Jam Icons. Write code to minimize impact when upgrading or switching frameworks.**
+
+✅ **Framework-Agnostic Patterns**:
+
+**1. Use Semantic HTL Classes - Not Framework Classes Directly**
+```html
+<!-- ❌ WRONG: Direct Bulma classes in HTL -->
+<div class="box has-background-light">
+  <button class="button is-primary is-large">Save</button>
+</div>
+
+<!-- ✅ RIGHT: Semantic classes mapped in SCSS -->
+<div class="cms-panel cms-panel--light">
+  <button class="cms-button cms-button--primary cms-button--large">Save</button>
+</div>
+```
+
+**2. Create SCSS Mixins/Variables for Framework Features**
+```scss
+// _variables.scss - Abstraction layer
+@import '~bulma/sass/utilities/initial-variables';
+@import '~bulma/sass/utilities/functions';
+@import '~bulma/sass/utilities/derived-variables';
+
+// Abstract framework variables
+$cms-primary-color: $primary !default;
+$cms-danger-color: $danger !default;
+$cms-spacing-unit: 0.5rem !default;
+$cms-border-radius: 4px !default;
+
+// Abstract framework mixins
+@mixin cms-button-base {
+  @extend .button; // Bulma specific
+}
+
+@mixin cms-card {
+  @extend .box; // Bulma specific
+}
+
+@mixin cms-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+```
+
+**3. Component-Specific SCSS Uses Abstractions**
+```scss
+// _mycomponent.scss
+@import 'variables';
+
+.cms-panel {
+  @include cms-card;
+  padding: $cms-spacing-unit * 2;
+  border-radius: $cms-border-radius;
+  
+  &--light {
+    background-color: lighten($cms-primary-color, 40%);
+  }
+}
+
+.cms-button {
+  @include cms-button-base;
+  
+  &--primary {
+    background-color: $cms-primary-color;
+    color: white;
+  }
+  
+  &--large {
+    padding: $cms-spacing-unit * 2 $cms-spacing-unit * 3;
+  }
+}
+```
+
+**4. Icon Abstraction Pattern**
+```html
+<!-- ❌ WRONG: Direct Jam Icons classes -->
+<span class="jam jam-check"></span>
+
+<!-- ✅ RIGHT: Semantic icon classes -->
+<span class="cms-icon cms-icon--check"></span>
+<span class="cms-icon cms-icon--plus"></span>
+<span class="cms-icon cms-icon--trash"></span>
+```
+
+```scss
+// _icons.scss - Icon abstraction layer
+.cms-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  
+  // Current implementation: Jam Icons
+  @extend .jam;
+  
+  &--check { @extend .jam-check; }
+  &--plus { @extend .jam-plus; }
+  &--trash { @extend .jam-trash; }
+  &--edit { @extend .jam-write; }
+  &--close { @extend .jam-close; }
+  // Add more as needed
+}
+
+// When switching icon library, only update this file:
+// .cms-icon {
+//   font-family: 'NewIconFont';
+//   &--check { content: '\e001'; }
+//   &--plus { content: '\e002'; }
+// }
+```
+
+**5. Grid/Layout Abstraction**
+```html
+<!-- ❌ WRONG: Direct Bulma grid classes -->
+<div class="columns">
+  <div class="column is-half">...</div>
+  <div class="column is-half">...</div>
+</div>
+
+<!-- ✅ RIGHT: Semantic layout classes -->
+<div class="cms-grid">
+  <div class="cms-grid__col-6">...</div>
+  <div class="cms-grid__col-6">...</div>
+</div>
+```
+
+```scss
+// _layout.scss
+.cms-grid {
+  @extend .columns; // Bulma specific
+  
+  &__col-6 {
+    @extend .column;
+    @extend .is-half; // Bulma specific
+  }
+  
+  &__col-4 {
+    @extend .column;
+    @extend .is-one-third;
+  }
+}
+```
+
+**6. Utility Class Abstraction**
+```scss
+// _utilities.scss - Framework utility abstractions
+.cms-text-center { text-align: center; }
+.cms-text-right { text-align: right; }
+.cms-hidden { display: none; }
+.cms-flex { display: flex; }
+.cms-flex-center { @include cms-flex-center; }
+
+// Spacing utilities (framework-agnostic)
+.cms-m-1 { margin: $cms-spacing-unit; }
+.cms-m-2 { margin: $cms-spacing-unit * 2; }
+.cms-p-1 { padding: $cms-spacing-unit; }
+.cms-p-2 { padding: $cms-spacing-unit * 2; }
+```
+
+**Framework Upgrade/Migration Checklist**:
+1. ✅ Update `_variables.scss` to map new framework variables
+2. ✅ Update `_icons.scss` to map new icon library
+3. ✅ Update SCSS `@extend` directives in abstraction files
+4. ✅ HTL templates remain unchanged (using semantic classes)
+5. ✅ Test all components in style guide/component library
+
+**When Adding New Components**:
+- [ ] Use `cms-*` prefix for all custom classes
+- [ ] Define semantic classes in component SCSS file
+- [ ] Use abstracted variables/mixins, not framework-specific values
+- [ ] Never hardcode framework class names in HTL
+- [ ] Document component dependencies in SCSS comments
+
+**Example - Complete Component**:
+```html
+<!-- contentfilter.html -->
+<div class="cms-content-filter">
+  <div class="cms-content-filter__controls">
+    <label class="cms-content-filter__label">
+      <span class="cms-icon cms-icon--filter"></span>
+      Filter:
+    </label>
+    <button class="cms-button cms-button--small">
+      <span class="cms-icon cms-icon--close"></span>
+      Clear
+    </button>
+  </div>
+</div>
+```
+
+```scss
+// _contentfilter.scss
+@import 'variables';
+
+.cms-content-filter {
+  display: flex;
+  gap: $cms-spacing-unit;
+  margin-bottom: $cms-spacing-unit * 2;
+  padding: $cms-spacing-unit;
+  background-color: lighten($cms-primary-color, 45%);
+  border-radius: $cms-border-radius;
+  
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: $cms-spacing-unit;
+  }
+  
+  &__label {
+    font-size: 0.875rem;
+    color: darken($cms-primary-color, 10%);
+    font-weight: 600;
+  }
+}
+```
+
+**Benefits of This Approach**:
+- 🎯 HTL templates are framework-agnostic (99% unchanged during migration)
+- 🔄 Framework changes isolated to SCSS abstraction layer
+- 📦 Easy to create a theme or skin by changing variables
+- 🧪 Easier to test - semantic class names are meaningful
+- 📚 Better code readability and maintainability
+
 ### Embedding Non-OSGi Libraries
 For libraries without OSGi metadata (e.g., thumbnailator), embed in bundle via `bnd.bnd`:
 ```

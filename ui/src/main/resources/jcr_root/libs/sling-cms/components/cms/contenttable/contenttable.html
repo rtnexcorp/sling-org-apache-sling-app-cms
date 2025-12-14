@@ -41,13 +41,13 @@
                     data-is-folder="${row.folder}"
                     data-taxonomy="${row.taxonomyString @ context='attribute'}">
                     <td class="Cell-Static" 
-                        title="# ${rowList.index + 1}" 
+                        title="# ${row.rowNumber}" 
                         data-sort-value="${row.rowNumberFormatted}">
                         ${row.rowNumber}
                     </td>
                     <sly data-sly-list.colConfig="${row.columnConfigs}">
                         <sly data-sly-test="${colConfig.hasResourceType}">
-                            <sly data-sly-resource="${row.path @ resourceType=colConfig.resourceType}"></sly>
+                            <sly data-sly-resource="${row.path @ resourceType=colConfig.resourceType, requestAttributes=colConfig.properties}"></sly>
                         </sly>
                     </sly>
                 </tr>
