@@ -17,10 +17,11 @@
   ~ under the License.
 */-->
 
-<sly data-sly-use.action="org.apache.sling.cms.core.models.BasicActionModel" />
+<sly data-sly-use.action="org.apache.sling.cms.core.models.ModalActionModel" />
 
-<a class="button"
-   data-sly-attribute.target="${action.newWindow ? '_blank' : ''}"
+<a class="button Fetch-Modal"
+   data-title="${action.title @ context='attribute'}"
+   data-path="${action.ajaxPath @ context='attribute'}"
    href="${action.href @ context='attribute'}"
    title="${action.title @ context='attribute'}">
     <span class="jam jam-${action.icon @ context='attribute'}">

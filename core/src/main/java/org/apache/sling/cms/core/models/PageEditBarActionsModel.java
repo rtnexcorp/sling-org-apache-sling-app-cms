@@ -18,24 +18,39 @@
  */
 package org.apache.sling.cms.core.models;
 
+import javax.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
-@Model(adaptables = Resource.class)
+/**
+ * Sling Model for the page edit bar actions component.
+ * Provides the list of action configurations and the suffix path.
+ */
+@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class PageEditBarActionsModel {
 
-    private final Resource resource;
+    @Inject
+    private Resource resource;
 
-    public PageEditBarActionsModel(Resource resource) {
-        this.resource = resource;
-    }
+    @SlingObject
+    private SlingHttpServletRequest request;
 
-    public List<Resource> getActions() {
+    /**
+     * Gets the list of action items wrapping each action configuration resource.
+     * Each item provides the resource type and the action config for request attributes.
+     *
+     * @return list of action items
+     */
+    public List<ActionItem> getActions() {
         if (resource == null) {
             return Collections.emptyList();
         }
@@ -45,8 +60,40 @@ public class PageEditBarActionsModel {
             return Collections.emptyList();
         }
 
-        List<Resource> actions = new ArrayList<>();
-        it.forEachRemaining(actions::add);
+        List<ActionItem> actions = new ArrayList<>();
+        it.forEachRemaining(r -> actions.add(new ActionItem(r)));
         return actions;
+    }
+
+    /**
+     * Gets the suffix path from the request (the path of the page being edited).
+     *
+     * @return suffix path or empty string
+     */
+    public String getSuffixPath() {
+        if (request == null || request.getRequestPathInfo() == null) {
+            return "";
+        }
+        String suffix = request.getRequestPathInfo().getSuffix();
+        return suffix != null ? suffix : "";
+    }
+
+    /**
+     * Wrapper for action configuration that provides data for HTL rendering.
+     */
+    public static class ActionItem {
+        private final Resource config;
+
+        public ActionItem(Resource config) {
+            this.config = config;
+        }
+
+        public String getResourceType() {
+            return config.getResourceType();
+        }
+
+        public Resource getConfig() {
+            return config;
+        }
     }
 }
