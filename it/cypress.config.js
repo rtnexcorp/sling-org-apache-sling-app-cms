@@ -24,7 +24,7 @@ module.exports = defineConfig({
     retries: {
       runMode: 3,
     },
-    baseUrl: "http://localhost:8080",
+    baseUrl: "http://localhost:8082",
     viewportWidth: 1000,
     viewportHeight: 660,
     excludeSpecPattern: ["**/__snapshots__/*", "**/__image_snapshots__/*"],

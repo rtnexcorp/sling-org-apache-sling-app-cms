@@ -18,21 +18,21 @@
  */
 package org.apache.sling.cms.core.internal.servlets;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Calendar;
 import java.util.Map;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -48,10 +48,13 @@ import org.slf4j.LoggerFactory;
  * the jcr:primaryType to sling:Page which the standard Sling POST
  * servlet import operation does not support.
  */
-@Component(service = Servlet.class, property = {
-        "sling.servlet.paths=/bin/cms/createpage",
-        "sling.servlet.methods=POST"
-})
+@Component(
+        service = Servlet.class,
+        property = {
+            "sling.servlet.paths=/bin/cms/createpage",
+            "sling.servlet.methods=POST",
+            "sling.auth.requirements=-/bin/cms/createpage"
+        })
 public class PageCreateServlet extends SlingAllMethodsServlet {
 
     private static final long serialVersionUID = 1L;
@@ -61,9 +64,15 @@ public class PageCreateServlet extends SlingAllMethodsServlet {
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response)
             throws ServletException, IOException {
 
-        String parentPath = request.getParameter("parentPath");
-        String pageName = request.getParameter(":name");
-        String contentJson = request.getParameter(":content");
+        final String parentPath = request.getParameter("parentPath");
+        final String pageName = request.getParameter(":name");
+        final String contentJson = request.getParameter(":content");
+
+        log.debug(
+                "/bin/cms/createpage called parentPath={} :name={} contentLength={}",
+                parentPath,
+                pageName,
+                contentJson != null ? contentJson.length() : -1);
 
         if (parentPath == null || parentPath.isEmpty()) {
             response.setStatus(400);
@@ -101,7 +110,7 @@ public class PageCreateServlet extends SlingAllMethodsServlet {
             }
 
             Node parentNode = session.getNode(parentPath);
-            String pagePath = parentPath + "/" + pageName;
+            final String pagePath = parentPath + "/" + pageName;
 
             // Parse the JSON content
             JsonObject jsonContent;
@@ -109,34 +118,45 @@ public class PageCreateServlet extends SlingAllMethodsServlet {
                 jsonContent = jsonReader.readObject();
             }
 
-            // Create the page node with sling:Page type
-            String primaryType = jsonContent.getString("jcr:primaryType", "sling:Page");
-            Node pageNode = parentNode.addNode(pageName, primaryType);
+            // Always create the page node with sling:Page type (do not allow overriding)
+            Node pageNode = parentNode.addNode(pageName, "sling:Page");
 
-            // Set properties on page node (excluding jcr:content and jcr:primaryType)
+            // Only apply properties intended for the page node (rare). Most page properties belong to jcr:content.
             setNodeProperties(pageNode, jsonContent);
 
-            // Create jcr:content if present
-            if (jsonContent.containsKey("jcr:content")) {
-                JsonObject jcrContent = jsonContent.getJsonObject("jcr:content");
-                String contentType = jcrContent.getString("jcr:primaryType", "nt:unstructured");
-                Node contentNode = pageNode.addNode("jcr:content", contentType);
-                setNodeProperties(contentNode, jcrContent);
-                
-                // Set audit properties
-                Calendar now = Calendar.getInstance();
-                String userId = session.getUserID();
-                contentNode.setProperty("jcr:lastModified", now);
-                contentNode.setProperty("jcr:lastModifiedBy", userId);
+            // Ensure jcr:content exists and apply its properties
+            JsonObject jcrContent =
+                    jsonContent.containsKey("jcr:content") ? jsonContent.getJsonObject("jcr:content") : null;
+            Node contentNode;
+            if (pageNode.hasNode("jcr:content")) {
+                contentNode = pageNode.getNode("jcr:content");
+            } else {
+                String contentType = jcrContent != null
+                        ? jcrContent.getString("jcr:primaryType", "nt:unstructured")
+                        : "nt:unstructured";
+                contentNode = pageNode.addNode("jcr:content", contentType);
             }
+
+            if (jcrContent != null) {
+                setNodeProperties(contentNode, jcrContent);
+            }
+
+            // Set audit properties
+            Calendar now = Calendar.getInstance();
+            String userId = session.getUserID();
+            contentNode.setProperty("jcr:lastModified", now);
+            contentNode.setProperty("jcr:lastModifiedBy", userId);
 
             session.save();
 
-            log.info("Created page: {}", pagePath);
+            log.info("Created page: {} (primaryType=sling:Page)", pagePath);
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"path\": \"" + pagePath + "\", \"changes\": [{\"type\": \"created\", \"argument\": [\"" + pagePath + "\"]}]}");
+            response.getWriter()
+                    .write("{\"path\": \"" + pagePath
+                            + "\", \"changes\": [{\"type\": \"created\", \"argument\": [\"" + pagePath
+                            + "\"]}], \"primaryType\": \"sling:Page\"}");
 
         } catch (RepositoryException e) {
             log.error("Error creating page", e);
@@ -151,8 +171,10 @@ public class PageCreateServlet extends SlingAllMethodsServlet {
             JsonValue value = entry.getValue();
 
             // Skip jcr:primaryType (already set), jcr:content (handled separately), and system properties
-            if ("jcr:primaryType".equals(key) || "jcr:content".equals(key) 
-                    || "jcr:created".equals(key) || "jcr:createdBy".equals(key)) {
+            if ("jcr:primaryType".equals(key)
+                    || "jcr:content".equals(key)
+                    || "jcr:created".equals(key)
+                    || "jcr:createdBy".equals(key)) {
                 continue;
             }
 

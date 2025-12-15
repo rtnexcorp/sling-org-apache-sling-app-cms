@@ -2,3 +2,14 @@
 node_modules
 cypress/videos/
 cypress/screenshots/
+target/
+.DS_Store
+.idea
+.vscode
+*.iml
+*.log
+*.class
+*.jar
+*.war
+*.ear
+node_modules/

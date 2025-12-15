@@ -117,7 +117,7 @@
           "jcr:primaryType": "nt:unstructured",
           "jcr:title": "Base Page",
           "template": "{\r\n  \"jcr:primaryType\": \"sling:Page\",\r\n  \"jcr:content\": {\r\n    \"jcr:primaryType\": \"nt:unstructured\",\r\n    \"jcr:title\": \"{{title}}\",\r\n    \"sling:template\": \"/conf/asf/site/templates/base-page\",\r\n    \"sling:resourceType\": \"reference/components/pages/base\",\r\n    \"published\": false\r\n  }\r\n}",
-          "allowedPaths": ["/content/apache/.*"],
+          "allowedPaths": ["/content/.*"],
           "sling:resourceType": "sling-cms/components/caconfig/template",
           "fields": {
             "jcr:primaryType": "nt:unstructured",

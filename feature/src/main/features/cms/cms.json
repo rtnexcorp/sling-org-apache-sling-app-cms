@@ -164,6 +164,22 @@
         "org.apache.sling.serviceuser.webconsole"
       ],
       "whitelist.name": "sling-cms"
+    },
+    "org.apache.sling.security.impl.ReferrerFilter": {
+      "allow.empty": true,
+      "allow.hosts.regexp": [
+        "localhost.*",
+        "127\\.0\\.0\\.1.*"
+      ],
+      "filter.methods": [
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
+      ],
+      "filter.exclude.pattern": [
+        "/bin/cms/createpage"
+      ]
     }
   },
   "repoinit:TEXT|true": "@file"

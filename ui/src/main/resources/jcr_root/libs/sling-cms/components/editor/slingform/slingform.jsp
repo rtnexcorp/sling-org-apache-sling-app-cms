@@ -1,18 +1,5 @@
 <%-- /*
- * License<%@include file="/libs/sling-cms/global.jsp"%>
-<c:set var="encoding" value="multipart/form-data" />
-<c:if test="${not empty properties.encoding}">
-    <c:set var="encoding" value="${properties.encoding}" />
-</c:if>
-<c:set var="formAction" value="${slingRequest.requestPathInfo.suffix}${properties.actionSuffix}" />
-<c:if test="${not empty properties.action}">
-    <c:set var="formAction" value="${properties.action}" />
-</c:if>
-<form method="post"
-    action="${sling:encode(formAction,'HTML_ATTR')}"
-    enctype="${sling:encode(encoding,'HTML_ATTR')}" class="Form-Ajax"
-    data-add-date="${properties.addDate != false}"
-    data-callback="${sling:encode(properties.callback,'HTML_ATTR')}"">pache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -34,13 +21,18 @@
 <c:if test="${not empty properties.encoding}">
     <c:set var="encoding" value="${properties.encoding}" />
 </c:if>
+<c:set var="formAction" value="${slingRequest.requestPathInfo.suffix}${properties.actionSuffix}" />
+<c:if test="${not empty properties.action}">
+    <c:set var="formAction" value="${properties.action}" />
+</c:if>
 <form method="post"
-    action="${sling:encode(slingRequest.requestPathInfo.suffix,'HTML_ATTR')}${sling:encode(properties.actionSuffix,'HTML_ATTR')}"
+    action="${sling:encode(formAction,'HTML_ATTR')}"
     enctype="${sling:encode(encoding,'HTML_ATTR')}" class="Form-Ajax"
     data-add-date="${properties.addDate != false}"
     data-callback="${sling:encode(properties.callback,'HTML_ATTR')}">
     <div class="form-wrapper pt-4 field">
         <input type="hidden" name="_charset_" value="utf-8" />
+        <input type="hidden" name="parentPath" value="${sling:encode(slingRequest.requestPathInfo.suffix,'HTML_ATTR')}" />
         <sling:include path="fields" resourceType="sling-cms/components/general/container" />
         <div class="field">
             <button type="submit" class="button is-primary">
