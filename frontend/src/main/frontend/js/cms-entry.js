@@ -23,10 +23,12 @@ import { sanitizeHTML, safeSetInnerHTML } from './sanitize.js';
 // Import dependencies and make them globally available
 import rava from 'rava';
 import autoComplete from 'js-autocomplete';
+import Handlebars from 'handlebars';
 
 // Make dependencies globally available BEFORE any modules that use them
 window.rava = rava;
 window.autoComplete = autoComplete;
+window.Handlebars = Handlebars;
 // Logger, error handlers, and sanitization utilities are auto-added to window.SlingCMS
 
 // Import SCSS (will be bundled into CSS)

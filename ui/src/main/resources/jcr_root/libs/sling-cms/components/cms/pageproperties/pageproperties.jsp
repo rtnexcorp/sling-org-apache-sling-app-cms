@@ -19,7 +19,6 @@
 <%@include file="/libs/sling-cms/global.jsp"%>
 <div class="page-properties-container field" data-path="${sling:encode(resource.path,'HTML_ATTR')}.include.html" data-source="select[name=pageTemplate]">
 </div>
-<input type="hidden" name=":operation" value="import" />
-<input type="hidden" name=":replaceProperties" value="true" />
+<input type="hidden" name="parentPath" value="${sling:encode(slingRequest.requestPathInfo.suffix,'HTML_ATTR')}" />
 <input type="hidden" name=":contentType" value="json" />
 <input type="hidden" name=":content" value="" />

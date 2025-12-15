@@ -65,7 +65,17 @@ rava.bind(".Form-Ajax", {
           }
           form.appendChild(dateContainer);
         }
-        const action = form.getAttribute("action");
+        let action = form.getAttribute("action");
+        // For import operations, append :name to the path instead of sending as form data
+        // This is because import creates the node at the exact path specified
+        const operationInput = form.querySelector('input[name=":operation"]');
+        const nameInput = form.querySelector('input[name=":name"]');
+        if (operationInput && operationInput.value === "import" && nameInput && nameInput.value) {
+          // Remove trailing /* if present and append the name
+          action = action.replace(/\/\*$/, "") + "/" + nameInput.value;
+          // Remove :name from formData so it's not sent as a parameter
+          formData.delete(":name");
+        }
         const response = await fetch(action, {
           method: "POST",
           body: formData,

@@ -52,32 +52,59 @@ rava.bind('.page-properties-container', {
           cb(template);
         }
       }
+
       async function handleChange() {
         const sourceSelect = this;
         const config = this.value;
+        if (!config) {
+          container.innerHTML = '';
+          return;
+        }
         sourceSelect.disabled = true;
         container.innerHTML = '';
-        const response = await fetch(container.dataset.path + config);
-        if (Sling.CMS.utils.ok(response)) {
-          const formHtml = await response.text();
-          getPageTemplate(config, (source) => {
-            const template = Handlebars.compile(source);
-            function updateContent() {
-              if (!wrapper.disabled) {
-                const data = Sling.CMS.utils.form2Obj(container.closest('form'));
-                document.querySelector('input[name=":content"]').value = template(data);
+        try {
+          const response = await fetch(container.dataset.path + config);
+          if (Sling.CMS.utils.ok(response)) {
+            const formHtml = await response.text();
+            getPageTemplate(config, (source) => {
+              const template = Handlebars.compile(source);
+              function updateContent() {
+                if (!wrapper.disabled) {
+                  const data = Sling.CMS.utils.form2Obj(container.closest('form'));
+                  document.querySelector('input[name=":content"]').value = template(data);
+                }
               }
-            }
-            window.SlingCMS.safeSetInnerHTML(container, formHtml);
-            document.querySelectorAll('input,textarea,select').forEach((el) => {
-              el.addEventListener('change', updateContent);
+              window.SlingCMS.safeSetInnerHTML(container, formHtml);
+              document.querySelectorAll('input,textarea,select').forEach((el) => {
+                el.addEventListener('change', updateContent);
+              });
+              container.closest('form').addEventListener('submit', updateContent);
+              sourceSelect.disabled = false;
             });
-            container.closest('form').addEventListener('submit', updateContent);
+          } else {
             sourceSelect.disabled = false;
-          });
+          }
+        } catch (error) {
+          console.error('Error loading page properties:', error);
+          sourceSelect.disabled = false;
         }
       }
-      document.querySelector(container.dataset.source).addEventListener('change', handleChange);
+
+      // Find the source select element with retry logic
+      function setupSelectListener() {
+        const form = container.closest('form');
+        const sourceSelect = form
+          ? form.querySelector(container.dataset.source)
+          : document.querySelector(container.dataset.source);
+
+        if (sourceSelect) {
+          sourceSelect.addEventListener('change', handleChange);
+        } else {
+          // Retry after a short delay if select not found
+          setTimeout(setupSelectListener, 50);
+        }
+      }
+      setupSelectListener();
     },
   },
 });
