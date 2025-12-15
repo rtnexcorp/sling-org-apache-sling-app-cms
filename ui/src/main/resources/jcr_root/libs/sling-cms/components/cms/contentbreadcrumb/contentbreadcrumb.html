@@ -1,4 +1,4 @@
-<!--
+<!--/*
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
   ~ distributed with this work for additional information
@@ -15,7 +15,7 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
-  -->
+  */-->
 <sly data-sly-use.breadcrumb="org.apache.sling.cms.core.models.ContentBreadcrumb">
     <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
@@ -34,16 +34,9 @@
                 </div>
             </li>
         </ul>
-        <sly data-sly-test="${!properties.hideSearch}">
-            <div class="contentnav-search">
-                <p class="control has-icons-left">
-                    <label class="is-sr-only" for="search-term">${'Search' @ i18n}</label>
-                    <input class="input is-small" type="text" name="search" id="search-term" />
-                    <span class="icon is-small is-left">
-                        <i class="jam jam-search" aria-hidden="true"></i>
-                    </span>
-                </p>
-            </div>
-        </sly>
+        <span class="content-filter-bar">
+            <sly data-sly-test="${!properties.hideSearch}" data-sly-resource="${'contentsearch' @ resourceType='sling-cms/components/cms/contentsearch'}"></sly>
+            <sly data-sly-test="${!properties.hideFilter}" data-sly-resource="${'contentfilter' @ resourceType='sling-cms/components/cms/contentfilter'}"></sly>
+        </span>
     </nav>
 </sly>
