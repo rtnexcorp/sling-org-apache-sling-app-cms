@@ -83,7 +83,10 @@ public class IndexCreator implements RepositoryInitializer {
         builder.tags(SLINGCMS, "slingcms-ntHierarchyNode");
 
         IndexRule indexRule = builder.indexRule(JcrConstants.NT_HIERARCHYNODE);
+        indexRule.indexNodeName();
         ensureCommonSlingProperties(indexRule);
+        // Enable fulltext indexing for global search
+        indexRule.property("allContent", ".", false).nodeScopeIndex();
     }
 
     private void ensureSlingComponentIndex(NodeBuilder indexRoot) {
@@ -162,11 +165,14 @@ public class IndexCreator implements RepositoryInitializer {
         builder.tags(SLINGCMS, "slingcms-slingFile");
 
         IndexRule indexRule = builder.indexRule(CMSConstants.NT_FILE);
+        indexRule.indexNodeName();
         ensureCommonSlingProperties(indexRule);
         indexRule
                 .property("metadata", "jcr:content/metadata/.*", true)
                 .propertyIndex()
                 .analyzed();
+        // Enable fulltext indexing for global search
+        indexRule.property("allContent", ".", false).nodeScopeIndex();
     }
 
     private void ensureSlingPageIndex(NodeBuilder indexRoot) {
@@ -187,8 +193,11 @@ public class IndexCreator implements RepositoryInitializer {
         builder.tags(SLINGCMS, "slingcms-slingPage");
 
         IndexRule indexRule = builder.indexRule(CMSConstants.NT_PAGE);
+        indexRule.indexNodeName();
         ensureCommonSlingProperties(indexRule);
         indexRule.property("slingTemplate", "jcr:content/sling:template", false).propertyIndex();
+        // Enable fulltext indexing for global search
+        indexRule.property("allContent", ".", false).nodeScopeIndex();
     }
 
     private void ensureSlingTaxonomyIndex(NodeBuilder indexRoot) {

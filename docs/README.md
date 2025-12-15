@@ -42,6 +42,7 @@ This folder contains developer and user documentation for Apache Sling CMS.
 - [`dialog-tabs.md`](dialog-tabs.md)
 - [`editor-field-types.md`](editor-field-types.md)
 - [`multifield.md`](multifield.md)
+- [`search.md`](search.md) - Global search and Lucene indexing
 
 ## 5) Assets / DAM (files, transformations, asset UX)
 - [`digital-asset-management.md`](digital-asset-management.md)

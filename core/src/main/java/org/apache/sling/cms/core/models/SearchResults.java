@@ -66,11 +66,15 @@ public class SearchResults {
         if (StringUtils.isEmpty(searchTerm)) {
             searchTerm = request.getParameter("q");
             // When using 'q' param (from start page), default to searching all hierarchy nodes
-            // and use LIKE query (no fulltext index required)
             if (StringUtils.isNotEmpty(searchTerm) && StringUtils.isEmpty(request.getParameter("type"))) {
                 type = "nt:hierarchyNode";
-                useFullText = false;
             }
+        }
+
+        // Allow explicit control of fulltext via parameter (default to true for Lucene)
+        String fulltextParam = request.getParameter("fulltext");
+        if (StringUtils.isNotEmpty(fulltextParam)) {
+            useFullText = Boolean.parseBoolean(fulltextParam);
         }
 
         if (StringUtils.isNotEmpty(searchTerm)) {
@@ -86,8 +90,23 @@ public class SearchResults {
         query.append("SELECT * FROM [").append(type).append("] AS s WHERE ");
 
         if (useFullText) {
-            // Full-text search using CONTAINS (requires Lucene index)
-            query.append("CONTAINS(s.*, '").append(term).append("')");
+            // Full-text search using CONTAINS on indexed properties
+            // Search across title, description, name, and content properties
+            query.append("(CONTAINS(s.[jcr:content/jcr:title], '")
+                    .append(term)
+                    .append("')")
+                    .append(" OR CONTAINS(s.[jcr:title], '")
+                    .append(term)
+                    .append("')")
+                    .append(" OR CONTAINS(s.[jcr:content/jcr:description], '")
+                    .append(term)
+                    .append("')")
+                    .append(" OR s.[jcr:content/jcr:title] LIKE '%")
+                    .append(term)
+                    .append("%'")
+                    .append(" OR LOCALNAME(s) LIKE '%")
+                    .append(term.toLowerCase())
+                    .append("%')");
         } else {
             // Property-based search using LIKE (no fulltext index required)
             String lowerTerm = term.toLowerCase();
