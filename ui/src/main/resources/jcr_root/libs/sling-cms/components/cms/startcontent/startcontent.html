@@ -1,0 +1,100 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.startContent="org.apache.sling.cms.core.models.StartContent"></sly>
+<br/><br/>
+<div class="columns">
+    <div class="column">
+        <!--/* Recent Content Panel */-->
+        <nav class="panel has-background-white" aria-label="${'Recent Content' @ i18n}">
+            <p class="panel-heading">
+                ${'Recent Content' @ i18n}
+            </p>
+            <sly data-sly-list.item="${startContent.recentContent}">
+                <a class="panel-block" 
+                   title="${item.path}" 
+                   href="/cms/site/content.html${item.parent.path}?resource=${item.path}">
+                    <span class="panel-icon">
+                        <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                            <i class="jam jam-document" aria-hidden="true"></i>
+                        </sly>
+                        <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                            <i class="jam jam-file" aria-hidden="true"></i>
+                        </sly>
+                    </span>
+                    <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                        ${item.valueMap['jcr:content/jcr:title'] || item.name}
+                    </sly>
+                    <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                        ${item.name}
+                    </sly>
+                </a>
+            </sly>
+        </nav>
+
+        <!--/* Recent Drafts Panel */-->
+        <nav class="panel has-background-white" aria-label="${'Recent Drafts' @ i18n}">
+            <p class="panel-heading">
+                ${'Recent Drafts' @ i18n}
+            </p>
+            <sly data-sly-list.item="${startContent.recentDrafts}">
+                <a class="panel-block" 
+                   title="${item.path}" 
+                   href="/cms/site/content.html${item.parent.path}?resource=${item.path}">
+                    <span class="panel-icon">
+                        <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                            <i class="jam jam-document" aria-hidden="true"></i>
+                        </sly>
+                        <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                            <i class="jam jam-file" aria-hidden="true"></i>
+                        </sly>
+                    </span>
+                    <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                        ${item.valueMap['jcr:content/jcr:title'] || item.name}
+                    </sly>
+                    <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                        ${item.name}
+                    </sly>
+                </a>
+            </sly>
+        </nav>
+    </div>
+
+    <div class="column">
+        <!--/* Find Content Panel with Search */-->
+        <nav class="panel has-background-white" aria-label="${'Find Content' @ i18n}">
+            <p class="panel-heading">
+                ${'Find Content' @ i18n}
+            </p>
+            <div class="panel-block">
+                <form class="get-form" 
+                      action="${resource.path}.search.html" 
+                      data-target=".startcontent-search-results"
+                      data-load="div">
+                    <p class="control has-icons-left">
+                        <input class="input" type="text" name="q" placeholder="${'Search...' @ i18n}" />
+                        <span class="icon is-left">
+                            <i class="jam jam-search" aria-hidden="true"></i>
+                        </span>
+                    </p>
+                </form>
+            </div>
+            <div class="startcontent-search-results"></div>
+        </nav>
+    </div>
+</div>

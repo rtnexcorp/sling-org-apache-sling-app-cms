@@ -1,0 +1,66 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.results="org.apache.sling.cms.core.models.SearchResults"></sly>
+<hr/>
+<div id="search-results" class="cms-search-results">
+    <div class="tile is-ancestor">
+        <sly data-sly-list.result="${results.resultList}">
+            <!--/* Determine title */-->
+                <sly data-sly-test.title="${result.valueMap['jcr:content/jcr:title'] || result.valueMap['jcr:title'] || result.name}"></sly>
+                
+                <!--/* Determine icon based on primary type */-->
+                <sly data-sly-test.isPage="${result.valueMap['jcr:primaryType'] == 'sling:Page'}"></sly>
+                <sly data-sly-test.isFile="${result.valueMap['jcr:primaryType'] == 'nt:file' || result.valueMap['jcr:primaryType'] == 'sling:File'}"></sly>
+                <sly data-sly-test.isFolder="${result.valueMap['jcr:primaryType'] == 'nt:folder' || result.valueMap['jcr:primaryType'] == 'sling:Folder' || result.valueMap['jcr:primaryType'] == 'sling:OrderedFolder'}"></sly>
+                
+                <div class="tile is-6 is-child">
+                    <div class="box">
+                        <!--/* Show thumbnail for files */-->
+                        <img data-sly-test="${isFile}" 
+                             src="${result.path}.transform/sling-cms-thumbnail.png" 
+                             loading="lazy" 
+                             alt="${title}" />
+                        
+                        <h5 title="${title}">
+                            <sly data-sly-test="${isPage}">
+                                <span class="jam jam-document"></span>
+                            </sly>
+                            <sly data-sly-test="${isFile}">
+                                <span class="jam jam-file"></span>
+                            </sly>
+                            <sly data-sly-test="${isFolder}">
+                                <span class="jam jam-folder"></span>
+                            </sly>
+                            <sly data-sly-test="${!isPage && !isFile && !isFolder}">
+                                <span class="jam jam-sitemap"></span>
+                            </sly>
+                            &nbsp;${title}
+                        </h5>
+                        <small class="is-size-7">
+                            <em title="${result.path}">${result.path}</em>
+                        </small><br/>
+                        <a href="#" class="button search-select-button is-pulled-right" data-path="${result.path}">
+                            ${'Select' @ i18n}
+                        </a>
+                        <br class="clearfix" />
+                    </div>
+                </div>
+        </sly>
+    </div>
+</div>

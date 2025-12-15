@@ -48,17 +48,9 @@ public class StartContent {
     private static final Logger log = LoggerFactory.getLogger(StartContent.class);
 
     private final ResourceResolver resolver;
-    private final String term;
 
     public StartContent(SlingHttpServletRequest request) {
         this.resolver = request.getResourceResolver();
-        term = request.getParameter("q");
-    }
-
-    public List<Resource> getRelatedContent() {
-        return getTenResults(
-                "SELECT * FROM [nt:hierarchyNode] AS s WHERE ISDESCENDANTNODE([/content]) AND CONTAINS(s.*,'"
-                        + escape(term).replaceAll("[\\Q+-&|!(){}[]^\"~*?:\\/\\E]", "") + "')");
     }
 
     public List<Resource> getRecentDrafts() {

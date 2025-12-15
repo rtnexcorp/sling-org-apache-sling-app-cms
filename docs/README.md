@@ -79,6 +79,7 @@ This folder contains developer and user documentation for Apache Sling CMS.
 - [`new-age-cms-content-automation.md`](new-age-cms-content-automation.md)
 - [`new-age-cms-ai.md`](new-age-cms-ai.md)
 - [`new-age-cms-backlog.md`](new-age-cms-backlog.md)
+- [`new-age-cms-roadmap.md`](new-age-cms-roadmap.md) ⭐ **Start here for development planning**
 
 ## Images
 - [`img/`](img/)
