@@ -18,7 +18,7 @@
 -->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ContentGridModel">
 <div class="reload-container scroll-container contentnav" 
-     data-path="${resource.path @ context='attribute'}.grid.html${requestPathInfo.suffix @ context='attribute'}">
+     data-path="${resource.path @ context='attribute'}.grid.html${model.requestSuffix @ context='attribute'}">
     <div class="columns is-multiline">
         <sly data-sly-list.item="${model.items}">
             <div class="column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd contentnav__item"

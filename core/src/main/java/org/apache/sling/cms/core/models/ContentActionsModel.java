@@ -117,9 +117,17 @@ public class ContentActionsModel {
         return "";
     }
 
-    private String getSuffix() {
+    /**
+     * Get the request suffix (path after .html extension)
+     * @return the suffix or empty string if none
+     */
+    public String getRequestSuffix() {
         String suffix = request.getRequestPathInfo().getSuffix();
         return suffix != null ? suffix : "";
+    }
+
+    private String getSuffix() {
+        return getRequestSuffix();
     }
 
     public static class Action {

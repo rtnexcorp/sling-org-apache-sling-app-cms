@@ -57,6 +57,15 @@ public class ContentTableModel {
     private int currentPage;
     private boolean hasNextPage;
 
+    /**
+     * Get the request suffix (path after .html extension)
+     * @return the suffix or empty string if none
+     */
+    public String getRequestSuffix() {
+        String suffix = request.getRequestPathInfo().getSuffix();
+        return suffix != null ? suffix : "";
+    }
+
     public int getCurrentPage() {
         if (currentPage == 0) {
             String pageParam = request.getParameter("page");

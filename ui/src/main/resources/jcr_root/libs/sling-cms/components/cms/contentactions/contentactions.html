@@ -25,7 +25,7 @@
                     <a class="button Fetch-Modal" 
                        data-title="Add ${action.label @ context='attribute'}" 
                        data-path=".Main-Content form" 
-                       href="${action.prefix @ context='attribute'}${requestPathInfo.suffix @ context='attribute'}${action.suffix @ context='attribute'}">
+                       href="${action.prefix @ context='attribute'}${model.requestSuffix @ context='attribute'}${action.suffix @ context='attribute'}">
                         + ${action.label @ i18n, context='html'}
                     </a>
                 </sly>

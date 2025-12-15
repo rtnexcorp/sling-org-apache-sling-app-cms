@@ -18,7 +18,7 @@
 -->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ContentTableModel">
 <div class="reload-container table__wrapper scroll-container contentnav" 
-     data-path="${resource.path @ context='attribute'}.table.html${requestPathInfo.suffix @ context='attribute'}">
+     data-path="${resource.path @ context='attribute'}.table.html${model.requestSuffix @ context='attribute'}">
     <table class="table is-fullwidth is-striped sortable">
         <thead>
             <tr>

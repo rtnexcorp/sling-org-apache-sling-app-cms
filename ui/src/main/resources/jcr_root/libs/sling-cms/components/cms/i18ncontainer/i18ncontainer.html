@@ -18,7 +18,7 @@
 -->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.I18nContainerModel">
 <div class="scroll-container reload-container" 
-     data-path="${resource.path @ context='attribute'}.html${requestPathInfo.suffix @ context='attribute'}">
+     data-path="${resource.path @ context='attribute'}.html${model.requestSuffix @ context='attribute'}">
     <sly data-sly-resource="${resource.path @ resourceType='sling-cms/components/general/container'}"></sly>
     
     <nav class="level">

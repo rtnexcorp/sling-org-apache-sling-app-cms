@@ -45,6 +45,15 @@ public class I18nContainerModel {
     private Resource firstLanguage;
     private List<KeyRow> keyRows;
 
+    /**
+     * Get the request suffix (path after .html extension)
+     * @return the suffix or empty string if none
+     */
+    public String getRequestSuffix() {
+        String suffix = request.getRequestPathInfo().getSuffix();
+        return suffix != null ? suffix : "";
+    }
+
     public List<LanguageFolder> getLanguages() {
         if (languages == null) {
             languages = new ArrayList<>();
