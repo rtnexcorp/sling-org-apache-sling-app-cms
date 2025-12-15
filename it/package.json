@@ -6,9 +6,15 @@
   "scripts": {
     "cypress:install": "./node_modules/.bin/cypress install --force",
     "cypress": "./node_modules/.bin/cypress open",
+    "cypress:open": "./node_modules/.bin/cypress open",
     "test": "./node_modules/.bin/cypress run",
+    "test:standalone": "SLING_MODE=standalone npm run test",
+    "test:author": "SLING_MODE=author npm run test",
+    "test:renderer": "SLING_MODE=renderer npm run test",
+    "test:spec": "./node_modules/.bin/cypress run --spec",
     "wait-for-ready": "node cypress/ready.js",
-    "ci": "npm run cypress:install && npm run wait-for-ready && npm run test"
+    "ci": "npm run cypress:install && npm run wait-for-ready && npm run test",
+    "ci:author": "npm run cypress:install && npm run wait-for-ready && npm run test:author"
   },
   "author": "Apache Software Foundation",
   "license": "Apache-2.0",
