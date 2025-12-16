@@ -1,0 +1,155 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Advanced Search Component Styles
+// Used on the CMS start page for enhanced search functionality
+// Variables are passed from cms.scss
+
+// Search Form
+.advanced-search-form {
+  width: 100%;
+
+  .field {
+    margin-bottom: 0.75rem;
+  }
+
+  // Collapsible Filters Section
+  .advanced-search-filters {
+    padding: 0.75rem;
+    background: hsl(0, 0%, 86%); // $grey-lighter
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+
+    .field {
+      margin-bottom: 0.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .label {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  // Toggle Button
+  .advanced-search-toggle {
+    transition: background-color 0.2s ease;
+
+    &.is-info {
+      .jam {
+        transition: transform 0.2s ease;
+      }
+    }
+  }
+}
+
+// Search Results Container
+.advanced-search-results-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+// Individual Search Result Item
+.search-result-item {
+  flex-direction: column;
+  align-items: flex-start !important;
+  padding: 0.75rem 1rem !important;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: hsl(0, 0%, 86%); // $grey-lighter
+  }
+
+  .search-result-content {
+    width: 100%;
+  }
+
+  .search-result-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .search-result-title {
+    font-weight: 500;
+    color: hsl(0, 0%, 21%); // $grey-darker
+  }
+
+  .search-result-path {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .search-result-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  // Taxonomy Badges in Results
+  .search-result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+
+    .taxonomy-badge {
+      cursor: default;
+      
+      .icon {
+        margin-right: 0.25rem;
+      }
+    }
+  }
+}
+
+// Taxonomy Quick Search Tags
+.taxonomy-quick-search {
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Browse by Tag Panel
+.panel > .panel-block > .tags {
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+// Empty State Styling
+.advanced-search-results-container {
+  .has-text-grey,
+  .has-text-grey-light {
+    .icon.is-large {
+      opacity: 0.5;
+    }
+  }
+}
