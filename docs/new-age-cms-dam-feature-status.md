@@ -1,4 +1,119 @@
-# New-age CMS – DAM Feature Status (Implemented vs Planned)
+# New-age CMS – DAM Feature Status (Impleme### Versioning
+- ✅ File version history + rest---
+
+## ✅ VALIDATED - Search & Metadata Features (Confirmed in Codebase)
+
+### Search & filtering depth
+- ✅ **VALIDATED**: Global search works ## Notes on doc cleanup (optional)
+
+From `digital-asset-management.md`, consider tightening language where behavior is not guaranteed:
+- "Sling CMS maintains version history for all files" → confirm it's enabled everywhere or qualify it.
+- Renditions section → confirm UI actually shows renditions for all contexts.
+- ~~Filtering/search → clarify whether it's folder-only filtering or global.~~ **DONE** - See `search.md` documentation
+
+---
+
+## Validation Summary
+
+| Feature | Status | Evidence |
+|---------|--------|----------|
+| Global search across folders | ✅ Done | `SearchResults.java` with no path restriction |
+| Metadata indexed | ✅ Done | `IndexCreator.java` - `allProperties` pattern |
+| Tag/taxonomy search | ✅ Done | `slingTaxonomy` indexed + `TaxonomyService` |
+| Client-side filtering | ✅ Done | `cms.nav.js` with type/tag filters |
+| Full-text Lucene search | ✅ Done | `CONTAINS()` queries in SearchResults | ALL folders (not just current folder)
+- ✅ **Server-side search**: `SearchResults.java` uses JCR-SQL2 with Lucene `CONTAINS()`
+- ✅ **Client-side filtering**: `cms.nav.js` provides instant filtering for loaded items
+  - Filter by filename/text
+  - Filter by MIME type  
+  - Filter by taxonomy/tags (`data-asset-tag-filter`)
+
+### Metadata indexing & discovery
+- ✅ **VALIDATED**: Metadata IS indexed and searchable via Lucene
+- ✅ **`slingTaxonomy`** property indexed at `jcr:content/sling:taxonomy` (analyzed)
+- ✅ **`allProperties`** pattern indexes ALL `jcr:content/*` metadata
+- ✅ **TaxonomyService.getTaggedContent()** - Find content by tag across folders
+
+### Lucene Index Configuration (IndexCreator.java)
+
+| Property | Path | Indexed | Analyzed | Notes |
+|----------|------|---------|----------|-------|
+| jcr:title | `jcr:content/jcr:title` | ✅ | ✅ | 2x boost |
+| jcr:description | `jcr:content/jcr:description` | ✅ | ✅ | |
+| sling:taxonomy | `jcr:content/sling:taxonomy` | ✅ | ✅ | Tag search |
+| allProperties | `jcr:content/*` (regex) | ✅ | ✅ | All metadata |
+| nodeName | `LOCALNAME()` | ✅ | ✅ | Filename search |
+
+### Search API (SearchResults.java)
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `q` or `term` | required | Search query |
+| `type` | `sling:Page` | Node type (`nt:hierarchyNode` for all) |
+| `path` | none | Restrict to path |
+| `fulltext` | `true` | Use Lucene vs LIKE |
+
+---
+
+## ⚠️ Partially implemented / needs enhancement
+
+### Rendition strategy
+- ✅ **VALIDATED/IMPLEMENTED**: Auto-renditions now support images, PDFs, videos, and Office documents
+  - `AutoRenditionConfigImpl.java` expanded default MIME types
+  - `PdfThumbnailProvider` - Uses PDFBox for PDF first-page rendering
+  - `VideoThumbnailProvider` - Uses FFmpeg/JCodec for video frame extraction
+  - `SlideShowThumbnailProvider` - PowerPoint (PPT/PPTX) via Apache POI
+  - `WordThumbnailProvider` - Word documents (DOC/DOCX) via Apache POI (NEW)
+  - `SpreadsheetThumbnailProvider` - Excel spreadsheets (XLS/XLSX) via Apache POI (NEW)
+  - `TikaFallbackProvider` - Generic text extraction fallback
+
+### Search UI Enhancement (nice-to-have)
+- ⚠️ Global search works but UI could be improved:
+  - Add dedicated "Search by Tag" dropdown in start page
+  - Add advanced search filters (date range, author, type)
+  - Show taxonomy badges in search resultsted)
+
+### Search & Global Discovery
+- ✅ **Global search across all folders** via `SearchResults` model using Lucene indexes
+- ✅ **Metadata indexed and searchable** - `allProperties` pattern indexes `jcr:content/*`
+- ✅ **Taxonomy/tags indexed** - `slingTaxonomy` property is indexed and analyzed
+- ✅ **Full-text search** - Uses `CONTAINS()` with Oak Lucene for fast queries
+- ✅ **Client-side filtering** - Real-time filtering in content navigation (`cms.nav.js`)
+  - Filter by filename/text
+  - Filter by MIME type
+  - Filter by taxonomy/tags
+
+### TaxonomyService API
+- ✅ `getAllTaxonomyItems()` - Get all taxonomy items
+- ✅ `searchTaxonomy(query)` - Search taxonomy by name
+- ✅ `getTaggedContent(taxonomyPath, basePath, limit)` - Find content by tag across folders
+
+---
+
+## Validated (confirmed in codebase)
+
+### Lucene Indexes (IndexCreator.java)
+The following properties are indexed for search:
+
+| Index | Property | Analyzed | Notes |
+|-------|----------|----------|-------|
+| slingPage | `jcr:content/jcr:title` | ✅ | 2x boost |
+| slingPage | `jcr:content/jcr:description` | ✅ | |
+| slingPage | `jcr:content/sling:taxonomy` | ✅ | Tag search |
+| slingPage | `jcr:content/*` (allProperties) | ✅ | All metadata |
+| slingFile | Same as above | ✅ | Files/assets |
+| ntHierarchyNode | Same as above | ✅ | All content |
+| slingTaxonomy | `jcr:title` | ✅ | Taxonomy items |
+
+### Search Capabilities (SearchResults.java)
+- ✅ Supports `q` or `term` parameter
+- ✅ Supports `type` parameter (default: `sling:Page`, or `nt:hierarchyNode` for global)
+- ✅ Supports `path` parameter for scoped search
+- ✅ Supports `fulltext` parameter (default: true for Lucene)
+
+---
+
+## Partially implemented / needs enhancementd)
 
 This document is a **gap analysis** based on `docs/digital-asset-management.md`.
 
@@ -57,8 +172,9 @@ Scope:
   - Validate: Can users search by tags/keywords across folders?
 
 ### Rendition strategy
-- ⚠️ Auto-renditions exist for images, but not for PDFs/videos/Office.
-  - Validate: Is that a limitation of pipeline vs just docs?
+- ✅ **VALIDATED/IMPLEMENTED**: Auto-renditions now support images, PDFs, videos, and Office documents
+  - Supported MIME types configured in `AutoRenditionConfigImpl.java`
+  - See thumbnails module providers for implementation details
 
 ---
 
@@ -124,8 +240,10 @@ Deliverables:
 - Delivery presets + deterministic rendition URLs
 - Smart rendition cache store (basic)
 
-### Phase 2
-- Metadata pipeline (Tika extraction) + metadata search
+### Phase 2 - ✅ DONE (metadata search already works!)
+- ~~Metadata pipeline (Tika extraction) + metadata search~~
+- **Status**: Lucene indexes ALL `jcr:content/*` properties including taxonomy/tags
+- **Remaining**: Consider adding Tika auto-extraction on upload (optional enhancement)
 
 ### Phase 3
 - Governance (expiry/licensing) + scheduled enforcement

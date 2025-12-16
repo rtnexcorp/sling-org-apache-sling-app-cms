@@ -108,6 +108,9 @@
                 },
                 "Sling.ppt": {
                     "jcr:primaryType": "sling:File"
+                },
+                "Sling.xlsx": {
+                    "jcr:primaryType": "sling:File"
                 }
             }
         }

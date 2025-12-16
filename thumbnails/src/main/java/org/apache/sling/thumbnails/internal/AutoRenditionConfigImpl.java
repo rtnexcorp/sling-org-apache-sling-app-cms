@@ -50,7 +50,23 @@ public class AutoRenditionConfigImpl implements AutoRenditionConfig {
         @AttributeDefinition(
                 name = "Supported MIME Types",
                 description = "MIME type patterns for auto-rendition generation (supports wildcards like 'image/*')")
-        String[] supportedMimeTypes() default {"image/*"};
+        String[] supportedMimeTypes() default {
+            // Images
+            "image/*",
+            // PDFs
+            "application/pdf",
+            // Videos
+            "video/*",
+            // Microsoft Office - PowerPoint
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            // Microsoft Office - Word
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            // Microsoft Office - Excel
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        };
 
         @AttributeDefinition(
                 name = "Content Paths",
