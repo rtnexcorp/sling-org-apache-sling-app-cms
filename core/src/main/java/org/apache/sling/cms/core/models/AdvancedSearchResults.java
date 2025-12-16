@@ -238,6 +238,24 @@ public class AdvancedSearchResults {
     }
 
     /**
+     * Returns search results as raw Resource list for backward compatibility.
+     * Used by searchresults component.
+     */
+    public List<Resource> getResultList() {
+        if (!hasSearchCriteria()) {
+            return Collections.emptyList();
+        }
+
+        String query = buildQuery();
+        log.debug("Search query: {}", query);
+
+        Iterator<Resource> it = resolver.findResources(query, Query.JCR_SQL2);
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(it, Spliterator.NONNULL), false)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Get all available taxonomy items for the tag dropdown.
      */
     public List<TaxonomyItem> getTaxonomyOptions() {

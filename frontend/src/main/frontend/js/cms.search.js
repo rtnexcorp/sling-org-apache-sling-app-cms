@@ -18,11 +18,68 @@
  */
 
 /**
- * Advanced Search functionality for the CMS Start Page
- * Handles filter toggle, taxonomy quick search, and form interactions
+ * CMS Search Module (Consolidated)
+ * 
+ * Handles all search functionality:
+ * - Global search (navbar)
+ * - Advanced search form (start page)
+ * - Filter toggle and taxonomy quick search
  */
 
 const rava = window.rava;
+
+// =============================================================================
+// Global Search Component (Navbar)
+// =============================================================================
+rava.bind('[data-component="global-search"]', {
+    callbacks: {
+        created() {
+            const container = this;
+            const searchInput = container.querySelector('input[name="search"]');
+            const searchBtn = container.querySelector('[data-global-search-btn]');
+            const searchPath = container.dataset.searchPath || '';
+            
+            function performGlobalSearch() {
+                const term = searchInput ? searchInput.value.trim() : '';
+                if (!term) return;
+                
+                const searchUrl = new URL('/cms/shared/search.html', window.location.origin);
+                searchUrl.searchParams.set('q', term);
+                if (searchPath) {
+                    searchUrl.searchParams.set('path', searchPath);
+                }
+                
+                if (window.SlingCMS && window.SlingCMS.ui && window.SlingCMS.ui.confirmModal) {
+                    window.SlingCMS.ui.confirmModal(searchUrl.toString(), `Search: ${term}`);
+                } else {
+                    window.location.href = searchUrl.toString();
+                }
+            }
+            
+            function handleKeyPress(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    performGlobalSearch();
+                }
+            }
+            
+            if (searchInput) {
+                searchInput.addEventListener('keypress', handleKeyPress);
+            }
+            
+            if (searchBtn) {
+                searchBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    performGlobalSearch();
+                });
+            }
+        }
+    }
+});
+
+// =============================================================================
+// Advanced Search Form (Start Page)
+// =============================================================================
 
 // Toggle advanced search filters visibility
 rava.bind('.advanced-search-toggle', {

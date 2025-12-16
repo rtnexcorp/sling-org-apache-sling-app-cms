@@ -23,8 +23,7 @@
 @use "tiptap";
 @use "assets";
 @use "contentfilter";
-@use "globalsearch";
-@use "advancedsearch";
+@use "search";
 @use "variables" as *;
 
 // Bulma breakpoints (for compatibility)

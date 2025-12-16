@@ -17,11 +17,87 @@
  * under the License.
  */
 
-// Advanced Search Component Styles
-// Used on the CMS start page for enhanced search functionality
-// Variables are passed from cms.scss
+// =============================================================================
+// CMS Search Styles (Consolidated)
+// =============================================================================
+// This file contains all search-related styles for the CMS:
+// - Global search component (navbar)
+// - Advanced search form (start page)
+// - Search results display
+// - Taxonomy badges and quick search
+// =============================================================================
 
-// Search Form
+// -----------------------------------------------------------------------------
+// Global Search Component (Navbar)
+// -----------------------------------------------------------------------------
+.cms-global-search {
+  display: inline-flex;
+  align-items: center;
+
+  &__form {
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__input {
+    font-size: 0.75rem;
+    height: 2em;
+    padding: calc(0.5em - 1px) calc(0.75em - 1px);
+    padding-left: 2rem;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    min-width: 200px;
+    outline: none;
+
+    &:focus {
+      border-color: #485fc7;
+      box-shadow: 0 0 0 0.125em rgba(72, 95, 199, 0.25);
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    left: 0.5rem;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: #7a7a7a;
+    font-size: 0.75rem;
+  }
+
+  &__btn {
+    font-size: 0.75rem;
+    height: 2em;
+    padding: calc(0.5em - 1px) 0.75em;
+    background-color: #485fc7;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    &:hover {
+      background-color: #3e56c4;
+    }
+  }
+
+  &__btn-icon {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Advanced Search Form (Start Page)
+// -----------------------------------------------------------------------------
 .advanced-search-form {
   width: 100%;
 
