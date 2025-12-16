@@ -1,0 +1,60 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--/* File Info Panel - displays file metadata and actions */-->
+<template data-sly-template.infoPanel="${@ preview}">
+    <h4 class="title is-5">${'Info' @ i18n}</h4>
+    <table class="table is-fullwidth is-narrow">
+        <tbody>
+            <tr><th>${'File' @ i18n}</th><td>${preview.fileName}</td></tr>
+            <tr><th>${'Type' @ i18n}</th><td><span class="tag ${preview.fileTypeColor}">${preview.mimeType}</span></td></tr>
+        </tbody>
+    </table>
+
+    <!--/* Renditions for previewable types */-->
+    <sly data-sly-test="${preview.previewable && preview.hasRenditions}">
+        <h4 class="title is-6 mt-4">${'Renditions' @ i18n}</h4>
+        <div class="buttons are-small">
+            <a href="${preview.filePath}" class="button is-info preview-link" data-image="${preview.filePath}">
+                <span class="icon"><span class="jam jam-picture"></span></span>
+                <span>${'Original' @ i18n}</span>
+            </a>
+            <sly data-sly-list.rendition="${preview.supportedRenditions}">
+                <a href="${preview.filePath}.transform/${rendition}.png" 
+                   class="button is-link is-outlined preview-link"
+                   data-image="${preview.filePath}.transform/${rendition}.png">
+                    <span class="icon"><span class="jam jam-picture"></span></span>
+                    <span>${rendition}</span>
+                </a>
+            </sly>
+        </div>
+    </sly>
+
+    <!--/* Download & Close */-->
+    <div class="field is-grouped mt-4">
+        <p class="control">
+            <a href="${preview.filePath}" download="${preview.fileName}" class="button is-success">
+                <span class="icon"><span class="jam jam-download"></span></span>
+                <span>${'Download' @ i18n}</span>
+            </a>
+        </p>
+        <p class="control">
+            <button type="button" class="button close">${'Close' @ i18n}</button>
+        </p>
+    </div>
+</template>

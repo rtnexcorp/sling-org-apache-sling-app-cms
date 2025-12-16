@@ -55,6 +55,7 @@ import './cms.pathfield.js';
 import './cms.tiptap.js';
 import './cms.toggle.js';
 import './cms.imagepreview.js';
+import './cms.docpreview.js';
 import './cms.assetbrowser.js';
 import './cms.globalsearch.js';
 
