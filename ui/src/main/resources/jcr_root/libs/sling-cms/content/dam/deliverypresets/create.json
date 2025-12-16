@@ -1,0 +1,201 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Add Delivery Preset",
+        "modalText": "Create Delivery Preset",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "button": "Create Preset",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Title",
+                        "name": "jcr:title",
+                        "required": true,
+                        "description": "Human-readable name for this preset"
+                    },
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Preset Name",
+                        "name": ":name",
+                        "required": true,
+                        "description": "URL-safe identifier (e.g., hero-banner, card-thumb)"
+                    },
+                    "description": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                        "label": "Description",
+                        "name": "jcr:description",
+                        "description": "Describe when to use this preset"
+                    },
+                    "separator1": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Dimensions"
+                    },
+                    "width": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Width (px)",
+                        "name": "width",
+                        "type": "number",
+                        "required": true,
+                        "description": "Target width in pixels (0 for auto)"
+                    },
+                    "height": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Height (px)",
+                        "name": "height",
+                        "type": "number",
+                        "required": true,
+                        "description": "Target height in pixels (0 for auto)"
+                    },
+                    "keepAspectRatio": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Keep Aspect Ratio",
+                        "name": "keepAspectRatio",
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "yes": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Yes",
+                                "value": "true"
+                            },
+                            "no": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "No",
+                                "value": "false"
+                            }
+                        }
+                    },
+                    "separator2": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Format & Quality"
+                    },
+                    "format": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Output Format",
+                        "name": "format",
+                        "required": true,
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "webp": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "WebP (recommended)",
+                                "value": "webp"
+                            },
+                            "avif": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "AVIF (modern browsers)",
+                                "value": "avif"
+                            },
+                            "jpg": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "JPEG",
+                                "value": "jpg"
+                            },
+                            "png": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "PNG",
+                                "value": "png"
+                            }
+                        }
+                    },
+                    "quality": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Quality (1-100)",
+                        "name": "quality",
+                        "type": "number",
+                        "value": "80",
+                        "description": "Image quality percentage"
+                    },
+                    "separator3": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Cropping"
+                    },
+                    "cropMode": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Crop Mode",
+                        "name": "cropMode",
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "none": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "None",
+                                "value": "none"
+                            },
+                            "center": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Center",
+                                "value": "center"
+                            },
+                            "smart": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Smart (auto-detect focus)",
+                                "value": "smart"
+                            },
+                            "face": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Face Detection",
+                                "value": "face"
+                            }
+                        }
+                    },
+                    "separator4": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Settings"
+                    },
+                    "enabled": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Enabled",
+                        "name": "enabled",
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "yes": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Yes",
+                                "value": "true"
+                            },
+                            "no": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "No",
+                                "value": "false"
+                            }
+                        }
+                    },
+                    "primaryType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "jcr:primaryType",
+                        "value": "nt:unstructured"
+                    },
+                    "resourceType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "sling:resourceType",
+                        "value": "sling/thumbnails/deliverypreset"
+                    }
+                }
+            }
+        }
+    }
+}

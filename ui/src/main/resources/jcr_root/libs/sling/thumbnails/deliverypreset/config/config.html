@@ -1,0 +1,176 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.preset="${'org.apache.sling.cms.delivery.DeliveryPreset' @ path=resource.path}">
+
+<form method="post" class="Form-Ajax" action="${resource.path}" enctype="multipart/form-data">
+    
+    <!-- Basic Information -->
+    <fieldset class="form-wrapper field">
+        <legend>${'Basic Information' @ i18n}</legend>
+        
+        <div class="field">
+            <label class="label">${'Preset Name' @ i18n}</label>
+            <div class="field-content">
+                <code>${resource.name}</code>
+            </div>
+        </div>
+        
+        <div class="field">
+            <label class="label" for="title">${'Title' @ i18n}</label>
+            <input type="text" id="title" name="jcr:title" 
+                   value="${properties['jcr:title']}" 
+                   class="input" required />
+        </div>
+        
+        <div class="field">
+            <label class="label" for="description">${'Description' @ i18n}</label>
+            <textarea id="description" name="jcr:description" class="input">${properties['jcr:description']}</textarea>
+        </div>
+        
+        <div class="field">
+            <div class="field-content">
+                <label>
+                    <input type="checkbox" name="enabled" value="true" 
+                           data-sly-attribute.checked="${properties.enabled != false}" />
+                    ${'Enabled' @ i18n}
+                </label>
+                <input type="hidden" name="enabled@DefaultValue" value="false" />
+                <input type="hidden" name="enabled@UseDefaultWhenMissing" value="true" />
+            </div>
+        </div>
+    </fieldset>
+    
+    <!-- Size Settings -->
+    <fieldset class="form-wrapper field">
+        <legend>${'Size Settings' @ i18n}</legend>
+        
+        <div class="field">
+            <label class="label" for="width">${'Width (px)' @ i18n}</label>
+            <input type="number" id="width" name="width" 
+                   value="${properties.width}" 
+                   class="input" min="0" />
+            <p class="field-description">${'Target width in pixels (0 for auto)' @ i18n}</p>
+        </div>
+        
+        <div class="field">
+            <label class="label" for="height">${'Height (px)' @ i18n}</label>
+            <input type="number" id="height" name="height" 
+                   value="${properties.height}" 
+                   class="input" min="0" />
+            <p class="field-description">${'Target height in pixels (0 for auto)' @ i18n}</p>
+        </div>
+        
+        <div class="field">
+            <div class="field-content">
+                <label>
+                    <input type="checkbox" name="keepAspectRatio" value="true" 
+                           data-sly-attribute.checked="${properties.keepAspectRatio != false}" />
+                    ${'Keep Aspect Ratio' @ i18n}
+                </label>
+                <input type="hidden" name="keepAspectRatio@DefaultValue" value="false" />
+                <input type="hidden" name="keepAspectRatio@UseDefaultWhenMissing" value="true" />
+            </div>
+        </div>
+    </fieldset>
+    
+    <!-- Format Settings -->
+    <fieldset class="form-wrapper field">
+        <legend>${'Format Settings' @ i18n}</legend>
+        
+        <div class="field">
+            <label class="label" for="format">${'Output Format' @ i18n}</label>
+            <select id="format" name="format" class="input">
+                <option value="webp" data-sly-attribute.selected="${properties.format == 'webp'}">WebP (${'Modern, recommended' @ i18n})</option>
+                <option value="avif" data-sly-attribute.selected="${properties.format == 'avif'}">AVIF (${'Best compression' @ i18n})</option>
+                <option value="jpg" data-sly-attribute.selected="${properties.format == 'jpg'}">JPEG (${'Universal' @ i18n})</option>
+                <option value="png" data-sly-attribute.selected="${properties.format == 'png'}">PNG (${'Lossless/Transparency' @ i18n})</option>
+            </select>
+        </div>
+        
+        <div class="field">
+            <label class="label" for="fallbackFormats">${'Fallback Formats' @ i18n}</label>
+            <select id="fallbackFormats" name="fallbackFormats" class="input" multiple="multiple" size="3">
+                <option value="jpg">JPEG</option>
+                <option value="png">PNG</option>
+                <option value="webp">WebP</option>
+            </select>
+            <p class="field-description">${'Hold Ctrl/Cmd to select multiple fallback formats' @ i18n}</p>
+        </div>
+        
+        <div class="field">
+            <label class="label" for="quality">${'Quality (1-100)' @ i18n}</label>
+            <input type="number" id="quality" name="quality" 
+                   value="${properties.quality ? properties.quality : 80}" 
+                   class="input" min="1" max="100" />
+            <p class="field-description">${'Higher = better quality, larger file size' @ i18n}</p>
+        </div>
+    </fieldset>
+    
+    <!-- Crop Settings -->
+    <fieldset class="form-wrapper field">
+        <legend>${'Crop Settings' @ i18n}</legend>
+        
+        <div class="field">
+            <label class="label" for="cropMode">${'Crop Mode' @ i18n}</label>
+            <select id="cropMode" name="cropMode" class="input">
+                <option value="none" data-sly-attribute.selected="${properties.cropMode == 'none'}">${'None (scale only)' @ i18n}</option>
+                <option value="center" data-sly-attribute.selected="${properties.cropMode == 'center' || !properties.cropMode}">${'Center' @ i18n}</option>
+                <option value="smart" data-sly-attribute.selected="${properties.cropMode == 'smart'}">${'Smart (content-aware)' @ i18n}</option>
+                <option value="face" data-sly-attribute.selected="${properties.cropMode == 'face'}">${'Face (focus on faces)' @ i18n}</option>
+                <option value="top" data-sly-attribute.selected="${properties.cropMode == 'top'}">${'Top' @ i18n}</option>
+                <option value="bottom" data-sly-attribute.selected="${properties.cropMode == 'bottom'}">${'Bottom' @ i18n}</option>
+            </select>
+        </div>
+    </fieldset>
+    
+    <!-- Advanced Settings -->
+    <fieldset class="form-wrapper field">
+        <legend>${'Advanced Settings' @ i18n}</legend>
+        
+        <div class="field">
+            <label class="label" for="transformationName">${'Transformation Name' @ i18n}</label>
+            <input type="text" id="transformationName" name="transformationName" 
+                   value="${properties.transformationName}" 
+                   class="input" />
+            <p class="field-description">${'Optional: Use an existing transformation instead of dynamic generation' @ i18n}</p>
+        </div>
+        
+        <div class="field">
+            <label class="label" for="categories">${'Categories' @ i18n}</label>
+            <input type="text" id="categories" name="categories" 
+                   value="${properties.categories}" 
+                   class="input" />
+            <p class="field-description">${'Comma-separated categories for organization (e.g., marketing, social)' @ i18n}</p>
+        </div>
+    </fieldset>
+    
+    <div class="form-actions">
+        <button type="submit" class="button is-primary">${'Save Preset' @ i18n}</button>
+    </div>
+</form>
+
+<hr/>
+
+<div class="delivery-preset-preview box">
+    <h4>${'URL Preview' @ i18n}</h4>
+    <p>${'Use this URL pattern to deliver optimized images:' @ i18n}</p>
+    <code>/content/path/to/image.jpg.deliver/${resource.name}.${properties.format ? properties.format : 'webp'}</code>
+</div>
+
+</sly>

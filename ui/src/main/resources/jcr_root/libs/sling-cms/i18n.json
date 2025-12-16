@@ -2710,6 +2710,16 @@
       "sling:message": "变换处理列表",
       "sling:key": "Transformations"
     },
+    "msg-delivery-presets": {
+      "jcr:primaryType": "sling:MessageEntry",
+      "sling:message": "Delivery Presets",
+      "sling:key": "Delivery Presets"
+    },
+    "msg-digital-assets": {
+      "jcr:primaryType": "sling:MessageEntry",
+      "sling:message": "Digital Assets",
+      "sling:key": "Digital Assets"
+    },
     "msg-transport-secret-provider-target": {
       "jcr:primaryType": "sling:MessageEntry",
       "sling:message": "传输目标提供者密码",

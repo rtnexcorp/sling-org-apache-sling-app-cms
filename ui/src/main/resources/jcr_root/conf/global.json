@@ -122,6 +122,118 @@
       }
     }
   },
+  "dam": {
+    "jcr:primaryType": "nt:unstructured",
+    "delivery-presets": {
+      "jcr:primaryType": "nt:unstructured",
+      "jcr:title": "Delivery Presets",
+      "hero-banner": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/deliverypreset",
+        "jcr:title": "Hero Banner",
+        "jcr:description": "Full-width hero banner images for page headers",
+        "width": 1920,
+        "height": 600,
+        "format": "webp",
+        "fallbackFormats": ["jpg"],
+        "quality": 85,
+        "cropMode": "center",
+        "keepAspectRatio": false,
+        "enabled": true,
+        "categories": ["marketing", "headers"]
+      },
+      "card-thumbnail": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/deliverypreset",
+        "jcr:title": "Card Thumbnail",
+        "jcr:description": "Thumbnails for content cards and teasers",
+        "width": 400,
+        "height": 300,
+        "format": "webp",
+        "fallbackFormats": ["jpg"],
+        "quality": 80,
+        "cropMode": "center",
+        "keepAspectRatio": false,
+        "enabled": true,
+        "categories": ["cards", "listings"]
+      },
+      "avatar": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/deliverypreset",
+        "jcr:title": "Avatar",
+        "jcr:description": "Square avatar images for user profiles",
+        "width": 128,
+        "height": 128,
+        "format": "webp",
+        "fallbackFormats": ["jpg", "png"],
+        "quality": 90,
+        "cropMode": "face",
+        "keepAspectRatio": false,
+        "enabled": true,
+        "categories": ["profiles"]
+      },
+      "social-share": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/deliverypreset",
+        "jcr:title": "Social Share",
+        "jcr:description": "Open Graph images for social media sharing",
+        "width": 1200,
+        "height": 630,
+        "format": "jpg",
+        "fallbackFormats": [],
+        "quality": 85,
+        "cropMode": "center",
+        "keepAspectRatio": false,
+        "enabled": true,
+        "categories": ["social", "og"]
+      },
+      "responsive-small": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/deliverypreset",
+        "jcr:title": "Responsive Small",
+        "jcr:description": "Small screen responsive images (mobile)",
+        "width": 480,
+        "height": 0,
+        "format": "webp",
+        "fallbackFormats": ["jpg"],
+        "quality": 80,
+        "cropMode": "none",
+        "keepAspectRatio": true,
+        "enabled": true,
+        "categories": ["responsive"]
+      },
+      "responsive-medium": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/deliverypreset",
+        "jcr:title": "Responsive Medium",
+        "jcr:description": "Medium screen responsive images (tablet)",
+        "width": 768,
+        "height": 0,
+        "format": "webp",
+        "fallbackFormats": ["jpg"],
+        "quality": 80,
+        "cropMode": "none",
+        "keepAspectRatio": true,
+        "enabled": true,
+        "categories": ["responsive"]
+      },
+      "responsive-large": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/deliverypreset",
+        "jcr:title": "Responsive Large",
+        "jcr:description": "Large screen responsive images (desktop)",
+        "width": 1200,
+        "height": 0,
+        "format": "webp",
+        "fallbackFormats": ["jpg"],
+        "quality": 82,
+        "cropMode": "none",
+        "keepAspectRatio": true,
+        "enabled": true,
+        "categories": ["responsive"]
+      }
+    }
+  },
   "site": {
     "jcr:primaryType": "sling:OrderedFolder",
     "jcr:content": {
