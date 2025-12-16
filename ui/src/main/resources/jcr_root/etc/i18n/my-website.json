@@ -1,0 +1,101 @@
+{
+    "jcr:primaryType": "sling:OrderedFolder",
+    "jcr:content": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "My Website Dictionary",
+        "jcr:description": "Sample i18n dictionary for website translations"
+    },
+    "en": {
+        "jcr:primaryType": "sling:Folder",
+        "jcr:mixinTypes": ["mix:language"],
+        "jcr:language": "en",
+        "sling:resourceType": "sling-cms/components/cms/blank",
+        "msg-welcome": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Welcome",
+            "sling:message": "Welcome to our website"
+        },
+        "msg-contact-us": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Contact Us",
+            "sling:message": "Contact Us"
+        },
+        "msg-about": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "About",
+            "sling:message": "About Us"
+        },
+        "msg-home": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Home",
+            "sling:message": "Home"
+        },
+        "msg-read-more": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Read More",
+            "sling:message": "Read More"
+        }
+    },
+    "fr": {
+        "jcr:primaryType": "sling:Folder",
+        "jcr:mixinTypes": ["mix:language"],
+        "jcr:language": "fr",
+        "sling:resourceType": "sling-cms/components/cms/blank",
+        "msg-welcome": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Welcome",
+            "sling:message": "Bienvenue sur notre site"
+        },
+        "msg-contact-us": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Contact Us",
+            "sling:message": "Contactez-nous"
+        },
+        "msg-about": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "About",
+            "sling:message": "À propos de nous"
+        },
+        "msg-home": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Home",
+            "sling:message": "Accueil"
+        },
+        "msg-read-more": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Read More",
+            "sling:message": "Lire la suite"
+        }
+    },
+    "zh": {
+        "jcr:primaryType": "sling:Folder",
+        "jcr:mixinTypes": ["mix:language"],
+        "jcr:language": "zh",
+        "sling:resourceType": "sling-cms/components/cms/blank",
+        "msg-welcome": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Welcome",
+            "sling:message": "欢迎访问我们的网站"
+        },
+        "msg-contact-us": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Contact Us",
+            "sling:message": "联系我们"
+        },
+        "msg-about": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "About",
+            "sling:message": "关于我们"
+        },
+        "msg-home": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Home",
+            "sling:message": "首页"
+        },
+        "msg-read-more": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Read More",
+            "sling:message": "阅读更多"
+        }
+    }
+}

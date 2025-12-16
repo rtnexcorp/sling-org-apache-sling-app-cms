@@ -1,5 +1,6 @@
 Sling-Nodetypes: SLING-INF/nodetypes/nodetypes.cnd
 Sling-Initial-Content: jcr_root/conf/global.json;overwrite:=true;ignoreImportProviders:=xml;path:=/conf/global,\
     jcr_root/etc/taxonomy;overwrite:=false;path:=/etc/taxonomy,\
+    jcr_root/etc/i18n;overwrite:=false;path:=/etc/i18n,\
     jcr_root/libs/sling-cms;overwrite:=true;path:=/libs/sling-cms,\
     jcr_root/libs/sling/thumbnails;overwrite:=true;path:=/libs/sling/thumbnails
