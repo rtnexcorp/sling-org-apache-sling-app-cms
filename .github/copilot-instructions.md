@@ -208,6 +208,14 @@ ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/mycomponent/
 - Create equivalent `.html` HTL file and remove the `.jsp`
 - Use Sling Models for business logic instead of scriptlets
 
+## JSP to HTL Migration (MANDATORY)
+
+When creating or migrating JSP to HTL, you MUST always follow the guidance and patterns in:
+
+- `/docs/jsp-to-htl-migration.md`
+
+This document contains real-world, battle-tested migration rules and examples specific to this codebase. It covers all critical differences, required Sling Model patterns, and common pitfalls. **Do not attempt JSP to HTL migration without consulting this file.**
+
 ### SCSS/CSS Organization (REQUIRED)
 **Create separate SCSS files for new components. Never add styles inline or to existing large files.**
 

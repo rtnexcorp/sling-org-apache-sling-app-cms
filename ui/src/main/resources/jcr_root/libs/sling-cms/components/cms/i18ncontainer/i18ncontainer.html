@@ -55,6 +55,9 @@
                                     <small>(${language.languageCode})</small>
                                 </th>
                             </sly>
+                            <th scope="col">
+                                ${'Actions' @ i18n}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,28 +67,55 @@
                                 <sly data-sly-list.langEntry="${row.languageEntries}">
                                     <td role="group" aria-labelledby="Column-${langEntry.languageCode @ context='attribute'}">
                                         <sly data-sly-test="${langEntry.hasEntry}">
-                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.entryName @ context='attribute'}/sling:message" 
-                                                   class="input" 
-                                                   type="text" 
-                                                   value="${langEntry.message @ context='attribute'}" />
-                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.entryName @ context='attribute'}/sling:key" 
-                                                   type="hidden" 
-                                                   value="${langEntry.key @ context='attribute'}" />
+                                            <div class="field has-addons">
+                                                <div class="control is-expanded">
+                                                    <input name="${langEntry.languageName @ context='attribute'}/${langEntry.entryName @ context='attribute'}/sling:message"
+                                                           class="input"
+                                                           type="text"
+                                                           value="${langEntry.message @ context='attribute'}" />
+                                                    <input name="${langEntry.languageName @ context='attribute'}/${langEntry.entryName @ context='attribute'}/sling:key"
+                                                           type="hidden"
+                                                           value="${langEntry.key @ context='attribute'}" />
+                                                </div>
+                                                <sly data-sly-test="${langEntry.message == '' || langEntry.message == null}">
+                                                    <div class="control">
+                                                        <button type="button"
+                                                                class="button is-danger is-small"
+                                                                title="${'Delete empty entry' @ i18n, context='attribute'}"
+                                                                onclick="deleteI18nLanguageEntry(this, '${model.suffixPath @ context='attribute'}', '${langEntry.languageName @ context='attribute'}', '${langEntry.entryName @ context='attribute'}')">
+                                                            <span class="icon is-small">
+                                                                <i class="jam jam-trash"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </sly>
+                                            </div>
                                         </sly>
                                         <sly data-sly-test="${!langEntry.hasEntry}">
-                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/sling:message" 
-                                                   class="input" 
-                                                   type="text" 
+                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/sling:message"
+                                                   class="input"
+                                                   type="text"
                                                    value="" />
-                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/sling:key" 
-                                                   type="hidden" 
+                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/sling:key"
+                                                   type="hidden"
                                                    value="${langEntry.key @ context='attribute'}" />
-                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/jcr:primaryType" 
-                                                   type="hidden" 
+                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/jcr:primaryType"
+                                                   type="hidden"
                                                    value="sling:MessageEntry" />
                                         </sly>
                                     </td>
                                 </sly>
+                                <td class="cell-actions">
+                                    <button type="button"
+                                            class="button is-danger is-small"
+                                            data-i18n-key="${row.key @ context='attribute'}"
+                                            onclick="deleteI18nEntry(this, '${model.suffixPath @ context='attribute'}', '${row.key @ context='attribute'}')">
+                                        <span class="icon">
+                                            <i class="jam jam-trash"></i>
+                                        </span>
+                                        <span>${'Delete' @ i18n}</span>
+                                    </button>
+                                </td>
                             </tr>
                         </sly>
                     </tbody>
