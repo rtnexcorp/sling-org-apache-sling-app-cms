@@ -1,4 +1,4 @@
-<%-- /*
+<!--/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,16 +15,11 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
- <%@include file="/libs/sling-cms/global.jsp"%>
+ */-->
 <div class="handler-details">
-    <span class="badge badge-primary mr-2">Crop</span>
+    <span class="badge badge-warning mr-2">Rotate</span>
     <dl class="row mb-0 mt-2">
-        <dt class="col-sm-4"><fmt:message key="Width" /></dt>
-        <dd class="col-sm-8"><strong><sling:encode value="${properties.width}" mode="HTML" />px</strong></dd>
-        <dt class="col-sm-4"><fmt:message key="Height" /></dt>
-        <dd class="col-sm-8"><strong><sling:encode value="${properties.height}" mode="HTML" />px</strong></dd>
-        <dt class="col-sm-4"><fmt:message key="Position" /></dt>
-        <dd class="col-sm-8"><sling:encode value="${properties.position}" mode="HTML" /></dd>
+        <dt class="col-sm-4">${'Degrees' @ i18n}</dt>
+        <dd class="col-sm-8"><strong>${properties.degrees}&deg;</strong></dd>
     </dl>
 </div>

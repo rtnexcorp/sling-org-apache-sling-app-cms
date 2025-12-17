@@ -1,4 +1,4 @@
-<%-- /*
+<!--/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,36 +15,32 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
-<%@include file="/libs/sling-cms/global.jsp"%>
+ */-->
 <div class="transformation-config">
     <div class="card mb-3">
         <div class="card-header">
-            <h5 class="mb-0"><fmt:message key="Transformation Details" /></h5>
+            <h5 class="mb-0">${'Transformation Details' @ i18n}</h5>
         </div>
         <div class="card-body">
             <dl class="row">
-                <dt class="col-sm-3"><fmt:message key="Display Name" /></dt>
-                <dd class="col-sm-9"><sling:encode value="${properties.name}" mode="HTML" /></dd>
-                <dt class="col-sm-3"><fmt:message key="Resource Path" /></dt>
-                <dd class="col-sm-9"><sling:encode value="${resource.path}" mode="HTML" /></dd>
+                <dt class="col-sm-3">${'Display Name' @ i18n}</dt>
+                <dd class="col-sm-9">${properties.name}</dd>
+                <dt class="col-sm-3">${'Resource Path' @ i18n}</dt>
+                <dd class="col-sm-9">${resource.path}</dd>
             </dl>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><fmt:message key="Transformation Handlers" /></h5>
-            <small class="text-muted"><fmt:message key="Handlers are executed in order from top to bottom" /></small>
+            <h5 class="mb-0">${'Transformation Handlers' @ i18n}</h5>
+            <small class="text-muted">${'Handlers are executed in order from top to bottom' @ i18n}</small>
         </div>
         <div class="card-body">
             <p class="text-muted">
-                <fmt:message key="Add, edit, or reorder transformation handlers. Each handler performs a specific operation on the image." />
+                ${'Add, edit, or reorder transformation handlers. Each handler performs a specific operation on the image.' @ i18n}
             </p>
-            <c:set var="oldAvailableTypes" value="${availableTypes}" />
-            <c:set var="availableTypes" value="SlingCMS-TransformationHandler" scope="request" />
-            <sling:include path="handlers" resourceType="sling-cms/components/general/reloadcontainer" />
-            <c:set var="availableTypes" value="${oldAvailableTypes}" scope="request" />
+            <sly data-sly-resource="${'handlers' @ resourceType='sling-cms/components/general/reloadcontainer', wcmmode='edit', availableTypes='SlingCMS-TransformationHandler'}"></sly>
         </div>
     </div>
 </div>

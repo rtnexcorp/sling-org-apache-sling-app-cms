@@ -89,10 +89,16 @@
             "link": "/cms/dam/deliverypresets.html/conf/global/dam/delivery-presets",
             "text": "Delivery Presets"
           },
+          "editors": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/config/edit.html/conf/global/dam/editors"],
+            "link": "/cms/config/edit.html/conf/global/dam/editors",
+            "text": "File Editors"
+          },
           "transformations": {
             "jcr:primaryType": "nt:unstructured",
-            "alternatives": ["/cms/transformations"],
-            "link": "/cms/transformations/editor.html/conf/global/files",
+            "alternatives": ["/cms/dam/transformations"],
+            "link": "/cms/dam/transformations.html/conf/global/dam/transformations",
             "text": "Transformations"
           }
         }

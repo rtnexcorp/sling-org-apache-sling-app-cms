@@ -1,4 +1,4 @@
-<%-- /*
+<!--/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,29 +15,26 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
- <%@include file="/libs/sling-cms/global.jsp"%>
+ */-->
 <div class="handler-details">
     <span class="badge badge-success mr-2">Resize</span>
     <dl class="row mb-0 mt-2">
-        <c:if test="${not empty properties.width}">
-            <dt class="col-sm-4">Width</dt>
-            <dd class="col-sm-8"><strong><sling:encode value="${properties.width}" mode="HTML" />px</strong></dd>
-        </c:if>
-        <c:if test="${not empty properties.height}">
-            <dt class="col-sm-4">Height</dt>
-            <dd class="col-sm-8"><strong><sling:encode value="${properties.height}" mode="HTML" />px</strong></dd>
-        </c:if>
-        <dt class="col-sm-4">Keep Aspect Ratio</dt>
+        <sly data-sly-test="${properties.width}">
+            <dt class="col-sm-4">${'Width' @ i18n}</dt>
+            <dd class="col-sm-8"><strong>${properties.width}px</strong></dd>
+        </sly>
+        <sly data-sly-test="${properties.height}">
+            <dt class="col-sm-4">${'Height' @ i18n}</dt>
+            <dd class="col-sm-8"><strong>${properties.height}px</strong></dd>
+        </sly>
+        <dt class="col-sm-4">${'Keep Aspect Ratio' @ i18n}</dt>
         <dd class="col-sm-8">
-            <c:choose>
-                <c:when test="${properties.keepAspectRatio == true}">
-                    <span class="badge badge-info">Yes</span>
-                </c:when>
-                <c:otherwise>
-                    <span class="badge badge-secondary">No</span>
-                </c:otherwise>
-            </c:choose>
+            <sly data-sly-test="${properties.keepAspectRatio}">
+                <span class="badge badge-info">${'Yes' @ i18n}</span>
+            </sly>
+            <sly data-sly-test="${!properties.keepAspectRatio}">
+                <span class="badge badge-secondary">${'No' @ i18n}</span>
+            </sly>
         </dd>
     </dl>
 </div>

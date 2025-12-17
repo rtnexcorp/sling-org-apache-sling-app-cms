@@ -9,7 +9,10 @@
     "jcr:content": {
       "jcr:primaryType": "nt:unstructured",
       "jcr:title": "File Configurations"
-    },
+    }
+  },
+  "dam": {
+    "jcr:primaryType": "nt:unstructured",
     "editors": {
       "jcr:primaryType": "sling:Config",
       "jcr:title": "File Editors",
@@ -71,59 +74,6 @@
         }
       }
     },
-    "transformations": {
-      "jcr:primaryType": "sling:Config",
-      "jcr:title": "Transformations",
-      "sling:resourceType": "sling-cms/components/caconfig/transformations",
-      "sling-cms-thumbnail": {
-        "jcr:primaryType": "nt:unstructured",
-        "name": "sling-cms-thumbnail",
-        "sling:resourceType": "sling/thumbnails/transformation",
-        "handlers": {
-          "jcr:primaryType": "nt:unstructured",
-          "crop": {
-            "jcr:primaryType": "nt:unstructured",
-            "position": "CENTER",
-            "height": "480",
-            "width": "600",
-            "sling:resourceType": "sling/thumbnails/transformers/crop"
-          }
-        }
-      },
-      "sling-cms-thumbnail128": {
-        "jcr:primaryType": "nt:unstructured",
-        "name": "sling-cms-thumbnail128",
-        "sling:resourceType": "sling/thumbnails/transformation",
-        "handlers": {
-          "jcr:primaryType": "nt:unstructured",
-          "crop": {
-            "jcr:primaryType": "nt:unstructured",
-            "position": "CENTER",
-            "height": "128",
-            "width": "128",
-            "sling:resourceType": "sling/thumbnails/transformers/crop"
-          }
-        }
-      },
-      "sling-cms-thumbnail32": {
-        "jcr:primaryType": "nt:unstructured",
-        "name": "sling-cms-thumbnail32",
-        "sling:resourceType": "sling/thumbnails/transformation",
-        "handlers": {
-          "jcr:primaryType": "nt:unstructured",
-          "crop": {
-            "jcr:primaryType": "nt:unstructured",
-            "height": "32",
-            "width": "32",
-            "position": "CENTER",
-            "sling:resourceType": "sling/thumbnails/transformers/crop"
-          }
-        }
-      }
-    }
-  },
-  "dam": {
-    "jcr:primaryType": "nt:unstructured",
     "delivery-presets": {
       "jcr:primaryType": "nt:unstructured",
       "jcr:title": "Delivery Presets",
@@ -231,6 +181,56 @@
         "keepAspectRatio": true,
         "enabled": true,
         "categories": ["responsive"]
+      }
+    },
+    "transformations": {
+      "jcr:primaryType": "sling:Config",
+      "jcr:title": "Transformations",
+      "sling:resourceType": "sling-cms/components/caconfig/transformations",
+      "sling-cms-thumbnail": {
+        "jcr:primaryType": "nt:unstructured",
+        "name": "sling-cms-thumbnail",
+        "sling:resourceType": "sling/thumbnails/transformation",
+        "handlers": {
+          "jcr:primaryType": "nt:unstructured",
+          "crop": {
+            "jcr:primaryType": "nt:unstructured",
+            "position": "CENTER",
+            "height": "480",
+            "width": "600",
+            "sling:resourceType": "sling/thumbnails/transformers/crop"
+          }
+        }
+      },
+      "sling-cms-thumbnail128": {
+        "jcr:primaryType": "nt:unstructured",
+        "name": "sling-cms-thumbnail128",
+        "sling:resourceType": "sling/thumbnails/transformation",
+        "handlers": {
+          "jcr:primaryType": "nt:unstructured",
+          "crop": {
+            "jcr:primaryType": "nt:unstructured",
+            "position": "CENTER",
+            "height": "128",
+            "width": "128",
+            "sling:resourceType": "sling/thumbnails/transformers/crop"
+          }
+        }
+      },
+      "sling-cms-thumbnail32": {
+        "jcr:primaryType": "nt:unstructured",
+        "name": "sling-cms-thumbnail32",
+        "sling:resourceType": "sling/thumbnails/transformation",
+        "handlers": {
+          "jcr:primaryType": "nt:unstructured",
+          "crop": {
+            "jcr:primaryType": "nt:unstructured",
+            "height": "32",
+            "width": "32",
+            "position": "CENTER",
+            "sling:resourceType": "sling/thumbnails/transformers/crop"
+          }
+        }
       }
     }
   },

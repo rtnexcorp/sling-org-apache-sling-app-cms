@@ -7,7 +7,14 @@
         "sling:resourceType": "sling-cms/components/general/textelement",
         "i18n": true,
         "level": "h3",
-        "text": "Transformations"
+        "text": "Image Transformations"
+    },
+    "description": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/textelement",
+        "i18n": true,
+        "level": "p",
+        "text": "Manage image transformation pipelines for asset processing. Each transformation can contain multiple handlers that process images sequentially."
     },
     "contentactions": {
         "jcr:primaryType": "nt:unstructured",
@@ -28,11 +35,15 @@
             "jcr:primaryType": "nt:unstructured",
             "name": {
                 "jcr:primaryType": "nt:unstructured",
-                "title": "Name"
+                "title": "Node Name"
             },
             "title": {
                 "jcr:primaryType": "nt:unstructured",
-                "title": "Transformation Name"
+                "title": "Display Name"
+            },
+            "handlers": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Handlers"
             },
             "lastModified": {
                 "jcr:primaryType": "nt:unstructured",
@@ -59,6 +70,10 @@
                         "sling:resourceType": "sling-cms/components/cms/columns/text",
                         "property": "name"
                     },
+                    "handlerCount": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/cms/columns/handlercount"
+                    },
                     "lastModified": {
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/cms/columns/lastmodified",
@@ -81,6 +96,13 @@
                             "title": "References",
                             "icon": "directions",
                             "prefix": "/cms/shared/references.html"
+                        },
+                        "duplicate": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                            "title": "Duplicate Transformation",
+                            "icon": "copy",
+                            "prefix": "/cms/transformations/duplicate.html"
                         },
                         "movecopy": {
                             "jcr:primaryType": "nt:unstructured",
