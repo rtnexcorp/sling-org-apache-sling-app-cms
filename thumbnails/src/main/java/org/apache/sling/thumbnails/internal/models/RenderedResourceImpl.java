@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -68,9 +69,14 @@ public class RenderedResourceImpl implements RenderedResource {
             this.renditionsPath = null;
         }
 
-        Collection<Resource> transformationResources =
+        // Check both "files" and "dam" configuration buckets for transformations
+        Collection<Resource> filesTransformations =
                 configResourceResolver.getResourceCollection(contextResource, "files", "transformations");
-        availableTransformations = transformationResources.stream()
+        Collection<Resource> damTransformations =
+                configResourceResolver.getResourceCollection(contextResource, "dam", "transformations");
+
+        // Merge transformations from both locations
+        availableTransformations = Stream.concat(filesTransformations.stream(), damTransformations.stream())
                 .map(r -> r.adaptTo(Transformation.class))
                 .collect(Collectors.toList());
         supportedRenditions =

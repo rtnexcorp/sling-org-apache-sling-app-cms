@@ -17,8 +17,9 @@
  * under the License.
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
-<td class="${colConfig.valueMap.show ? '' : 'cell-actions is-vhidden'}">
-    <c:forEach var="ac" items="${sling:listChildren(colConfig)}">
+<c:set var="colConfigResource" value="${sling:getResource(resourceResolver, requestScope.colConfigPath)}" />
+<td class="cell-actions ${colConfig.valueMap.show ? '' : 'is-vhidden'}">
+    <c:forEach var="ac" items="${sling:listChildren(colConfigResource)}">
         <c:set var="actionConfig" value="${ac}" scope="request" />
         <sling:include path="${resource.path}" resourceType="${actionConfig.resourceType}" />
     </c:forEach>

@@ -75,8 +75,9 @@
       }
     },
     "delivery-presets": {
-      "jcr:primaryType": "nt:unstructured",
+      "jcr:primaryType": "sling:Config",
       "jcr:title": "Delivery Presets",
+      "sling:resourceType": "sling-cms/components/caconfig/delivery-presets",
       "hero-banner": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "sling/thumbnails/deliverypreset",

@@ -251,10 +251,15 @@ public class ContentTableModel {
     public static class ColumnConfig {
         private final Resource resource;
         private final ValueMap properties;
+        private final ValueMap enhancedProperties;
 
         public ColumnConfig(Resource resource) {
             this.resource = resource;
             this.properties = resource.getValueMap();
+            // Create enhanced properties map with resource path for HTL components
+            this.enhancedProperties =
+                    new org.apache.sling.api.wrappers.ValueMapDecorator(new java.util.HashMap<>(properties));
+            ((java.util.Map<String, Object>) enhancedProperties).put("colConfigPath", resource.getPath());
         }
 
         public String getName() {
@@ -282,7 +287,7 @@ public class ContentTableModel {
         }
 
         public ValueMap getProperties() {
-            return properties;
+            return enhancedProperties;
         }
     }
 }

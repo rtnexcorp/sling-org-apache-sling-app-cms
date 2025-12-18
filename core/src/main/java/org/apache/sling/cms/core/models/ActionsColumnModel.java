@@ -75,7 +75,18 @@ public class ActionsColumnModel {
      * @return list of action configurations
      */
     public List<ActionConfig> getActions() {
-        // The colConfig is passed as a Resource via request attribute
+        // First try to get the colConfigPath from request attributes
+        String colConfigPath = (String) request.getAttribute("colConfigPath");
+        if (colConfigPath != null) {
+            Resource colConfig = request.getResourceResolver().getResource(colConfigPath);
+            if (colConfig != null) {
+                return StreamSupport.stream(colConfig.getChildren().spliterator(), false)
+                        .map(ActionConfig::new)
+                        .collect(Collectors.toList());
+            }
+        }
+
+        // Fallback to old approach for backwards compatibility
         Object colConfigObj = request.getAttribute("colConfig");
         if (colConfigObj instanceof Resource) {
             Resource colConfig = (Resource) colConfigObj;
