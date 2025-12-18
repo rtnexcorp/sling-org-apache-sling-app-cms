@@ -83,6 +83,12 @@
         "title": "Digital Assets",
         "links": {
           "jcr:primaryType": "nt:unstructured",
+          "cache": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/dam/cache"],
+            "link": "/cms/dam/cache.html",
+            "text": "Cache Management"
+          },
           "deliverypresets": {
             "jcr:primaryType": "nt:unstructured",
             "alternatives": ["/cms/dam/deliverypresets"],
