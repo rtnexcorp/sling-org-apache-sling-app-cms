@@ -18,9 +18,8 @@
 -->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ActionButtonModel" />
 <sly data-sly-use.config="${model.config}" />
-<a class="button Fetch-Modal"
-   data-title="${config.title @ context='attribute'}"
-   data-path="${config.ajaxPath || '.Main-Content form' @ context='attribute'}"
+<a class="button"
+   target="${config.new != false ? '_blank' : ''}"
    href="${config.prefix @ context='attribute'}${resource.path @ context='attribute'}${config.suffix @ context='attribute'}"
    title="${config.title @ context='attribute'}">
     <span class="jam jam-${config.icon @ context='attribute'}">

@@ -16,29 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */-->
-
-<sly data-sly-use.globals="/libs/sling-cms/global.jsp" />
 <sly data-sly-use.model="org.apache.sling.cms.core.models.PageEditBarModel" />
 
 <link rel="stylesheet" href="/static/sling-cms/css/jam.min.css" />
 <link rel="stylesheet" href="/static/sling-cms/css/editor.min.css" />
 
-<sly data-sly-include="/libs/sling-cms/components/editor/scripts/init.jsp" />
+<sly data-sly-include="/libs/sling-cms/components/editor/scripts/init.html" />
+
+<sly data-sly-test="${model.pagePath}" />
 
 <div class="sling-cms-editor">
-  <div class="level has-background-grey">
-    <div class="level-left">
-      <a href="/cms/start.html" target="_blank" title="${model.appName}" class="button">
-        <img src="${model.logo}" alt="Sling Logo" class="sling-cms-logo" />
-      </a>
+    <div class="level has-background-grey">
+        <div class="level-left">
+            <a href="/cms/start.html" target="_blank" title="${model.appName @ context='attribute'}" class="button">
+                <img src="${model.logo @ context='attribute'}" alt="Sling Logo" class="sling-cms-logo" />
+            </a>
+        </div>
+        <div class="level-right">
+            <div class="field has-addons">
+                <sly data-sly-resource="${'actions' @ resourceType='sling-cms/components/cms/pageeditbar/actions'}" />
+            </div>
+        </div>
     </div>
-
-    <div class="level-right">
-      <div class="field has-addons">
-        <sly data-sly-include="actions/actions" />
-      </div>
-    </div>
-  </div>
 </div>
 
-<sly data-sly-include="/libs/sling-cms/components/editor/scripts/finalize.jsp" />
+<sly data-sly-include="/libs/sling-cms/components/editor/scripts/finalize.html" />

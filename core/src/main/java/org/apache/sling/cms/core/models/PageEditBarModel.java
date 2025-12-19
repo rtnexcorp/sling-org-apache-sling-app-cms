@@ -38,6 +38,22 @@ public class PageEditBarModel {
     @Self
     private SlingHttpServletRequest request;
 
+    public String getPagePath() {
+        if (request == null) {
+            LOG.warn("PageEditBarModel: request is null");
+            return "";
+        }
+        String suffix = request.getRequestPathInfo().getSuffix();
+        LOG.debug("PageEditBarModel.getPagePath() returning suffix: {}", suffix);
+
+        // Store page path in request attribute so child includes can access it
+        if (suffix != null && !suffix.isEmpty()) {
+            request.setAttribute("pagePath", suffix);
+        }
+
+        return suffix != null ? suffix : "";
+    }
+
     public String getAppName() {
         String value = StringUtils.defaultString(getBranding().get("appName", String.class));
         LOG.debug("PageEditBarModel.getAppName() returning: {}", value);

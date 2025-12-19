@@ -16,15 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */-->
-
-<sly data-sly-use.model="org.apache.sling.cms.core.models.PagePropertiesEditorModel" />
-
-<sly data-sly-test="${model.editable}">
-  <sly data-sly-resource="${model.editPath @ resourceType='sling-cms/components/editor/slingform', replaceSuffix=model.replaceSuffix}" />
-</sly>
-
-<sly data-sly-test="${!model.editable}">
-  <div class="notification is-warning is-light">
-    ${model.message @ context='html'}
-  </div>
+<sly data-sly-test="${isEditor == 'true'}">
+    <link rel="stylesheet" href="/static/sling-cms/css/jam.min.css" />
+    <link rel="stylesheet" href="/static/sling-cms/css/editor.min.css" />
+    <sly data-sly-test="${properties.availableTypes}">
+        <sly data-sly-attribute.data-available-types="${properties.availableTypes}"></sly>
+    </sly>
 </sly>
