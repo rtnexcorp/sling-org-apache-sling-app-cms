@@ -64,6 +64,7 @@
             "alternatives": [
               "/cms/transformations/edit.html",
               "/cms/template/edit.html",
+              "/cms/config/actions",
               "/cms/config"
             ],
             "link": "/cms/config/configs.html/conf",
@@ -106,6 +107,20 @@
             "alternatives": ["/cms/dam/transformations"],
             "link": "/cms/dam/transformations.html/conf/global/dam/transformations",
             "text": "Transformations"
+          }
+        }
+      },
+      "cmsnav": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/cms/staticnav",
+        "title": "CMS Configuration",
+        "links": {
+          "jcr:primaryType": "nt:unstructured",
+          "pageeditbar": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/config/actions/pageeditbar"],
+            "link": "/cms/config/actions/pageeditbar.html/conf/global/actions/pageeditbar",
+            "text": "Page Edit Bar Actions"
           }
         }
       },

@@ -1,0 +1,115 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Edit Action",
+        "modalText": "Edit Action",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "button": "Save Action",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "separator1": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Action Properties"
+                    },
+                    "resourceType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Action Type",
+                        "name": "sling:resourceType",
+                        "required": true,
+                        "description": "Type of action button",
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "basic": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Basic (Direct Link)",
+                                "value": "sling-cms/components/cms/actions/basic"
+                            },
+                            "modal": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Modal (Dialog)",
+                                "value": "sling-cms/components/cms/actions/modal"
+                            }
+                        }
+                    },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Title",
+                        "name": "title",
+                        "required": true,
+                        "description": "Button label/tooltip text"
+                    },
+                    "icon": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Icon",
+                        "name": "icon",
+                        "description": "Jam icon name (e.g., pencil-f, trash, copy, eye)"
+                    },
+                    "separator2": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "URL Configuration"
+                    },
+                    "prefix": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "URL Prefix",
+                        "name": "prefix",
+                        "required": true,
+                        "description": "URL before the resource path (e.g., /cms/page/edit.html)"
+                    },
+                    "suffix": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "URL Suffix",
+                        "name": "suffix",
+                        "description": "URL after the resource path (optional)"
+                    },
+                    "separator3": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Behavior Options"
+                    },
+                    "newwindow": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Open in New Window",
+                        "name": "new",
+                        "description": "For basic actions - open link in new tab",
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "no": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "No",
+                                "value": "false"
+                            },
+                            "yes": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Yes",
+                                "value": "true"
+                            }
+                        }
+                    },
+                    "ajaxPath": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "AJAX Path",
+                        "name": "ajaxPath",
+                        "description": "For modal actions - selector for modal content (e.g., .Main-Content form)"
+                    }
+                }
+            }
+        }
+    }
+}

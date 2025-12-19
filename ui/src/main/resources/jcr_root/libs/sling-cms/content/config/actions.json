@@ -1,0 +1,103 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/base",
+        "jcr:title": "Action Configurations",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "richtext": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/textelement",
+                "i18n": true,
+                "level": "h3",
+                "text": "Action Configurations"
+            },
+            "description": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/textelement",
+                "i18n": true,
+                "level": "p",
+                "text": "Manage action button configurations for page edit bars, toolbars, and content management interfaces. Configure action properties like title, icon, URL prefix/suffix, and behavior."
+            },
+            "contentactions": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contentactions",
+                "actions": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "configuration": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "label": "Action Configuration",
+                        "prefix": "/cms/config/actions/create.html"
+                    }
+                }
+            },
+            "contenttable": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contenttable",
+                "columns": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Name"
+                    },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Title"
+                    },
+                    "description": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Description"
+                    },
+                    "actions": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Actions"
+                    }
+                },
+                "types": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "nt:unstructured": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "columns": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "name": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/name",
+                                "link": false
+                            },
+                            "title": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "jcr:title"
+                            },
+                            "description": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "jcr:description"
+                            },
+                            "actions": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/actions",
+                                "edit": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Edit Action Configuration",
+                                    "icon": "pencil-f",
+                                    "prefix": "/cms/config/actions/edit.html"
+                                },
+                                "delete": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Delete Action Configuration",
+                                    "icon": "trash",
+                                    "prefix": "/cms/shared/delete.html"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

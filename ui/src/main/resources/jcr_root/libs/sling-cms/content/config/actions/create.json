@@ -1,0 +1,51 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Add Action Configuration",
+        "modalText": "Create Action Configuration",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "button": "Create Configuration",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Title",
+                        "name": "jcr:title",
+                        "required": true,
+                        "description": "Human-readable name for this action configuration"
+                    },
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Configuration Name",
+                        "name": ":name",
+                        "required": true,
+                        "description": "URL-safe identifier (e.g., pageeditbar, toolbar, contentactions)"
+                    },
+                    "description": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                        "label": "Description",
+                        "name": "jcr:description",
+                        "description": "Describe the purpose of this action configuration"
+                    },
+                    "primaryType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "jcr:primaryType",
+                        "value": "nt:unstructured"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
-<!--
+<!-- HTL: Basic action button for CMS UI. Uses ActionButtonModel for configuration. -->
+<!-- /*
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
   distributed with this work for additional information
@@ -15,16 +16,15 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
--->
+*/ -->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ActionButtonModel" />
-<sly data-sly-use.config="${model.config}" />
 <a class="button"
-   target="${config.new != false ? '_blank' : ''}"
-   href="${config.prefix @ context='attribute'}${resource.path @ context='attribute'}${config.suffix @ context='attribute'}"
-   title="${config.title @ context='attribute'}">
-    <span class="jam jam-${config.icon @ context='attribute'}">
+   target="${model.config.new == 'true' ? '_blank' : ''}"
+   href="${model.config.prefix @ context='attribute'}${resource.path @ context='attribute'}${model.config.suffix @ context='attribute'}"
+   title="${model.config.title @ context='attribute'}">
+    <span class="jam jam-${model.config.icon @ context='attribute'}">
         <span class="is-sr-only">
-            ${config.title}
+            ${model.config.title}
         </span>
     </span>
 </a>

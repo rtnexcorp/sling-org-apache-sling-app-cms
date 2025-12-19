@@ -18,8 +18,6 @@
  */
 package org.apache.sling.cms.core.models;
 
-import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -27,41 +25,65 @@ import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sling Model for the page edit bar actions component.
- * Provides the list of action configurations and the suffix path.
+ * Reads action configurations from /conf/global/actions/pageeditbar
+ * and provides them to the HTL template.
  */
 @Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class PageEditBarActionsModel {
 
-    @Inject
-    private Resource resource;
+    private static final Logger LOG = LoggerFactory.getLogger(PageEditBarActionsModel.class);
+    private static final String ACTIONS_CONFIG_PATH = "/conf/global/actions/pageeditbar";
+
+    @SlingObject
+    private ResourceResolver resourceResolver;
 
     @SlingObject
     private SlingHttpServletRequest request;
 
     /**
-     * Gets the list of action items wrapping each action configuration resource.
-     * Each item provides the resource type and the action config for request attributes.
+     * Gets the list of action items from /conf/global/actions/pageeditbar.
+     * Each item wraps an action configuration resource with its properties
+     * (title, icon, prefix, suffix, etc.)
      *
      * @return list of action items
      */
     public List<ActionItem> getActions() {
-        if (resource == null) {
+        if (resourceResolver == null) {
+            LOG.warn("PageEditBarActionsModel: resourceResolver is null");
             return Collections.emptyList();
         }
 
-        Iterator<Resource> it = resource.listChildren();
+        Resource actionsConfigResource = resourceResolver.getResource(ACTIONS_CONFIG_PATH);
+        if (actionsConfigResource == null) {
+            LOG.warn("PageEditBarActionsModel: actions config not found at {}", ACTIONS_CONFIG_PATH);
+            return Collections.emptyList();
+        }
+
+        Iterator<Resource> it = actionsConfigResource.listChildren();
         if (it == null) {
             return Collections.emptyList();
         }
 
         List<ActionItem> actions = new ArrayList<>();
-        it.forEachRemaining(r -> actions.add(new ActionItem(r, request)));
+        while (it.hasNext()) {
+            Resource actionResource = it.next();
+            // Skip jcr:content and other non-action nodes
+            if (!actionResource.getName().startsWith("jcr:")) {
+                actions.add(new ActionItem(actionResource, request));
+                LOG.debug("PageEditBarActionsModel: added action {}", actionResource.getPath());
+            }
+        }
+
+        LOG.info("PageEditBarActionsModel: loaded {} actions from {}", actions.size(), ACTIONS_CONFIG_PATH);
         return actions;
     }
 

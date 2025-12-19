@@ -20,42 +20,39 @@ package org.apache.sling.cms.core.models;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Sling Model for action button configuration.
+ * Provides access to action button properties (title, icon, prefix, suffix, etc.)
+ * from the current resource's ValueMap.
+ */
 @Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class ActionButtonModel {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActionButtonModel.class);
 
-    @Self
-    private SlingHttpServletRequest request;
+    @SlingObject
+    private Resource resource;
 
+    /**
+     * Returns the configuration ValueMap from the current action button resource.
+     * This provides access to properties like title, icon, prefix, suffix, ajaxPath, etc.
+     *
+     * @return ValueMap containing action button configuration properties
+     */
     public ValueMap getConfig() {
-        if (request == null) {
-            LOG.warn("ActionButtonModel: request is null");
+        if (resource == null) {
+            LOG.warn("ActionButtonModel: resource is null");
             return ValueMap.EMPTY;
         }
 
-        String actionConfigPath = (String) request.getAttribute("actionConfigPath");
-        if (actionConfigPath == null || actionConfigPath.isEmpty()) {
-            LOG.warn("ActionButtonModel: actionConfigPath not found in request attributes");
-            return ValueMap.EMPTY;
-        }
-
-        ResourceResolver resolver = request.getResourceResolver();
-        Resource actionConfigResource = resolver.getResource(actionConfigPath);
-        if (actionConfigResource == null) {
-            LOG.warn("ActionButtonModel: action config resource not found at {}", actionConfigPath);
-            return ValueMap.EMPTY;
-        }
-
-        LOG.debug("ActionButtonModel: returning config from {}", actionConfigPath);
-        return actionConfigResource.getValueMap();
+        LOG.debug("ActionButtonModel: returning config from resource {}", resource.getPath());
+        return resource.getValueMap();
     }
 }

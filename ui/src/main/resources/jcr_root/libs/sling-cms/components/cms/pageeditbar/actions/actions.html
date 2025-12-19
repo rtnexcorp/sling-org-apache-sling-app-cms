@@ -16,12 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */-->
-<sly data-sly-use.model="org.apache.sling.cms.core.models.ActionsModel" />
-<sly data-sly-list.actionCfg="${resource.listChildren}">
-    <div class="control" data-action-config="${actionCfg.path}">
-        <sly data-sly-test="${model.pagePath}">
-            <sly data-sly-set.dummy="${model.setActionConfig[actionCfg.path]}" />
-            <sly data-sly-resource="${model.pagePath @ resourceType=actionCfg.resourceType}"/>
+<sly data-sly-use.model="org.apache.sling.cms.core.models.PageEditBarActionsModel" />
+<sly data-sly-list.actionItem="${model.actions}">
+    <div class="control" data-action-config="${actionItem.config.path}">
+        <sly data-sly-test="${model.suffixPath}">
+            <sly data-sly-resource="${actionItem.config @ resourceType=actionItem.resourceType}"/>
         </sly>
     </div>
 </sly>
