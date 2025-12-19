@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Sling Model for action button configuration.
  * Provides access to action button properties (title, icon, prefix, suffix, etc.)
- * from the current resource's ValueMap.
+ * from the current resource's ValueMap, and the target resource path from the request suffix.
  */
 @Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class ActionButtonModel {
@@ -39,6 +39,9 @@ public class ActionButtonModel {
 
     @SlingObject
     private Resource resource;
+
+    @SlingObject
+    private SlingHttpServletRequest request;
 
     /**
      * Returns the configuration ValueMap from the current action button resource.
@@ -54,5 +57,28 @@ public class ActionButtonModel {
 
         LOG.debug("ActionButtonModel: returning config from resource {}", resource.getPath());
         return resource.getValueMap();
+    }
+
+    /**
+     * Returns the target resource path for the action button.
+     * This is typically the suffix from the request (the page being edited),
+     * not the action configuration resource path.
+     *
+     * @return target resource path from request suffix, or empty string if not available
+     */
+    public String getTargetPath() {
+        if (request == null || request.getRequestPathInfo() == null) {
+            LOG.debug("ActionButtonModel: request or requestPathInfo is null, returning empty target path");
+            return "";
+        }
+
+        String suffix = request.getRequestPathInfo().getSuffix();
+        if (suffix == null || suffix.isEmpty()) {
+            LOG.debug("ActionButtonModel: request suffix is null or empty, returning empty target path");
+            return "";
+        }
+
+        LOG.debug("ActionButtonModel: returning target path from suffix: {}", suffix);
+        return suffix;
     }
 }

@@ -22,7 +22,7 @@
 <a class="button Fetch-Modal"
    data-title="${model.config.title @ context='attribute'}"
    data-path="${model.config.ajaxPath || '.Main-Content form' @ context='attribute'}"
-   href="${model.config.prefix @ context='attribute'}${resource.path @ context='attribute'}${model.config.suffix @ context='attribute'}"
+   href="${model.config.prefix @ context='attribute'}${model.targetPath @ context='attribute'}${model.config.suffix @ context='attribute'}"
    title="${model.config.title @ context='attribute'}">
     <span class="jam jam-${model.config.icon @ context='attribute'}">
         <span class="is-sr-only">

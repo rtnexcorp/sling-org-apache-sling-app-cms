@@ -19,21 +19,13 @@
 
 <!-- HTL: Properties Editor for Page Edit Bar. Adapts content resource and includes editor form if available. -->
 
-<sly data-sly-use.model="org.apache.sling.cms.core.models.PropertiesEditorModel" />
+<sly data-sly-use.model="org.apache.sling.cms.core.models.PagePropertiesEditorModel" />
 
-<sly data-sly-test.contentResource="${model.contentResource}">
-    <sly data-sly-test.editable="${contentResource.adaptTo['org.apache.sling.cms.EditableResource']}" />
-    <sly data-sly-test.hasEditPath="${editable && editable.editPath}">
-        <sly data-sly-include="${editable.editPath}" data-sly-resource="@resourceType='sling-cms/components/editor/slingform', replaceSuffix='${editable.resource.path}'" />
-    </sly>
-    <sly data-sly-test.noEditPath="${!editable || !editable.editPath}">
-        <div class="notification is-warning is-light">
-            ${'Unable to open properties editor for this resource.' @ i18n}
-        </div>
-    </sly>
+<sly data-sly-test.isEditable="${model.editable}">
+    <sly data-sly-resource="${model.editPath @ resourceType='sling-cms/components/editor/slingform', replaceSuffix=model.replaceSuffix}" />
 </sly>
-<sly data-sly-test.noContentResource="${!model.contentResource}">
+<sly data-sly-test.notEditable="${!model.editable}">
     <div class="notification is-warning is-light">
-        ${'Unable to open properties editor: no resource selected.' @ i18n}
+        ${model.message @ i18n}
     </div>
 </sly>

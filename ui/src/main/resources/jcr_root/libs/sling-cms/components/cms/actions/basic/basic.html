@@ -20,7 +20,7 @@
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ActionButtonModel" />
 <a class="button"
    target="${model.config.new == 'true' ? '_blank' : ''}"
-   href="${model.config.prefix @ context='attribute'}${resource.path @ context='attribute'}${model.config.suffix @ context='attribute'}"
+   href="${model.config.prefix @ context='attribute'}${model.targetPath @ context='attribute'}${model.config.suffix @ context='attribute'}"
    title="${model.config.title @ context='attribute'}">
     <span class="jam jam-${model.config.icon @ context='attribute'}">
         <span class="is-sr-only">
