@@ -81,8 +81,10 @@ public class FileMetadataExtractorImplTest {
         when(resolver.adaptTo(Session.class)).thenReturn(session);
 
         Resource resource = mock(Resource.class);
+        // Return a fresh InputStream each time adaptTo is called (Tika and SHA256 both need to read)
         Mockito.when(resource.adaptTo(InputStream.class))
-                .thenReturn(FileMetadataExtractorImplTest.class.getClassLoader().getResourceAsStream("apache.png"));
+                .thenAnswer(invocation ->
+                        FileMetadataExtractorImplTest.class.getClassLoader().getResourceAsStream("apache.png"));
         Mockito.when(resource.getPath()).thenReturn("/content/test/apache.png");
 
         file = Mockito.mock(File.class);
