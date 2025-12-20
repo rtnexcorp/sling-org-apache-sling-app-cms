@@ -147,7 +147,7 @@ Your site may have pre-configured transformation presets:
 | `medium` | 960px width | Tablet images |
 | `large` | 1920px width | Desktop hero images |
 
-> **Note:** Transformation presets are configured per-site under `/conf/{site}/files/transformations/`
+> **Note:** Transformation presets are configured globally under `/conf/global/dam/transformations/`. For backward compatibility, transformations under `/conf/{site}/files/transformations/` are also supported.
 
 ---
 
@@ -677,7 +677,7 @@ Configure automatic rendition generation in the OSGi console:
 
 Site administrators can create new transformation presets:
 
-1. Navigate to `/conf/{site}/files/transformations/`
+1. Navigate to `/conf/global/dam/transformations/`
 2. Create a new transformation node
 3. Configure resize, crop, or other handlers
 4. The new preset is immediately available

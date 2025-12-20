@@ -16,9 +16,9 @@ Image transformations are used to transform a file from one format to an image f
 
 ## Transformation Configurations
 
-File transformations should be created per site configuration at via the Configuration Console:
+File transformations should be created in the global configuration via the Configuration Console:
 
-`/conf/[conf-name]/files/transformations`
+`/conf/global/dam/transformations`
 
 ![Editing a Transformation](img/edit-transformation.png)
 

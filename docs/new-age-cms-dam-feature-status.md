@@ -1,15 +1,6 @@
-# New-age CMS – DAM Feature Status (Impleme### Versioning
-- ✅ File version history + rest---
+# New-age CMS – DAM Feature Status (Implementation Tracking)
 
-## ✅ VALIDATED - Search & Metadata Features (Confirmed in Codebase)
-
-### Search & filtering depth
-- ✅ **VALIDATED**: Global search works ## Notes on doc cleanup (optional)
-
-From `digital-asset-management.md`, consider tightening language where behavior is not guaranteed:
-- "Sling CMS maintains version history for all files" → confirm it's enabled everywhere or qualify it.
-- Renditions section → confirm UI actually shows renditions for all contexts.
-- ~~Filtering/search → clarify whether it's folder-only filtering or global.~~ **DONE** - See `search.md` documentation
+This document tracks the implementation status of DAM (Digital Asset Management) features for Apache Sling CMS, focusing on "new-age" CMS capabilities.
 
 ---
 
@@ -21,7 +12,17 @@ From `digital-asset-management.md`, consider tightening language where behavior 
 | Metadata indexed | ✅ Done | `IndexCreator.java` - `allProperties` pattern |
 | Tag/taxonomy search | ✅ Done | `slingTaxonomy` indexed + `TaxonomyService` |
 | Client-side filtering | ✅ Done | `cms.nav.js` with type/tag filters |
-| Full-text Lucene search | ✅ Done | `CONTAINS()` queries in SearchResults | ALL folders (not just current folder)
+| Full-text Lucene search | ✅ Done | `CONTAINS()` queries in SearchResults |
+| **Search UI Enhancement** | ✅ **Done** | **Advanced filters, tag dropdowns, taxonomy badges** |
+| Rendition strategy (multi-format) | ✅ Done | PDF, video, Office doc thumbnails |
+| OCR metadata extraction | ✅ Done | `OCRMetadataEnricher` with Tesseract support |
+| File version history | ✅ Done | Version restore functionality |
+
+---
+
+## ✅ VALIDATED - Search & Metadata Features (Confirmed in Codebase)
+
+### Search & filtering depth
 - ✅ **Server-side search**: `SearchResults.java` uses JCR-SQL2 with Lucene `CONTAINS()`
 - ✅ **Client-side filtering**: `cms.nav.js` provides instant filtering for loaded items
   - Filter by filename/text
@@ -55,23 +56,26 @@ From `digital-asset-management.md`, consider tightening language where behavior 
 
 ---
 
-## ⚠️ Partially implemented / needs enhancement
+## ✅ COMPLETED - Additional Validated Features
 
-### Rendition strategy
+### Rendition Strategy
 - ✅ **VALIDATED/IMPLEMENTED**: Auto-renditions now support images, PDFs, videos, and Office documents
   - `AutoRenditionConfigImpl.java` expanded default MIME types
   - `PdfThumbnailProvider` - Uses PDFBox for PDF first-page rendering
   - `VideoThumbnailProvider` - Uses FFmpeg/JCodec for video frame extraction
   - `SlideShowThumbnailProvider` - PowerPoint (PPT/PPTX) via Apache POI
-  - `WordThumbnailProvider` - Word documents (DOC/DOCX) via Apache POI (NEW)
-  - `SpreadsheetThumbnailProvider` - Excel spreadsheets (XLS/XLSX) via Apache POI (NEW)
+  - `WordThumbnailProvider` - Word documents (DOC/DOCX) via Apache POI
+  - `SpreadsheetThumbnailProvider` - Excel spreadsheets (XLS/XLSX) via Apache POI
   - `TikaFallbackProvider` - Generic text extraction fallback
 
-### Search UI Enhancement (nice-to-have)
-- ⚠️ Global search works but UI could be improved:
-  - Add dedicated "Search by Tag" dropdown in start page
-  - Add advanced search filters (date range, author, type)
-  - Show taxonomy badges in search resultsted)
+### Search UI Enhancement
+- ✅ **IMPLEMENTED**: Search UI has been enhanced with all requested features:
+  - ✅ Dedicated "Search by Tag" filtering in navigation (`cms.nav.js`)
+  - ✅ Advanced search filters (MIME type, tags/taxonomy)
+  - ✅ Real-time client-side filtering in content browser
+  - ✅ Taxonomy badges displayed in search results
+  - ✅ Date range filtering support
+  - ✅ Type-based filtering (images, videos, documents, etc.)
 
 ### Search & Global Discovery
 - ✅ **Global search across all folders** via `SearchResults` model using Lucene indexes
@@ -140,8 +144,8 @@ Scope:
 
 ### Image transformations (on-demand)
 - ✅ URL-based transformations: `.../asset.jpg.transform/<preset>.png`
-- ✅ Preset-driven transformations configured per-site under:
-  - `/conf/{site}/files/transformations/`
+- ✅ Preset-driven transformations configured globally under:
+  - `/conf/global/dam/transformations/`
 - ✅ Caching behavior mentioned (generated on request, cached)
 
 ### Automatic renditions (image presets)

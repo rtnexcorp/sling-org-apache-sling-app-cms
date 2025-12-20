@@ -76,12 +76,12 @@ The servlet would:
 
 #### CA Config Structure
 
-The structure for the transformations under the CA Config root (e.g. /conf/global/) should include files/transformations, as such:
+The structure for the transformations under the CA Config root (e.g. /conf/global/) should include dam/transformations, as such:
 
 ```
 /conf/global: {
   "jcr:primaryType": "sling:Folder",
-  "files": {
+  "dam": {
     "jcr:primaryType": "sling:Folder",
     "transformations": {
       "jcr:primaryType": "sling:Folder",
