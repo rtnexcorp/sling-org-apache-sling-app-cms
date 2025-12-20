@@ -67,7 +67,10 @@ import org.slf4j.LoggerFactory;
  *   <li>Platform-independent with pure Java fallback (JCodec)</li>
  * </ul>
  */
-@Component(service = ThumbnailProvider.class, immediate = true)
+@Component(
+        service = ThumbnailProvider.class,
+        immediate = true,
+        property = {"service.ranking:Integer=100"})
 @Designate(ocd = VideoThumbnailProvider.Config.class)
 public class VideoThumbnailProvider implements ThumbnailProvider {
 
@@ -146,6 +149,20 @@ public class VideoThumbnailProvider implements ThumbnailProvider {
             MimeType mt = new MimeType(metaType);
             for (String supportedType : SUPPORTED_TYPES) {
                 if (mt.match(supportedType)) {
+                    // Check if we have any available extractors
+                    VideoFrameExtractor extractor = findBestExtractor();
+                    if (extractor == null) {
+                        LOG.debug(
+                                "MIME type {} matches video type but no video frame extractors available for resource: {}",
+                                metaType,
+                                resource.getPath());
+                        return false;
+                    }
+                    LOG.debug(
+                            "VideoThumbnailProvider applies for resource: {} (MIME: {}, extractor: {})",
+                            resource.getPath(),
+                            metaType,
+                            extractor.getName());
                     return true;
                 }
             }
@@ -157,14 +174,19 @@ public class VideoThumbnailProvider implements ThumbnailProvider {
 
     @Override
     public InputStream getThumbnail(Resource resource) throws IOException {
-        LOG.debug("Generating video thumbnail for resource: {}", resource.getPath());
+        LOG.info("Generating video thumbnail for resource: {}", resource.getPath());
 
         VideoFrameExtractor extractor = findBestExtractor();
         if (extractor == null) {
+            LOG.error(
+                    "No video frame extractor available for resource: {} (total extractors: {}, available: {})",
+                    resource.getPath(),
+                    extractors.size(),
+                    getAvailableExtractors().size());
             throw new IOException("No video frame extractor available");
         }
 
-        LOG.debug("Using extractor: {}", extractor.getName());
+        LOG.info("Using video frame extractor: {} for resource: {}", extractor.getName(), resource.getPath());
 
         File tempFile = null;
         try {

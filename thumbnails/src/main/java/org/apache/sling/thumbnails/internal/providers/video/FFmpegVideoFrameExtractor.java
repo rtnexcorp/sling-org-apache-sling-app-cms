@@ -145,16 +145,22 @@ public class FFmpegVideoFrameExtractor implements VideoFrameExtractor {
 
     private boolean checkFFmpegAvailable() {
         try {
+            LOG.debug("Checking FFmpeg availability at path: {}", ffmpegPath);
             ProcessBuilder pb = new ProcessBuilder(ffmpegPath, "-version");
             pb.redirectErrorStream(true);
             Process process = pb.start();
             boolean completed = process.waitFor(5, TimeUnit.SECONDS);
             if (completed && process.exitValue() == 0) {
-                LOG.debug("FFmpeg is available");
+                LOG.info("FFmpeg is available at path: {}", ffmpegPath);
                 return true;
+            } else {
+                LOG.warn(
+                        "FFmpeg check failed: completed={}, exitValue={}",
+                        completed,
+                        completed ? process.exitValue() : "timeout");
             }
         } catch (Exception e) {
-            LOG.debug("FFmpeg check failed: {}", e.getMessage());
+            LOG.warn("FFmpeg check failed at path {}: {}", ffmpegPath, e.getMessage());
         }
         return false;
     }

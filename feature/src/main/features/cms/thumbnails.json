@@ -42,6 +42,18 @@
         "org.apache.sling.thumbnails:sling-thumbnails=[sling-thumbnails]",
         "org.apache.sling.thumbnails:sling-cms-thumbnails=[sling-thumbnails]"
       ]
+    },
+    "org.apache.sling.thumbnails.internal.providers.video.FFmpegVideoFrameExtractor": {
+      "ffmpeg_path": "",
+      "ffprobe_path": "",
+      "timeout_seconds:Long": 30,
+      "enabled:Boolean": true
+    },
+    "org.apache.sling.thumbnails.internal.providers.VideoThumbnailProvider": {
+      "samplePositions:Integer[]": [10, 25, 50],
+      "useSharpnessDetection:Boolean": true,
+      "useFaceDetection:Boolean": false,
+      "timeoutMs:Long": 30000
     }
   }
 }

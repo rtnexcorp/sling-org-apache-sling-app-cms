@@ -194,6 +194,31 @@ _Implementation_: `org.apache.sling.thumbnails.internal.providers.SlideShowThumb
 
 _Supported Type(s)_: PPTX / PPT documents
 
+### Video Thumbnail Provider
+
+Generates video thumbnails by extracting frames using pluggable VideoFrameExtractor implementations.
+
+_Implementation_: `org.apache.sling.thumbnails.internal.providers.VideoThumbnailProvider`
+
+_Supported Type(s)_: video/mp4, video/quicktime, video/x-m4v, video/webm, video/x-msvideo, video/mpeg, video/x-matroska, video/ogg, video/3gpp
+
+**Requirements:**
+- **FFmpeg** must be installed on the system (see Video Thumbnail Setup below)
+
+_Configuration_:
+```
+PID = org.apache.sling.thumbnails.internal.providers.VideoThumbnailProvider
+  samplePositions = [10, 25, 50]
+  useSharpnessDetection = true
+  useFaceDetection = false
+  timeoutMs = 30000
+```
+
+- `samplePositions` - Percentage positions in video to sample frames (default: 10%, 25%, 50%)
+- `useSharpnessDetection` - Analyze frame sharpness to select best thumbnail (default: true)
+- `useFaceDetection` - Prefer frames containing faces - requires OpenCV (default: false)
+- `timeoutMs` - Maximum time to spend extracting frames in milliseconds (default: 30000)
+
 ### Tika Fallback Thumbnail Provider
 
 Generates a thumbnail using Apache Tika
@@ -313,3 +338,120 @@ _Handler Type_: `sling/thumbnails/transformers/transparency`
 _Parameters_
 
 - alpha - the level of transparency, with lower being more transparent (0.0 - 1.0)
+
+## Video Thumbnail Setup
+
+Video thumbnail generation requires **FFmpeg** to be installed on your system.
+
+### Installing FFmpeg
+
+**macOS (Homebrew):**
+```bash
+brew install ffmpeg
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get update
+sudo apt-get install ffmpeg
+```
+
+**RHEL/CentOS/Fedora:**
+```bash
+sudo dnf install ffmpeg
+# or
+sudo yum install ffmpeg
+```
+
+**Windows:**
+Download from https://ffmpeg.org/download.html or use Chocolatey:
+```powershell
+choco install ffmpeg
+```
+
+### Verifying FFmpeg Installation
+
+```bash
+ffmpeg -version
+ffprobe -version
+```
+
+Both commands should return version information.
+
+### Configuring FFmpeg Path
+
+By default, the FFmpeg extractor looks for `ffmpeg` and `ffprobe` in your system PATH. If FFmpeg is installed in a non-standard location, configure the full paths:
+
+**Option 1: Via Feature Model (Permanent)**
+
+Edit `feature/src/main/features/cms/thumbnails.json`:
+```json
+"org.apache.sling.thumbnails.internal.providers.video.FFmpegVideoFrameExtractor": {
+  "ffmpeg_path": "/opt/homebrew/bin/ffmpeg",
+  "ffprobe_path": "/opt/homebrew/bin/ffprobe",
+  "timeout_seconds:Long": 30,
+  "enabled:Boolean": true
+}
+```
+
+**Option 2: Via OSGi Console (Runtime)**
+
+1. Navigate to: http://localhost:8082/system/console/configMgr
+2. Search for: `Apache Sling Thumbnails - FFmpeg Video Frame Extractor`
+3. Set **FFmpeg Path** (e.g., `/opt/homebrew/bin/ffmpeg` on macOS)
+4. Set **FFprobe Path** (e.g., `/opt/homebrew/bin/ffprobe`)
+5. Click **Save**
+
+**Option 3: For Docker/Containers**
+
+Ensure FFmpeg is in the container's PATH:
+```dockerfile
+FROM slingcms/base
+RUN apt-get update && apt-get install -y ffmpeg
+```
+
+### Troubleshooting Video Thumbnails
+
+**Symptom:** Video files upload but show generic file icon instead of video frame thumbnail.
+
+**Check Logs:**
+```bash
+grep -i "video\|ffmpeg\|thumbnail" deployment/author/launcher/logs/error.log
+```
+
+**Common Issues:**
+
+1. **FFmpeg Not Found:**
+   ```
+   WARN FFmpegVideoFrameExtractor: FFmpeg not available
+   ```
+   **Solution:** Install FFmpeg or configure absolute path
+
+2. **Using Fallback Provider:**
+   ```
+   INFO TikaFallbackProvider: Extracting content thumbnail from /path/to/video.mp4
+   ```
+   **Solution:** VideoThumbnailProvider not being used - check FFmpeg availability
+
+3. **No Extractors Available:**
+   ```
+   WARN VideoThumbnailProvider: No video frame extractors available
+   ```
+   **Solution:** FFmpeg extractor not registered - check bundle deployment
+
+**Successful Log Output:**
+```
+INFO VideoThumbnailProvider: Video Thumbnail Provider activated with 1 extractors available
+INFO VideoThumbnailProvider: Available video frame extractors:
+INFO VideoThumbnailProvider:   - FFmpeg (priority: 200, types: [video/mp4, ...])
+INFO FFmpegVideoFrameExtractor: FFmpeg video frame extractor activated (path: ffmpeg)
+```
+
+### Video Frame Extractor Architecture
+
+The VideoThumbnailProvider uses a pluggable SPI (Service Provider Interface) for video frame extraction:
+
+- **FFmpegVideoFrameExtractor** (priority: 200) - Uses system FFmpeg (default)
+- Future implementations could include JCodec (pure Java), OpenCV, etc.
+
+Extractors are selected by priority (highest first) and availability check (`isAvailable()` method).
