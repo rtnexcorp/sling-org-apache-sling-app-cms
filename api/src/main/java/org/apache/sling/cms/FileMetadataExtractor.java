@@ -25,7 +25,17 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Service for extracting metadata from a file
+ *
+ * @deprecated Use {@link org.apache.sling.thumbnails.metadata.MetadataExtractionService} instead.
+ *             This interface is deprecated and will be removed in a future version.
+ *             The new metadata pipeline in the thumbnails module provides more features:
+ *             - Extensible extractor framework
+ *             - EXIF/IPTC/XMP extraction for images
+ *             - Video metadata (duration/codec/bitrate)
+ *             - PDF metadata extraction
+ *             - Metadata enricher framework
  */
+@Deprecated
 @ProviderType
 public interface FileMetadataExtractor {
 

@@ -31,28 +31,55 @@ import org.apache.sling.api.resource.observation.ResourceChangeListener;
 import org.apache.sling.cms.CMSConstants;
 import org.apache.sling.cms.core.internal.jobs.FileMetadataExtractorConsumer;
 import org.apache.sling.event.jobs.JobManager;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * A Resource Change Listener which extracts the metadata from sling:Files when
  * they are uploaded.
+ *
+ * @deprecated This listener has been replaced by
+ *             {@link org.apache.sling.thumbnails.internal.metadata.AssetMetadataExtractionListener}
+ *             in the thumbnails module. This listener is disabled by default and will be removed
+ *             in a future version. The new metadata pipeline provides enhanced features including
+ *             EXIF/IPTC/XMP extraction, video metadata, and PDF metadata extraction.
  */
+@Deprecated
 @Component(
         service = {
             FileMetadataExtractorListener.class,
             ResourceChangeListener.class,
             ExternalResourceChangeListener.class
         },
+        configurationPolicy = ConfigurationPolicy.OPTIONAL,
         property = {
             ResourceChangeListener.CHANGES + "=ADDED",
             ResourceChangeListener.PATHS + "=/content",
             ResourceChangeListener.PATHS + "=/static"
         },
         immediate = true)
+@Designate(ocd = FileMetadataExtractorListener.Config.class)
 public class FileMetadataExtractorListener implements ResourceChangeListener, ExternalResourceChangeListener {
+
+    @ObjectClassDefinition(
+            name = "Apache Sling CMS - File Metadata Extractor Listener (Deprecated)",
+            description =
+                    "DEPRECATED: This listener is replaced by the new metadata pipeline in the thumbnails module. "
+                            + "Disable this listener to use the new enhanced metadata extraction.")
+    public @interface Config {
+        @AttributeDefinition(
+                name = "Enabled",
+                description = "Enable or disable this deprecated listener. "
+                        + "Set to false to use the new metadata pipeline in the thumbnails module (recommended).")
+        boolean enabled() default false;
+    }
 
     private static final Logger log = LoggerFactory.getLogger(FileMetadataExtractorListener.class);
 
@@ -62,8 +89,25 @@ public class FileMetadataExtractorListener implements ResourceChangeListener, Ex
     @Reference
     private ResourceResolverFactory factory;
 
+    private boolean enabled = false;
+
+    @Activate
+    protected void activate(Config config) {
+        this.enabled = config.enabled();
+        if (enabled) {
+            log.warn("FileMetadataExtractorListener is DEPRECATED and enabled. "
+                    + "Please migrate to the new metadata pipeline in the thumbnails module.");
+        } else {
+            log.info("FileMetadataExtractorListener is disabled (using new metadata pipeline in thumbnails module)");
+        }
+    }
+
     @Override
     public void onChange(List<ResourceChange> changes) {
+        if (!enabled) {
+            log.trace("FileMetadataExtractorListener is disabled, skipping");
+            return;
+        }
         try (ResourceResolver serviceResolver = factory.getServiceResourceResolver(
                 Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, "sling-cms-metadata"))) {
             changes.stream()
