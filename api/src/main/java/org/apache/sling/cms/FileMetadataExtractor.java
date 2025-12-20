@@ -24,14 +24,17 @@ import java.util.Map;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Service for extracting metadata from a file
+ * Service for extracting metadata from a file. This service coordinates
+ * the execution of all registered {@link FileMetadataEnricher} implementations
+ * to build a complete metadata profile for each file.
  */
 @ProviderType
 public interface FileMetadataExtractor {
 
     /**
      * Extract the metadata from the specified file and return the resulting
-     * metadata
+     * metadata. This method applies all registered enrichers that support
+     * the given file type.
      *
      * @param file the file from which to extract the metadata
      * @return the metadata from the file

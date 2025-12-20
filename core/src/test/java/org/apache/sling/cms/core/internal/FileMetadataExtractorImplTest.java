@@ -34,6 +34,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.cms.File;
+import org.apache.sling.cms.core.internal.enrichers.TikaMetadataEnricher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -41,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -61,6 +63,8 @@ public class FileMetadataExtractorImplTest {
 
     private FileMetadataExtractorImpl extractor;
 
+    private TikaMetadataEnricher tikaEnricher;
+
     @BeforeEach
     public void init() throws RepositoryException, LoginException {
 
@@ -79,10 +83,43 @@ public class FileMetadataExtractorImplTest {
         Resource resource = mock(Resource.class);
         Mockito.when(resource.adaptTo(InputStream.class))
                 .thenReturn(FileMetadataExtractorImplTest.class.getClassLoader().getResourceAsStream("apache.png"));
+        Mockito.when(resource.getPath()).thenReturn("/content/test/apache.png");
 
         file = Mockito.mock(File.class);
         Mockito.when(file.getResource()).thenReturn(resource);
+        Mockito.when(file.getPath()).thenReturn("/content/test/apache.png");
+
         extractor = new FileMetadataExtractorImpl(resolverFactory);
+
+        // Register the Tika enricher
+        tikaEnricher = new TikaMetadataEnricher();
+        tikaEnricher.activate(new TikaMetadataEnricher.Config() {
+            @Override
+            public Class<TikaMetadataEnricher.Config> annotationType() {
+                return TikaMetadataEnricher.Config.class;
+            }
+
+            @Override
+            public boolean enabled() {
+                return true;
+            }
+
+            @Override
+            public int priority() {
+                return 100;
+            }
+        });
+        // Inject the resolver factory into the enricher
+        java.lang.reflect.Field field;
+        try {
+            field = TikaMetadataEnricher.class.getDeclaredField("resolverFactory");
+            field.setAccessible(true);
+            field.set(tikaEnricher, resolverFactory);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        extractor.bindEnricher(tikaEnricher);
     }
 
     @Test
@@ -91,8 +128,17 @@ public class FileMetadataExtractorImplTest {
 
         assertNotNull(metadata);
         assertTrue(metadata.size() > 0);
+        // Should have SHA256 + Tika metadata
+        assertTrue(metadata.containsKey("SHA256"));
 
         log.info("Extracted metadata: {}", metadata);
+    }
+
+    @Test
+    public void testEnricherBinding() {
+        // Verify enricher was bound
+        assertEquals("tika", tikaEnricher.getName());
+        assertTrue(tikaEnricher.shouldEnrich(file));
     }
 
     @Test
@@ -209,7 +255,7 @@ public class FileMetadataExtractorImplTest {
 
         String[] formatted = new String[keys.length];
         for (int i = 0; i < keys.length; i++) {
-            formatted[i] = extractor.formatKey(keys[i], registry);
+            formatted[i] = tikaEnricher.formatKey(keys[i], registry);
         }
 
         String[] expected = new String[] {
@@ -328,7 +374,7 @@ public class FileMetadataExtractorImplTest {
                         "GPS:GPSLatitudeRef", "Content-Type", "X-Parsed-By", "ExifSubIFD:MaxApertureValue")
                 .iterator();
         while (keys.hasNext()) {
-            extractor.formatKey(keys.next(), registry);
+            tikaEnricher.formatKey(keys.next(), registry);
         }
         verify(registry).registerNamespace(eq("ExifSubIFD"), anyString());
     }

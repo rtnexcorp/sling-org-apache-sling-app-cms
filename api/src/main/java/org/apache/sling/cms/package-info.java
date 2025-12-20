@@ -23,5 +23,5 @@
  *
  * @since 0.10.0
  */
-@org.osgi.annotation.versioning.Version("2.3.0")
+@org.osgi.annotation.versioning.Version("2.4.0")
 package org.apache.sling.cms;
