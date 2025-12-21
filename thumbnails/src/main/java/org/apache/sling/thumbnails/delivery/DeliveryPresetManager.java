@@ -36,12 +36,12 @@ public interface DeliveryPresetManager {
     /**
      * Configuration path pattern for delivery presets.
      */
-    String CONFIG_PATH = "/dam/delivery-presets";
+    String CONFIG_PATH = "/conf/global/dam/delivery-presets";
 
     /**
      * Get a delivery preset by name for a given context resource.
      * Uses CA Config pattern to resolve site-specific presets.
-     *
+     * 
      * @param contextResource the resource to use for configuration resolution
      * @param presetName the name of the preset to find
      * @return the preset or null if not found
@@ -51,7 +51,7 @@ public interface DeliveryPresetManager {
 
     /**
      * Get all available delivery presets for a given context resource.
-     *
+     * 
      * @param contextResource the resource to use for configuration resolution
      * @return list of available presets (never null, may be empty)
      */
@@ -60,7 +60,7 @@ public interface DeliveryPresetManager {
 
     /**
      * Get all enabled delivery presets for a given context resource.
-     *
+     * 
      * @param contextResource the resource to use for configuration resolution
      * @return list of enabled presets
      */
@@ -69,7 +69,7 @@ public interface DeliveryPresetManager {
 
     /**
      * Get delivery presets by category.
-     *
+     * 
      * @param contextResource the resource to use for configuration resolution
      * @param category the category to filter by
      * @return list of presets in the given category
@@ -80,7 +80,7 @@ public interface DeliveryPresetManager {
     /**
      * Resolve the delivery URL for an asset using a specific preset.
      * The URL will include format negotiation based on the preset configuration.
-     *
+     * 
      * @param asset the asset resource
      * @param preset the delivery preset to use
      * @return the delivery URL for the asset
@@ -90,7 +90,7 @@ public interface DeliveryPresetManager {
 
     /**
      * Resolve the delivery URL with format override.
-     *
+     * 
      * @param asset the asset resource
      * @param preset the delivery preset to use
      * @param format the specific format to request (e.g., "webp", "jpg")
@@ -101,7 +101,7 @@ public interface DeliveryPresetManager {
 
     /**
      * Resolve the delivery URL for an asset using a preset name.
-     *
+     * 
      * @param asset the asset resource
      * @param presetName the name of the preset to use
      * @return the delivery URL or null if preset not found
@@ -111,7 +111,7 @@ public interface DeliveryPresetManager {
 
     /**
      * Get all available categories from all presets.
-     *
+     * 
      * @param contextResource the resource to use for configuration resolution
      * @return list of unique category names
      */
@@ -120,7 +120,7 @@ public interface DeliveryPresetManager {
 
     /**
      * Check if a preset exists for the given context.
-     *
+     * 
      * @param contextResource the resource to use for configuration resolution
      * @param presetName the name of the preset
      * @return true if the preset exists
