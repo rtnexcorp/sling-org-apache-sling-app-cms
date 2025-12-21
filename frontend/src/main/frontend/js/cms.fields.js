@@ -427,3 +427,41 @@ rava.bind(".editor-tabs", {
     },
   },
 });
+
+// Accordions field component handler
+rava.bind(".editor-accordions", {
+  callbacks: {
+    created() {
+      const accordionsContainer = this;
+      const accordions = accordionsContainer.querySelectorAll(".editor-accordion");
+      accordions.forEach((accordion) => {
+        const header = accordion.querySelector(".editor-accordion__header");
+        const content = accordion.querySelector(".editor-accordion__content");
+        if (header && content) {
+          header.addEventListener("click", () => {
+            const isOpen = header.classList.contains("is-open");
+            // Close all accordions
+            accordions.forEach((acc) => {
+              acc.querySelector(".editor-accordion__header").classList.remove("is-open");
+              acc.querySelector(".editor-accordion__content").classList.remove("is-open");
+            });
+            // Open clicked accordion if it was not open
+            if (!isOpen) {
+              header.classList.add("is-open");
+              content.classList.add("is-open");
+            }
+          });
+        }
+      });
+    },
+  },
+});
+
+// Fieldsets field component handler (optional, for future extensibility)
+rava.bind(".editor-fieldsets", {
+  callbacks: {
+    created() {
+      // No JS needed for basic fieldset/legend grouping, but this is a placeholder for future logic
+    },
+  },
+});
