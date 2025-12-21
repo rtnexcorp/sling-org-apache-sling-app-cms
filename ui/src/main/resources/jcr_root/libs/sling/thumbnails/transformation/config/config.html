@@ -17,19 +17,54 @@
  * under the License.
  */-->
 <div class="transformation-config">
-    <div class="card mb-3">
-        <div class="card-header">
-            <h5 class="mb-0">${'Transformation Details' @ i18n}</h5>
+    <form method="post" class="Form-Ajax" action="${resource.path}" enctype="multipart/form-data">
+
+        <fieldset class="form-wrapper field">
+            <legend>${'Basic Information' @ i18n}</legend>
+
+            <div class="field">
+                <label class="label">${'Node Name' @ i18n}</label>
+                <div class="field-content">
+                    <code>${resource.name}</code>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">${'Resource Path' @ i18n}</label>
+                <div class="field-content">
+                    <code>${resource.path}</code>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label" for="displayName">${'Display Name' @ i18n} <span class="field-required">*</span></label>
+                <input type="text" id="displayName" name="name"
+                       value="${properties.name}"
+                       class="input" required />
+                <p class="field-description">${'Human-readable name for the transformation' @ i18n}</p>
+            </div>
+
+            <div class="field">
+                <label class="label" for="title">${'Title' @ i18n}</label>
+                <input type="text" id="title" name="jcr:title"
+                       value="${properties['jcr:title']}"
+                       class="input" />
+                <p class="field-description">${'Optional title for better organization' @ i18n}</p>
+            </div>
+
+            <div class="field">
+                <label class="label" for="description">${'Description' @ i18n}</label>
+                <textarea id="description" name="jcr:description" class="input" rows="3">${properties['jcr:description']}</textarea>
+                <p class="field-description">${'Detailed description of what this transformation does' @ i18n}</p>
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+            <button type="submit" class="button is-primary">${'Save Transformation' @ i18n}</button>
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">${'Display Name' @ i18n}</dt>
-                <dd class="col-sm-9">${properties.name}</dd>
-                <dt class="col-sm-3">${'Resource Path' @ i18n}</dt>
-                <dd class="col-sm-9">${resource.path}</dd>
-            </dl>
-        </div>
-    </div>
+    </form>
+
+    <hr/>
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -48,18 +83,85 @@
 <style>
 .transformation-config .card {
     border: 1px solid #dee2e6;
+    margin-top: 1.5rem;
 }
 .transformation-config .card-header {
     background-color: #f8f9fa;
     font-weight: 600;
 }
-.transformation-config dl.row {
+.transformation-config .form-wrapper {
+    border: 1px solid #dee2e6;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+}
+.transformation-config .form-wrapper legend {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0 0.5rem;
+    width: auto;
+}
+.transformation-config .field {
+    margin-bottom: 1rem;
+}
+.transformation-config .field:last-child {
     margin-bottom: 0;
 }
-.transformation-config dl dt {
+.transformation-config .label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+.transformation-config .input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+}
+.transformation-config .input:focus {
+    border-color: #3273dc;
+    outline: none;
+}
+.transformation-config .field-content {
+    padding: 0.5rem 0;
+}
+.transformation-config .field-content code {
+    background-color: #f5f5f5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.875rem;
+}
+.transformation-config .field-description {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+.transformation-config .field-required {
+    color: #ff3860;
+}
+.transformation-config .form-actions {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+.transformation-config .button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
     font-weight: 600;
 }
-.transformation-config dl dd {
-    margin-bottom: 0.5rem;
+.transformation-config .button.is-primary {
+    background-color: #3273dc;
+    color: white;
+}
+.transformation-config .button.is-primary:hover {
+    background-color: #2366d1;
+}
+.transformation-config hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid #dee2e6;
 }
 </style>

@@ -1,4 +1,4 @@
-<%-- /*
+<!--/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,18 +15,10 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
-<%@include file="/libs/sling-cms/global.jsp"%>
-<c:set var="colValue" value="${resource.valueMap[colConfig.valueMap.property]}" />
-<td title="${sling:encode(colValue,'HTML_ATTR')}" data-property="${sling:encode(colConfig.valueMap.property,'HTML_ATTR')}">
-	<c:choose>
-		<c:when test="${colConfig.valueMap.link}">
-			<a href="${sling:encode(colConfig.valueMap.prefix,'HTML_ATTR')}${sling:encode(resource.path,'HTML_ATTR')}">
-				<sling:encode value="${colValue}" mode="HTML" />
-			</a>
-		</c:when>
-		<c:otherwise>
-			<sling:encode value="${colValue}" mode="HTML" />
-		</c:otherwise>
-	</c:choose>
+ */-->
+<sly data-sly-use.localeResource="org.apache.sling.cms.core.models.LocaleResource">
+<td title="${localeResource.locale.displayLanguage @ context='attribute'} ${localeResource.locale.displayCountry @ context='attribute'}"
+    data-value="${localeResource.locale @ context='attribute'}">
+    ${localeResource.locale.displayLanguage @ context='html'} ${localeResource.locale.displayCountry @ context='html'}
 </td>
+</sly>

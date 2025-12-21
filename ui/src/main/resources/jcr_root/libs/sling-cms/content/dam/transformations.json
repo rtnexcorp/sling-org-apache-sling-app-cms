@@ -39,11 +39,7 @@
                     "jcr:primaryType": "nt:unstructured",
                     "name": {
                         "jcr:primaryType": "nt:unstructured",
-                        "title": "Node Name"
-                    },
-                    "title": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "title": "Display Name"
+                        "title": "Transformation Name"
                     },
                     "handlers": {
                         "jcr:primaryType": "nt:unstructured",
@@ -67,12 +63,8 @@
                             "name": {
                                 "jcr:primaryType": "nt:unstructured",
                                 "sling:resourceType": "sling-cms/components/cms/columns/name",
-                                "link": false
-                            },
-                            "transformationName": {
-                                "jcr:primaryType": "nt:unstructured",
-                                "sling:resourceType": "sling-cms/components/cms/columns/text",
-                                "property": "name"
+                                "link": true,
+                                "prefix": "/cms/dam/transformations/edit.html"
                             },
                             "handlerCount": {
                                 "jcr:primaryType": "nt:unstructured",

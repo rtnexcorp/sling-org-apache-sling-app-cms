@@ -17,10 +17,12 @@
  * under the License.
  */-->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.HandlerCountModel">
+<td data-property="handlers">
     <sly data-sly-test="${model.hasHandlers}">
         <span class="badge badge-info">${model.handlerText}</span>
     </sly>
     <sly data-sly-test="${!model.hasHandlers}">
         <span class="badge badge-secondary">${'No handlers' @ i18n}</span>
     </sly>
+</td>
 </sly>

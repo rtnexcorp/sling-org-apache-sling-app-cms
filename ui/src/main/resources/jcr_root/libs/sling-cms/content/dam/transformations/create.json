@@ -38,6 +38,24 @@
                         "description": "Unique identifier (lowercase, no spaces)",
                         "name": ":name"
                     },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Title",
+                        "description": "Optional title for better organization",
+                        "name": "jcr:title",
+                        "required": false,
+                        "skipload":true
+                    },
+                    "description": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                        "label": "Description",
+                        "description": "Detailed description of what this transformation does",
+                        "name": "jcr:description",
+                        "required": false,
+                        "skipload":true
+                    },
                     "nameParam": {
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/editor/fields/hidden",
