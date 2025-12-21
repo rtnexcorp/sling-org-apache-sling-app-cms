@@ -24,14 +24,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.thumbnails.DeliveryPresetView;
 import org.apache.sling.thumbnails.FilePreview;
 import org.apache.sling.thumbnails.RenderedResource;
+import org.apache.sling.thumbnails.delivery.DeliveryPreset;
+import org.apache.sling.thumbnails.delivery.DeliveryPresetManager;
 
 /**
  * Sling Model implementation of {@link FilePreview} for the DAM.
@@ -64,10 +69,14 @@ public class FilePreviewModel implements FilePreview {
     @Self
     private SlingHttpServletRequest request;
 
+    @OSGiService
+    private DeliveryPresetManager deliveryPresetManager;
+
     private String filePath;
     private String fileName;
     private String mimeType;
     private List<String> supportedRenditions;
+    private List<DeliveryPresetView> deliveryPresets;
 
     @PostConstruct
     protected void init() {
@@ -86,10 +95,26 @@ public class FilePreviewModel implements FilePreview {
             } else {
                 supportedRenditions = Collections.emptyList();
             }
+
+            // Get delivery presets and wrap them with URLs
+            if (deliveryPresetManager != null) {
+                List<DeliveryPreset> presets = deliveryPresetManager.getEnabledPresets(fileResource);
+                deliveryPresets = presets.stream()
+                        .map(preset -> {
+                            // Use a supported format (jpg/png) instead of webp
+                            String format = getSupportedFormat(preset);
+                            String url = deliveryPresetManager.getDeliveryUrl(fileResource, preset, format);
+                            return new DeliveryPresetView(preset, url);
+                        })
+                        .collect(Collectors.toList());
+            } else {
+                deliveryPresets = Collections.emptyList();
+            }
         } else {
             fileName = "File";
             mimeType = "";
             supportedRenditions = Collections.emptyList();
+            deliveryPresets = Collections.emptyList();
         }
     }
 
@@ -265,5 +290,43 @@ public class FilePreviewModel implements FilePreview {
             return "Text File";
         }
         return "File";
+    }
+
+    @Override
+    public boolean hasDeliveryPresets() {
+        return !deliveryPresets.isEmpty();
+    }
+
+    @Override
+    public List<DeliveryPresetView> getDeliveryPresets() {
+        return deliveryPresets;
+    }
+
+    /**
+     * Get a supported format for the transformation system.
+     * The transformation system currently only supports: gif, jpg/jpeg, png.
+     * If the preset uses an unsupported format (like webp), use the first fallback format.
+     */
+    private String getSupportedFormat(DeliveryPreset preset) {
+        String format = preset.getFormat().toLowerCase();
+
+        // Check if format is supported by OutputFileFormat enum
+        if ("gif".equals(format) || "jpg".equals(format) || "jpeg".equals(format) || "png".equals(format)) {
+            return format;
+        }
+
+        // Use fallback formats
+        List<String> fallbacks = preset.getFallbackFormats();
+        if (fallbacks != null && !fallbacks.isEmpty()) {
+            for (String fallback : fallbacks) {
+                String fb = fallback.toLowerCase();
+                if ("gif".equals(fb) || "jpg".equals(fb) || "jpeg".equals(fb) || "png".equals(fb)) {
+                    return fb;
+                }
+            }
+        }
+
+        // Default to jpg if no supported format found
+        return "jpg";
     }
 }

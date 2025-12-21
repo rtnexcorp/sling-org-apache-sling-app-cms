@@ -119,4 +119,14 @@ public interface FilePreview {
      * @return a human-readable label for the file type
      */
     String getFileTypeLabel();
+
+    /**
+     * @return true if delivery presets are available for this file
+     */
+    boolean hasDeliveryPresets();
+
+    /**
+     * @return list of available delivery presets for this file with delivery URLs
+     */
+    List<DeliveryPresetView> getDeliveryPresets();
 }
