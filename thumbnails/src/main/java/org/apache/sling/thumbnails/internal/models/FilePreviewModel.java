@@ -75,8 +75,8 @@ public class FilePreviewModel implements FilePreview {
     private String filePath;
     private String fileName;
     private String mimeType;
-    private List<String> supportedRenditions;
-    private List<DeliveryPresetView> deliveryPresets;
+    private List<String> deliveryPresets;
+    private List<DeliveryPresetView> renditions;
 
     @PostConstruct
     protected void init() {
@@ -88,32 +88,32 @@ public class FilePreviewModel implements FilePreview {
             ValueMap contentProps = fileResource.getValueMap();
             mimeType = contentProps.get("jcr:content/jcr:mimeType", String.class);
 
-            // Get renditions from RenderedResource
+            // Get renditions (physical files) from RenderedResource
             RenderedResource rendered = request.adaptTo(RenderedResource.class);
             if (rendered != null && rendered.getSupportedRenditions() != null) {
-                supportedRenditions = new ArrayList<>(rendered.getSupportedRenditions());
-            } else {
-                supportedRenditions = Collections.emptyList();
-            }
-
-            // Get delivery presets and wrap them with URLs
-            if (deliveryPresetManager != null) {
-                List<DeliveryPreset> presets = deliveryPresetManager.getEnabledPresets(fileResource);
-                deliveryPresets = presets.stream()
-                        .map(preset -> {
-                            // Use a supported format (jpg/png) instead of webp
-                            String format = getSupportedFormat(preset);
-                            String url = deliveryPresetManager.getDeliveryUrl(fileResource, preset, format);
-                            return new DeliveryPresetView(preset, url);
+                List<String> supportedRenditionNames = new ArrayList<>(rendered.getSupportedRenditions());
+                // Wrap physical renditions with transform URLs
+                renditions = supportedRenditionNames.stream()
+                        .map(renditionName -> {
+                            String url = filePath + ".transform/" + renditionName + ".png";
+                            return new DeliveryPresetView(null, url);
                         })
                         .collect(Collectors.toList());
+            } else {
+                renditions = Collections.emptyList();
+            }
+
+            // Get delivery presets (on-demand transformations)
+            if (deliveryPresetManager != null) {
+                List<DeliveryPreset> presets = deliveryPresetManager.getEnabledPresets(fileResource);
+                deliveryPresets = presets.stream().map(DeliveryPreset::getName).collect(Collectors.toList());
             } else {
                 deliveryPresets = Collections.emptyList();
             }
         } else {
             fileName = "File";
             mimeType = "";
-            supportedRenditions = Collections.emptyList();
+            renditions = Collections.emptyList();
             deliveryPresets = Collections.emptyList();
         }
     }
@@ -180,12 +180,12 @@ public class FilePreviewModel implements FilePreview {
 
     @Override
     public boolean hasRenditions() {
-        return !supportedRenditions.isEmpty();
+        return !renditions.isEmpty();
     }
 
     @Override
-    public List<String> getSupportedRenditions() {
-        return supportedRenditions;
+    public List<DeliveryPresetView> getRenditions() {
+        return renditions;
     }
 
     @Override
@@ -298,35 +298,7 @@ public class FilePreviewModel implements FilePreview {
     }
 
     @Override
-    public List<DeliveryPresetView> getDeliveryPresets() {
+    public List<String> getDeliveryPresets() {
         return deliveryPresets;
-    }
-
-    /**
-     * Get a supported format for the transformation system.
-     * The transformation system currently only supports: gif, jpg/jpeg, png.
-     * If the preset uses an unsupported format (like webp), use the first fallback format.
-     */
-    private String getSupportedFormat(DeliveryPreset preset) {
-        String format = preset.getFormat().toLowerCase();
-
-        // Check if format is supported by OutputFileFormat enum
-        if ("gif".equals(format) || "jpg".equals(format) || "jpeg".equals(format) || "png".equals(format)) {
-            return format;
-        }
-
-        // Use fallback formats
-        List<String> fallbacks = preset.getFallbackFormats();
-        if (fallbacks != null && !fallbacks.isEmpty()) {
-            for (String fallback : fallbacks) {
-                String fb = fallback.toLowerCase();
-                if ("gif".equals(fb) || "jpg".equals(fb) || "jpeg".equals(fb) || "png".equals(fb)) {
-                    return fb;
-                }
-            }
-        }
-
-        // Default to jpg if no supported format found
-        return "jpg";
     }
 }

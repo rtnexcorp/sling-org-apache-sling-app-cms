@@ -91,16 +91,6 @@ public interface FilePreview {
     boolean isPreviewable();
 
     /**
-     * @return true if renditions are available for this file
-     */
-    boolean hasRenditions();
-
-    /**
-     * @return list of supported rendition names
-     */
-    List<String> getSupportedRenditions();
-
-    /**
      * @return the preview type identifier (image, video, pdf, word, excel, powerpoint, text, unknown)
      */
     String getPreviewType();
@@ -121,12 +111,22 @@ public interface FilePreview {
     String getFileTypeLabel();
 
     /**
-     * @return true if delivery presets are available for this file
+     * @return true if renditions (physical files) are available for this file
+     */
+    boolean hasRenditions();
+
+    /**
+     * @return list of available renditions (physical files) with delivery URLs for this file
+     */
+    List<DeliveryPresetView> getRenditions();
+
+    /**
+     * @return true if delivery presets (on-demand transformations) are available for this file
      */
     boolean hasDeliveryPresets();
 
     /**
-     * @return list of available delivery presets for this file with delivery URLs
+     * @return list of supported delivery preset names (on-demand transformations)
      */
-    List<DeliveryPresetView> getDeliveryPresets();
+    List<String> getDeliveryPresets();
 }

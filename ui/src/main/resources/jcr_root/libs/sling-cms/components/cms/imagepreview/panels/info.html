@@ -27,37 +27,11 @@
     </table>
 
     <!--/* Accordion for Renditions and Delivery Presets */-->
-    <sly data-sly-test="${preview.previewable && (preview.hasRenditions || preview.hasDeliveryPresets)}">
+    <sly data-sly-test="${preview.previewable && (preview.hasDeliveryPresets || preview.hasRenditions)}">
         <div class="mt-4">
-            <!--/* Renditions Accordion */-->
-            <sly data-sly-test="${preview.hasRenditions}">
-                <details class="message is-link mb-2">
-                    <summary class="message-header" style="cursor: pointer;">
-                        <p>${'Renditions' @ i18n}</p>
-                        <span class="icon is-small"><span class="jam jam-chevron-down"></span></span>
-                    </summary>
-                    <div class="message-body">
-                        <div class="buttons are-small">
-                            <a href="${preview.filePath}" class="button is-info preview-link" data-image="${preview.filePath}">
-                                <span class="icon"><span class="jam jam-picture"></span></span>
-                                <span>${'Original' @ i18n}</span>
-                            </a>
-                            <sly data-sly-list.rendition="${preview.supportedRenditions}">
-                                <a href="${preview.filePath}.transform/${rendition}.png"
-                                   class="button is-link is-outlined preview-link"
-                                   data-image="${preview.filePath}.transform/${rendition}.png">
-                                    <span class="icon"><span class="jam jam-picture"></span></span>
-                                    <span>${rendition}</span>
-                                </a>
-                            </sly>
-                        </div>
-                    </div>
-                </details>
-            </sly>
-
-            <!--/* Delivery Presets Accordion */-->
+            <!--/* Delivery Presets Accordion - On-Demand Transformations */-->
             <sly data-sly-test="${preview.hasDeliveryPresets}">
-                <details class="message is-primary">
+                <details class="message is-link mb-2">
                     <summary class="message-header" style="cursor: pointer;">
                         <p>${'Delivery Presets' @ i18n}</p>
                         <span class="icon is-small"><span class="jam jam-chevron-down"></span></span>
@@ -65,12 +39,36 @@
                     <div class="message-body">
                         <div class="buttons are-small">
                             <sly data-sly-list.preset="${preview.deliveryPresets}">
-                                <a href="${preset.deliveryUrl}"
-                                   class="button is-primary is-outlined preview-link"
-                                   data-image="${preset.deliveryUrl}"
-                                   title="${preset.description}">
+                                <button class="button is-info is-outlined" data-preset="${preset}">
                                     <span class="icon"><span class="jam jam-picture"></span></span>
-                                    <span>${preset.title}</span>
+                                    <span>${preset}</span>
+                                </button>
+                            </sly>
+                        </div>
+                    </div>
+                </details>
+            </sly>
+
+            <!--/* Renditions Accordion - Physical Files */-->
+            <sly data-sly-test="${preview.hasRenditions}">
+                <details class="message is-primary">
+                    <summary class="message-header" style="cursor: pointer;">
+                        <p>${'Renditions' @ i18n}</p>
+                        <span class="icon is-small"><span class="jam jam-chevron-down"></span></span>
+                    </summary>
+                    <div class="message-body">
+                        <div class="buttons are-small">
+                            <a href="${preview.filePath}" class="button is-primary is-outlined preview-link" data-image="${preview.filePath}">
+                                <span class="icon"><span class="jam jam-picture"></span></span>
+                                <span>${'Original' @ i18n}</span>
+                            </a>
+                            <sly data-sly-list.rendition="${preview.renditions}">
+                                <a href="${rendition.deliveryUrl}"
+                                   class="button is-primary is-outlined preview-link"
+                                   data-image="${rendition.deliveryUrl}"
+                                   title="${rendition.description}">
+                                    <span class="icon"><span class="jam jam-picture"></span></span>
+                                    <span>${rendition.title}</span>
                                 </a>
                             </sly>
                         </div>
