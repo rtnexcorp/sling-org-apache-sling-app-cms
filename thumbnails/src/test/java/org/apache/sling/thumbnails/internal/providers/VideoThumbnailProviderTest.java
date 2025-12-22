@@ -62,6 +62,17 @@ public class VideoThumbnailProviderTest {
 
         provider = new VideoThumbnailProvider();
 
+        // Register a mock VideoFrameExtractor so applies() returns true
+        VideoFrameExtractor mockExtractor = mock(VideoFrameExtractor.class);
+        lenient().when(mockExtractor.getName()).thenReturn("Mock Extractor");
+        lenient().when(mockExtractor.getPriority()).thenReturn(100);
+        lenient().when(mockExtractor.isAvailable()).thenReturn(true);
+        lenient()
+                .when(mockExtractor.getSupportedTypes())
+                .thenReturn(Set.of("video/mp4", "video/quicktime", "video/webm", "video/x-matroska"));
+
+        context.registerService(VideoFrameExtractor.class, mockExtractor);
+
         // Create and configure a mock config
         VideoThumbnailProvider.Config config = mock(VideoThumbnailProvider.Config.class);
         lenient().when(config.samplePositions()).thenReturn(new int[] {10, 25, 50});
@@ -70,6 +81,9 @@ public class VideoThumbnailProviderTest {
         lenient().when(config.timeoutMs()).thenReturn(30000L);
 
         provider.activate(config);
+
+        // Manually bind the extractor since OSGi service tracking doesn't work in unit tests
+        provider.bindExtractor(mockExtractor);
     }
 
     @Test
