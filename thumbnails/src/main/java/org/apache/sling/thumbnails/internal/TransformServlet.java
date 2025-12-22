@@ -186,7 +186,7 @@ public class TransformServlet extends SlingAllMethodsServlet {
             Transformation transformation = transformationOp.get();
             log.debug("Transforming file...");
 
-            // Try using SmartRenditionService if available
+            // Try using SmartRenditionService if available - this is our primary cache
             if (smartRenditionService != null) {
                 try {
                     log.debug("Using SmartRenditionService for transformation: {}", transformationName);
@@ -194,15 +194,23 @@ public class TransformServlet extends SlingAllMethodsServlet {
                     IOUtils.copy(rendition, response.getOutputStream());
                     return;
                 } catch (SmartRenditionService.RenditionException e) {
-                    log.warn("SmartRenditionService failed, falling back to direct transformation", e);
-                    // Fall through to legacy approach
+                    log.warn("SmartRenditionService failed, falling back to JCR rendition check", e);
+                    // Fall through to JCR check
                 }
             }
 
-            // Legacy approach - direct transformation and optional JCR storage
+            // Check JCR for existing rendition (fallback cache)
+            if (renditionSupport.renditionExists(file, renditionName)) {
+                log.debug("Serving existing JCR rendition: {}", renditionName);
+                IOUtils.copy(renditionSupport.getRenditionContent(file, renditionName), response.getOutputStream());
+                return;
+            }
+
+            // Neither cache has the rendition - generate it
+            log.debug("Generating new rendition: {}", renditionName);
             ByteArrayOutputStream baos = transform(request, response, transformation);
             if (renditionSupport.supportsRenditions(file)) {
-                log.debug("Saving rendition...");
+                log.debug("Saving rendition to JCR...");
                 renditionSupport.setRendition(file, renditionName, new ByteArrayInputStream(baos.toByteArray()));
             }
         }
