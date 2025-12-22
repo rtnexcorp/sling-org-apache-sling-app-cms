@@ -5,131 +5,115 @@
     "fields": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "sling-cms/components/general/container",
-        "accordions": {
+        "fieldsets": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/accordions",
-            "basicInfoAccordion": {
+            "sling:resourceType": "sling-cms/components/editor/fields/fieldsets",
+            "authorInfo": {
                 "jcr:primaryType": "nt:unstructured",
-                "title": "Basic Info",
-                "fieldset": {
+                "title": "Author Details",
+                "name": {
                     "jcr:primaryType": "nt:unstructured",
-                    "sling:resourceType": "sling-cms/components/editor/fields/fieldsets",
-                    "info": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "title": "Author Details",
-                        "name": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "sling:resourceType": "sling-cms/components/editor/fields/text",
-                            "label": "Author Name",
-                            "name": "authorName",
-                            "required": true
-                        },
-                        "jobTitle": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "sling:resourceType": "sling-cms/components/editor/fields/text",
-                            "label": "Job Title",
-                            "name": "jobTitle"
-                        },
-                        "image": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "sling:resourceType": "sling-cms/components/editor/fields/path",
-                            "label": "Author Image",
-                            "name": "authorImage",
-                            "basePath": "/content",
-                            "type": "file"
-                        },
-                        "bio": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "sling:resourceType": "sling-cms/components/editor/fields/textarea",
-                            "label": "Biography",
-                            "name": "bio"
-                        },
-                        "email": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "sling:resourceType": "sling-cms/components/editor/fields/text",
-                            "label": "Email Address",
-                            "name": "email"
-                        }
-                    }
+                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                    "label": "Author Name",
+                    "name": "authorName",
+                    "required": true
+                },
+                "jobTitle": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                    "label": "Job Title",
+                    "name": "jobTitle"
+                },
+                "image": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/path",
+                    "label": "Author Image",
+                    "name": "authorImage",
+                    "basePath": "/content",
+                    "type": "file"
+                },
+                "bio": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                    "label": "Biography",
+                    "name": "bio"
+                },
+                "email": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                    "label": "Email Address",
+                    "name": "email"
                 }
             },
-            "socialAccordion": {
+            "socialProfiles": {
                 "jcr:primaryType": "nt:unstructured",
                 "title": "Social Links",
-                "fieldset": {
+                "socialLinks": {
                     "jcr:primaryType": "nt:unstructured",
-                    "sling:resourceType": "sling-cms/components/editor/fields/fieldsets",
-                    "links": {
+                    "sling:resourceType": "sling-cms/components/editor/fields/multifield",
+                    "label": "Social Links",
+                    "name": "socialLinks",
+                    "minItems": "0",
+                    "maxItems": "10",
+                    "template": {
                         "jcr:primaryType": "nt:unstructured",
-                        "title": "Social Links",
-                        "socialLinks": {
+                        "platform": {
                             "jcr:primaryType": "nt:unstructured",
-                            "sling:resourceType": "sling-cms/components/editor/fields/multifield",
-                            "label": "Social Links",
-                            "name": "socialLinks",
-                            "minItems": "0",
-                            "maxItems": "10",
-                            "template": {
+                            "sling:resourceType": "sling-cms/components/editor/fields/select",
+                            "label": "Platform",
+                            "name": "platform",
+                            "required": true,
+                            "options": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "platform": {
+                                "twitter": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/editor/fields/select",
-                                    "label": "Platform",
-                                    "name": "platform",
-                                    "required": true,
-                                    "options": {
-                                        "jcr:primaryType": "nt:unstructured",
-                                        "twitter": {
-                                            "jcr:primaryType": "nt:unstructured",
-                                            "label": "Twitter / X",
-                                            "value": "twitter"
-                                        },
-                                        "linkedin": {
-                                            "jcr:primaryType": "nt:unstructured",
-                                            "label": "LinkedIn",
-                                            "value": "linkedin"
-                                        },
-                                        "github": {
-                                            "jcr:primaryType": "nt:unstructured",
-                                            "label": "GitHub",
-                                            "value": "github"
-                                        },
-                                        "facebook": {
-                                            "jcr:primaryType": "nt:unstructured",
-                                            "label": "Facebook",
-                                            "value": "facebook"
-                                        },
-                                        "instagram": {
-                                            "jcr:primaryType": "nt:unstructured",
-                                            "label": "Instagram",
-                                            "value": "instagram"
-                                        },
-                                        "youtube": {
-                                            "jcr:primaryType": "nt:unstructured",
-                                            "label": "YouTube",
-                                            "value": "youtube"
-                                        },
-                                        "website": {
-                                            "jcr:primaryType": "nt:unstructured",
-                                            "label": "Website",
-                                            "value": "website"
-                                        }
-                                    }
+                                    "label": "Twitter / X",
+                                    "value": "twitter"
                                 },
-                                "url": {
+                                "linkedin": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/editor/fields/text",
-                                    "label": "Profile URL",
-                                    "name": "url",
-                                    "required": true
+                                    "label": "LinkedIn",
+                                    "value": "linkedin"
                                 },
-                                "label": {
+                                "github": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/editor/fields/text",
-                                    "label": "Display Label (optional)",
-                                    "name": "label"
+                                    "label": "GitHub",
+                                    "value": "github"
+                                },
+                                "facebook": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "label": "Facebook",
+                                    "value": "facebook"
+                                },
+                                "instagram": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "label": "Instagram",
+                                    "value": "instagram"
+                                },
+                                "youtube": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "label": "YouTube",
+                                    "value": "youtube"
+                                },
+                                "website": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "label": "Website",
+                                    "value": "website"
                                 }
                             }
+                        },
+                        "url": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Profile URL",
+                            "name": "url",
+                            "required": true
+                        },
+                        "label": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Display Label (optional)",
+                            "name": "label"
                         }
                     }
                 }

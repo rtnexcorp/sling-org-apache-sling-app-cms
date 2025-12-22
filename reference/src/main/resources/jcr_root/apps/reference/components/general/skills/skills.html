@@ -1,93 +1,75 @@
-<%-- /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */ --%>
-<%@include file="/libs/sling-cms/global.jsp"%>
-<c:if test="${not empty properties.authorName}">
-    <div class="author-card">
-        <c:if test="${not empty properties.authorImage}">
-            <div class="author-image">
-                <img src="${sling:encode(properties.authorImage,'HTML_ATTR')}" 
-                     alt="${sling:encode(properties.authorName,'HTML_ATTR')}" />
-            </div>
-        </c:if>
-        <div class="author-info">
-            <h3 class="author-name">
-                <sling:encode value="${properties.authorName}" mode="HTML" />
-            </h3>
-            <c:if test="${not empty properties.jobTitle}">
-                <p class="author-title">
-                    <sling:encode value="${properties.jobTitle}" mode="HTML" />
-                </p>
-            </c:if>
-            <c:if test="${not empty properties.bio}">
-                <p class="author-bio">
-                    <sling:encode value="${properties.bio}" mode="HTML" />
-                </p>
-            </c:if>
-            <c:if test="${not empty properties.email}">
-                <p class="author-email">
-                    <a href="mailto:${sling:encode(properties.email,'HTML_ATTR')}">
-                        <sling:encode value="${properties.email}" mode="HTML" />
-                    </a>
-                </p>
-            </c:if>
-            <c:set var="socialLinksResource" value="${sling:getRelativeResource(resource, 'socialLinks')}" />
-            <c:if test="${socialLinksResource != null}">
-                <div class="author-social-links">
-                    <c:forEach var="link" items="${sling:listChildren(socialLinksResource)}">
-                        <c:set var="linkProps" value="${sling:adaptTo(link,'org.apache.sling.api.resource.ValueMap')}" />
-                        <a href="${sling:encode(linkProps.url,'HTML_ATTR')}" 
-                           class="social-link social-link--${sling:encode(linkProps.platform,'HTML_ATTR')}"
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           title="${not empty linkProps.label ? sling:encode(linkProps.label,'HTML_ATTR') : sling:encode(linkProps.platform,'HTML_ATTR')}">
-                            <c:choose>
-                                <c:when test="${linkProps.platform == 'twitter'}">
-                                    <span class="social-icon">𝕏</span>
-                                </c:when>
-                                <c:when test="${linkProps.platform == 'linkedin'}">
-                                    <span class="social-icon">in</span>
-                                </c:when>
-                                <c:when test="${linkProps.platform == 'github'}">
-                                    <span class="social-icon">⌨</span>
-                                </c:when>
-                                <c:when test="${linkProps.platform == 'facebook'}">
-                                    <span class="social-icon">f</span>
-                                </c:when>
-                                <c:when test="${linkProps.platform == 'instagram'}">
-                                    <span class="social-icon">📷</span>
-                                </c:when>
-                                <c:when test="${linkProps.platform == 'youtube'}">
-                                    <span class="social-icon">▶</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="social-icon">🔗</span>
-                                </c:otherwise>
-                            </c:choose>
-                            <c:if test="${not empty linkProps.label}">
-                                <span class="social-label">
-                                    <sling:encode value="${linkProps.label}" mode="HTML" />
-                                </span>
-                            </c:if>
-                        </a>
-                    </c:forEach>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<sly data-sly-use.skills="org.apache.sling.cms.reference.models.SkillsModel">
+    <sly data-sly-test="${skills.hasAuthor}">
+        <article class="author-card">
+            <sly data-sly-test="${skills.hasImage}">
+                <div class="author-image">
+                    <img src="${skills.authorImage}" alt="${skills.authorName}"/>
                 </div>
-            </c:if>
-        </div>
-    </div>
-</c:if>
+            </sly>
+            <div class="author-info">
+                <h3 class="author-name">${skills.authorName}</h3>
+                <sly data-sly-test="${skills.hasJobTitle}">
+                    <p class="author-title">${skills.jobTitle}</p>
+                </sly>
+                <sly data-sly-test="${skills.hasBio}">
+                    <p class="author-bio">${skills.bio}</p>
+                </sly>
+                <sly data-sly-test="${skills.hasEmail}">
+                    <p class="author-email">
+                        <a href="mailto:${skills.email}">${skills.email}</a>
+                    </p>
+                </sly>
+                <sly data-sly-test="${skills.hasSocialLinks}">
+                    <div class="author-social-links" data-sly-list.link="${skills.socialLinks}">
+                        <a href="${link.url}"
+                           class="social-link social-link--${link.platform}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           title="${link.label ? link.label : link.platform}">
+                            <span class="social-icon" data-sly-test="${link.platform == 'twitter'}">𝕏</span>
+                            <span class="social-icon" data-sly-test="${link.platform == 'linkedin'}">in</span>
+                            <span class="social-icon" data-sly-test="${link.platform == 'github'}">⌨</span>
+                            <span class="social-icon" data-sly-test="${link.platform == 'facebook'}">f</span>
+                            <span class="social-icon" data-sly-test="${link.platform == 'instagram'}">📷</span>
+                            <span class="social-icon" data-sly-test="${link.platform == 'youtube'}">▶</span>
+                            <span class="social-icon" data-sly-test="${link.platform != 'twitter' && link.platform != 'linkedin' && link.platform != 'github' && link.platform != 'facebook' && link.platform != 'instagram' && link.platform != 'youtube'}">🔗</span>
+                            <span class="social-label" data-sly-test="${link.label}">${link.label}</span>
+                        </a>
+                    </div>
+                </sly>
+                <sly data-sly-test="${skills.hasSkills}">
+                    <div class="author-skills">
+                        <h4>Skills</h4>
+                        <ul data-sly-list.skill="${skills.skills}">
+                            <li class="author-skill">
+                                <span class="skill-name">${skill.name}</span>
+                                <span class="skill-level">${skill.level}</span>
+                                <sly data-sly-test="${skill.description}">
+                                    <span class="skill-description">${skill.description}</span>
+                                </sly>
+                            </li>
+                        </ul>
+                    </div>
+                </sly>
+            </div>
+        </article>
+    </sly>
+</sly>
