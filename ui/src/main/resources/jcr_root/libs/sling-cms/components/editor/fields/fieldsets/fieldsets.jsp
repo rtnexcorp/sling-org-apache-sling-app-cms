@@ -26,7 +26,7 @@
         <c:set var="fieldsetProps" value="${sling:adaptTo(fieldset,'org.apache.sling.api.resource.ValueMap')}" />
         <c:set var="fieldsetId" value="fieldset-${status.index}" />
         
-        <fieldset class="editor-fieldset">
+        <fieldset class="editor-fieldset" data-fieldset-id="${fieldsetId}">
             <%-- Fieldset legend with toggle button --%>
             <legend class="editor-fieldset__legend">
                 <button type="button" 
@@ -54,37 +54,3 @@
     
 </div>
 
-<%-- JavaScript for fieldset toggle functionality --%>
-<script>
-(function() {
-    'use strict';
-    
-    document.querySelectorAll('.editor-fieldset__toggle').forEach(function(button) {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const fieldset = this.closest('.editor-fieldset');
-            const content = fieldset.querySelector('.editor-fieldset__content');
-            const isExpanded = this.getAttribute('aria-expanded') === 'true';
-            
-            this.setAttribute('aria-expanded', !isExpanded);
-            content.setAttribute('aria-hidden', isExpanded);
-            fieldset.classList.toggle('is-collapsed', isExpanded);
-            
-            // Persist state in localStorage
-            const fieldsetId = this.getAttribute('aria-controls');
-            localStorage.setItem('fieldset-' + fieldsetId, !isExpanded);
-        });
-    });
-    
-    // Restore collapsed state from localStorage
-    document.querySelectorAll('.editor-fieldset__toggle').forEach(function(button) {
-        const fieldsetId = button.getAttribute('aria-controls');
-        const isCollapsed = localStorage.getItem('fieldset-' + fieldsetId) === 'false';
-        if (isCollapsed) {
-            button.setAttribute('aria-expanded', 'false');
-            button.closest('.editor-fieldset').querySelector('.editor-fieldset__content').setAttribute('aria-hidden', 'true');
-            button.closest('.editor-fieldset').classList.add('is-collapsed');
-        }
-    });
-})();
-</script>

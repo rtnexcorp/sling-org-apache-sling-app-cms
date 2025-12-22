@@ -428,40 +428,68 @@ rava.bind(".editor-tabs", {
   },
 });
 
-// Accordions field component handler
-rava.bind(".editor-accordions", {
+// Fieldsets field component handler - provides collapsible fieldsets in editor dialogs
+const FIELDSET_STORAGE_PREFIX = 'editor-fieldset-';
+
+rava.bind('.editor-fieldset__toggle', {
   callbacks: {
     created() {
-      const accordionsContainer = this;
-      const accordions = accordionsContainer.querySelectorAll(".editor-accordion");
-      accordions.forEach((accordion) => {
-        const header = accordion.querySelector(".editor-accordion__header");
-        const content = accordion.querySelector(".editor-accordion__content");
-        if (header && content) {
-          header.addEventListener("click", () => {
-            const isOpen = header.classList.contains("is-open");
-            // Close all accordions
-            accordions.forEach((acc) => {
-              acc.querySelector(".editor-accordion__header").classList.remove("is-open");
-              acc.querySelector(".editor-accordion__content").classList.remove("is-open");
-            });
-            // Open clicked accordion if it was not open
-            if (!isOpen) {
-              header.classList.add("is-open");
-              content.classList.add("is-open");
+      const button = this;
+      const fieldset = button.closest('.editor-fieldset');
+      
+      if (!fieldset) return;
+
+      // Restore saved state from localStorage
+      const fieldsetId = fieldset.getAttribute('data-fieldset-id');
+      if (fieldsetId) {
+        try {
+          const savedState = localStorage.getItem(FIELDSET_STORAGE_PREFIX + fieldsetId);
+          if (savedState !== null) {
+            const isExpanded = savedState === 'true';
+            const content = fieldset.querySelector('.editor-fieldset__content');
+
+            if (content) {
+              button.setAttribute('aria-expanded', isExpanded);
+              content.setAttribute('aria-hidden', !isExpanded);
+              fieldset.classList.toggle('is-collapsed', !isExpanded);
             }
-          });
+          }
+        } catch (err) {
+          window.SlingCMS.logger.warn('Failed to restore fieldset state:', err);
         }
-      });
+      }
     },
   },
-});
+  events: {
+    click(e) {
+      e.preventDefault();
 
-// Fieldsets field component handler (optional, for future extensibility)
-rava.bind(".editor-fieldsets", {
-  callbacks: {
-    created() {
-      // No JS needed for basic fieldset/legend grouping, but this is a placeholder for future logic
+      const button = this;
+      const fieldset = button.closest('.editor-fieldset');
+      if (!fieldset) return;
+
+      const content = fieldset.querySelector('.editor-fieldset__content');
+      if (!content) return;
+
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      const newState = !isExpanded;
+
+      // Update ARIA attributes
+      button.setAttribute('aria-expanded', newState);
+      content.setAttribute('aria-hidden', !newState);
+
+      // Update visual state
+      fieldset.classList.toggle('is-collapsed', !newState);
+
+      // Persist state in localStorage
+      const fieldsetId = fieldset.getAttribute('data-fieldset-id');
+      if (fieldsetId) {
+        try {
+          localStorage.setItem(FIELDSET_STORAGE_PREFIX + fieldsetId, newState);
+        } catch (err) {
+          window.SlingCMS.logger.warn('Failed to persist fieldset state:', err);
+        }
+      }
     },
   },
 });
