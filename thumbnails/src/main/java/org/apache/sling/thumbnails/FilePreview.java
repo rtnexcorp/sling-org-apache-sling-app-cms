@@ -126,7 +126,7 @@ public interface FilePreview {
     boolean hasDeliveryPresets();
 
     /**
-     * @return list of supported delivery preset names (on-demand transformations)
+     * @return list of delivery preset views with delivery URLs (on-demand transformations)
      */
-    List<String> getDeliveryPresets();
+    List<DeliveryPresetView> getDeliveryPresets();
 }

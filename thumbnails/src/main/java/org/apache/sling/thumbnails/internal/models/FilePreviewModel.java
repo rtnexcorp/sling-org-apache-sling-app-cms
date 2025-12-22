@@ -75,7 +75,7 @@ public class FilePreviewModel implements FilePreview {
     private String filePath;
     private String fileName;
     private String mimeType;
-    private List<String> deliveryPresets;
+    private List<DeliveryPresetView> deliveryPresets;
     private List<DeliveryPresetView> renditions;
 
     @PostConstruct
@@ -106,7 +106,14 @@ public class FilePreviewModel implements FilePreview {
             // Get delivery presets (on-demand transformations)
             if (deliveryPresetManager != null) {
                 List<DeliveryPreset> presets = deliveryPresetManager.getEnabledPresets(fileResource);
-                deliveryPresets = presets.stream().map(DeliveryPreset::getName).collect(Collectors.toList());
+                deliveryPresets = presets.stream()
+                        .map(preset -> {
+                            // Generate transform URL: /path/to/file.jpg.transform/preset-name.webp
+                            String transformUrl =
+                                    filePath + ".transform/" + preset.getName() + "." + preset.getFormat();
+                            return new DeliveryPresetView(preset, transformUrl);
+                        })
+                        .collect(Collectors.toList());
             } else {
                 deliveryPresets = Collections.emptyList();
             }
@@ -298,7 +305,7 @@ public class FilePreviewModel implements FilePreview {
     }
 
     @Override
-    public List<String> getDeliveryPresets() {
+    public List<DeliveryPresetView> getDeliveryPresets() {
         return deliveryPresets;
     }
 }

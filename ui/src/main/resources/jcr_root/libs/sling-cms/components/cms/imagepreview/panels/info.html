@@ -39,10 +39,13 @@
                     <div class="message-body">
                         <div class="buttons are-small">
                             <sly data-sly-list.preset="${preview.deliveryPresets}">
-                                <button class="button is-info is-outlined" data-preset="${preset}">
+                                <a href="${preset.deliveryUrl}"
+                                   class="button is-info is-outlined preview-link"
+                                   data-image="${preset.deliveryUrl}"
+                                   title="${preset.description}">
                                     <span class="icon"><span class="jam jam-picture"></span></span>
-                                    <span>${preset}</span>
-                                </button>
+                                    <span>${preset.title}</span>
+                                </a>
                             </sly>
                         </div>
                     </div>
