@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.sling.cms.core.internal.enrichers;
+package org.apache.sling.thumbnails.internal.enrichers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +68,7 @@ public class OCRMetadataEnricherTest {
     @Test
     public void testEnricherDisabledByDefault() {
         // Activate with default config (disabled)
-        OCRMetadataEnricher.Config config = createConfig(false, 50, new String[] {"image/png"}, "", "eng", 120, 10000);
+        OCRMetadataEnricher.Config config = createConfig(false, 50, new String[] {"image/png"}, "", "eng", 10000);
         enricher.activate(config);
 
         assertEquals("ocr", enricher.getName());
@@ -83,7 +83,7 @@ public class OCRMetadataEnricherTest {
 
         // Activate with OCR enabled
         OCRMetadataEnricher.Config config =
-                createConfig(true, 50, new String[] {"image/png", "image/jpeg"}, "", "eng", 120, 10000);
+                createConfig(true, 50, new String[] {"image/png", "image/jpeg"}, "", "eng", 10000);
         enricher.activate(config);
 
         assertTrue(enricher.shouldEnrich(file));
@@ -96,7 +96,7 @@ public class OCRMetadataEnricherTest {
 
         // Activate with OCR enabled
         OCRMetadataEnricher.Config config =
-                createConfig(true, 50, new String[] {"image/png", "image/jpeg"}, "", "eng", 120, 10000);
+                createConfig(true, 50, new String[] {"image/png", "image/jpeg"}, "", "eng", 10000);
         enricher.activate(config);
 
         assertFalse(enricher.shouldEnrich(file));
@@ -107,7 +107,7 @@ public class OCRMetadataEnricherTest {
         when(valueMap.get("jcr:content/jcr:mimeType", String.class)).thenReturn("image/jpeg");
 
         OCRMetadataEnricher.Config config =
-                createConfig(true, 50, new String[] {"image/png", "image/jpeg"}, "", "eng", 120, 10000);
+                createConfig(true, 50, new String[] {"image/png", "image/jpeg"}, "", "eng", 10000);
         enricher.activate(config);
 
         assertTrue(enricher.shouldEnrich(file));
@@ -118,7 +118,7 @@ public class OCRMetadataEnricherTest {
         when(valueMap.get("jcr:content/jcr:mimeType", String.class)).thenReturn("application/pdf");
 
         OCRMetadataEnricher.Config config =
-                createConfig(true, 50, new String[] {"image/png", "application/pdf"}, "", "eng", 120, 10000);
+                createConfig(true, 50, new String[] {"image/png", "application/pdf"}, "", "eng", 10000);
         enricher.activate(config);
 
         assertTrue(enricher.shouldEnrich(file));
@@ -130,7 +130,7 @@ public class OCRMetadataEnricherTest {
         when(valueMap.get("jcr:content/jcr:mimeType", String.class)).thenReturn(null);
         when(valueMap.get("jcr:mimeType", String.class)).thenReturn("image/png");
 
-        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 120, 10000);
+        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 10000);
         enricher.activate(config);
 
         assertTrue(enricher.shouldEnrich(file));
@@ -146,7 +146,7 @@ public class OCRMetadataEnricherTest {
                 .thenAnswer(invocation ->
                         OCRMetadataEnricherTest.class.getClassLoader().getResourceAsStream("apache.png"));
 
-        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 120, 10000);
+        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 10000);
         enricher.activate(config);
 
         Map<String, Object> metadata = new HashMap<>();
@@ -177,7 +177,7 @@ public class OCRMetadataEnricherTest {
                         OCRMetadataEnricherTest.class.getClassLoader().getResourceAsStream("apache.png"));
 
         // Configure with very small max length
-        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 120, 100);
+        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 100);
         enricher.activate(config);
 
         Map<String, Object> metadata = new HashMap<>();
@@ -195,7 +195,7 @@ public class OCRMetadataEnricherTest {
         when(valueMap.get("jcr:content/jcr:mimeType", String.class)).thenReturn("image/png");
         when(resource.adaptTo(InputStream.class)).thenReturn(null);
 
-        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 120, 10000);
+        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "eng", 10000);
         enricher.activate(config);
 
         Map<String, Object> metadata = new HashMap<>();
@@ -211,7 +211,7 @@ public class OCRMetadataEnricherTest {
 
     @Test
     public void testPriorityConfiguration() {
-        OCRMetadataEnricher.Config config = createConfig(true, 75, new String[] {"image/png"}, "", "eng", 120, 10000);
+        OCRMetadataEnricher.Config config = createConfig(true, 75, new String[] {"image/png"}, "", "eng", 10000);
         enricher.activate(config);
 
         assertEquals(75, enricher.getPriority());
@@ -219,8 +219,7 @@ public class OCRMetadataEnricherTest {
 
     @Test
     public void testCustomLanguageConfiguration() {
-        OCRMetadataEnricher.Config config =
-                createConfig(true, 50, new String[] {"image/png"}, "", "fra+eng", 120, 10000);
+        OCRMetadataEnricher.Config config = createConfig(true, 50, new String[] {"image/png"}, "", "fra+eng", 10000);
         enricher.activate(config);
 
         // Configuration should be stored (verified via logs during activate)
@@ -236,7 +235,6 @@ public class OCRMetadataEnricherTest {
             String[] supportedMimeTypes,
             String tesseractPath,
             String language,
-            int timeout,
             int maxTextLength) {
 
         return new OCRMetadataEnricher.Config() {
@@ -268,11 +266,6 @@ public class OCRMetadataEnricherTest {
             @Override
             public String language() {
                 return language;
-            }
-
-            @Override
-            public int timeout() {
-                return timeout;
             }
 
             @Override

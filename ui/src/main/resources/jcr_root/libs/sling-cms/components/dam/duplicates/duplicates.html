@@ -1,0 +1,106 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.duplicate="org.apache.sling.thumbnails.internal.models.DuplicateDetectionModel"/>
+
+<div class="duplicate-detection" data-component="duplicate-detection">
+    <div class="duplicate-detection__header">
+        <h2 class="duplicate-detection__title">${'Duplicate Detection' @ i18n}</h2>
+    </div>
+
+    <div class="duplicate-detection__overview">
+        <div class="duplicate-detection__stats">
+            <div class="duplicate-detection__stat">
+                <span class="duplicate-detection__stat-number">${duplicate.duplicateGroupCount}</span>
+                <span class="duplicate-detection__stat-label">${'Duplicate Groups' @ i18n}</span>
+            </div>
+            <div class="duplicate-detection__stat">
+                <span class="duplicate-detection__stat-number">${duplicate.totalDuplicateCount}</span>
+                <span class="duplicate-detection__stat-label">${'Total Duplicates' @ i18n}</span>
+            </div>
+        </div>
+    </div>
+
+    <!--/* Asset Details Section */-->
+    <sly data-sly-test="${duplicate.asset}">
+        <div class="duplicate-detection__asset-details">
+            <h3 class="duplicate-detection__section-title">${'Asset Details' @ i18n}</h3>
+
+            <div class="duplicate-detection__detail-grid">
+                <div class="duplicate-detection__detail-item">
+                    <label class="duplicate-detection__detail-label">${'Path' @ i18n}:</label>
+                    <span class="duplicate-detection__detail-value">${duplicate.asset.path}</span>
+                </div>
+
+                <div class="duplicate-detection__detail-item">
+                    <label class="duplicate-detection__detail-label">${'Has Duplicates' @ i18n}:</label>
+                    <span class="duplicate-detection__detail-value ${duplicate.hasDuplicates ? 'duplicate-detection__status--has-duplicates' : 'duplicate-detection__status--no-duplicates'}">
+                        ${duplicate.hasDuplicates ? 'Yes' : 'No' @ i18n}
+                    </span>
+                </div>
+
+                <div class="duplicate-detection__detail-item">
+                    <label class="duplicate-detection__detail-label">${'Duplicate Count' @ i18n}:</label>
+                    <span class="duplicate-detection__detail-value">${duplicate.duplicateCount}</span>
+                </div>
+
+                <sly data-sly-test="${duplicate.storedHash}">
+                    <div class="duplicate-detection__detail-item">
+                        <label class="duplicate-detection__detail-label">${'Hash' @ i18n}:</label>
+                        <span class="duplicate-detection__detail-value duplicate-detection__hash">${duplicate.storedHash}</span>
+                    </div>
+                </sly>
+            </div>
+
+            <!--/* Duplicates Section */-->
+            <sly data-sly-test="${duplicate.duplicates.size > 0}">
+                <div class="duplicate-detection__duplicates">
+                    <h4 class="duplicate-detection__subsection-title">${'Duplicate Assets' @ i18n}</h4>
+                    <div class="duplicate-detection__duplicate-list">
+                        <div data-sly-list.duplicateAsset="${duplicate.duplicates}" class="duplicate-detection__duplicate-item">
+                            <div class="duplicate-detection__duplicate-card">
+                                <a href="${duplicateAsset.path}.html" class="duplicate-detection__duplicate-link">
+                                    <div class="duplicate-detection__duplicate-path">${duplicateAsset.path}</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </sly>
+        </div>
+    </sly>
+
+    <!--/* All Duplicate Groups */-->
+    <sly data-sly-test="${duplicate.allDuplicateGroups.size > 0}">
+        <div class="duplicate-detection__all-groups">
+            <h3 class="duplicate-detection__section-title">${'All Duplicate Groups' @ i18n}</h3>
+            <div class="duplicate-detection__group-list">
+                <div data-sly-list.group="${duplicate.allDuplicateGroups}" class="duplicate-detection__group-item">
+                    <div class="duplicate-detection__group-card">
+                        <h4 class="duplicate-detection__group-title">${'Group {0}' @ i18n, i18n, groupList.index + 1} (${group.size} ${'assets' @ i18n})</h4>
+                        <div class="duplicate-detection__group-assets">
+                            <div data-sly-list.asset="${group}" class="duplicate-detection__group-asset">
+                                <a href="${asset.path}.html" class="duplicate-detection__group-asset-link">${asset.path}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </sly>
+</div>

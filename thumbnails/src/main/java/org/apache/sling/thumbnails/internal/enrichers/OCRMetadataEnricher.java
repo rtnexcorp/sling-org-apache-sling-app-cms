@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.sling.cms.core.internal.enrichers;
+package org.apache.sling.thumbnails.internal.enrichers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,9 +87,6 @@ public class OCRMetadataEnricher implements FileMetadataEnricher {
                 description = "Language for OCR (e.g., 'eng', 'fra', 'deu', 'eng+fra')")
         String language() default "eng";
 
-        @AttributeDefinition(name = "OCR Timeout (seconds)", description = "Maximum time to spend on OCR per file")
-        int timeout() default 120;
-
         @AttributeDefinition(name = "Max Text Length", description = "Maximum length of extracted OCR text to store")
         int maxTextLength() default MAX_OCR_TEXT_LENGTH;
     }
@@ -99,7 +96,6 @@ public class OCRMetadataEnricher implements FileMetadataEnricher {
     private Set<String> supportedMimeTypes;
     private String tesseractPath;
     private String language;
-    private int timeout;
     private int maxTextLength;
 
     @Activate
@@ -109,7 +105,6 @@ public class OCRMetadataEnricher implements FileMetadataEnricher {
         this.supportedMimeTypes = new HashSet<>(Arrays.asList(config.supportedMimeTypes()));
         this.tesseractPath = config.tesseractPath();
         this.language = config.language();
-        this.timeout = config.timeout();
         this.maxTextLength = config.maxTextLength();
 
         log.info(
@@ -185,10 +180,16 @@ public class OCRMetadataEnricher implements FileMetadataEnricher {
 
     private void checkTesseractAvailability() {
         try {
-            Process process = Runtime.getRuntime().exec(tesseractPath.isEmpty() ? "tesseract" : tesseractPath);
-            process.destroy();
-            log.info("Tesseract OCR is available");
-        } catch (IOException e) {
+            ProcessBuilder pb = new ProcessBuilder(tesseractPath.isEmpty() ? "tesseract" : tesseractPath, "--version");
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                log.info("Tesseract OCR is available");
+            } else {
+                log.warn("Tesseract OCR returned non-zero exit code: {}", exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
             log.warn(
                     "Tesseract OCR not found - OCR enricher is enabled but will fail. "
                             + "Please install Tesseract or disable this enricher. Error: {}",

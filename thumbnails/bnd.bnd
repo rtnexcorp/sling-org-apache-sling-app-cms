@@ -1,5 +1,5 @@
 Sling-Model-Packages: org.apache.sling.thumbnails,org.apache.sling.thumbnails.internal.models,org.apache.sling.thumbnails.cache
 
-Export-Package: org.apache.sling.thumbnails.cache
+Export-Package: org.apache.sling.thumbnails.cache,org.apache.sling.thumbnails.internal.models
 
 -includeresource: lib/thumbnailator.jar=thumbnailator-[[0-9\.]]*.jar;lib:=true

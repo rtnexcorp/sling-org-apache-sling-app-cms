@@ -1,0 +1,101 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.collection="org.apache.sling.thumbnails.internal.models.CollectionModel"/>
+
+<div class="collections-management" data-component="collections-management">
+    <div class="collections-management__header">
+        <h2 class="collections-management__title">${'Collections Management' @ i18n}</h2>
+    </div>
+
+    <div class="collections-management__overview">
+        <div class="collections-management__stats">
+            <div class="collections-management__stat">
+                <span class="collections-management__stat-number">${collection.savedSearchCount}</span>
+                <span class="collections-management__stat-label">${'Saved Searches' @ i18n}</span>
+            </div>
+        </div>
+    </div>
+
+    <!--/* Collection Details Section */-->
+    <sly data-sly-test="${collection.collection}">
+        <div class="collections-management__collection-details">
+            <h3 class="collections-management__section-title">${'Collection Details' @ i18n}</h3>
+
+            <div class="collections-management__detail-grid">
+                <div class="collections-management__detail-item">
+                    <label class="collections-management__detail-label">${'Path' @ i18n}:</label>
+                    <span class="collections-management__detail-value">${collection.collection.path}</span>
+                </div>
+
+                <div class="collections-management__detail-item">
+                    <label class="collections-management__detail-label">${'Assets' @ i18n}:</label>
+                    <span class="collections-management__detail-value">${collection.assets.size}</span>
+                </div>
+            </div>
+
+            <!--/* Assets in Collection */-->
+            <sly data-sly-test="${collection.assets.size > 0}">
+                <div class="collections-management__assets">
+                    <h4 class="collections-management__subsection-title">${'Assets in Collection' @ i18n}</h4>
+                    <div class="collections-management__asset-grid">
+                        <div data-sly-list.asset="${collection.assets}" class="collections-management__asset-item">
+                            <div class="collections-management__asset-card">
+                                <a href="${asset.path}.html" class="collections-management__asset-link">
+                                    <div class="collections-management__asset-path">${asset.path}</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </sly>
+        </div>
+    </sly>
+
+    <!--/* Asset Collections Section */-->
+    <sly data-sly-test="${collection.collectionsForAsset.size > 0}">
+        <div class="collections-management__asset-collections">
+            <h3 class="collections-management__section-title">${'Collections for this Asset' @ i18n}</h3>
+            <div class="collections-management__collection-list">
+                <div data-sly-list.collection="${collection.collectionsForAsset}" class="collections-management__collection-item">
+                    <div class="collections-management__collection-card">
+                        <a href="${collection.path}.html" class="collections-management__collection-link">
+                            <div class="collections-management__collection-path">${collection.path}</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </sly>
+
+    <!--/* Saved Searches Section */-->
+    <sly data-sly-test="${collection.savedSearches.size > 0}">
+        <div class="collections-management__saved-searches">
+            <h3 class="collections-management__section-title">${'Saved Searches' @ i18n}</h3>
+            <div class="collections-management__search-list">
+                <div data-sly-list.search="${collection.savedSearches}" class="collections-management__search-item">
+                    <div class="collections-management__search-card">
+                        <a href="${search.path}.html" class="collections-management__search-link">
+                            <div class="collections-management__search-path">${search.path}</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </sly>
+</div>

@@ -22,6 +22,9 @@
 @use "overrides";
 @use "tiptap";
 @use "assets";
+@use "assetgovernance";
+@use "collections";
+@use "duplicates";
 @use "contentfilter";
 @use "search";
 @use "variables" as *;

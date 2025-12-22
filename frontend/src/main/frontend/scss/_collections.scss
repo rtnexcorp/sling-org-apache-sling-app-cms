@@ -1,0 +1,188 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/* Collections Management Component - Provides UI for managing asset collections and saved searches */
+
+.collections-management {
+  padding: 1.5rem;
+
+  &__header {
+    margin-bottom: 2rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+
+  &__overview {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &__stats {
+    display: flex;
+    gap: 2rem;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #9E2165;
+  }
+
+  &__stat-label {
+    font-size: 0.875rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 2rem 0 1rem 0;
+  }
+
+  &__subsection-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    margin: 1.5rem 0 0.5rem 0;
+  }
+
+  &__collection-details,
+  &__asset-collections,
+  &__saved-searches {
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &__detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  &__detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__detail-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__detail-value {
+    font-size: 1rem;
+    color: #333;
+  }
+
+  &__assets {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e1e5e9;
+  }
+
+  &__asset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  &__asset-item {
+    background: #f8f9fa;
+    border: 1px solid #e1e5e9;
+    border-radius: 0.25rem;
+    overflow: hidden;
+  }
+
+  &__asset-card {
+    padding: 1rem;
+  }
+
+  &__asset-link {
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__asset-path {
+    font-size: 0.875rem;
+    word-break: break-all;
+  }
+
+  &__collection-list,
+  &__search-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  &__collection-item,
+  &__search-item {
+    background: #f8f9fa;
+    border: 1px solid #e1e5e9;
+    border-radius: 0.25rem;
+    overflow: hidden;
+  }
+
+  &__collection-card,
+  &__search-card {
+    padding: 1rem;
+  }
+
+  &__collection-link,
+  &__search-link {
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__collection-path,
+  &__search-path {
+    font-size: 0.875rem;
+    word-break: break-all;
+  }
+}
