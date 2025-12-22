@@ -70,6 +70,18 @@
             "link": "/cms/config/configs.html/conf",
             "text": "Configuration"
           },
+          "schemas": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/schema"],
+            "link": "/cms/schema/list.html/conf/global/schemas",
+            "text": "Content Schemas"
+          },
+          "fragments": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/fragment"],
+            "link": "/cms/fragment/list.html/content/fragments",
+            "text": "Content Fragments"
+          },
           "usergenerated": {
             "jcr:primaryType": "nt:unstructured",
             "alternatives": ["/cms/usergenerated/review.html"],

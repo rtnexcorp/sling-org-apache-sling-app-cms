@@ -1,0 +1,167 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Create Schema Field",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "actionSuffix": "/*",
+                "button": "Create Field",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "fieldName": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Field Name",
+                        "description": "Technical name (e.g. title, description, price)",
+                        "name": ":name",
+                        "required": true,
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+                    },
+                    "label": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Label",
+                        "description": "Human-readable label",
+                        "name": "label",
+                        "required": true,
+                        "skipload": true
+                    },
+                    "description": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                        "label": "Description",
+                        "name": "description",
+                        "skipload": true
+                    },
+                    "type": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Field Type",
+                        "name": "type",
+                        "required": true,
+                        "skipload": true,
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "string": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "String (Short Text)",
+                                "value": "string"
+                            },
+                            "text": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Text (Long Text)",
+                                "value": "text"
+                            },
+                            "richtext": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Rich Text",
+                                "value": "richtext"
+                            },
+                            "boolean": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Boolean (True/False)",
+                                "value": "boolean"
+                            },
+                            "integer": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Integer (Whole Number)",
+                                "value": "integer"
+                            },
+                            "decimal": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Decimal (Number with Decimals)",
+                                "value": "decimal"
+                            },
+                            "date": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Date",
+                                "value": "date"
+                            },
+                            "datetime": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Date/Time",
+                                "value": "datetime"
+                            },
+                            "reference": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Reference (Link to Content)",
+                                "value": "reference"
+                            },
+                            "tag": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Tag (Taxonomy)",
+                                "value": "tag"
+                            },
+                            "asset": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Asset (File/Image)",
+                                "value": "asset"
+                            },
+                            "select": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Select (Dropdown)",
+                                "value": "select"
+                            }
+                        }
+                    },
+                    "required": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/boolean",
+                        "label": "Required",
+                        "name": "required",
+                        "skipload": true
+                    },
+                    "multiple": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/boolean",
+                        "label": "Multiple Values",
+                        "name": "multiple",
+                        "skipload": true
+                    },
+                    "order": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Order",
+                        "description": "Sort order (10, 20, 30...)",
+                        "name": "order",
+                        "type": "number",
+                        "value": "10",
+                        "skipload": true
+                    },
+                    "defaultValue": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Default Value",
+                        "name": "defaultValue",
+                        "skipload": true
+                    },
+                    "primaryType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "jcr:primaryType",
+                        "value": "nt:unstructured"
+                    },
+                    "validationFolder": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "validation/jcr:primaryType",
+                        "value": "nt:unstructured"
+                    },
+                    "propertiesFolder": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "properties/jcr:primaryType",
+                        "value": "nt:unstructured"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,6 +1,8 @@
 Export-Package: org.apache.sling.cms.reference.beans
 Sling-Initial-Content: jcr_root/apps/reference;overwrite:=true;uninstall:=true;path:=/apps/reference,\
     jcr_root/conf/asf.json;overwrite:=true;ignoreImportProviders:=xml;path:=/conf/asf,\
+    jcr_root/conf/global/schemas.json;overwrite:=true;ignoreImportProviders:=xml;path:=/conf/global/schemas,\
+    jcr_root/content/fragments;overwrite:=true;ignoreImportProviders:=xml;path:=/content/fragments,\
     jcr_root/content/reference.json;overwrite:=true;path:=/content/reference,\
     jcr_root/content/reference/en;overwrite:=true;path:=/content/reference/en,\
     jcr_root/etc/taxonomy/reference.json;overwrite:=true;path:=/etc/taxonomy/reference,\
