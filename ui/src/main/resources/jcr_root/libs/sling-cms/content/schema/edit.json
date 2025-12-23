@@ -71,7 +71,7 @@
                 "contenttable": {
                     "jcr:primaryType": "nt:unstructured",
                     "sling:resourceType": "sling-cms/components/cms/contenttable",
-                    "path": "fields",
+                    "appendSuffix": "/fields",
                     "columns": {
                         "jcr:primaryType": "nt:unstructured",
                         "name": {
