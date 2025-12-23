@@ -29,7 +29,9 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.cms.schema.ContentSchema;
 import org.apache.sling.cms.schema.SchemaField;
 import org.apache.sling.cms.schema.SchemaManager;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.Optional;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
@@ -37,16 +39,18 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
  * Sling Model for rendering fragment editor forms dynamically based on schema.
  * Generates appropriate form fields for each field defined in the fragment's schema.
  */
-@Model(adaptables = Resource.class)
+@Model(adaptables = Resource.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class FragmentEditor {
 
     @SlingObject
     private Resource resource;
 
     @Inject
+    @Optional
     private String schemaId;
 
     @OSGiService
+    @Optional
     private SchemaManager schemaManager;
 
     private ContentSchema schema;
@@ -94,5 +98,15 @@ public class FragmentEditor {
             return value != null ? value.toString() : "";
         }
         return "";
+    }
+
+    /**
+     * Get the properties ValueMap for direct access in HTL templates.
+     * HTL can access this via ${fragmentEditor.properties['fieldName']}.
+     *
+     * @return the resource's ValueMap
+     */
+    public ValueMap getProperties() {
+        return properties;
     }
 }

@@ -115,7 +115,7 @@ Let's create a blog article using the Article Content Type:
 
 ### "No schema found for this fragment"
 - Ensure the `schemaId` property is set correctly
-- Verify the schema exists at `/conf/global/schemas/{schemaId}`
+- Verify the schema exists at `/conf/global/site/schemas/{schemaId}`
 
 ### Missing Fields in Editor
 - Check that the schema has fields defined

@@ -17,7 +17,7 @@
  * under the License.
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
-<c:set var="schemasPath" value="/conf/global/schemas" />
+<c:set var="schemasPath" value="/conf/global/site/schemas" />
 <c:set var="schemasResource" value="${sling:getResource(resourceResolver, schemasPath)}" />
 <c:if test="${schemasResource != null}">
     <c:forEach var="schemaResource" items="${sling:listChildren(schemasResource)}">

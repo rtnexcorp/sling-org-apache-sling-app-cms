@@ -8,13 +8,13 @@ The Content Schema Management system provides a complete GUI for creating, editi
 
 1. **Login to CMS**: http://localhost:8082/cms
 2. **Navigate**: Click **Manage > Content Schemas** in the left navigation menu
-3. **Default Location**: Schemas are stored at `/conf/global/schemas/`
+3. **Default Location**: Schemas are stored at `/conf/global/site/schemas/`
 
 ## Features
 
 ### 1. Schema List View
 
-**URL**: `/cms/schema/list.html/conf/global/schemas`
+**URL**: `/cms/schema/list.html/conf/global/site/schemas`
 
 Displays all content schemas with:
 - Schema ID (technical name)
@@ -50,7 +50,7 @@ Enabled: ✓
 
 ### 3. Edit Schema
 
-**URL**: `/cms/schema/edit.html/conf/global/schemas/{schema-id}`
+**URL**: `/cms/schema/edit.html/conf/global/site/schemas/{schema-id}`
 
 **Two Sections**:
 
@@ -239,7 +239,7 @@ Validation Rules:
 
 Schemas are stored in the JCR repository at:
 ```
-/conf/global/schemas/
+/conf/global/site/schemas/
 ├── article/
 │   ├── jcr:primaryType = nt:unstructured
 │   ├── sling:resourceType = sling-cms/components/cms/schema
@@ -257,7 +257,7 @@ Schemas are stored in the JCR repository at:
 
 Each field is stored as a node under the schema's `fields/` folder:
 ```
-/conf/global/schemas/article/fields/title/
+/conf/global/site/schemas/article/fields/title/
 ├── jcr:primaryType = nt:unstructured
 ├── label = "Title"
 ├── type = "string"
@@ -272,7 +272,7 @@ Each field is stored as a node under the schema's `fields/` folder:
 
 Schemas can be adapted to `ContentSchema` Sling Model:
 ```java
-Resource schemaResource = resourceResolver.getResource("/conf/global/schemas/article");
+Resource schemaResource = resourceResolver.getResource("/conf/global/site/schemas/article");
 ContentSchema schema = schemaResource.adaptTo(ContentSchema.class);
 
 // Use schema
@@ -363,7 +363,7 @@ When making breaking changes:
 ### Schema Not Appearing in List
 
 **Check**:
-1. Schema exists at `/conf/global/schemas/{schema-id}`
+1. Schema exists at `/conf/global/site/schemas/{schema-id}`
 2. Has `sling:resourceType = "sling-cms/components/cms/schema"`
 3. Parent folder has `jcr:primaryType = "nt:unstructured"`
 
@@ -377,7 +377,7 @@ When making breaking changes:
 ### Cannot Create Schema
 
 **Check**:
-1. User has write permissions to `/conf/global/schemas/`
+1. User has write permissions to `/conf/global/site/schemas/`
 2. Schema ID is unique
 3. All required fields filled
 
@@ -398,12 +398,12 @@ Planned features:
 ```
 CMS Start Page
 └── Manage Section
-    └── Content Schemas (/cms/schema/list.html/conf/global/schemas)
+    └── Content Schemas (/cms/schema/list.html/conf/global/site/schemas)
         ├── List View
         │   ├── Create Schema (+)
         │   ├── Edit Schema (per item)
         │   └── Delete Schema (per item)
-        └── Edit Schema View (/cms/schema/edit.html/conf/global/schemas/{id})
+        └── Edit Schema View (/cms/schema/edit.html/conf/global/site/schemas/{id})
             ├── Schema Properties Form
             └── Fields Section
                 ├── Create Field (+)
@@ -415,7 +415,7 @@ CMS Start Page
 
 - **Documentation**: `/docs/content-schemas.md` - Complete technical guide
 - **API Reference**: JavaDocs for `org.apache.sling.cms.schema` package
-- **Example Schemas**: `/conf/global/schemas/article`, `/conf/global/schemas/product`
+- **Example Schemas**: `/conf/global/site/schemas/article`, `/conf/global/site/schemas/product`
 
 ---
 

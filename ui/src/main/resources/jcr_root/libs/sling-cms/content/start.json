@@ -73,7 +73,7 @@
           "schemas": {
             "jcr:primaryType": "nt:unstructured",
             "alternatives": ["/cms/schema"],
-            "link": "/cms/schema/list.html/conf/global/schemas",
+            "link": "/cms/schema/list.html/conf/global/site/schemas",
             "text": "Content Schemas"
           },
           "fragments": {

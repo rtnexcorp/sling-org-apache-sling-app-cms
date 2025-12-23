@@ -31,10 +31,10 @@ Content Schemas provide a first-class schema definition system for pages and con
 
 ## Schema Structure
 
-Schemas are stored at `/conf/{site}/schemas/{schema-id}` with the following structure:
+Schemas are stored at `/conf/{site}/site/schemas/{schema-id}` with the following structure:
 
 ```
-/conf/global/schemas/article
+/conf/global/site/schemas/article
   - jcr:primaryType: nt:unstructured
   - sling:resourceType: sling-cms/components/cms/schema
   - title: "Article"

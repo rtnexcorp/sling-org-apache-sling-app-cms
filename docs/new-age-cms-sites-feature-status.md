@@ -123,7 +123,7 @@ if (!result.isValid()) {
 **Related Code**:
 - API: `api/src/main/java/org/apache/sling/cms/schema/`
 - Implementation: `core/src/main/java/org/apache/sling/cms/core/internal/schema/`
-- Examples: `ui/src/main/resources/jcr_root/conf/global/schemas/`
+- Examples: `ui/src/main/resources/jcr_root/conf/global/site/schemas/`
 
 ### 2) Preview tokens + draft rendering
 **What**: Preview unpublished changes without full publish.
