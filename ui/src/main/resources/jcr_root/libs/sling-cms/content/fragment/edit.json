@@ -2,7 +2,7 @@
     "jcr:primaryType": "sling:Page",
     "jcr:content": {
         "jcr:title": "Edit Content Fragment",
-        "sling:resourceType": "sling-cms/components/pages/editor",
+        "sling:resourceType": "sling-cms/components/pages/fragmentmodal",
         "jcr:primaryType": "nt:unstructured",
         "container": {
             "jcr:primaryType": "nt:unstructured",

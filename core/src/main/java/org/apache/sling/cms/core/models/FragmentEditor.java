@@ -19,11 +19,11 @@
 package org.apache.sling.cms.core.models;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.cms.schema.ContentSchema;
@@ -31,7 +31,6 @@ import org.apache.sling.cms.schema.SchemaField;
 import org.apache.sling.cms.schema.SchemaManager;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.Optional;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
@@ -39,29 +38,43 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
  * Sling Model for rendering fragment editor forms dynamically based on schema.
  * Generates appropriate form fields for each field defined in the fragment's schema.
  */
-@Model(adaptables = Resource.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class FragmentEditor {
+
+    @SlingObject
+    private SlingHttpServletRequest request;
 
     @SlingObject
     private Resource resource;
 
-    @Inject
-    @Optional
-    private String schemaId;
-
     @OSGiService
-    @Optional
     private SchemaManager schemaManager;
 
     private ContentSchema schema;
     private ValueMap properties;
+    private Resource fragmentResource;
 
     @PostConstruct
     protected void init() {
-        if (schemaId != null && schemaManager != null) {
-            schema = schemaManager.getSchema(resource, schemaId);
+        // Get the fragment resource from the request suffix
+        if (request != null && request.getRequestPathInfo() != null) {
+            String suffixPath = request.getRequestPathInfo().getSuffix();
+            if (suffixPath != null && resource != null) {
+                fragmentResource = resource.getResourceResolver().getResource(suffixPath);
+            }
         }
-        properties = resource.getValueMap();
+
+        // Fallback to current resource if no suffix
+        if (fragmentResource == null) {
+            fragmentResource = resource;
+        }
+
+        properties = fragmentResource.getValueMap();
+        String schemaId = properties.get("schemaId", String.class);
+
+        if (schemaId != null && schemaManager != null) {
+            schema = schemaManager.getSchema(fragmentResource, schemaId);
+        }
     }
 
     /**
@@ -87,16 +100,34 @@ public class FragmentEditor {
 
     /**
      * Get the current value for a field from the resource.
-     * This is called for each field during rendering to populate form values.
+     * This reads from child field nodes created during fragment initialization.
      *
      * @param fieldName the name of the field to get the value for
      * @return the field value as a String, or empty string if not set
      */
     public String getFieldValue(String fieldName) {
-        if (properties != null && fieldName != null) {
-            Object value = properties.get(fieldName);
-            return value != null ? value.toString() : "";
+        if (fieldName == null || fragmentResource == null) {
+            return "";
         }
+
+        // First, check if there's a child node for this field (new structure)
+        Resource fieldResource = fragmentResource.getChild(fieldName);
+        if (fieldResource != null) {
+            ValueMap fieldProps = fieldResource.getValueMap();
+            Object value = fieldProps.get("value");
+            if (value != null) {
+                return value.toString();
+            }
+        }
+
+        // Fallback to direct properties (legacy structure)
+        if (properties != null) {
+            Object value = properties.get(fieldName);
+            if (value != null) {
+                return value.toString();
+            }
+        }
+
         return "";
     }
 

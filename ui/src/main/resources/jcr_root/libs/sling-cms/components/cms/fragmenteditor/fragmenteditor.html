@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<sly data-sly-use.fragmentEditor="org.apache.sling.cms.core.models.FragmentEditor">
+<sly data-sly-use.fragmentEditor="${'org.apache.sling.cms.core.models.FragmentEditor' @ request=request}">
     <div class="cms-fragment-editor">
         <sly data-sly-list.field="${fragmentEditor.fields}">
             <div class="field">

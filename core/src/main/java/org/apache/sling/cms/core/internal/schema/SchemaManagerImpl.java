@@ -24,13 +24,12 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.cms.schema.ContentSchema;
 import org.apache.sling.cms.schema.SchemaManager;
 import org.apache.sling.cms.schema.ValidationResult;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,15 +40,19 @@ import org.slf4j.LoggerFactory;
 public class SchemaManagerImpl implements SchemaManager {
 
     private static final Logger log = LoggerFactory.getLogger(SchemaManagerImpl.class);
-
-    @Reference
-    private ConfigurationResourceResolver configurationResourceResolver;
+    private static final String SCHEMAS_PATH = "/conf/global/site/schemas";
 
     @Override
     public ContentSchema getSchema(@NotNull Resource contextResource, @NotNull String schemaId) {
-        Iterable<Resource> schemaResources =
-                configurationResourceResolver.getResourceCollection(contextResource, "site", "schemas");
+        ResourceResolver resolver = contextResource.getResourceResolver();
+        Resource schemasResource = resolver.getResource(SCHEMAS_PATH);
 
+        if (schemasResource == null) {
+            log.debug("Schemas resource not found at: {}", SCHEMAS_PATH);
+            return null;
+        }
+
+        Iterable<Resource> schemaResources = schemasResource.getChildren();
         for (Resource schemaResource : schemaResources) {
             if (schemaId.equals(schemaResource.getName())) {
                 ContentSchema schema = schemaResource.adaptTo(ContentSchema.class);
@@ -66,9 +69,15 @@ public class SchemaManagerImpl implements SchemaManager {
     @Override
     @NotNull
     public List<ContentSchema> getAllSchemas(@NotNull Resource contextResource) {
-        Iterable<Resource> schemaResources =
-                configurationResourceResolver.getResourceCollection(contextResource, "site", "schemas");
+        ResourceResolver resolver = contextResource.getResourceResolver();
+        Resource schemasResource = resolver.getResource(SCHEMAS_PATH);
 
+        if (schemasResource == null) {
+            log.debug("Schemas resource not found at: {}", SCHEMAS_PATH);
+            return new ArrayList<>();
+        }
+
+        Iterable<Resource> schemaResources = schemasResource.getChildren();
         return StreamSupport.stream(schemaResources.spliterator(), false)
                 .map(r -> r.adaptTo(ContentSchema.class))
                 .filter(s -> s != null && s.isEnabled())
