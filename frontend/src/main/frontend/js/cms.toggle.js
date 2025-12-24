@@ -54,8 +54,11 @@ rava.bind('.toggle-value', {
       }
       
       // Function to update visibility based on source value
+      // Supports comma-separated values in data-toggle-value (e.g., "string,text")
       function updateVisibility(sourceEl) {
-        if (sourceEl.value !== toggle.dataset.toggleValue) {
+        const currentValue = sourceEl.value || '';
+        const toggleValues = toggle.dataset.toggleValue.split(',').map(v => v.trim());
+        if (currentValue === '' || !toggleValues.includes(currentValue)) {
           toggle.classList.add('is-hidden');
         } else {
           toggle.classList.remove('is-hidden');
