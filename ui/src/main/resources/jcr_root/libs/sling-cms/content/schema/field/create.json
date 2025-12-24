@@ -111,6 +111,35 @@
                             }
                         }
                     },
+                    "options": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/multifield",
+                        "label": "Select Options",
+                        "description": "Add options for the dropdown (only for Select field type)",
+                        "name": "options",
+                        "toggleSource": "type",
+                        "toggleValue": "select",
+                        "skipload": true,
+                        "template": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "label": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                                "label": "Label",
+                                "description": "Display text",
+                                "name": "label",
+                                "required": true
+                            },
+                            "value": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                                "label": "Value",
+                                "description": "Stored value",
+                                "name": "value",
+                                "required": true
+                            }
+                        }
+                    },
                     "required": {
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/editor/fields/boolean",

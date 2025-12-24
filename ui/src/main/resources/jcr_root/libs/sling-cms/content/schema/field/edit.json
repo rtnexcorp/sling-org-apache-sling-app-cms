@@ -37,12 +37,12 @@
                             "jcr:primaryType": "nt:unstructured",
                             "string": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "String",
+                                "label": "String (Short Text)",
                                 "value": "string"
                             },
                             "text": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Text",
+                                "label": "Text (Long Text)",
                                 "value": "text"
                             },
                             "richtext": {
@@ -52,17 +52,17 @@
                             },
                             "boolean": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Boolean",
+                                "label": "Boolean (True/False)",
                                 "value": "boolean"
                             },
                             "integer": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Integer",
+                                "label": "Integer (Whole Number)",
                                 "value": "integer"
                             },
                             "decimal": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Decimal",
+                                "label": "Decimal (Number with Decimals)",
                                 "value": "decimal"
                             },
                             "date": {
@@ -77,23 +77,51 @@
                             },
                             "reference": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Reference",
+                                "label": "Reference (Link to Content)",
                                 "value": "reference"
                             },
                             "tag": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Tag",
+                                "label": "Tag (Taxonomy)",
                                 "value": "tag"
                             },
                             "asset": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Asset",
+                                "label": "Asset (File/Image)",
                                 "value": "asset"
                             },
                             "select": {
                                 "jcr:primaryType": "nt:unstructured",
-                                "label": "Select",
+                                "label": "Select (Dropdown)",
                                 "value": "select"
+                            }
+                        }
+                    },
+                    "options": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/multifield",
+                        "label": "Select Options",
+                        "description": "Add options for the dropdown (only for Select field type)",
+                        "name": "options",
+                        "toggleSource": "type",
+                        "toggleValue": "select",
+                        "template": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "label": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                                "label": "Label",
+                                "description": "Display text",
+                                "name": "label",
+                                "required": true
+                            },
+                            "value": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                                "label": "Value",
+                                "description": "Stored value",
+                                "name": "value",
+                                "required": true
                             }
                         }
                     },
@@ -162,25 +190,6 @@
                         "label": "Pattern (Regular Expression)",
                         "name": "validation/pattern",
                         "description": "e.g. ^[A-Z0-9-]{5,20}$ for SKU validation"
-                    },
-                    "propertiesHeading": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/general/textelement",
-                        "level": "h3",
-                        "text": "Additional Properties (for select fields)"
-                    },
-                    "optionsInfo": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/general/textelement",
-                        "level": "p",
-                        "text": "For select fields, add options as a comma-separated list (e.g. electronics, clothing, books)"
-                    },
-                    "options": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
-                        "label": "Options (comma-separated)",
-                        "name": "properties/options",
-                        "description": "For select fields only"
                     }
                 }
             }

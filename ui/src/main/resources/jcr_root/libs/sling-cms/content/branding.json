@@ -13,7 +13,7 @@
     "tileColor": "#662f8f",
     "browserConfig": "/static/sling-cms/img/browserconfig.xml",
     "webManifest": "/static/sling-cms/img/site.webmanifest",
-    "css": "/static/sling-cms/css/style.min.css",
+    "css": "/static/sling-cms/css/cms.min.css",
     "js": [
         "/static/sling-cms/js/cms.bundle.min.js",
         "/static/sling-cms/js/editor.bundle.min.js"
