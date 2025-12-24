@@ -59,6 +59,7 @@ import './cms.docpreview.js';
 import './cms.assetbrowser.js';
 import './cms.search.js';
 import './cms.i18n.js';
+import './cms.preview.js';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {

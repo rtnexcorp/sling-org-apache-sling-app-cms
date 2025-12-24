@@ -119,6 +119,14 @@ public class CMSSecurityFilter implements Filter {
             allowed = true;
         }
 
+        // Check if preview mode is enabled via valid preview token
+        Boolean previewEnabled =
+                (Boolean) slingRequest.getAttribute(org.apache.sling.cms.CMSConstants.ATTR_PREVIEW_ENABLED);
+        if (Boolean.TRUE.equals(previewEnabled)) {
+            log.trace("Preview mode enabled, allowing access to unpublished content");
+            allowed = true;
+        }
+
         PublishableResource publishableResource = Optional.ofNullable(
                         CMSUtils.findPublishableParent(slingRequest.getResource()))
                 .map(r -> r.adaptTo(PublishableResource.class))

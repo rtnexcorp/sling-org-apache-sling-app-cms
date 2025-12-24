@@ -32,6 +32,11 @@ public class CMSConstants {
     public static final String ATTR_EDIT_ENABLED = "cmsEditEnabled";
 
     /**
+     * The Request attribute for whether or not preview mode is enabled
+     */
+    public static final String ATTR_PREVIEW_ENABLED = "cmsPreviewEnabled";
+
+    /**
      * The Component type for pages
      */
     public static final String COMPONENT_TYPE_PAGE = "Page";
@@ -134,6 +139,26 @@ public class CMSConstants {
      * The last publication action
      */
     public static final String PN_LAST_PUBLICATION_TYPE = "sling:lastPublicationType";
+
+    /**
+     * Preview token property name
+     */
+    public static final String PN_PREVIEW_TOKEN = "sling:previewToken";
+
+    /**
+     * Preview token expiry property name
+     */
+    public static final String PN_PREVIEW_EXPIRY = "sling:previewExpiry";
+
+    /**
+     * Preview token created by property name
+     */
+    public static final String PN_PREVIEW_CREATED_BY = "sling:previewCreatedBy";
+
+    /**
+     * Query parameter name for preview token
+     */
+    public static final String PARAM_PREVIEW_TOKEN = "preview";
 
     /**
      * Constant for the Site URL

@@ -136,9 +136,51 @@ Deliverables:
 ### 3) References graph + impact analysis
 **What**: Show "Referenced by / References" before moving/deleting/publishing.
 
-Deliverables:
-- Reference index (lightweight)
-- UI panel for impact analysis
+**Status**: **Partially implemented** - Core functionality exists, needs enhancement
+
+**What Exists (Dec 2025)**:
+- ✅ **Reference tracking API**: `Reference` and `References` interfaces (api/)
+- ✅ **Auto-update references**: `UpdateReferencesPostOperation` updates paths on move/delete
+- ✅ **UI components**: View references modal and delete/move dialogs show references
+- ✅ **JCR query-based**: Full-text search finds references using Oak Lucene indexes
+- ✅ **Pattern matching**: Distinguishes page references (.html) from asset references
+
+**Current Limitations**:
+- ❌ No dedicated reference graph/index (relies on runtime queries)
+- ❌ No visualization of relationship graphs
+- ❌ No pre-publish impact analysis
+- ❌ Performance may degrade with large repositories
+- ❌ No circular reference detection
+- ❌ No reference type distinction (hard vs soft dependencies)
+
+**Enhancement Action Items**:
+1. **Reference index/cache** - Build lightweight graph store for faster lookups
+   - Bidirectional index: "references" and "referenced by"
+   - Update on save/move/delete events
+   - Falls back to query-based if unavailable
+2. **Visual graph UI** - D3.js/similar for interactive visualization
+   - Node-edge graph showing relationships
+   - Filter by type (pages, assets, taxonomy)
+   - Circular dependency highlighting
+3. **Impact analysis dashboard** - Enhanced preview before operations
+   - "What breaks if I delete this?" scoring
+   - Publish impact analysis (downstream pages)
+   - Reference type classification (critical vs optional)
+4. **JSP→HTL migration** - Convert existing JSP components
+   - `components/cms/references/references.jsp` → `.html`
+   - `components/editor/fields/references/references.jsp` → `.html`
+
+**Related Code**:
+- API: `api/src/main/java/org/apache/sling/cms/Reference.java`
+- Implementation: `core/.../internal/models/ReferenceOperation.java`
+- UI: `ui/.../components/cms/references/` and `components/editor/fields/references/`
+- Post processor: `core/.../internal/operations/UpdateReferencesPostOperation.java`
+
+**Deliverables for Full Implementation**:
+- Reference index (lightweight graph store)
+- Enhanced UI panel with visual graph
+- Pre-publish impact analysis
+- Performance optimization for large repos
 
 ### 4) Multi-site rollouts (lightweight MSM alternative)
 **What**: Controlled propagation of shared templates/policies/config across sites.
