@@ -152,14 +152,6 @@
                         "label": "Default Value",
                         "name": "defaultValue"
                     },
-                    "textValidationHeading": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/general/textelement",
-                        "level": "h4",
-                        "text": "Text Validation",
-                        "toggleSource": "type",
-                        "toggleValue": "string,text"
-                    },
                     "minLength": {
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/editor/fields/text",
@@ -186,14 +178,6 @@
                         "name": "validation/pattern",
                         "toggleSource": "type",
                         "toggleValue": "string,text"
-                    },
-                    "numberValidationHeading": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/general/textelement",
-                        "level": "h4",
-                        "text": "Number Validation",
-                        "toggleSource": "type",
-                        "toggleValue": "integer,decimal"
                     },
                     "min": {
                         "jcr:primaryType": "nt:unstructured",
