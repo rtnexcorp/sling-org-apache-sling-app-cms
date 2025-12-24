@@ -35,8 +35,8 @@ License. -->
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -51,6 +51,9 @@ License. -->
                 <configuration>
                     <excludes>
                         <exclude>**/*.webmanifest</exclude>
+                        <!-- i18n sample data files -->
+                        <exclude>**/etc/i18n/**/*.json</exclude>
+                        <exclude>**/etc/i18n/**/.content.xml</exclude>
                     </excludes>
                 </configuration>
                 <executions>

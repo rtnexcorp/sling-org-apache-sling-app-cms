@@ -17,11 +17,14 @@
  * under the License.
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
-<dl>
-    <dt><fmt:message key="Position" /></dt>
-    <dd><sling:encode value="${properties.position}" mode="HTML" /></dd>
-    <dt><fmt:message key="Height" /></dt>
-    <dd><sling:encode value="${properties.height}" mode="HTML" /></dd>
-    <dt><fmt:message key="Width" /></dt>
-    <dd><sling:encode value="${properties.width}" mode="HTML" /></dd>
-</dl>
+<div class="handler-details">
+    <span class="badge badge-primary mr-2">Crop</span>
+    <dl class="row mb-0 mt-2">
+        <dt class="col-sm-4"><fmt:message key="Width" /></dt>
+        <dd class="col-sm-8"><strong><sling:encode value="${properties.width}" mode="HTML" />px</strong></dd>
+        <dt class="col-sm-4"><fmt:message key="Height" /></dt>
+        <dd class="col-sm-8"><strong><sling:encode value="${properties.height}" mode="HTML" />px</strong></dd>
+        <dt class="col-sm-4"><fmt:message key="Position" /></dt>
+        <dd class="col-sm-8"><sling:encode value="${properties.position}" mode="HTML" /></dd>
+    </dl>
+</div>

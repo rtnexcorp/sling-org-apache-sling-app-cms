@@ -1,0 +1,28 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--/* Video Preview - displays video files with playback controls */-->
+<template data-sly-template.videoPreview="${@ preview}">
+    <div class="box has-background-dark has-text-centered">
+        <video id="previewVideo" controls preload="metadata" style="max-width:100%; max-height:500px;">
+            <source src="${preview.filePath}" type="${preview.mimeType}"/>
+            ${'Your browser does not support video playback.' @ i18n}
+        </video>
+    </div>
+    <p class="help has-text-centered">${'Use controls to play, pause, and seek' @ i18n}</p>
+</template>

@@ -34,17 +34,61 @@ rava.bind('.toggle-value', {
       const source = this.getAttribute('data-toggle-source');
       const selector = `input[name="${source}"], select[name="${source}"]`;
       const toggle = this;
-      const sourceEl = document.querySelector(selector);
-      function handleChange() {
-        if (this.value !== toggle.dataset.toggleValue) {
+      
+      // Function to find source element within form or document
+      function findSourceEl() {
+        // First try within the closest form
+        const form = toggle.closest('form');
+        if (form) {
+          const el = form.querySelector(selector);
+          if (el) return el;
+        }
+        // Then try within the closest modal
+        const modal = toggle.closest('.modal');
+        if (modal) {
+          const el = modal.querySelector(selector);
+          if (el) return el;
+        }
+        // Finally try document-wide
+        return document.querySelector(selector);
+      }
+      
+      // Function to update visibility based on source value
+      // Supports comma-separated values in data-toggle-value (e.g., "string,text")
+      function updateVisibility(sourceEl) {
+        const currentValue = sourceEl.value || '';
+        const toggleValues = toggle.dataset.toggleValue.split(',').map(v => v.trim());
+        if (currentValue === '' || !toggleValues.includes(currentValue)) {
           toggle.classList.add('is-hidden');
         } else {
           toggle.classList.remove('is-hidden');
         }
       }
-      if (sourceEl) {
-        sourceEl.addEventListener('change', handleChange);
+      
+      // Function to handle change events
+      function handleChange() {
+        updateVisibility(this);
       }
+      
+      // Function to bind to source element
+      function bindToSource(sourceEl) {
+        sourceEl.addEventListener('change', handleChange);
+        updateVisibility(sourceEl);
+      }
+      
+      // Try to find and bind with retries for dynamic content
+      function tryBind(retryCount) {
+        const sourceEl = findSourceEl();
+        if (sourceEl) {
+          bindToSource(sourceEl);
+        } else if (retryCount > 0) {
+          // Retry with increasing delays for dynamically loaded modals
+          setTimeout(() => tryBind(retryCount - 1), 100);
+        }
+      }
+      
+      // Start with immediate check, then retry up to 5 times
+      tryBind(5);
     },
   },
 });

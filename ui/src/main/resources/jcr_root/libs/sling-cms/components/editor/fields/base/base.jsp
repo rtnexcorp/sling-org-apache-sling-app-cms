@@ -71,7 +71,14 @@
         <c:set var="events" value="${events},${event.key}" />
     </c:if>
 </c:forEach>
-<div class="field" data-events="${events}" data-path="${sling:encode(resource.path,'HTML_ATTR')}">
+<%-- Build toggle-value class and attributes if configured --%>
+<c:set var="toggleClass" value="" />
+<c:set var="toggleAttrs" value="" />
+<c:if test="${not empty properties.toggleSource && not empty properties.toggleValue}">
+    <c:set var="toggleClass" value="is-hidden toggle-value" />
+    <c:set var="toggleAttrs" value="data-toggle-source=\"${sling:encode(properties.toggleSource,'HTML_ATTR')}\" data-toggle-value=\"${sling:encode(properties.toggleValue,'HTML_ATTR')}\"" />
+</c:if>
+<div class="field ${toggleClass}" data-events="${events}" data-path="${sling:encode(resource.path,'HTML_ATTR')}" ${toggleAttrs}>
     <c:if test="${not empty properties.label}">
         <label class="label" for="${sling:encode(properties.name,'HTML_ATTR')}">
             <fmt:message key="${properties.label}" var="label" />

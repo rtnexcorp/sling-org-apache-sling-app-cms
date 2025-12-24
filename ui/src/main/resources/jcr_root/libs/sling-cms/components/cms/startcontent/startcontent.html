@@ -1,0 +1,212 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.startContent="org.apache.sling.cms.core.models.StartContent"></sly>
+<sly data-sly-use.advancedSearch="org.apache.sling.cms.core.models.AdvancedSearchResults"></sly>
+<br/><br/>
+<div class="columns">
+    <div class="column">
+        <!--/* Recent Content Panel */-->
+        <nav class="panel has-background-white" aria-label="${'Recent Content' @ i18n}">
+            <p class="panel-heading">
+                ${'Recent Content' @ i18n}
+            </p>
+            <sly data-sly-list.item="${startContent.recentContent}">
+                <a class="panel-block" 
+                   title="${item.path}" 
+                   href="/cms/site/content.html${item.parent.path}?resource=${item.path}">
+                    <span class="panel-icon">
+                        <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                            <i class="jam jam-document" aria-hidden="true"></i>
+                        </sly>
+                        <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                            <i class="jam jam-file" aria-hidden="true"></i>
+                        </sly>
+                    </span>
+                    <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                        ${item.valueMap['jcr:content/jcr:title'] || item.name}
+                    </sly>
+                    <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                        ${item.name}
+                    </sly>
+                </a>
+            </sly>
+        </nav>
+
+        <!--/* Recent Drafts Panel */-->
+        <nav class="panel has-background-white" aria-label="${'Recent Drafts' @ i18n}">
+            <p class="panel-heading">
+                ${'Recent Drafts' @ i18n}
+            </p>
+            <sly data-sly-list.item="${startContent.recentDrafts}">
+                <a class="panel-block" 
+                   title="${item.path}" 
+                   href="/cms/site/content.html${item.parent.path}?resource=${item.path}">
+                    <span class="panel-icon">
+                        <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                            <i class="jam jam-document" aria-hidden="true"></i>
+                        </sly>
+                        <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                            <i class="jam jam-file" aria-hidden="true"></i>
+                        </sly>
+                    </span>
+                    <sly data-sly-test="${item.resourceType == 'sling:Page'}">
+                        ${item.valueMap['jcr:content/jcr:title'] || item.name}
+                    </sly>
+                    <sly data-sly-test="${item.resourceType != 'sling:Page'}">
+                        ${item.name}
+                    </sly>
+                </a>
+            </sly>
+        </nav>
+    </div>
+
+    <div class="column">
+        <!--/* Advanced Search Panel */-->
+        <nav class="panel has-background-white" aria-label="${'Find Content' @ i18n}">
+            <p class="panel-heading">
+                ${'Find Content' @ i18n}
+            </p>
+            
+            <!--/* Main Search Form */-->
+            <div class="panel-block">
+                <form class="get-form advanced-search-form" 
+                      action="${resource.path}.advancedsearch.html" 
+                      data-target=".advanced-search-results"
+                      data-load="div">
+                    
+                    <!--/* Search Term */-->
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <input class="input" type="text" name="q" 
+                                   placeholder="${'Search...' @ i18n}" 
+                                   value="${advancedSearch.term}" />
+                            <span class="icon is-left">
+                                <i class="jam jam-search" aria-hidden="true"></i>
+                            </span>
+                        </p>
+                    </div>
+
+                    <!--/* Advanced Filters Toggle */-->
+                    <div class="field">
+                        <button type="button" class="button is-small is-light advanced-search-toggle">
+                            <span class="icon is-small">
+                                <i class="jam jam-filter" aria-hidden="true"></i>
+                            </span>
+                            <span>${'Advanced Filters' @ i18n}</span>
+                        </button>
+                    </div>
+
+                    <!--/* Advanced Filter Fields (hidden by default) */-->
+                    <div class="advanced-search-filters" style="display:none;">
+                        <!--/* Search by Tag */-->
+                        <div class="field">
+                            <label class="label is-small">${'Search by Tag' @ i18n}</label>
+                            <div class="control">
+                                <div class="select is-small is-fullwidth">
+                                    <select name="taxonomy">
+                                        <option value="">${'All Tags' @ i18n}</option>
+                                        <sly data-sly-list.tag="${advancedSearch.taxonomyOptions}">
+                                            <option value="${tag.path}" 
+                                                    data-sly-attribute.selected="${tag.path == advancedSearch.taxonomyPath ? 'selected' : ''}">
+                                                ${tag.title}
+                                            </option>
+                                        </sly>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--/* Content Type Filter */-->
+                        <div class="field">
+                            <label class="label is-small">${'Content Type' @ i18n}</label>
+                            <div class="control">
+                                <div class="select is-small is-fullwidth">
+                                    <select name="type">
+                                        <option value="all" selected="${advancedSearch.contentType == 'all' ? 'selected' : ''}">${'All Types' @ i18n}</option>
+                                        <option value="page" data-sly-attribute.selected="${advancedSearch.contentType == 'page' ? 'selected' : ''}">${'Pages' @ i18n}</option>
+                                        <option value="file" data-sly-attribute.selected="${advancedSearch.contentType == 'file' ? 'selected' : ''}">${'Files' @ i18n}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--/* Author Filter */-->
+                        <div class="field">
+                            <label class="label is-small">${'Author' @ i18n}</label>
+                            <div class="control">
+                                <input class="input is-small" type="text" name="author" 
+                                       placeholder="${'Username' @ i18n}"
+                                       value="${advancedSearch.author}" />
+                            </div>
+                        </div>
+
+                        <!--/* Date Range Filters */-->
+                        <div class="field">
+                            <label class="label is-small">${'Date Range' @ i18n}</label>
+                            <div class="field is-grouped">
+                                <div class="control is-expanded">
+                                    <input class="input is-small" type="date" name="dateFrom" 
+                                           placeholder="${'From' @ i18n}"
+                                           value="${advancedSearch.dateFrom}" />
+                                </div>
+                                <div class="control is-expanded">
+                                    <input class="input is-small" type="date" name="dateTo" 
+                                           placeholder="${'To' @ i18n}"
+                                           value="${advancedSearch.dateTo}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--/* Search Button */-->
+                    <div class="field">
+                        <button type="submit" class="button is-primary is-small is-fullwidth">
+                            <span class="icon is-small">
+                                <i class="jam jam-search" aria-hidden="true"></i>
+                            </span>
+                            <span>${'Search' @ i18n}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!--/* Search Results Container */-->
+            <div class="advanced-search-results"></div>
+        </nav>
+
+        <!--/* Quick Tag Search Panel */-->
+        <nav class="panel has-background-white" aria-label="${'Browse by Tag' @ i18n}">
+            <p class="panel-heading">
+                ${'Browse by Tag' @ i18n}
+            </p>
+            <div class="panel-block">
+                <div class="tags">
+                    <sly data-sly-list.tag="${advancedSearch.topTaxonomyOptions}" data-sly-unwrap>
+                        <a class="tag is-link is-light taxonomy-quick-search" 
+                           href="${resource.path}.advancedsearch.html?taxonomy=${tag.path}"
+                           data-taxonomy="${tag.path}"
+                           title="${'Search content tagged with' @ i18n} ${tag.title}">
+                            ${tag.title}
+                        </a>
+                    </sly>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>

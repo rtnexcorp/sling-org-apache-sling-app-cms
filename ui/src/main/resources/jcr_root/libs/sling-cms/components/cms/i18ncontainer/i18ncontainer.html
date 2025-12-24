@@ -1,0 +1,128 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.I18nContainerModel">
+<div class="scroll-container reload-container" 
+     data-path="${resource.path @ context='attribute'}.html${model.requestSuffix @ context='attribute'}">
+    <sly data-sly-resource="${resource.path @ resourceType='sling-cms/components/general/container'}"></sly>
+    
+    <nav class="level">
+        <div class="level-left">
+            <div class="level-item">
+                <a class="Button Fetch-Modal" 
+                   data-title="Add Entry" 
+                   data-path=".Main-Content form" 
+                   href="/cms/i18n/entry/create.html${model.firstLanguagePath @ context='attribute'}">
+                    ${'+ Entry' @ i18n}
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <form method="post" 
+          action="${model.suffixPath @ context='attribute'}" 
+          enctype="multipart/form-data" 
+          class="Form-Ajax" 
+          data-add-date="false">
+        <fieldset class="form-wrapper field">
+            <input type="hidden" name="_charset_" value="utf-8" />
+            <div class="table-container">
+                <table class="table is-fullwidth is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th class="Column-key" scope="col">
+                                ${'Key' @ i18n}
+                            </th>
+                            <sly data-sly-list.language="${model.languages}">
+                                <th id="Column-${language.languageCode @ context='attribute'}" scope="col">
+                                    ${language.displayLanguage} ${language.displayCountry}
+                                    <br/>
+                                    <small>(${language.languageCode})</small>
+                                </th>
+                            </sly>
+                            <th scope="col">
+                                ${'Actions' @ i18n}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <sly data-sly-list.row="${model.keyRows}">
+                            <tr>
+                                <td>${row.key}</td>
+                                <sly data-sly-list.langEntry="${row.languageEntries}">
+                                    <td role="group" aria-labelledby="Column-${langEntry.languageCode @ context='attribute'}">
+                                        <sly data-sly-test="${langEntry.hasEntry}">
+                                            <div class="field has-addons">
+                                                <div class="control is-expanded">
+                                                    <input name="${langEntry.languageName @ context='attribute'}/${langEntry.entryName @ context='attribute'}/sling:message"
+                                                           class="input"
+                                                           type="text"
+                                                           value="${langEntry.message @ context='attribute'}" />
+                                                    <input name="${langEntry.languageName @ context='attribute'}/${langEntry.entryName @ context='attribute'}/sling:key"
+                                                           type="hidden"
+                                                           value="${langEntry.key @ context='attribute'}" />
+                                                </div>
+                                                <sly data-sly-test="${langEntry.message == '' || langEntry.message == null}">
+                                                    <div class="control">
+                                                        <button type="button"
+                                                                class="button is-danger is-small"
+                                                                title="${'Delete empty entry' @ i18n, context='attribute'}"
+                                                                onclick="deleteI18nLanguageEntry(this, '${model.suffixPath @ context='attribute'}', '${langEntry.languageName @ context='attribute'}', '${langEntry.entryName @ context='attribute'}')">
+                                                            <span class="icon is-small">
+                                                                <i class="jam jam-trash"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </sly>
+                                            </div>
+                                        </sly>
+                                        <sly data-sly-test="${!langEntry.hasEntry}">
+                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/sling:message"
+                                                   class="input"
+                                                   type="text"
+                                                   value="" />
+                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/sling:key"
+                                                   type="hidden"
+                                                   value="${langEntry.key @ context='attribute'}" />
+                                            <input name="${langEntry.languageName @ context='attribute'}/${langEntry.key @ context='attribute'}/jcr:primaryType"
+                                                   type="hidden"
+                                                   value="sling:MessageEntry" />
+                                        </sly>
+                                    </td>
+                                </sly>
+                                <td class="cell-actions">
+                                    <button type="button"
+                                            class="button is-danger is-small"
+                                            data-i18n-key="${row.key @ context='attribute'}"
+                                            onclick="deleteI18nEntry(this, '${model.suffixPath @ context='attribute'}', '${row.key @ context='attribute'}')">
+                                        <span class="icon">
+                                            <i class="jam jam-trash"></i>
+                                        </span>
+                                        <span>${'Delete' @ i18n}</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </sly>
+                    </tbody>
+                </table>
+            </div>
+            <button class="button is-primary">${'Save i18n Dictionary' @ i18n}</button>
+        </fieldset>
+    </form>
+</div>
+</sly>

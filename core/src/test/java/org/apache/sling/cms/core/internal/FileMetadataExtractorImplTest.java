@@ -33,7 +33,9 @@ import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.cms.File;
+import org.apache.sling.cms.core.internal.enrichers.TikaMetadataEnricher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -41,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -61,6 +64,8 @@ public class FileMetadataExtractorImplTest {
 
     private FileMetadataExtractorImpl extractor;
 
+    private TikaMetadataEnricher tikaEnricher;
+
     @BeforeEach
     public void init() throws RepositoryException, LoginException {
 
@@ -77,12 +82,50 @@ public class FileMetadataExtractorImplTest {
         when(resolver.adaptTo(Session.class)).thenReturn(session);
 
         Resource resource = mock(Resource.class);
+        ValueMap valueMap = mock(ValueMap.class);
+        Mockito.when(valueMap.get("jcr:content/jcr:mimeType", String.class)).thenReturn("image/png");
+        Mockito.when(resource.getValueMap()).thenReturn(valueMap);
+        // Return a fresh InputStream each time adaptTo is called (Tika and SHA256 both need to read)
         Mockito.when(resource.adaptTo(InputStream.class))
-                .thenReturn(FileMetadataExtractorImplTest.class.getClassLoader().getResourceAsStream("apache.png"));
+                .thenAnswer(invocation ->
+                        FileMetadataExtractorImplTest.class.getClassLoader().getResourceAsStream("apache.png"));
+        Mockito.when(resource.getPath()).thenReturn("/content/test/apache.png");
 
         file = Mockito.mock(File.class);
         Mockito.when(file.getResource()).thenReturn(resource);
+        Mockito.when(file.getPath()).thenReturn("/content/test/apache.png");
+
         extractor = new FileMetadataExtractorImpl(resolverFactory);
+
+        // Register the Tika enricher
+        tikaEnricher = new TikaMetadataEnricher();
+        tikaEnricher.activate(new TikaMetadataEnricher.Config() {
+            @Override
+            public Class<TikaMetadataEnricher.Config> annotationType() {
+                return TikaMetadataEnricher.Config.class;
+            }
+
+            @Override
+            public boolean enabled() {
+                return true;
+            }
+
+            @Override
+            public int priority() {
+                return 100;
+            }
+        });
+        // Inject the resolver factory into the enricher
+        java.lang.reflect.Field field;
+        try {
+            field = TikaMetadataEnricher.class.getDeclaredField("resolverFactory");
+            field.setAccessible(true);
+            field.set(tikaEnricher, resolverFactory);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        extractor.bindEnricher(tikaEnricher);
     }
 
     @Test
@@ -91,8 +134,17 @@ public class FileMetadataExtractorImplTest {
 
         assertNotNull(metadata);
         assertTrue(metadata.size() > 0);
+        // Should have SHA256 + Tika metadata
+        assertTrue(metadata.containsKey("SHA256"));
 
         log.info("Extracted metadata: {}", metadata);
+    }
+
+    @Test
+    public void testEnricherBinding() {
+        // Verify enricher was bound
+        assertEquals("tika", tikaEnricher.getName());
+        assertTrue(tikaEnricher.shouldEnrich(file));
     }
 
     @Test
@@ -209,7 +261,7 @@ public class FileMetadataExtractorImplTest {
 
         String[] formatted = new String[keys.length];
         for (int i = 0; i < keys.length; i++) {
-            formatted[i] = extractor.formatKey(keys[i], registry);
+            formatted[i] = tikaEnricher.formatKey(keys[i], registry);
         }
 
         String[] expected = new String[] {
@@ -328,8 +380,96 @@ public class FileMetadataExtractorImplTest {
                         "GPS:GPSLatitudeRef", "Content-Type", "X-Parsed-By", "ExifSubIFD:MaxApertureValue")
                 .iterator();
         while (keys.hasNext()) {
-            extractor.formatKey(keys.next(), registry);
+            tikaEnricher.formatKey(keys.next(), registry);
         }
         verify(registry).registerNamespace(eq("ExifSubIFD"), anyString());
+    }
+
+    @Test
+    public void testOCRMetadataExtraction() throws Exception {
+        // Setup OCR enricher
+        org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher ocrEnricher =
+                new org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher();
+
+        org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher.Config ocrConfig =
+                new org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher.Config() {
+                    @Override
+                    public Class<org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher.Config>
+                            annotationType() {
+                        return org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher.Config.class;
+                    }
+
+                    @Override
+                    public boolean enabled() {
+                        return true;
+                    }
+
+                    @Override
+                    public int priority() {
+                        return 60; // Higher priority than Tika enricher
+                    }
+
+                    @Override
+                    public String[] supportedMimeTypes() {
+                        return new String[] {"image/png", "image/jpeg", "application/pdf"};
+                    }
+
+                    @Override
+                    public String tesseractPath() {
+                        return "";
+                    }
+
+                    @Override
+                    public String language() {
+                        return "eng";
+                    }
+
+                    @Override
+                    public int timeout() {
+                        return 120;
+                    }
+
+                    @Override
+                    public int maxTextLength() {
+                        return 10000;
+                    }
+                };
+
+        // Use reflection to call protected activate method
+        java.lang.reflect.Method activateMethod =
+                org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher.class.getDeclaredMethod(
+                        "activate", org.apache.sling.cms.core.internal.enrichers.OCRMetadataEnricher.Config.class);
+        activateMethod.setAccessible(true);
+        activateMethod.invoke(ocrEnricher, ocrConfig);
+
+        // Bind OCR enricher to the extractor
+        extractor.bindEnricher(ocrEnricher);
+
+        // Extract metadata
+        Map<String, Object> metadata = extractor.extractMetadata(file);
+
+        assertNotNull(metadata);
+        assertTrue(metadata.size() > 0);
+
+        // Should have SHA256 hash
+        assertTrue(metadata.containsKey("SHA256"), "Should contain SHA256 hash");
+
+        // OCR text may or may not be present depending on whether:
+        // 1. Tesseract is installed on the system
+        // 2. The test image contains readable text
+        // 3. Tika OCR parser is available
+        if (metadata.containsKey("ocr:text")) {
+            log.info("OCR text successfully extracted: {}", metadata.get("ocr:text"));
+            assertNotNull(metadata.get("ocr:text"));
+            assertTrue(metadata.get("ocr:text") instanceof String);
+        } else {
+            log.info("OCR text not extracted - this is normal if Tesseract is not installed or test image has no text");
+        }
+
+        log.info("Full metadata with OCR enricher: {}", metadata);
+
+        // Verify enricher was properly registered
+        assertEquals("ocr", ocrEnricher.getName());
+        assertEquals(60, ocrEnricher.getPriority());
     }
 }

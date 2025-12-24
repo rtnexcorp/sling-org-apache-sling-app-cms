@@ -60,7 +60,7 @@ spec:
             successThreshold: {{ .Values.livenessProbe.cms.successThreshold }}
             failureThreshold: {{ .Values.livenessProbe.cms.failureThreshold }}
             httpGet:
-              path: /system/health
+              path: "/system/health?tags=systemalive&format=txt"
               port: http
           readinessProbe:
             initialDelaySeconds: {{ .Values.readinessProbe.cms.initialDelaySeconds }}
@@ -69,7 +69,7 @@ spec:
             successThreshold: {{ .Values.readinessProbe.cms.successThreshold }}
             failureThreshold: {{ .Values.readinessProbe.cms.failureThreshold }}
             httpGet:
-              path: /system/health
+              path: "/system/health?tags=systemready&format=txt"
               port: http
           resources:
             {{- toYaml .Values.resources.cms | nindent 12 }}

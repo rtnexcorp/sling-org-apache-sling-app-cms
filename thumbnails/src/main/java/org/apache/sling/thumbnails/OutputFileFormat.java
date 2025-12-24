@@ -30,7 +30,8 @@ import org.osgi.annotation.versioning.ProviderType;
 public enum OutputFileFormat {
     GIF("image/gif"),
     JPEG("image/jpeg"),
-    PNG("image/png");
+    PNG("image/png"),
+    WEBM("video/webm");
 
     /**
      * Loads the output format requested in the specified request suffix.
@@ -53,6 +54,9 @@ public enum OutputFileFormat {
         format = format.toUpperCase();
         if ("JPG".equals(format)) {
             format = "JPEG";
+        }
+        if ("WEBM".equals(format)) {
+            format = "WEBM";
         }
         try {
             return Enum.valueOf(OutputFileFormat.class, format);

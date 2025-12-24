@@ -1,0 +1,103 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/base",
+        "jcr:title": "Content Fragments",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "contentactions": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contentactions",
+                "actions": {
+                    "fragment": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "label": "Content Fragment",
+                        "prefix": "/cms/fragment/create.html"
+                    }
+                }
+            },
+            "contentbreadcrumb": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contentbreadcrumb",
+                "depth": 3
+            },
+            "contenttable": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contenttable",
+                "columns": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Name"
+                    },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Title"
+                    },
+                    "schema": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Content Type"
+                    },
+                    "modified": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Last Modified"
+                    },
+                    "actions": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Actions"
+                    }
+                },
+                "types": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "nt:unstructured": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "columns": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "name": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/name",
+                                "link": true,
+                                "prefix": "/cms/fragment/edit.html"
+                            },
+                            "title": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "jcr:title"
+                            },
+                            "schema": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "schemaId"
+                            },
+                            "modified": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/lastmodified",
+                                "subPath": ""
+                            },
+                            "actions": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/actions",
+                                "edit": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Edit Fragment",
+                                    "icon": "pencil-f",
+                                    "prefix": "/cms/fragment/edit.html"
+                                },
+                                "delete": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Delete Fragment",
+                                    "icon": "trash",
+                                    "prefix": "/cms/shared/delete.html"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

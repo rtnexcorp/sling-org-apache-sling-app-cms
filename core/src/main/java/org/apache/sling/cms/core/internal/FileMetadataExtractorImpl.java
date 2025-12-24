@@ -18,41 +18,31 @@
  */
 package org.apache.sling.cms.core.internal;
 
-import javax.jcr.NamespaceRegistry;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
-import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.cms.CMSConstants;
 import org.apache.sling.cms.File;
+import org.apache.sling.cms.FileMetadataEnricher;
 import org.apache.sling.cms.FileMetadataExtractor;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.metadata.Property;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 @Component(service = FileMetadataExtractor.class)
 public class FileMetadataExtractorImpl implements FileMetadataExtractor {
@@ -61,18 +51,63 @@ public class FileMetadataExtractorImpl implements FileMetadataExtractor {
 
     private ResourceResolverFactory resolverFactory;
 
+    @Reference(
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            bind = "bindEnricher",
+            unbind = "unbindEnricher")
+    private volatile List<FileMetadataEnricher> enrichers = new ArrayList<>();
+
     @Activate
     public FileMetadataExtractorImpl(@Reference ResourceResolverFactory resolverFactory) {
         this.resolverFactory = resolverFactory;
     }
 
+    protected void bindEnricher(FileMetadataEnricher enricher) {
+        enrichers.add(enricher);
+        sortEnrichers();
+        log.info("Registered metadata enricher: {}", enricher.getName());
+    }
+
+    protected void unbindEnricher(FileMetadataEnricher enricher) {
+        enrichers.remove(enricher);
+        log.info("Unregistered metadata enricher: {}", enricher.getName());
+    }
+
+    private void sortEnrichers() {
+        Collections.sort(
+                enrichers,
+                Comparator.comparingInt(FileMetadataEnricher::getPriority).reversed());
+    }
+
     @Override
     public Map<String, Object> extractMetadata(File file) throws IOException {
-        try {
-            return extractMetadata(file.getResource());
-        } catch (SAXException | TikaException | RepositoryException | LoginException e) {
-            throw new IOException("Failed to parse metadata", e);
+        log.debug("Extracting metadata from {} using {} enrichers", file.getPath(), enrichers.size());
+        Map<String, Object> metadata = new HashMap<>();
+
+        // Apply all registered enrichers that support this file
+        for (FileMetadataEnricher enricher : enrichers) {
+            try {
+                if (enricher.shouldEnrich(file)) {
+                    log.debug("Applying enricher: {}", enricher.getName());
+                    enricher.enrichMetadata(file, metadata);
+                } else {
+                    log.trace("Skipping enricher {} for file {}", enricher.getName(), file.getPath());
+                }
+            } catch (Exception e) {
+                log.error("Error applying enricher {} to file {}", enricher.getName(), file.getPath(), e);
+                // Continue with other enrichers even if one fails
+            }
         }
+
+        // Add SHA256 checksum (always computed)
+        try {
+            metadata.put("SHA256", generateSha(file.getResource()));
+        } catch (IOException e) {
+            log.warn("Failed to generate SHA256 for {}", file.getPath(), e);
+        }
+
+        return metadata;
     }
 
     @Override
@@ -83,120 +118,45 @@ public class FileMetadataExtractorImpl implements FileMetadataExtractor {
     @Override
     public void updateMetadata(File file, boolean persist) throws IOException {
         log.trace("Updating metadata for {}, persist {}", file, persist);
-        try {
-            Resource resource = file.getResource();
-            Resource content = resource.getChild(JcrConstants.JCR_CONTENT);
-            if (content == null) {
-                log.warn("Content resource is null");
-                return;
+        Resource resource = file.getResource();
+        Resource content = resource.getChild(JcrConstants.JCR_CONTENT);
+        if (content == null) {
+            log.warn("Content resource is null for {}", resource.getPath());
+            return;
+        }
+
+        Map<String, Object> properties = null;
+        Resource metadata = content.getChild(CMSConstants.NN_METADATA);
+        if (metadata != null) {
+            properties = metadata.adaptTo(ModifiableValueMap.class);
+        } else {
+            properties = new HashMap<>();
+            properties.put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED);
+        }
+
+        if (properties != null) {
+            // Extract metadata using all enrichers
+            properties.putAll(extractMetadata(file));
+            resource.getResourceResolver().refresh();
+
+            if (metadata == null) {
+                resource.getResourceResolver().create(content, CMSConstants.NN_METADATA, properties);
             }
-            Map<String, Object> properties = null;
-            Resource metadata = content.getChild(CMSConstants.NN_METADATA);
-            if (metadata != null) {
-                properties = metadata.adaptTo(ModifiableValueMap.class);
-            } else {
-                properties = new HashMap<>();
-                properties.put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED);
+
+            if (persist) {
+                resource.getResourceResolver().commit();
             }
-            if (properties != null) {
-                properties.putAll(extractMetadata(file.getResource()));
-                properties.put("SHA256", generateSha(resource));
-                resource.getResourceResolver().refresh();
-                if (metadata == null) {
-                    resource.getResourceResolver().create(content, CMSConstants.NN_METADATA, properties);
-                }
-                if (persist) {
-                    resource.getResourceResolver().commit();
-                }
-                log.info("Metadata extracted from {}", resource.getPath());
-            } else {
-                throw new IOException("Unable to update metadata for " + resource.getPath());
-            }
-        } catch (SAXException | TikaException | RepositoryException | LoginException e) {
-            throw new IOException("Failed to parse metadata", e);
+            log.info("Metadata extracted from {}", resource.getPath());
+        } else {
+            throw new IOException("Unable to update metadata for " + resource.getPath());
         }
     }
 
-    public String generateSha(Resource resource) throws IOException {
+    protected String generateSha(Resource resource) throws IOException {
         try (InputStream is = resource.adaptTo(InputStream.class)) {
             String sha256 = DigestUtils.sha256Hex(is);
-            log.info("Generated SHA {} for {}", sha256, resource.getPath());
+            log.debug("Generated SHA {} for {}", sha256, resource.getPath());
             return sha256;
-        }
-    }
-
-    @SuppressWarnings(value = {"java:S1874"})
-    public Map<String, Object> extractMetadata(Resource resource)
-            throws IOException, SAXException, TikaException, RepositoryException, LoginException {
-        log.info("Extracting metadata from {}", resource.getPath());
-        Map<String, Object> properties = new HashMap<>();
-        try (InputStream is = resource.adaptTo(InputStream.class)) {
-            Parser parser = new AutoDetectParser();
-            BodyContentHandler handler = new BodyContentHandler();
-            Metadata md = new Metadata();
-            ParseContext context = new ParseContext();
-            try {
-                parser.parse(is, handler, md, context);
-            } catch (SAXException se) {
-                // unfortunately, we can't use instanceof to check as the class is not exported
-                if ("WriteLimitReachedException".equals(se.getClass().getSimpleName())) { // NOSONAR
-                    log.info("Write limit reached for {}", resource.getPath());
-                } else {
-                    throw se;
-                }
-            }
-
-            try (ResourceResolver adminResolver = resolverFactory.getAdministrativeResourceResolver(null)) {
-                NamespaceRegistry registry =
-                        adminResolver.adaptTo(Session.class).getWorkspace().getNamespaceRegistry();
-                for (String name : md.names()) {
-                    putMetadata(properties, name, md, registry);
-                }
-            }
-        }
-        return properties;
-    }
-
-    protected String formatKey(String initialKey, NamespaceRegistry registry) throws RepositoryException {
-        String namespace = null;
-        String key = null;
-        if (initialKey.contains(":")) {
-            namespace = StringUtils.substringBefore(initialKey, ":");
-            key = StringUtils.substringAfter(initialKey, ":");
-        } else {
-            key = initialKey;
-        }
-        key = key.replace(" ", "").replace("/", "-");
-        if (namespace != null) {
-            namespace = namespace.replace(" ", "").replace("/", "-");
-            if (!ArrayUtils.contains(registry.getPrefixes(), namespace)) {
-                registry.registerNamespace(namespace, "http://sling.apache.org/cms/ns/" + namespace);
-            }
-            return namespace + ":" + key;
-        } else {
-            return key;
-        }
-    }
-
-    private void putMetadata(Map<String, Object> properties, String name, Metadata metadata, NamespaceRegistry registry)
-            throws RepositoryException {
-        log.trace("Updating property: {}", name);
-        String filtered = formatKey(name, registry);
-        Property property = Property.get(name);
-        if (property != null) {
-            if (metadata.isMultiValued(property)) {
-                properties.put(filtered, metadata.getValues(property));
-            } else if (metadata.getDate(property) != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(metadata.getDate(property));
-                properties.put(filtered, cal);
-            } else if (metadata.getInt(property) != null) {
-                properties.put(filtered, metadata.getInt(property));
-            } else {
-                properties.put(filtered, metadata.get(property));
-            }
-        } else {
-            properties.put(filtered, metadata.get(name));
         }
     }
 }

@@ -62,7 +62,7 @@ Apache Sling CMS is built on the Apache Sling web framework, which provides a RE
 |-----------|---------|---------|
 | Apache Jackrabbit | 2.22.2 | JCR implementation |
 | Apache Jackrabbit Oak | **1.78.0** | Modern JCR backend |
-| Oak Lucene | 1.78.0 | Full-text search |
+| Oak Lucene | 1.78.0 | Full-text search (see [search.md](search.md)) |
 | Oak Segment | 1.78.0 | Segment store |
 
 **Analysis**: Oak 1.78.0 is recent and provides excellent performance with the segment-tar storage model.

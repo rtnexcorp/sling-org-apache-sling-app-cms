@@ -17,11 +17,27 @@
  * under the License.
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
-<dl>
-    <dt>Width</dt>
-    <dd><sling:encode value="${properties.width}" mode="HTML" /></dd>
-    <dt>Height</dt>
-    <dd><sling:encode value="${properties.height}" mode="HTML" /></dd>
-    <dt>Keep Aspect Ratio</dt>
-    <dd><sling:encode value="${properties.keepAspectRatio}" mode="HTML" /></dd>
-</dl>
+<div class="handler-details">
+    <span class="badge badge-success mr-2">Resize</span>
+    <dl class="row mb-0 mt-2">
+        <c:if test="${not empty properties.width}">
+            <dt class="col-sm-4">Width</dt>
+            <dd class="col-sm-8"><strong><sling:encode value="${properties.width}" mode="HTML" />px</strong></dd>
+        </c:if>
+        <c:if test="${not empty properties.height}">
+            <dt class="col-sm-4">Height</dt>
+            <dd class="col-sm-8"><strong><sling:encode value="${properties.height}" mode="HTML" />px</strong></dd>
+        </c:if>
+        <dt class="col-sm-4">Keep Aspect Ratio</dt>
+        <dd class="col-sm-8">
+            <c:choose>
+                <c:when test="${properties.keepAspectRatio == true}">
+                    <span class="badge badge-info">Yes</span>
+                </c:when>
+                <c:otherwise>
+                    <span class="badge badge-secondary">No</span>
+                </c:otherwise>
+            </c:choose>
+        </dd>
+    </dl>
+</div>

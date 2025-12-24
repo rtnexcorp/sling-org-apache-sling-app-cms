@@ -1,0 +1,191 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.meta="org.apache.sling.thumbnails.AssetMetadata"/>
+
+<div class="asset-metadata-editor">
+    <div class="columns is-variable is-4">
+        <!--/* Preview Column */-->
+        <div class="column is-4">
+            <div class="asset-metadata-editor__preview">
+                <figure class="image mb-3">
+                    <sly data-sly-test="${meta.image}">
+                        <img src="${meta.thumbnailUrl}" alt="${meta.fileName}"/>
+                    </sly>
+                    <sly data-sly-test="${meta.video}">
+                        <img src="${meta.thumbnailUrl}" alt="${meta.fileName}"/>
+                        <span class="asset-badge asset-badge--video asset-badge--large">
+                            <i class="jam jam-video-camera"></i> ${'Video' @ i18n}
+                        </span>
+                    </sly>
+                    <sly data-sly-test="${meta.pdf}">
+                        <img src="${meta.thumbnailUrl}" alt="${meta.fileName}"/>
+                    </sly>
+                    <sly data-sly-test="${!meta.image && !meta.video && !meta.pdf}">
+                        <img src="/static/sling-cms/thumbnails/file.png" alt="${meta.fileName}"/>
+                    </sly>
+                </figure>
+
+                <table class="table is-narrow is-fullwidth is-size-7">
+                    <tbody>
+                        <tr><th>${'File' @ i18n}</th><td>${meta.fileName}</td></tr>
+                        <tr><th>${'Type' @ i18n}</th><td>${meta.mimeType}</td></tr>
+                        <tr><th>${'Size' @ i18n}</th><td>${meta.formattedFileSize}</td></tr>
+                        <sly data-sly-test="${meta.hasDimensions}">
+                            <tr><th>${'Dimensions' @ i18n}</th><td>${meta.imageWidth} x ${meta.imageHeight} px</td></tr>
+                        </sly>
+                    </tbody>
+                </table>
+
+                <sly data-sly-test="${meta.hasRenditions}">
+                    <p class="is-size-7 has-text-weight-bold mb-1">${'Renditions' @ i18n}</p>
+                    <div class="tags are-small">
+                        <sly data-sly-list.rendition="${meta.renditions}">
+                            <a href="${rendition.path}" class="tag is-link" target="_blank">${rendition.name}</a>
+                        </sly>
+                    </div>
+                </sly>
+            </div>
+        </div>
+
+        <!--/* Form Column */-->
+        <div class="column is-8">
+            <form method="post" action="${meta.assetContentPath}" class="Form-Ajax" data-add-date="true">
+                <fieldset class="form-wrapper field">
+                    <input type="hidden" name="_charset_" value="UTF-8"/>
+
+                    <div class="columns is-multiline">
+                        <div class="column is-6">
+                            <div class="field">
+                                <label class="label is-small">${'Title' @ i18n}</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text" name="jcr:title" value="${meta.title}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="field">
+                                <label class="label is-small">${'Alt Text' @ i18n}</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text" name="alt" value="${meta.altText}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-12">
+                            <div class="field">
+                                <label class="label is-small">${'Description' @ i18n}</label>
+                                <div class="control">
+                                    <textarea class="textarea is-small" name="jcr:description" rows="2">${meta.description}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="field">
+                                <label class="label is-small">${'Copyright' @ i18n}</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text" name="dc:rights" value="${meta.copyright}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="field">
+                                <label class="label is-small">${'Creator' @ i18n}</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text" name="dc:creator" value="${meta.creator}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="field">
+                                <label class="label is-small">${'Source' @ i18n}</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text" name="dc:source" value="${meta.source}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="field">
+                                <label class="label is-small">${'Keywords' @ i18n}</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text" name="keywords" value="${meta.keywords}"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--/* Taxonomy / Tags field */-->
+                        <div class="column is-12">
+                            <div class="field">
+                                <label class="label is-small">${'Tags' @ i18n}</label>
+                                <div class="labelfield">
+                                    <fieldset disabled="disabled" class="labelfield__template is-hidden">
+                                        <a class="tag labelfield__item" title="">
+                                            <input type="hidden" name="sling:taxonomy" value="" />
+                                            <span class="labelfield__title"></span>
+                                            <button class="delete is-small">
+                                                <span class="is-sr-only">${'Delete' @ i18n}</span>
+                                            </button>
+                                        </a>
+                                    </fieldset>
+                                    <div class="labelfield__field field has-addons">
+                                        <div class="control is-expanded">
+                                            <input class="input is-small" type="text" id="taxonomy-field" list="taxonomy-options" autocomplete="off"/>
+                                        </div>
+                                        <div class="control">
+                                            <button class="labelfield__add button is-small">
+                                                <span class="jam jam-plus">
+                                                    <span class="is-sr-only">${'Add' @ i18n}</span>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="labelfield__container tags are-medium mt-2">
+                                        <sly data-sly-list.item="${meta.assignedTaxonomyItems}">
+                                            <a class="tag labelfield__item is-info" title="${item.path}">
+                                                <input type="hidden" name="sling:taxonomy" value="${item.path}"/>
+                                                <span class="labelfield__title">${item.title}</span>
+                                                <button class="delete is-small">
+                                                    <span class="is-sr-only">${'Delete' @ i18n}</span>
+                                                </button>
+                                            </a>
+                                        </sly>
+                                    </div>
+                                    <datalist id="taxonomy-options">
+                                        <sly data-sly-list.option="${meta.taxonomyOptions}">
+                                            <option value="${option.path}">${option.title}</option>
+                                        </sly>
+                                    </datalist>
+                                    <input type="hidden" name="sling:taxonomy@TypeHint" value="String[]"/>
+                                    <input type="hidden" name="sling:taxonomy@Delete" value="delete"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped mt-3">
+                        <div class="control">
+                            <button class="button is-primary is-small" type="submit">${'Save' @ i18n}</button>
+                        </div>
+                        <div class="control">
+                            <button type="button" class="button is-small close">${'Cancel' @ i18n}</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

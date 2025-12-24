@@ -1,0 +1,149 @@
+# SPDX-License-Identifier: Apache-2.0
+
+# Maven build artifacts
+**/target/
+*.jar
+*.war
+*.ear
+*.class
+
+# Maven release files
+pom.xml.releaseBackup
+pom.xml.tag
+pom.xml.next
+release.properties
+
+# Node.js dependencies and build artifacts
+**/node_modules/
+**/node/
+**/dist/
+**/.sass-cache/
+
+# IDE and editor files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+bin/
+.vscode/
+.brackets.json
+.metadata/
+RemoteSystemsTempFiles/
+
+# macOS
+.DS_Store
+
+# VLT (Vault) files
+.vlt
+.vlt-sync-config.properties
+.vlt-sync.log
+
+# Vagrant
+.vagrant/
+
+# Java version management
+.java-version
+
+# Git
+.git/
+.github/
+
+# Documentation (usually not needed for code assistance)
+docs/
+*.md
+!claude.md
+!README.md
+*.MD
+LICENSE
+NOTICE
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+
+# Deployment and runtime artifacts
+deployment/**/launcher/
+deployment/**/cache/
+
+# Test output and test resources
+**/surefire-reports/
+**/failsafe-reports/
+**/src/test/resources/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Frontend build artifacts
+**/.grunt/
+**/bower_components/
+
+# Docker and container files (if not needed for context)
+*.dockerfile
+.dockerignore
+
+# Large data and sample content files
+**/sample-content/
+**/demo-content/
+**/*.sql
+**/*.dump
+
+# Generated feature files (too verbose)
+**/generated/
+
+# Package lock files (too large)
+package-lock.json
+bun.lock
+yarn.lock
+
+# IDE workspace files
+*.code-workspace
+.idea/workspace.xml
+.idea/tasks.xml
+
+# Large binary and media files
+**/*.mp4
+**/*.mov
+**/*.avi
+**/*.zip
+**/*.tar.gz
+**/*.tgz
+**/*.pdf
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
+**/*.ico
+**/*.woff
+**/*.woff2
+**/*.ttf
+**/*.eot
+
+# Minified and bundled files
+**/*.min.js
+**/*.min.css
+**/*.bundle.js
+**/*.bundle.css
+
+# Source maps
+**/*.map
+
+# Coverage reports
+**/coverage/
+**/.nyc_output/
+**/htmlcov/
+
+# Cypress artifacts
+**/cypress/screenshots/
+**/cypress/videos/
+**/cypress/downloads/
+
+# Build caches
+**/.cache/
+**/.parcel-cache/
+**/.rollup.cache/

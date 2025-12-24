@@ -25,15 +25,21 @@
         <c:set var="text" value="${properties.text}"/>
     </c:otherwise>
 </c:choose>
+<c:set var="toggleClass" value="" />
+<c:set var="toggleAttrs" value="" />
+<c:if test="${not empty properties.toggleSource && not empty properties.toggleValue}">
+    <c:set var="toggleClass" value="is-hidden toggle-value" />
+    <c:set var="toggleAttrs" value="data-toggle-source=\"${sling:encode(properties.toggleSource,'HTML_ATTR')}\" data-toggle-value=\"${sling:encode(properties.toggleValue,'HTML_ATTR')}\"" />
+</c:if>
 <c:choose>
     <c:when test="${not empty properties.href}">
-        <${sling:encode(properties.level,'HTML')}>
+        <${sling:encode(properties.level,'HTML')} class="${toggleClass}" ${toggleAttrs}>
             <a href="${sling:encode(properties.href,'HTML_ATTR')}">
                 <sling:encode value="${text}" mode="HTML" />
             </a>
         </${sling:encode(properties.level,'HTML')}>
     </c:when>
     <c:otherwise>
-        <${sling:encode(properties.level,'HTML')}><sling:encode value="${text}" mode="HTML" /></${sling:encode(properties.level,'HTML')}>
+        <${sling:encode(properties.level,'HTML')} class="${toggleClass}" ${toggleAttrs}><sling:encode value="${text}" mode="HTML" /></${sling:encode(properties.level,'HTML')}>
     </c:otherwise>
 </c:choose>

@@ -44,12 +44,14 @@ import org.apache.sling.thumbnails.RenditionSupport;
 import org.apache.sling.thumbnails.ThumbnailSupport;
 import org.apache.sling.thumbnails.Transformation;
 import org.apache.sling.thumbnails.Transformer;
+import org.apache.sling.thumbnails.cache.SmartRenditionService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +79,9 @@ public class TransformServlet extends SlingAllMethodsServlet {
     private final transient ThumbnailSupport thumbnailSupport;
 
     private final transient TransformationCache transformationCache;
+
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL)
+    private volatile SmartRenditionService smartRenditionService;
 
     @Activate
     public TransformServlet(
@@ -169,7 +174,8 @@ public class TransformServlet extends SlingAllMethodsServlet {
             throws IOException, ExecutionException {
         Resource file = request.getResource();
         String originalContentType = response.getContentType();
-        response.setContentType(OutputFileFormat.forRequest(request).getMimeType());
+        OutputFileFormat format = OutputFileFormat.forRequest(request);
+        response.setContentType(format.getMimeType());
         Optional<Transformation> transformationOp =
                 transformationCache.getTransformation(serviceResolver, transformationName);
         if (!transformationOp.isPresent()) {
@@ -179,9 +185,32 @@ public class TransformServlet extends SlingAllMethodsServlet {
         } else {
             Transformation transformation = transformationOp.get();
             log.debug("Transforming file...");
+
+            // Try using SmartRenditionService if available - this is our primary cache
+            if (smartRenditionService != null) {
+                try {
+                    log.debug("Using SmartRenditionService for transformation: {}", transformationName);
+                    java.io.InputStream rendition = smartRenditionService.getRendition(file, transformation, format);
+                    IOUtils.copy(rendition, response.getOutputStream());
+                    return;
+                } catch (SmartRenditionService.RenditionException e) {
+                    log.warn("SmartRenditionService failed, falling back to JCR rendition check", e);
+                    // Fall through to JCR check
+                }
+            }
+
+            // Check JCR for existing rendition (fallback cache)
+            if (renditionSupport.renditionExists(file, renditionName)) {
+                log.debug("Serving existing JCR rendition: {}", renditionName);
+                IOUtils.copy(renditionSupport.getRenditionContent(file, renditionName), response.getOutputStream());
+                return;
+            }
+
+            // Neither cache has the rendition - generate it
+            log.debug("Generating new rendition: {}", renditionName);
             ByteArrayOutputStream baos = transform(request, response, transformation);
             if (renditionSupport.supportsRenditions(file)) {
-                log.debug("Saving rendition...");
+                log.debug("Saving rendition to JCR...");
                 renditionSupport.setRendition(file, renditionName, new ByteArrayInputStream(baos.toByteArray()));
             }
         }

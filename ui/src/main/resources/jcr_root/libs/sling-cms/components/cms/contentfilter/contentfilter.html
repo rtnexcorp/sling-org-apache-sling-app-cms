@@ -1,0 +1,46 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.filter="org.apache.sling.cms.core.models.ContentFilter"/>
+
+<div class="content-filter" data-component="content-filter">
+    <div class="content-filter__controls">
+        <!--/* Type Filter */-->
+        <div class="select is-small">
+            <select data-content-type-filter aria-label="${'Filter by type' @ i18n}">
+                <option value="">${'All Types' @ i18n}</option>
+                <option value="image/">${'Images' @ i18n}</option>
+                <option value="video/">${'Videos' @ i18n}</option>
+                <option value="application/pdf,application/msword,application/vnd">${'Documents' @ i18n}</option>
+                <option value="folder">${'Folders' @ i18n}</option>
+            </select>
+        </div>
+        
+        <!--/* Taxonomy Filter */-->
+        <sly data-sly-test="${filter.hasTaxonomyOptions}">
+            <div class="select is-small">
+                <select data-content-tag-filter aria-label="${'Filter by tag' @ i18n}">
+                    <option value="">${'All Tags' @ i18n}</option>
+                    <sly data-sly-list.option="${filter.taxonomyOptions}">
+                        <option value="${option.path}">${option.title}</option>
+                    </sly>
+                </select>
+            </div>
+        </sly>
+    </div>
+</div>

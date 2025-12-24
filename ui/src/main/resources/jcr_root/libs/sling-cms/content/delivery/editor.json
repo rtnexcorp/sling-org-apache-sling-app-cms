@@ -1,0 +1,114 @@
+{
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "sling-cms/components/general/container",
+    "richtext": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/textelement",
+        "i18n": true,
+        "level": "h3",
+        "text": "Delivery Presets"
+    },
+    "description": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/textelement",
+        "i18n": true,
+        "level": "p",
+        "text": "Configure optimized image delivery profiles for front-end use. Presets combine format, size, quality, and cropping into named profiles."
+    },
+    "contentactions": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/cms/contentactions",
+        "actions": {
+            "template": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Delivery Preset",
+                "prefix": "/cms/delivery/create.html"
+            }
+        }
+    },
+    "contenttable": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/cms/contenttable",
+        "appendSuffix": "/delivery-presets",
+        "columns": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Name"
+            },
+            "title": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Title"
+            },
+            "format": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Format"
+            },
+            "size": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Size"
+            },
+            "enabled": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Status"
+            },
+            "actions": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Actions"
+            }
+        },
+        "types": {
+            "jcr:primaryType": "nt:unstructured",
+            "nt:unstructured": {
+                "jcr:primaryType": "nt:unstructured",
+                "columns": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/cms/columns/name",
+                        "link": false
+                    },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/cms/columns/text",
+                        "property": "jcr:title"
+                    },
+                    "format": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/cms/columns/text",
+                        "property": "format"
+                    },
+                    "size": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/cms/columns/text",
+                        "property": "width"
+                    },
+                    "enabled": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/cms/columns/text",
+                        "property": "enabled"
+                    },
+                    "actions": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/cms/columns/actions",
+                        "edit": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/cms/actions/basic",
+                            "new": false,
+                            "title": "Edit Delivery Preset",
+                            "icon": "pencil-f",
+                            "prefix": "/cms/delivery/edit.html"
+                        },
+                        "delete": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                            "title": "Delete Delivery Preset",
+                            "icon": "trash",
+                            "prefix": "/cms/shared/delete.html"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -17,7 +17,10 @@
  * under the License.
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
-<dl>
-    <dt>Degrees</dt>
-    <dd><sling:encode value="${properties.degrees}" mode="HTML" /></dd>
-</dl>
+<div class="handler-details">
+    <span class="badge badge-warning mr-2">Rotate</span>
+    <dl class="row mb-0 mt-2">
+        <dt class="col-sm-4">Degrees</dt>
+        <dd class="col-sm-8"><strong><sling:encode value="${properties.degrees}" mode="HTML" />&deg;</strong></dd>
+    </dl>
+</div>

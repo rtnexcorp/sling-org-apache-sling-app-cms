@@ -21,6 +21,10 @@
 @use "fonts";
 @use "overrides";
 @use "tiptap";
+@use "assets";
+@use "contentfilter";
+@use "search";
+@use "toggle";
 @use "variables" as *;
 
 // Bulma breakpoints (for compatibility)
@@ -143,8 +147,20 @@ small.card-footer-item {
 }
 
 .contentnav-search {
-  display: flex;
   margin-block-end: 0;
+}
+
+.content-filter-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  
+  
+  .content-filter__controls {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
 }
 
 .has-padding-1 {

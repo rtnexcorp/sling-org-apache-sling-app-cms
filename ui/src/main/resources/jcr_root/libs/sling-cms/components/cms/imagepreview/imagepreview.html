@@ -1,0 +1,93 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--/* 
+ * Image Preview Component
+ * 
+ * Modular preview component that supports multiple file types.
+ * Preview templates are organized in separate files for maintainability:
+ * 
+ * - previews/image.html      - Image files (jpg, png, gif, etc.)
+ * - previews/video.html      - Video files (mp4, webm, etc.)
+ * - previews/pdf.html        - PDF documents
+ * - previews/word.html       - Word documents (doc, docx)
+ * - previews/excel.html      - Excel spreadsheets (xls, xlsx)
+ * - previews/powerpoint.html - PowerPoint presentations (ppt, pptx)
+ * - previews/text.html       - Plain text files
+ * - previews/unknown.html    - Unsupported file types
+ * - panels/info.html         - File info sidebar panel
+ */-->
+<sly data-sly-use.preview="org.apache.sling.thumbnails.FilePreview"/>
+
+<!--/* Load preview templates */-->
+<sly data-sly-use.imageTemplate="previews/image.html"/>
+<sly data-sly-use.videoTemplate="previews/video.html"/>
+<sly data-sly-use.pdfTemplate="previews/pdf.html"/>
+<sly data-sly-use.wordTemplate="previews/word.html"/>
+<sly data-sly-use.excelTemplate="previews/excel.html"/>
+<sly data-sly-use.powerPointTemplate="previews/powerpoint.html"/>
+<sly data-sly-use.textTemplate="previews/text.html"/>
+<sly data-sly-use.unknownTemplate="previews/unknown.html"/>
+<sly data-sly-use.infoTemplate="panels/info.html"/>
+
+<div class="image-preview-modal">
+    <div class="columns">
+        <!-- LEFT: PREVIEW AREA -->
+        <div class="column is-three-quarters">
+            <h4 class="title is-5">${'Preview' @ i18n}</h4>
+
+            <!--/* Dispatch to appropriate preview template based on file type */-->
+            <sly data-sly-test="${preview.image}">
+                <sly data-sly-call="${imageTemplate.imagePreview @ preview=preview}"/>
+            </sly>
+
+            <sly data-sly-test="${preview.video}">
+                <sly data-sly-call="${videoTemplate.videoPreview @ preview=preview}"/>
+            </sly>
+
+            <sly data-sly-test="${preview.pdf}">
+                <sly data-sly-call="${pdfTemplate.pdfPreview @ preview=preview}"/>
+            </sly>
+
+            <sly data-sly-test="${preview.word}">
+                <sly data-sly-call="${wordTemplate.wordPreview @ preview=preview}"/>
+            </sly>
+
+            <sly data-sly-test="${preview.excel}">
+                <sly data-sly-call="${excelTemplate.excelPreview @ preview=preview}"/>
+            </sly>
+
+            <sly data-sly-test="${preview.powerPoint}">
+                <sly data-sly-call="${powerPointTemplate.powerPointPreview @ preview=preview}"/>
+            </sly>
+
+            <sly data-sly-test="${preview.text}">
+                <sly data-sly-call="${textTemplate.textPreview @ preview=preview}"/>
+            </sly>
+
+            <sly data-sly-test="${preview.previewType == 'unknown'}">
+                <sly data-sly-call="${unknownTemplate.unknownPreview @ preview=preview}"/>
+            </sly>
+        </div>
+
+        <!-- RIGHT: INFO & ACTIONS -->
+        <div class="column is-one-quarter">
+            <sly data-sly-call="${infoTemplate.infoPanel @ preview=preview}"/>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,7 @@
  - [Configuring a Site](configure-site.md)
  - [Configuring File Editor](configure-file-editor.md)
  - [Deployment Models](deployment-models.md)
+ - [Digital Asset Management](digital-asset-management.md)
  - [Email Configuration](email-configuration.md)
  - [Error Pages](error-pages.md)
  - [Image Transformations](image-transformations.md)

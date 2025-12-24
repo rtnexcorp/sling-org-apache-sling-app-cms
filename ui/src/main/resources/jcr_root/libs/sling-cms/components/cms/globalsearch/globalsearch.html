@@ -1,0 +1,55 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ * Global Search Component
+ * 
+ * Properties:
+ *   - searchAction: Path for the search form action (defaults to resource.path)
+ *   - resultTarget: CSS selector for loading results (defaults to .search-result-container)
+ *   - searchPath: Optional path to limit search scope
+ *   - placeholder: Input placeholder text
+ */-->
+<sly data-sly-test.searchAction="${properties.searchAction || resource.path}"></sly>
+<sly data-sly-test.resultTarget="${properties.resultTarget || '.search-result-container'}"></sly>
+<div class="cms-global-search" 
+     data-component="global-search" 
+     data-search-path="${properties.searchPath @ context='attribute'}"
+     data-search-action="${searchAction @ context='attribute'}.search.html"
+     data-result-target="${resultTarget @ context='attribute'}">
+    <form method="get" class="cms-global-search__form get-form" 
+          data-target="${resultTarget @ context='attribute'}" 
+          data-load="div"
+          action="${searchAction @ context='attribute'}.search.html">
+        <div class="cms-global-search__input-wrapper">
+            <input class="cms-global-search__input" 
+                   type="text" 
+                   name="q" 
+                   placeholder="${properties.placeholder || 'Search content...' @ i18n, context='attribute'}"
+                   aria-label="${'Global search' @ i18n}"
+                   autocomplete="off" />
+            <span class="cms-global-search__icon">
+                <i class="jam jam-search" aria-hidden="true"></i>
+            </span>
+        </div>
+        <button type="submit" class="cms-global-search__btn" title="${'Search' @ i18n}">
+            <span class="cms-global-search__btn-icon">
+                <i class="jam jam-search" aria-hidden="true"></i>
+            </span>
+        </button>
+    </form>
+</div>

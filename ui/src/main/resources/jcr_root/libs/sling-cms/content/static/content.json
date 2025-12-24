@@ -94,12 +94,12 @@
                             "actions": {
                                 "jcr:primaryType": "nt:unstructured",
                                 "sling:resourceType": "sling-cms/components/cms/columns/actions",
-                                "edit": {
+                                "metadata": {
                                     "jcr:primaryType": "nt:unstructured",
                                     "sling:resourceType": "sling-cms/components/cms/actions/modal",
-                                    "title": "Edit File Properties",
-                                    "icon": "cog",
-                                    "prefix": "/cms/file/edit.html"
+                                    "title": "Asset Metadata",
+                                    "icon": "document",
+                                    "prefix": "/cms/file/metadata.html"
                                 },
                                 "preview": {
                                     "jcr:primaryType": "nt:unstructured",

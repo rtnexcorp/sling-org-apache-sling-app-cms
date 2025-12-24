@@ -1,0 +1,190 @@
+{
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "sling-cms/components/editor/slingform",
+    "button": "Save Profile Card",
+    "fields": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/container",
+        "accordions": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/accordions",
+            "personalInfoAccordion": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Personal Information",
+                "fieldset": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/fieldsets",
+                    "basicDetails": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Basic Details",
+                        "firstName": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "First Name",
+                            "name": "firstName",
+                            "required": true
+                        },
+                        "lastName": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Last Name",
+                            "name": "lastName",
+                            "required": true
+                        },
+                        "email": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Email Address",
+                            "name": "email",
+                            "required": true
+                        }
+                    },
+                    "profilePhoto": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Profile Photo",
+                        "profileImage": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/path",
+                            "label": "Profile Image",
+                            "name": "profileImage",
+                            "basePath": "/content",
+                            "type": "file"
+                        },
+                        "imageCaption": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Image Caption",
+                            "name": "imageCaption"
+                        }
+                    }
+                }
+            },
+            "professionalAccordion": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Professional Information",
+                "fieldset": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/fieldsets",
+                    "jobDetails": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Job Details",
+                        "jobTitle": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Job Title",
+                            "name": "jobTitle"
+                        },
+                        "department": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Department",
+                            "name": "department"
+                        },
+                        "company": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Company",
+                            "name": "company"
+                        }
+                    },
+                    "biography": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Biography",
+                        "bio": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                            "label": "Professional Biography",
+                            "name": "bio"
+                        }
+                    }
+                }
+            },
+            "socialAccordion": {
+                "jcr:primaryType": "nt:unstructured",
+                "title": "Social & Contact",
+                "fieldset": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/fieldsets",
+                    "contactInfo": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Contact Information",
+                        "phone": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Phone Number",
+                            "name": "phone"
+                        },
+                        "website": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/text",
+                            "label": "Personal Website",
+                            "name": "website"
+                        }
+                    },
+                    "socialLinks": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Social Media",
+                        "socialProfiles": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/fields/multifield",
+                            "label": "Social Media Profiles",
+                            "name": "socialProfiles",
+                            "minItems": "0",
+                            "maxItems": "10",
+                            "template": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "platform": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/editor/fields/select",
+                                    "label": "Platform",
+                                    "name": "platform",
+                                    "required": true,
+                                    "options": {
+                                        "jcr:primaryType": "nt:unstructured",
+                                        "twitter": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "label": "Twitter / X",
+                                            "value": "twitter"
+                                        },
+                                        "linkedin": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "label": "LinkedIn",
+                                            "value": "linkedin"
+                                        },
+                                        "github": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "label": "GitHub",
+                                            "value": "github"
+                                        },
+                                        "facebook": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "label": "Facebook",
+                                            "value": "facebook"
+                                        },
+                                        "instagram": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "label": "Instagram",
+                                            "value": "instagram"
+                                        },
+                                        "youtube": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "label": "YouTube",
+                                            "value": "youtube"
+                                        }
+                                    }
+                                },
+                                "profileUrl": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                                    "label": "Profile URL",
+                                    "name": "profileUrl",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

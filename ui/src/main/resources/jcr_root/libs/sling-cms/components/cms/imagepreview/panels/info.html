@@ -1,0 +1,96 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--/* File Info Panel - displays file metadata and actions */-->
+<template data-sly-template.infoPanel="${@ preview}">
+    <h4 class="title is-5">${'Info' @ i18n}</h4>
+    <table class="table is-fullwidth is-narrow">
+        <tbody>
+            <tr><th>${'File' @ i18n}</th><td>${preview.fileName}</td></tr>
+            <tr><th>${'Type' @ i18n}</th><td><span class="tag ${preview.fileTypeColor}">${preview.mimeType}</span></td></tr>
+        </tbody>
+    </table>
+
+    <!--/* Accordion for Renditions and Delivery Presets */-->
+    <sly data-sly-test="${preview.previewable && (preview.hasDeliveryPresets || preview.hasRenditions)}">
+        <div class="mt-4">
+            <!--/* Delivery Presets Accordion - On-Demand Transformations */-->
+            <sly data-sly-test="${preview.hasDeliveryPresets}">
+                <details class="message is-link mb-2">
+                    <summary class="message-header" style="cursor: pointer;">
+                        <p>${'Delivery Presets' @ i18n}</p>
+                        <span class="icon is-small"><span class="jam jam-chevron-down"></span></span>
+                    </summary>
+                    <div class="message-body">
+                        <div class="buttons are-small">
+                            <sly data-sly-list.preset="${preview.deliveryPresets}">
+                                <a href="${preset.deliveryUrl}"
+                                   class="button is-info is-outlined preview-link"
+                                   data-image="${preset.deliveryUrl}"
+                                   title="${preset.description}">
+                                    <span class="icon"><span class="jam jam-picture"></span></span>
+                                    <span>${preset.title}</span>
+                                </a>
+                            </sly>
+                        </div>
+                    </div>
+                </details>
+            </sly>
+
+            <!--/* Renditions Accordion - Physical Files */-->
+            <sly data-sly-test="${preview.hasRenditions}">
+                <details class="message is-primary">
+                    <summary class="message-header" style="cursor: pointer;">
+                        <p>${'Renditions' @ i18n}</p>
+                        <span class="icon is-small"><span class="jam jam-chevron-down"></span></span>
+                    </summary>
+                    <div class="message-body">
+                        <div class="buttons are-small">
+                            <a href="${preview.filePath}" class="button is-primary is-outlined preview-link" data-image="${preview.filePath}">
+                                <span class="icon"><span class="jam jam-picture"></span></span>
+                                <span>${'Original' @ i18n}</span>
+                            </a>
+                            <sly data-sly-list.rendition="${preview.renditions}">
+                                <a href="${rendition.deliveryUrl}"
+                                   class="button is-primary is-outlined preview-link"
+                                   data-image="${rendition.deliveryUrl}"
+                                   title="${rendition.description}">
+                                    <span class="icon"><span class="jam jam-picture"></span></span>
+                                    <span>${rendition.title}</span>
+                                </a>
+                            </sly>
+                        </div>
+                    </div>
+                </details>
+            </sly>
+        </div>
+    </sly>
+
+    <!--/* Download & Close */-->
+    <div class="field is-grouped mt-4">
+        <p class="control">
+            <a href="${preview.filePath}" download="${preview.fileName}" class="button is-success">
+                <span class="icon"><span class="jam jam-download"></span></span>
+                <span>${'Download' @ i18n}</span>
+            </a>
+        </p>
+        <p class="control">
+            <button type="button" class="button close">${'Close' @ i18n}</button>
+        </p>
+    </div>
+</template>

@@ -6,6 +6,30 @@ This document describes a **safe, staged plan** to reach the **latest Tika 2.x**
 
 ---
 
+## 0) Current Status (December 2025)
+
+**Build Status**: ✅ SUCCESS with Tika 1.28.5
+
+**Verified Blockers** (confirmed via OSGi feature analysis):
+
+| Bundle | Version | Tika Import Range | Blocks Tika 2.x? |
+|--------|---------|-------------------|------------------|
+| `oak-lucene` | 1.86.0 | `[1.28,2)` | ✅ Yes |
+| `composum-nodes-commons` | 4.3.4 | `[1.0,2)` | ✅ Yes |
+| `composum-nodes-console` | 4.3.4 | `[1.0,2)` | ✅ Yes |
+| `sling.jcr.webdav` | 2.3.10 | `[1.0,2)` | ✅ Yes |
+
+**Related Upgrades Completed**:
+- Oak: 1.86.0 ✅
+- Jackrabbit: 2.22.2 ✅
+- SLF4J: 2.0.17 ✅
+- Sling Commons Log: 6.0.2 ✅
+- Composum Nodes: 4.3.4 ✅ (still blocks Tika 2.x)
+
+**Action Required**: Monitor upstream releases for Tika 2.x compatible versions of Oak Lucene and Composum Nodes.
+
+---
+
 ## 1) Goals
 
 - Upgrade Apache Tika to the latest stable release (Tika 2.x+).

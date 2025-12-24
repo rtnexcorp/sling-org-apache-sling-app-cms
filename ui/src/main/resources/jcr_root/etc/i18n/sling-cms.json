@@ -1,0 +1,146 @@
+{
+    "jcr:primaryType": "sling:OrderedFolder",
+    "jcr:content": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "Sling CMS Dictionary",
+        "jcr:description": "Default i18n dictionary for Apache Sling CMS UI"
+    },
+    "en": {
+        "jcr:primaryType": "sling:Folder",
+        "jcr:mixinTypes": ["mix:language"],
+        "jcr:language": "en",
+        "sling:resourceType": "sling-cms/components/cms/blank",
+        "msg-save": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Save",
+            "sling:message": "Save"
+        },
+        "msg-cancel": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Cancel",
+            "sling:message": "Cancel"
+        },
+        "msg-delete": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Delete",
+            "sling:message": "Delete"
+        },
+        "msg-edit": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Edit",
+            "sling:message": "Edit"
+        },
+        "msg-add": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Add",
+            "sling:message": "Add"
+        },
+        "msg-search": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Search",
+            "sling:message": "Search"
+        },
+        "msg-publish": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Publish",
+            "sling:message": "Publish"
+        },
+        "msg-unpublish": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Unpublish",
+            "sling:message": "Unpublish"
+        }
+    },
+    "es": {
+        "jcr:primaryType": "sling:Folder",
+        "jcr:mixinTypes": ["mix:language"],
+        "jcr:language": "es",
+        "sling:resourceType": "sling-cms/components/cms/blank",
+        "msg-save": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Save",
+            "sling:message": "Guardar"
+        },
+        "msg-cancel": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Cancel",
+            "sling:message": "Cancelar"
+        },
+        "msg-delete": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Delete",
+            "sling:message": "Eliminar"
+        },
+        "msg-edit": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Edit",
+            "sling:message": "Editar"
+        },
+        "msg-add": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Add",
+            "sling:message": "Agregar"
+        },
+        "msg-search": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Search",
+            "sling:message": "Buscar"
+        },
+        "msg-publish": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Publish",
+            "sling:message": "Publicar"
+        },
+        "msg-unpublish": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Unpublish",
+            "sling:message": "Despublicar"
+        }
+    },
+    "de": {
+        "jcr:primaryType": "sling:Folder",
+        "jcr:mixinTypes": ["mix:language"],
+        "jcr:language": "de",
+        "sling:resourceType": "sling-cms/components/cms/blank",
+        "msg-save": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Save",
+            "sling:message": "Speichern"
+        },
+        "msg-cancel": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Cancel",
+            "sling:message": "Abbrechen"
+        },
+        "msg-delete": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Delete",
+            "sling:message": "Löschen"
+        },
+        "msg-edit": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Edit",
+            "sling:message": "Bearbeiten"
+        },
+        "msg-add": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Add",
+            "sling:message": "Hinzufügen"
+        },
+        "msg-search": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Search",
+            "sling:message": "Suchen"
+        },
+        "msg-publish": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Publish",
+            "sling:message": "Veröffentlichen"
+        },
+        "msg-unpublish": {
+            "jcr:primaryType": "sling:MessageEntry",
+            "sling:key": "Unpublish",
+            "sling:message": "Veröffentlichung aufheben"
+        }
+    }
+}

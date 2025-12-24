@@ -1,0 +1,380 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/* Asset Browser Styles */
+
+// Variables
+$asset-card-gap: 1rem;
+$asset-card-radius: 6px;
+$asset-badge-bg: rgba(0, 0, 0, 0.7);
+$asset-badge-color: #fff;
+
+/* Filter Bar */
+.asset-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: $asset-card-radius;
+  margin-bottom: 1rem;
+
+  &__search {
+    flex: 1;
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__view-toggle {
+    .buttons {
+      margin-bottom: 0;
+    }
+    
+    .asset-view-btn {
+      &.is-selected {
+        background-color: #3273dc;
+        border-color: #3273dc;
+        color: #fff;
+      }
+    }
+  }
+
+  &__count {
+    font-size: 0.875rem;
+    color: #666;
+    margin-left: auto;
+  }
+}
+
+/* Content Filter - for static content console */
+.content-filter {
+  margin-bottom: 1rem;
+  padding: 0.75rem 0;
+
+  &__controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .select {
+    min-width: 120px;
+  }
+}
+
+/* Asset Grid */
+.asset-grid {
+  &[data-view="list"] {
+    .asset-grid__items {
+      display: block;
+    }
+
+    .asset-item {
+      width: 100%;
+      max-width: 100%;
+      flex: none;
+
+      .asset-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .card-image {
+          width: 80px;
+          min-width: 80px;
+          
+          .image {
+            width: 80px;
+            height: 60px;
+            
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+
+        .card-content {
+          flex: 1;
+          padding: 0.5rem 1rem;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .asset-card__title {
+          flex: 1;
+          margin-bottom: 0;
+        }
+
+        .asset-card__meta {
+          margin-bottom: 0;
+        }
+
+        .asset-card__date {
+          white-space: nowrap;
+        }
+
+        .card-footer {
+          width: auto;
+          border: none;
+        }
+
+        .cell-actions {
+          position: static;
+          opacity: 1;
+          visibility: visible;
+          padding: 0 0.5rem;
+        }
+      }
+    }
+  }
+
+  &__empty {
+    color: #999;
+    
+    .icon {
+      color: #ccc;
+    }
+  }
+}
+
+/* Asset Card */
+.asset-card {
+  border-radius: $asset-card-radius;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    .asset-card__overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .card-image {
+    position: relative;
+    background: #f0f0f0;
+
+    .image img {
+      object-fit: cover;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__info {
+    padding: 0.75rem 1rem;
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+
+    .tag {
+      text-transform: uppercase;
+      font-size: 0.65rem;
+    }
+  }
+
+  &__size {
+    color: #888;
+  }
+
+  &__date {
+    display: block;
+    font-size: 0.75rem;
+    color: #999;
+  }
+}
+
+/* Asset Badges */
+.asset-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: $asset-badge-bg;
+  color: $asset-badge-color;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &--video {
+    background: #e91e63;
+  }
+
+  &--pdf {
+    background: #f44336;
+  }
+
+  &--large {
+    padding: 8px 16px;
+    font-size: 1rem;
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, 50%);
+  }
+}
+
+/* Asset Metadata Editor */
+.asset-metadata-editor {
+  &__preview {
+    position: sticky;
+    top: 1rem;
+
+    .image {
+      background: #f0f0f0;
+      border-radius: $asset-card-radius;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+
+      img {
+        max-width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+      }
+    }
+  }
+
+  &__info {
+    .table {
+      th {
+        width: 40%;
+        font-size: 0.85rem;
+      }
+
+      td {
+        font-size: 0.85rem;
+        word-break: break-all;
+      }
+    }
+  }
+
+  &__renditions {
+    .tags {
+      flex-wrap: wrap;
+    }
+  }
+
+  .box {
+    margin-bottom: 1rem;
+
+    .title {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+  }
+}
+
+/* Publication Status */
+.publication-status {
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  &__published {
+    color: #48c774;
+  }
+
+  &__unpublished {
+    color: #ffdd57;
+  }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .asset-filter-bar {
+    &__search {
+      order: 1;
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+
+    &__filters {
+      order: 2;
+    }
+
+    &__view-toggle {
+      order: 3;
+    }
+
+    &__count {
+      order: 4;
+      flex-basis: 100%;
+      text-align: center;
+      margin-left: 0;
+    }
+  }
+
+  .asset-metadata-editor {
+    &__preview {
+      position: static;
+    }
+  }
+}

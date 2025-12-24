@@ -19,12 +19,29 @@
 const { defineConfig } = require("cypress");
 const { pa11y, prepareAudit } = require("@cypress-audit/pa11y");
 
+// Default ports for different deployment modes
+const PORTS = {
+  standalone: 8080,
+  author: 8082,
+  renderer: 8083
+};
+
+// Get base URL from environment or use standalone default
+const getBaseUrl = () => {
+  if (process.env.CYPRESS_BASE_URL) {
+    return process.env.CYPRESS_BASE_URL;
+  }
+  const mode = process.env.SLING_MODE || 'standalone';
+  const port = PORTS[mode] || PORTS.standalone;
+  return `http://localhost:${port}`;
+};
+
 module.exports = defineConfig({
   e2e: {
     retries: {
       runMode: 3,
     },
-    baseUrl: "http://localhost:8080",
+    baseUrl: getBaseUrl(),
     viewportWidth: 1000,
     viewportHeight: 660,
     excludeSpecPattern: ["**/__snapshots__/*", "**/__image_snapshots__/*"],
@@ -37,5 +54,16 @@ module.exports = defineConfig({
         pa11y: pa11y(console.log.bind(console)),
       });
     },
+    // Environment-specific configuration
+    env: {
+      // Default ports
+      STANDALONE_PORT: PORTS.standalone,
+      AUTHOR_PORT: PORTS.author,
+      RENDERER_PORT: PORTS.renderer,
+      // URLs for cross-instance testing
+      STANDALONE_URL: `http://localhost:${PORTS.standalone}`,
+      AUTHOR_URL: `http://localhost:${PORTS.author}`,
+      RENDERER_URL: `http://localhost:${PORTS.renderer}`
+    }
   },
 });

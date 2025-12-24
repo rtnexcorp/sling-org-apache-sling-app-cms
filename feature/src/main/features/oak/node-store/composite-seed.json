@@ -5,7 +5,7 @@
     "bundles": [
       {
         "id": "org.apache.jackrabbit:oak-segment-tar:${oak.version}",
-        "start-order": "15"
+        "start-order": "20"
       }
     ],
     "configurations": {

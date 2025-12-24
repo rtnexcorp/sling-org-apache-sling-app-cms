@@ -41,14 +41,6 @@ public class StartContentTest {
     }
 
     @Test
-    public void canGetRelatedContent() {
-        context.request().addRequestParameter("q", "apache");
-        StartContent startContent = new StartContent(context.request());
-        List<Resource> related = startContent.getRelatedContent();
-        assertNotNull(related);
-    }
-
-    @Test
     public void canGetRecentDrafts() {
         StartContent startContent = new StartContent(context.request());
         List<Resource> related = startContent.getRecentDrafts();

@@ -1,0 +1,128 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.ContentGridModel">
+<div class="reload-container scroll-container contentnav" 
+     data-path="${resource.path @ context='attribute'}.grid.html${model.requestSuffix @ context='attribute'}">
+    <div class="columns is-multiline">
+        <sly data-sly-list.item="${model.items}">
+            <div class="column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd contentnav__item"
+                 data-mime-type="${item.mimeType @ context='attribute'}"
+                 data-is-folder="${item.folder}"
+                 data-taxonomy="${item.taxonomyString @ context='attribute'}">
+                <div class="card is-linked" 
+                     title="${item.name @ context='attribute'}" 
+                     data-value="${item.path @ context='attribute'}">
+                    <div class="card-image">
+                        <figure class="image is-5by4">
+                            <img src="${item.thumbnailPath @ context='attribute'}" 
+                                 loading="lazy" 
+                                 alt="${item.name @ context='attribute'}">
+                        </figure>
+                        <div class="is-vhidden cell-actions">
+                            <sly data-sly-list.action="${item.actions}">
+                                <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/modal'}">
+                                    <a class="button Fetch-Modal" 
+                                       data-title="${action.title @ context='attribute'}" 
+                                       data-path="${(action.ajaxPath || '.Main-Content form') @ context='attribute'}" 
+                                       href="${action.prefix @ context='attribute'}${action.itemPath @ context='attribute'}${action.suffix @ context='attribute'}" 
+                                       title="${action.title @ context='attribute'}">
+                                        <span class="jam jam-${action.icon @ context='attribute'}">
+                                            <span class="is-sr-only">
+                                                ${action.title @ context='html'}
+                                            </span>
+                                        </span>
+                                    </a>
+                                </sly>
+                                <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/basic'}">
+                                    <a class="button" 
+                                       target="${action.openInNew ? '_blank' : '_self'}"
+                                       href="${action.prefix @ context='attribute'}${action.itemPath @ context='attribute'}${action.suffix @ context='attribute'}" 
+                                       title="${action.title @ context='attribute'}">
+                                        <span class="jam jam-${action.icon @ context='attribute'}">
+                                            <span class="is-sr-only">
+                                                ${action.title @ context='html'}
+                                            </span>
+                                        </span>
+                                    </a>
+                                </sly>
+                            </sly>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <div class="card-footer-item card-footer-group">
+                            <span>${item.title}</span>
+                            <small data-sly-test="${item.lastModified}">${item.lastModified}</small>
+                        </div>
+                    </footer>
+                    <footer class="card-footer">
+                        <a data-sly-test="${item.navigable}" 
+                           href="${item.nameConfigPrefix}${item.path @ context='attribute'}" 
+                           class="card-footer-item item-link">${'Open' @ i18n}</a>
+                        
+                        <sly data-sly-test="${item.publishable}">
+                            <sly data-sly-test="${item.published && item.contentDistribution}">
+                                <a class="Fetch-Modal card-footer-item" 
+                                   href="/cms/shared/publish.html${item.path @ context='attribute'}" 
+                                   title="${'Content Published' @ i18n}" 
+                                   data-title="${'Publish' @ i18n}" 
+                                   data-path=".Main-Content form">
+                                    ${'Republish' @ i18n}
+                                </a>
+                                <a class="Fetch-Modal card-footer-item" 
+                                   href="/cms/shared/unpublish.html${item.path @ context='attribute'}" 
+                                   title="${'Content Published' @ i18n}" 
+                                   data-title="${'Unpublish' @ i18n}" 
+                                   data-path=".Main-Content form">
+                                    ${'Unpublish' @ i18n}
+                                </a>
+                            </sly>
+                            <sly data-sly-test="${item.published && !item.contentDistribution}">
+                                <a class="Fetch-Modal card-footer-item" 
+                                   href="/cms/shared/unpublish.html${item.path @ context='attribute'}" 
+                                   title="${'Content Published' @ i18n}" 
+                                   data-title="${'Unpublish' @ i18n}" 
+                                   data-path=".Main-Content form">
+                                    ${'Unpublish' @ i18n}
+                                </a>
+                            </sly>
+                            <sly data-sly-test="${!item.published}">
+                                <a class="Fetch-Modal card-footer-item" 
+                                   href="/cms/shared/publish.html${item.path @ context='attribute'}" 
+                                   title="${'Content Not Published' @ i18n}" 
+                                   data-title="${'Publish' @ i18n}" 
+                                   data-path=".Main-Content form">
+                                    ${'Publish' @ i18n}
+                                </a>
+                            </sly>
+                        </sly>
+                    </footer>
+                </div>
+            </div>
+        </sly>
+    </div>
+    <nav class="pagination" role="navigation" aria-label="pagination">
+        <a data-sly-test="${model.hasPreviousPage}" 
+           class="pagination-previous" 
+           href="?page=${model.previousPage}">${'Previous' @ i18n}</a>
+        <a data-sly-test="${model.hasNextPage}" 
+           class="pagination-next" 
+           href="?page=${model.nextPage}">${'Next' @ i18n}</a>
+    </nav>
+</div>
+</sly>

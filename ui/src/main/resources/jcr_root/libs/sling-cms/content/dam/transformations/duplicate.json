@@ -1,0 +1,59 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Duplicate Transformation",
+        "modalText": "Duplicate Transformation",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "actionSuffix": "*",
+                "button": "Duplicate",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "helpText": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/general/textelement",
+                        "level": "p",
+                        "text": "Create a copy of this transformation with all its handlers."
+                    },
+                    "operation": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": ":operation",
+                        "value": "copy"
+                    },
+                    "dest": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/path",
+                        "label": "Parent Path",
+                        "name": ":dest",
+                        "required": true,
+                        "basePath": "/conf"
+                    },
+                    "newName": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "New Display Name",
+                        "description": "Name for the duplicated transformation",
+                        "name": "name",
+                        "required": true
+                    },
+                    "nodeName": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Node Name",
+                        "description": "Unique identifier for the copy",
+                        "name": ":newName",
+                        "required": true
+                    }
+                }
+            }
+        }
+    }
+}

@@ -72,11 +72,11 @@ describe("Reference Component Tests", () => {
       cy.get("a.action-button").should("be.visible");
       cy.pa11y();
 
-      cy.visit("/cms/config/edit.html/conf/global/files/transformations");
+      cy.visit("/cms/config/edit.html/conf/global/dam/transformations");
       cy.get('a[data-title="Add Transformation"]').should("be.visible");
 
       cy.visit(
-        "/cms/transformations/edit.html/conf/global/files/transformations/sling-cms-thumbnail"
+        "/cms/transformations/edit.html/conf/global/dam/transformations/sling-cms-thumbnail"
       );
       cy.get("a.action-button").should("be.visible");
       cy.pa11y();
