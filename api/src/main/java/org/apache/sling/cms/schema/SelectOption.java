@@ -16,7 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@Version("1.1.0")
 package org.apache.sling.cms.schema;
 
-import org.osgi.annotation.versioning.Version;
+import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ProviderType;
+
+/**
+ * Represents a single option in a SELECT field.
+ *
+ * <p>Each option has a human-readable label and a stored value.
+ */
+@ProviderType
+public interface SelectOption {
+
+    /**
+     * Gets the human-readable label for this option.
+     *
+     * @return the option label
+     */
+    @NotNull
+    String getLabel();
+
+    /**
+     * Gets the value that will be stored when this option is selected.
+     *
+     * @return the option value
+     */
+    @NotNull
+    String getValue();
+}

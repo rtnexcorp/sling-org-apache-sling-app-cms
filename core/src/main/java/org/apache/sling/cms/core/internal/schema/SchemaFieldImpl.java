@@ -21,14 +21,17 @@ package org.apache.sling.cms.core.internal.schema;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.cms.schema.FieldType;
 import org.apache.sling.cms.schema.SchemaField;
+import org.apache.sling.cms.schema.SelectOption;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -80,6 +83,7 @@ public class SchemaFieldImpl implements SchemaField {
     private final Resource resource;
     private Map<String, Object> validation;
     private Map<String, Object> properties;
+    private List<SelectOption> options;
 
     public SchemaFieldImpl(Resource resource) {
         this.resource = resource;
@@ -159,6 +163,15 @@ public class SchemaFieldImpl implements SchemaField {
         return order != null ? order : 0;
     }
 
+    @Override
+    @NotNull
+    public List<SelectOption> getOptions() {
+        if (options == null) {
+            options = loadOptions();
+        }
+        return options;
+    }
+
     private Map<String, Object> loadValidation() {
         Resource validationResource = resource.getChild("validation");
         if (validationResource == null) {
@@ -175,5 +188,20 @@ public class SchemaFieldImpl implements SchemaField {
         }
         ValueMap vm = propsResource.getValueMap();
         return new HashMap<>(vm);
+    }
+
+    private List<SelectOption> loadOptions() {
+        Resource optionsResource = resource.getChild("options");
+        if (optionsResource == null) {
+            return Collections.emptyList();
+        }
+        List<SelectOption> optionList = new ArrayList<>();
+        for (Resource optionResource : optionsResource.getChildren()) {
+            SelectOption option = optionResource.adaptTo(SelectOption.class);
+            if (option != null) {
+                optionList.add(option);
+            }
+        }
+        return optionList;
     }
 }

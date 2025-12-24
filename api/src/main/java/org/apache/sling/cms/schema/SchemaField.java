@@ -18,6 +18,7 @@
  */
 package org.apache.sling.cms.schema;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
@@ -114,4 +115,14 @@ public interface SchemaField {
      * @return the field order (lower numbers come first)
      */
     int getOrder();
+
+    /**
+     * Gets the options for SELECT type fields.
+     *
+     * <p>Each option contains a label (displayed to the user) and a value (stored when selected).
+     *
+     * @return list of select options, or empty list if not a SELECT field or no options defined
+     */
+    @NotNull
+    List<SelectOption> getOptions();
 }

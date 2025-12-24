@@ -20,7 +20,7 @@
     <div class="cms-fragment-editor">
         <sly data-sly-list.field="${fragmentEditor.fields}">
             <div class="field">
-                <sly data-sly-test="${field.type == 'STRING'}">
+                <sly data-sly-test="${field.type == 'STRING' || field.type == 'string'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <input class="input" type="text" name="${field.name}" id="${field.name}" 
@@ -31,7 +31,7 @@
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'TEXT'}">
+                <sly data-sly-test="${field.type == 'TEXT' || field.type == 'text'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <textarea class="textarea" name="${field.name}" id="${field.name}" 
@@ -42,7 +42,7 @@
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'BOOLEAN'}">
+                <sly data-sly-test="${field.type == 'BOOLEAN' || field.type == 'boolean'}">
                     <div class="field">
                         <label class="checkbox">
                             <input type="checkbox" name="${field.name}" value="true" 
@@ -53,19 +53,19 @@
                     </div>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'INTEGER' || field.type == 'DECIMAL'}">
+                <sly data-sly-test="${field.type == 'INTEGER' || field.type == 'integer' || field.type == 'DECIMAL' || field.type == 'decimal'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <input class="input" type="number" name="${field.name}" id="${field.name}" 
                                value="${fragmentEditor.properties[field.name]}" 
                                required="${field.required}" 
-                               step="${field.type == 'DECIMAL' ? '0.01' : '1'}"
+                               step="${field.type == 'DECIMAL' || field.type == 'decimal' ? '0.01' : '1'}"
                                placeholder="${field.description}"/>
                     </div>
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'DATE'}">
+                <sly data-sly-test="${field.type == 'DATE' || field.type == 'date'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <input class="input" type="date" name="${field.name}" id="${field.name}" 
@@ -75,7 +75,7 @@
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'DATETIME'}">
+                <sly data-sly-test="${field.type == 'DATETIME' || field.type == 'datetime'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <input class="input" type="datetime-local" name="${field.name}" id="${field.name}" 
@@ -85,15 +85,15 @@
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'SELECT'}">
+                <sly data-sly-test="${field.type == 'SELECT' || field.type == 'select'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <div class="select">
                             <select name="${field.name}" id="${field.name}" required="${field.required}">
                                 <option value="">-- Select --</option>
                                 <sly data-sly-list.option="${field.options}">
-                                    <option value="${option}" selected="${fragmentEditor.properties[field.name] == option}">
-                                        ${option}
+                                    <option value="${option.value}" selected="${fragmentEditor.properties[field.name] == option.value}">
+                                        ${option.label}
                                     </option>
                                 </sly>
                             </select>
@@ -102,7 +102,18 @@
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'REFERENCE'}">
+                <sly data-sly-test="${field.type == 'RICHTEXT' || field.type == 'richtext'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <textarea class="textarea richtext-editor" name="${field.name}" id="${field.name}" 
+                                  required="${field.required}" 
+                                  placeholder="${field.description}" 
+                                  rows="10">${fragmentEditor.properties[field.name]}</textarea>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'REFERENCE' || field.type == 'reference'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <input class="input pathfield" type="text" name="${field.name}" id="${field.name}" 
@@ -113,7 +124,7 @@
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'ASSET'}">
+                <sly data-sly-test="${field.type == 'ASSET' || field.type == 'asset'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <input class="input pathfield" type="text" name="${field.name}" id="${field.name}" 
@@ -125,7 +136,7 @@
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
                 
-                <sly data-sly-test="${field.type == 'TAG'}">
+                <sly data-sly-test="${field.type == 'TAG' || field.type == 'tag'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
                         <input class="input tagfield" type="text" name="${field.name}" id="${field.name}" 

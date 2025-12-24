@@ -468,7 +468,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "title",
             "label": "Title",
-            "type": "STRING",
+            "type": "string",
             "required": true,
             "order": 10
           },
@@ -477,7 +477,7 @@
             "name": "summary",
             "label": "Summary",
             "description": "Brief summary of the article",
-            "type": "TEXT",
+            "type": "text",
             "required": false,
             "order": 20
           },
@@ -485,7 +485,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "body",
             "label": "Body",
-            "type": "RICHTEXT",
+            "type": "richtext",
             "required": true,
             "order": 30
           },
@@ -493,7 +493,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "author",
             "label": "Author",
-            "type": "REFERENCE",
+            "type": "reference",
             "required": false,
             "order": 40
           },
@@ -501,7 +501,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "publishDate",
             "label": "Publish Date",
-            "type": "DATE",
+            "type": "date",
             "required": true,
             "order": 50
           },
@@ -509,7 +509,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "expiryDate",
             "label": "Expiry Date",
-            "type": "DATE",
+            "type": "date",
             "required": false,
             "order": 60
           },
@@ -517,16 +517,43 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "category",
             "label": "Category",
-            "type": "SELECT",
+            "type": "select",
             "required": true,
             "order": 70,
-            "options": ["Technology", "Business", "Lifestyle", "News", "Opinion"]
+            "options": {
+              "jcr:primaryType": "nt:unstructured",
+              "technology": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Technology",
+                "value": "technology"
+              },
+              "business": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Business",
+                "value": "business"
+              },
+              "lifestyle": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Lifestyle",
+                "value": "lifestyle"
+              },
+              "news": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "News",
+                "value": "news"
+              },
+              "opinion": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Opinion",
+                "value": "opinion"
+              }
+            }
           },
           "tags": {
             "jcr:primaryType": "nt:unstructured",
             "name": "tags",
             "label": "Tags",
-            "type": "TAG",
+            "type": "tag",
             "required": false,
             "multiple": true,
             "order": 80
@@ -535,7 +562,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "featuredImage",
             "label": "Featured Image",
-            "type": "ASSET",
+            "type": "asset",
             "required": false,
             "order": 90
           },
@@ -543,7 +570,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "featured",
             "label": "Featured Article",
-            "type": "BOOLEAN",
+            "type": "boolean",
             "required": false,
             "order": 100
           },
@@ -551,7 +578,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "viewCount",
             "label": "View Count",
-            "type": "INTEGER",
+            "type": "integer",
             "required": false,
             "defaultValue": "0",
             "order": 110
@@ -560,7 +587,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "rating",
             "label": "Rating",
-            "type": "DECIMAL",
+            "type": "decimal",
             "required": false,
             "min": "0",
             "max": "5",
@@ -581,7 +608,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "productName",
             "label": "Product Name",
-            "type": "STRING",
+            "type": "string",
             "required": true,
             "order": 10
           },
@@ -590,7 +617,7 @@
             "name": "sku",
             "label": "SKU",
             "description": "Product SKU/Code",
-            "type": "STRING",
+            "type": "string",
             "required": true,
             "order": 20
           },
@@ -598,7 +625,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "description",
             "label": "Description",
-            "type": "RICHTEXT",
+            "type": "richtext",
             "required": true,
             "order": 30
           },
@@ -606,7 +633,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "price",
             "label": "Price",
-            "type": "DECIMAL",
+            "type": "decimal",
             "required": true,
             "min": "0",
             "order": 40
@@ -615,7 +642,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "stockQuantity",
             "label": "Stock Quantity",
-            "type": "INTEGER",
+            "type": "integer",
             "required": true,
             "min": "0",
             "defaultValue": "0",
@@ -625,16 +652,48 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "category",
             "label": "Category",
-            "type": "SELECT",
+            "type": "select",
             "required": true,
             "order": 60,
-            "options": ["Electronics", "Clothing", "Home & Garden", "Sports", "Books", "Toys"]
+            "options": {
+              "jcr:primaryType": "nt:unstructured",
+              "electronics": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Electronics",
+                "value": "electronics"
+              },
+              "clothing": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Clothing",
+                "value": "clothing"
+              },
+              "home-garden": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Home & Garden",
+                "value": "home-garden"
+              },
+              "sports": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Sports",
+                "value": "sports"
+              },
+              "books": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Books",
+                "value": "books"
+              },
+              "toys": {
+                "jcr:primaryType": "nt:unstructured",
+                "label": "Toys",
+                "value": "toys"
+              }
+            }
           },
           "productImages": {
             "jcr:primaryType": "nt:unstructured",
             "name": "productImages",
             "label": "Product Images",
-            "type": "ASSET",
+            "type": "asset",
             "required": false,
             "multiple": true,
             "order": 70
@@ -643,7 +702,7 @@
             "jcr:primaryType": "nt:unstructured",
             "name": "featured",
             "label": "Featured Product",
-            "type": "BOOLEAN",
+            "type": "boolean",
             "required": false,
             "order": 80
           }
