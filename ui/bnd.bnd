@@ -1,5 +1,5 @@
 Sling-Nodetypes: SLING-INF/nodetypes/nodetypes.cnd
-Sling-Initial-Content: jcr_root/conf/global.json;overwrite:=true;path:=/conf/global,\
+Sling-Initial-Content: jcr_root/conf/global;overwrite:=true;uninstall:=true;path:=/conf/global,\
     jcr_root/etc/taxonomy;overwrite:=false;path:=/etc/taxonomy,\
     jcr_root/etc/i18n;overwrite:=false;path:=/etc/i18n,\
     jcr_root/libs/sling-cms;overwrite:=true;path:=/libs/sling-cms,\

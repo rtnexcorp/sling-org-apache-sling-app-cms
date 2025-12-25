@@ -1,0 +1,113 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "sling:resourceType": "sling-cms/components/cms/schema",
+  "jcr:title": "Product",
+  "description": "E-commerce product",
+  "version": "1.0",
+  "enabled": true,
+  "fields": {
+    "jcr:primaryType": "nt:unstructured",
+    "productName": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "productName",
+      "label": "Product Name",
+      "type": "string",
+      "required": true,
+      "order": 10
+    },
+    "sku": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "sku",
+      "label": "SKU",
+      "description": "Product SKU/Code",
+      "type": "string",
+      "required": true,
+      "order": 20
+    },
+    "description": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "description",
+      "label": "Description",
+      "type": "richtext",
+      "required": true,
+      "order": 30
+    },
+    "price": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "price",
+      "label": "Price",
+      "type": "decimal",
+      "required": true,
+      "min": "0",
+      "order": 40
+    },
+    "stockQuantity": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "stockQuantity",
+      "label": "Stock Quantity",
+      "type": "integer",
+      "required": true,
+      "min": "0",
+      "defaultValue": "0",
+      "order": 50
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "category",
+      "label": "Category",
+      "type": "select",
+      "required": true,
+      "order": 60,
+      "options": {
+        "jcr:primaryType": "nt:unstructured",
+        "electronics": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Electronics",
+          "value": "electronics"
+        },
+        "clothing": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Clothing",
+          "value": "clothing"
+        },
+        "home-garden": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Home & Garden",
+          "value": "home-garden"
+        },
+        "sports": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Sports",
+          "value": "sports"
+        },
+        "books": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Books",
+          "value": "books"
+        },
+        "toys": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Toys",
+          "value": "toys"
+        }
+      }
+    },
+    "productImages": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "productImages",
+      "label": "Product Images",
+      "type": "asset",
+      "required": false,
+      "multiple": true,
+      "order": 70
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "featured",
+      "label": "Featured Product",
+      "type": "boolean",
+      "required": false,
+      "order": 80
+    }
+  }
+}

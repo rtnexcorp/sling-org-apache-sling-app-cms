@@ -1,0 +1,7 @@
+{
+  "jcr:primaryType": "sling:Config",
+  "jcr:title": "Rewriter",
+  "sling:resourceType": "sling-cms/components/caconfig/rewriter",
+  "doctype": "<!DOCTYPE html>",
+  "attributes": ["action", "href", "src"]
+}

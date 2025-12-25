@@ -34,6 +34,7 @@ This folder contains developer and user documentation for Apache Sling CMS.
 
 ## 4) Sites (authoring, pages, templates, navigation, policies)
 - [`configure-site.md`](configure-site.md)
+- [`global-configuration-structure.md`](global-configuration-structure.md) - Organization of global configurations
 - [`page-editing.md`](page-editing.md)
 - [`managing-content.md`](managing-content.md)
 - [`templates.md`](templates.md)

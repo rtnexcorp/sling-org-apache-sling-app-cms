@@ -1,0 +1,7 @@
+{
+  "jcr:primaryType": "sling:OrderedFolder",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Default Site Configuration"
+  }
+}
