@@ -24,7 +24,6 @@
  * Features:
  * - Tree/list view of folders
  * - Breadcrumb navigation
- * - Search/filter functionality
  * - Single-click selection
  * - Type filtering (folders, pages, assets)
  */
@@ -48,13 +47,11 @@ rava.bind('.pathbrowser-container', {
       const itemsContainer = container.querySelector('.pathbrowser-items');
       const loadingEl = container.querySelector('.pathbrowser-loading');
       const emptyEl = container.querySelector('.pathbrowser-empty');
-      const searchInput = container.querySelector('.pathbrowser-search__input');
       const cancelButton = container.querySelector('.pathbrowser-cancel');
       const selectButton = container.querySelector('.pathbrowser-select');
 
       let currentPath = basePath;
       let selectedPath = initialValue || basePath;
-      let allItems = [];
 
       // Toggle panel open/close
       toggleButton.addEventListener('click', () => {
@@ -79,15 +76,6 @@ rava.bind('.pathbrowser-container', {
           selectedDisplay.textContent = selectedPath;
           panel.classList.add('is-hidden');
         }
-      });
-
-      // Search/filter
-      let searchTimeout;
-      searchInput.addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-          filterItems(searchInput.value);
-        }, 300);
       });
 
       // Load folder contents
@@ -119,36 +107,37 @@ rava.bind('.pathbrowser-container', {
           }
 
           const url = `/bin/cms/paths?path=${encodeURIComponent(path)}&type=${encodeURIComponent(typeParam)}`;
+          window.SlingCMS.logger.debug('Fetching paths from:', url);
+          
           const response = await fetch(url);
 
           if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
           const paths = await response.json();
-          allItems = [];
+          window.SlingCMS.logger.debug('Received paths:', paths);
+
+          if (!Array.isArray(paths)) {
+            throw new Error('Invalid response: expected array of paths');
+          }
 
           // Fetch details for each path to get node type
           const detailsPromises = paths.map(async (childPath) => {
             try {
               const detailResponse = await fetch(`${childPath}.json`);
               if (!detailResponse.ok) {
+                window.SlingCMS.logger.warn('Failed to fetch details for:', childPath);
                 return null;
               }
               const details = await detailResponse.json();
               const name = childPath.substring(childPath.lastIndexOf('/') + 1);
               const nodeType = details['jcr:primaryType'];
 
-              // Additional filtering if specific types were requested
-              if (filterType) {
-                const types = filterType.split(',').map(t => t.trim());
-                if (!types.includes(nodeType)) {
-                  return null;
-                }
-              }
+              // Note: PathSuggestionServlet already filtered by type, no need to filter again
 
               // Determine if it's a container (folder/page)
-              const isContainer = nodeType.includes('Folder') || nodeType.includes('Page') || nodeType === 'nt:folder';
+              const isContainer = nodeType.includes('Folder') || nodeType.includes('Page') || nodeType === 'nt:folder' || nodeType === 'sling:Site';
 
               return {
                 name,
@@ -163,21 +152,21 @@ rava.bind('.pathbrowser-container', {
           });
 
           const results = await Promise.all(detailsPromises);
-          allItems = results.filter(item => item !== null);
+          const items = results.filter(item => item !== null);
 
           // Sort: containers first, then alphabetically
-          allItems.sort((a, b) => {
+          items.sort((a, b) => {
             if (a.isContainer !== b.isContainer) {
               return a.isContainer ? -1 : 1;
             }
             return a.name.localeCompare(b.name);
           });
 
-          renderItems(allItems);
+          renderItems(items);
 
         } catch (error) {
-          window.SlingCMS.logger.error('Failed to load folder:', error);
-          itemsContainer.innerHTML = '<p class="has-text-danger">Failed to load folders</p>';
+          window.SlingCMS.logger.error('Failed to load folder:', path, error);
+          itemsContainer.innerHTML = `<p class="has-text-danger">Failed to load folders: ${error.message}</p>`;
         } finally {
           loadingEl.classList.add('is-hidden');
         }
@@ -280,21 +269,6 @@ rava.bind('.pathbrowser-container', {
 
           breadcrumbList.appendChild(li);
         });
-      }
-
-      // Filter items by search term
-      function filterItems(searchTerm) {
-        if (!searchTerm) {
-          renderItems(allItems);
-          return;
-        }
-
-        const term = searchTerm.toLowerCase();
-        const filtered = allItems.filter(item =>
-          item.name.toLowerCase().includes(term)
-        );
-
-        renderItems(filtered);
       }
 
       // Initialize if there's an initial value
