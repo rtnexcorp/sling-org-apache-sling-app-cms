@@ -1,0 +1,113 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<sly data-sly-use.slingProps="org.apache.sling.api.resource.ValueMap">
+
+  <!-- Hidden input for the actual path value -->
+  <input type="hidden"
+         name="${properties.name}"
+         id="${properties.name @ context='attribute'}"
+         value="${properties.value || properties.defaultValue}"
+         class="pathbrowser-input"
+         data-sly-test="${properties.required}"
+         required="required" />
+
+  <input type="hidden"
+         name="${properties.name}"
+         id="${properties.name @ context='attribute'}"
+         value="${properties.value || properties.defaultValue}"
+         class="pathbrowser-input"
+         data-sly-test="${!properties.required}" />
+
+  <div class="field">
+    <label class="label" for="${properties.name @ context='attribute'}" data-sly-test="${properties.label}">
+      ${properties.label}
+      <span class="has-text-danger" data-sly-test="${properties.required}">*</span>
+    </label>
+
+    <!-- Path Browser Container -->
+    <div class="pathbrowser-container"
+         data-field-name="${properties.name @ context='attribute'}"
+         data-base-path="${properties.basePath || '/content' @ context='attribute'}"
+         data-filter-type="${properties.type @ context='attribute'}"
+         data-initial-value="${properties.value || properties.defaultValue @ context='attribute'}">
+
+      <!-- Selected Path Display -->
+      <div class="pathbrowser-selected">
+        <div class="pathbrowser-selected__display">
+          <span class="icon is-small">
+            <span class="jam jam-folder"></span>
+          </span>
+          <span class="pathbrowser-selected__path">${properties.value || properties.defaultValue || 'No folder selected'}</span>
+        </div>
+        <button type="button" class="button is-small pathbrowser-toggle" title="Browse folders">
+          <span class="icon">
+            <span class="jam jam-chevron-down"></span>
+          </span>
+        </button>
+      </div>
+
+      <!-- Folder Browser Panel (initially hidden) -->
+      <div class="pathbrowser-panel is-hidden">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb pathbrowser-breadcrumb" aria-label="breadcrumbs">
+          <ul class="pathbrowser-breadcrumb__list">
+            <!-- Populated by JavaScript -->
+          </ul>
+        </nav>
+
+        <!-- Search/Filter -->
+        <div class="pathbrowser-search">
+          <div class="control has-icons-left">
+            <input class="input is-small pathbrowser-search__input"
+                   type="text"
+                   placeholder="Filter folders...">
+            <span class="icon is-small is-left">
+              <span class="jam jam-search"></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Folder List -->
+        <div class="pathbrowser-list">
+          <!-- Loading state -->
+          <div class="pathbrowser-loading">
+            <div class="loader is-loading"></div>
+            <p>Loading folders...</p>
+          </div>
+
+          <!-- Folder items (populated by JavaScript) -->
+          <div class="pathbrowser-items">
+            <!-- Items will be added here -->
+          </div>
+
+          <!-- Empty state -->
+          <div class="pathbrowser-empty is-hidden">
+            <p class="has-text-grey">No folders found</p>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pathbrowser-actions">
+          <button type="button" class="button is-small pathbrowser-cancel">Cancel</button>
+          <button type="button" class="button is-small is-primary pathbrowser-select" disabled>Select</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</sly>

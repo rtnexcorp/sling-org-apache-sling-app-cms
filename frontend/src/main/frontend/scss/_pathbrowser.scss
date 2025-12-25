@@ -1,0 +1,244 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Path Browser Component Styles
+// macOS Finder-like visual folder browser for path selection
+
+.pathbrowser-container {
+  position: relative;
+}
+
+// Selected path display
+.pathbrowser-selected {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: #b5b5b5;
+  }
+
+  &__display {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  &__path {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: monospace;
+    font-size: 0.875rem;
+  }
+
+  .jam-folder {
+    color: #485fc7;
+  }
+}
+
+.pathbrowser-toggle {
+  flex-shrink: 0;
+
+  .jam {
+    transition: transform 0.2s ease;
+  }
+}
+
+// Browser panel (dropdown-style)
+.pathbrowser-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.25rem;
+  background: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+
+  &.is-hidden {
+    display: none;
+  }
+}
+
+// Breadcrumb navigation
+.pathbrowser-breadcrumb {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f5f5f5;
+  background-color: #fafafa;
+  flex-shrink: 0;
+
+  &__list {
+    flex-wrap: wrap;
+    margin: 0;
+
+    li {
+      font-size: 0.875rem;
+
+      a {
+        color: #485fc7;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+
+        &:hover {
+          background-color: rgba(72, 95, 199, 0.1);
+        }
+      }
+
+      &.is-active a {
+        color: #363636;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Search/filter
+.pathbrowser-search {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f5f5f5;
+  flex-shrink: 0;
+
+  &__input {
+    width: 100%;
+  }
+}
+
+// Folder list
+.pathbrowser-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 200px;
+  max-height: 250px;
+  position: relative;
+}
+
+.pathbrowser-loading,
+.pathbrowser-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+
+  p {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.pathbrowser-items {
+  padding: 0.5rem 0;
+}
+
+// Individual folder item (like Finder row)
+.pathbrowser-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-left: 3px solid transparent;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &.is-selected {
+    background-color: #e8f4fd;
+    border-left-color: #485fc7;
+
+    .pathbrowser-item__name {
+      font-weight: 600;
+      color: #485fc7;
+    }
+  }
+
+  &.is-container {
+    .jam {
+      color: #485fc7;
+    }
+  }
+
+  .jam-folder {
+    color: #485fc7;
+  }
+
+  .jam-document {
+    color: #7a7a7a;
+  }
+
+  &__name {
+    flex: 1;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__type {
+    font-size: 0.75rem;
+    color: #7a7a7a;
+    background-color: #f5f5f5;
+    padding: 0.125rem 0.5rem;
+    border-radius: 3px;
+  }
+}
+
+// Actions footer
+.pathbrowser-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #f5f5f5;
+  background-color: #fafafa;
+  flex-shrink: 0;
+}
+
+// Scrollbar styling (webkit browsers)
+.pathbrowser-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.pathbrowser-list::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+.pathbrowser-list::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+  border-radius: 4px;
+
+  &:hover {
+    background: #b5b5b5;
+  }
+}
+
+// Responsive adjustments
+@media screen and (max-width: 768px) {
+  .pathbrowser-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+    max-height: 80vh;
+    right: auto;
+    margin-top: 0;
+  }
+}
