@@ -70,18 +70,6 @@
             "link": "/cms/config/configs.html/conf",
             "text": "Configuration"
           },
-          "schemas": {
-            "jcr:primaryType": "nt:unstructured",
-            "alternatives": ["/cms/schema"],
-            "link": "/cms/schema/list.html/conf/global/site/schemas",
-            "text": "Content Schemas"
-          },
-          "fragments": {
-            "jcr:primaryType": "nt:unstructured",
-            "alternatives": ["/cms/fragment"],
-            "link": "/cms/fragment/list.html/content/fragments",
-            "text": "Content Fragments"
-          },
           "usergenerated": {
             "jcr:primaryType": "nt:unstructured",
             "alternatives": ["/cms/usergenerated/review.html"],
@@ -96,6 +84,18 @@
         "title": "Digital Assets",
         "links": {
           "jcr:primaryType": "nt:unstructured",
+          "schemas": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/schema"],
+            "link": "/cms/schema/list.html/conf/global/site/schemas",
+            "text": "Content Schemas"
+          },
+          "fragments": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/fragment"],
+            "link": "/cms/fragment/list.html/content/fragments",
+            "text": "Content Fragments"
+          },
           "cache": {
             "jcr:primaryType": "nt:unstructured",
             "alternatives": ["/cms/dam/cache"],
