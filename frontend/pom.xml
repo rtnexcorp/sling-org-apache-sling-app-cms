@@ -62,7 +62,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>ci</arguments>
+                            <arguments>ci --include=dev</arguments>
                         </configuration>
                     </execution>
                     <!-- Build frontend assets -->

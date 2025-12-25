@@ -23,8 +23,11 @@
                     "destination": {
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/editor/fields/path",
-                        "label": "Destination:",
-                        "name": ":dest"
+                        "label": "Destination Folder:",
+                        "name": ":dest",
+                        "type": "sling:Folder,sling:OrderedFolder,nt:folder",
+                        "basePath": "/content",
+                        "required": true
                     },
                     "operation": {
                         "jcr:primaryType": "nt:unstructured",

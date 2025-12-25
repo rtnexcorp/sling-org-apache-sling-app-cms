@@ -44,6 +44,12 @@ rava.bind(".Form-Ajax", {
             jcrcontent = true;
           }
         });
+
+        // Validate and fix move/copy operations using dedicated module
+        if (window.Sling.CMS.MoveCopy) {
+          window.Sling.CMS.MoveCopy.validateAndFixForm(form, formData);
+        }
+
         if (
           form.dataset.addDate &&
           !form.querySelector('input[name="jcr:content/jcr:lastModified"]')

@@ -1,0 +1,120 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Move/Copy Component Styles
+// Provides styling for move/copy operations and drag-and-drop functionality
+
+// Draggable item state
+.is-dragging {
+  opacity: 0.5;
+  cursor: move;
+}
+
+// Drop target states
+.is-drop-target {
+  background-color: rgba(72, 95, 199, 0.1);
+  border: 2px dashed #485fc7;
+
+  &::after {
+    content: 'Drop here';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0.5rem 1rem;
+    background: rgba(72, 95, 199, 0.9);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    pointer-events: none;
+    z-index: 10;
+  }
+}
+
+// Draggable content rows
+.content-table {
+  tr[draggable="true"] {
+    cursor: move;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  // Drop target rows (folders/containers)
+  tr.can-drop {
+    position: relative;
+
+    &.is-drop-target {
+      background-color: rgba(72, 95, 199, 0.1);
+    }
+  }
+}
+
+// Content grid drag-and-drop
+.content-grid {
+  .content-item[draggable="true"] {
+    cursor: move;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .content-item.can-drop {
+    position: relative;
+
+    &.is-drop-target {
+      border: 2px dashed #485fc7;
+      background-color: rgba(72, 95, 199, 0.1);
+    }
+  }
+}
+
+// Move/Copy modal specific styles
+.movecopy-modal {
+  .destination-preview {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.875rem;
+
+    &::before {
+      content: 'Preview: ';
+      font-weight: bold;
+      font-family: inherit;
+    }
+  }
+
+  .operation-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-left: 4px solid #485fc7;
+    background-color: #f5f5f5;
+
+    &.operation-move::before {
+      content: 'Move: ';
+      font-weight: bold;
+    }
+
+    &.operation-copy::before {
+      content: 'Copy: ';
+      font-weight: bold;
+    }
+  }
+}
+
+// Drag ghost/placeholder styles
+.drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.8;
+  background: white;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}

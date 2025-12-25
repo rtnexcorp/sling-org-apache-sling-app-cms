@@ -45,6 +45,7 @@ import './tiptap-bundle.js';
 import './cms-module.js';
 import './cms.draggable.js';
 import './cms.fields.js';
+import './cms.movecopy.js';
 import './cms.form.js';
 import './cms.job.js';
 import './cms.labelfield.js';
