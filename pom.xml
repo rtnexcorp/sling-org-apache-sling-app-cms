@@ -18,6 +18,7 @@
     <description>An Apache Sling Reference CMS Application</description>
     <modules>
         <module>api</module>
+        <module>asset</module>
         <module>core</module>
         <module>login</module>
         <module>frontend</module>
