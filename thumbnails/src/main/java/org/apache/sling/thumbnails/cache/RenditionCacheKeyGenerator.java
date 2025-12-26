@@ -24,8 +24,8 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.thumbnails.OutputFileFormat;
-import org.apache.sling.thumbnails.Transformation;
+import org.apache.sling.cms.transformation.OutputFileFormat;
+import org.apache.sling.cms.transformation.Transformation;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

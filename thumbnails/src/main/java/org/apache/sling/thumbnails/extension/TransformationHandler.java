@@ -21,8 +21,9 @@ package org.apache.sling.thumbnails.extension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
-import org.apache.sling.thumbnails.TransformationHandlerConfig;
+import org.apache.sling.cms.transformation.TransformationHandlerConfig;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /*
@@ -51,4 +52,49 @@ public interface TransformationHandler {
      */
     void handle(InputStream inputStream, OutputStream outputStream, TransformationHandlerConfig config)
             throws IOException;
+
+    /**
+     * Handles the transformation of the file using the command values from the
+     * suffix segment, with access to source file metadata.
+     * <p>
+     * This method allows handlers to use metadata extracted from the source file
+     * (e.g., EXIF orientation, GPS coordinates, copyright information) to make
+     * intelligent transformation decisions.
+     * </p>
+     * <p>
+     * Default implementation delegates to the non-metadata-aware method for
+     * backward compatibility.
+     * </p>
+     *
+     * @param inputStream    the inputstream from which to read the file to transform
+     * @param outputStream   the outputstream to write the transformed file to
+     * @param config         the configuration values for the transformation
+     * @param sourceMetadata metadata extracted from the source file (may be empty)
+     * @throws IOException an exception occurs transforming the file
+     * @since 1.1.0
+     */
+    default void handle(
+            InputStream inputStream,
+            OutputStream outputStream,
+            TransformationHandlerConfig config,
+            Map<String, Object> sourceMetadata)
+            throws IOException {
+        // Default: delegate to existing method for backward compatibility
+        handle(inputStream, outputStream, config);
+    }
+
+    /**
+     * Indicates whether this handler uses source file metadata.
+     * <p>
+     * Handlers that return {@code true} will receive metadata via the
+     * {@link #handle(InputStream, OutputStream, TransformationHandlerConfig, Map)}
+     * method. This allows the transformation system to optimize metadata loading.
+     * </p>
+     *
+     * @return {@code true} if this handler uses metadata, {@code false} otherwise
+     * @since 1.1.0
+     */
+    default boolean usesMetadata() {
+        return false;
+    }
 }

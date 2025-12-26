@@ -1,0 +1,22 @@
+{
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "sling-cms/components/editor/slingform",
+    "button": "Save",
+    "fields": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/container",
+        "info": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/textelement",
+            "level": "p",
+            "text": "The Auto-Rotate handler automatically corrects image orientation based on EXIF metadata. No additional configuration is required.",
+            "i18n": true
+        },
+        "resourceType": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+            "name": "sling:resourceType",
+            "value": "sling/thumbnails/transformers/autorotate"
+        }
+    }
+}

@@ -24,13 +24,23 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Model representing a transformation, a series of handlers
+ *
+ * @deprecated Use {@link org.apache.sling.cms.transformation.Transformation} instead.
+ *             This interface will be removed in version 2.0.0.
  */
+@Deprecated
 @ProviderType
-public interface Transformation {
+public interface Transformation extends org.apache.sling.cms.transformation.Transformation {
 
-    List<TransformationHandlerConfig> getHandlers();
+    @Override
+    @Deprecated
+    List<org.apache.sling.cms.transformation.TransformationHandlerConfig> getHandlers();
 
+    @Override
+    @Deprecated
     String getName();
 
+    @Override
+    @Deprecated
     String getPath();
 }

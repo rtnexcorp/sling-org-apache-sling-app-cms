@@ -34,7 +34,7 @@
         <figure class="image is-5by4">
             <c:choose>
                 <c:when test="${fn:startsWith(mimeType, 'image/')}">
-                    <img src="/cms/file/preview.html${sling:encode(asset.path,'HTML_ATTR')}.transform/sling-cms-thumbnail.png" loading="lazy" alt="${sling:encode(assetTitle, 'HTML_ATTR')}" class="asset-thumbnail">
+                    <img src="/cms/file/preview.html${sling:encode(asset.path,'HTML_ATTR')}.transform/auto-rotate-thumbnail.png" loading="lazy" alt="${sling:encode(assetTitle, 'HTML_ATTR')}" class="asset-thumbnail" onerror="this.src='/cms/file/preview.html${sling:encode(asset.path,'HTML_ATTR')}.transform/sling-cms-thumbnail.png'">
                 </c:when>
                 <c:when test="${fn:startsWith(mimeType, 'video/')}">
                     <img src="/cms/file/preview.html${sling:encode(asset.path,'HTML_ATTR')}.transform/sling-cms-thumbnail.png" loading="lazy" alt="${sling:encode(assetTitle, 'HTML_ATTR')}" class="asset-thumbnail">

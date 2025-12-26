@@ -21,18 +21,22 @@ package org.apache.sling.thumbnails.internal;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.cms.rendition.RenditionSupport;
+import org.apache.sling.cms.transformation.OutputFileFormat;
+import org.apache.sling.cms.transformation.Transformation;
+import org.apache.sling.cms.transformation.Transformer;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobConsumer;
-import org.apache.sling.thumbnails.OutputFileFormat;
-import org.apache.sling.thumbnails.RenditionSupport;
-import org.apache.sling.thumbnails.Transformation;
-import org.apache.sling.thumbnails.Transformer;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -130,9 +134,19 @@ public class AutoRenditionJobConsumer implements JobConsumer {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             transformer.transform(resource, transformation, DEFAULT_FORMAT, baos);
 
-            renditionSupport.setRendition(resource, renditionName, new ByteArrayInputStream(baos.toByteArray()));
+            // Collect rendition metadata
+            Map<String, Object> renditionMetadata =
+                    collectRenditionMetadata(resource, transformationName, transformation, DEFAULT_FORMAT);
 
-            log.info("Successfully generated rendition {} for {}", renditionName, path);
+            // Save rendition with metadata
+            renditionSupport.setRendition(
+                    resource, renditionName, new ByteArrayInputStream(baos.toByteArray()), renditionMetadata);
+
+            log.info(
+                    "Successfully generated rendition {} for {} with {} metadata fields",
+                    renditionName,
+                    path,
+                    renditionMetadata.size());
             return JobResult.OK;
 
         } catch (LoginException e) {
@@ -144,6 +158,78 @@ public class AutoRenditionJobConsumer implements JobConsumer {
         } catch (IOException e) {
             log.error("Failed to generate rendition for {}: {}", path, e.getMessage(), e);
             return JobResult.FAILED;
+        }
+    }
+
+    /**
+     * Collects metadata for the rendition, including source metadata and
+     * transformation details.
+     * This preserves important metadata like copyright, GPS coordinates, and tracks
+     * transformation history.
+     *
+     * @param resource           the source file resource
+     * @param transformationName the name of the transformation applied
+     * @param transformation     the transformation configuration
+     * @param format             the output format
+     * @return map of metadata fields to store with the rendition
+     */
+    private Map<String, Object> collectRenditionMetadata(
+            Resource resource, String transformationName, Transformation transformation, OutputFileFormat format) {
+        Map<String, Object> metadata = new HashMap<>();
+
+        // Transformation details
+        metadata.put("sourceFile", resource.getPath());
+        metadata.put("transformation", transformationName);
+        metadata.put("transformationPath", transformation.getPath());
+        metadata.put("format", format.name());
+        metadata.put("generated", Calendar.getInstance());
+        metadata.put("generator", "AutoRenditionJobConsumer");
+
+        // Copy important source metadata fields
+        Resource sourceMetadata = resource.getChild("jcr:content/metadata");
+        if (sourceMetadata != null) {
+            ValueMap sourceMap = sourceMetadata.getValueMap();
+
+            // Copyright and ownership
+            copyMetadataField(sourceMap, metadata, "exif:Copyright");
+            copyMetadataField(sourceMap, metadata, "exif:Artist");
+            copyMetadataField(sourceMap, metadata, "dc:creator");
+            copyMetadataField(sourceMap, metadata, "dc:rights");
+
+            // GPS location data (important for SEO and asset management)
+            copyMetadataField(sourceMap, metadata, "geo:lat");
+            copyMetadataField(sourceMap, metadata, "geo:long");
+            copyMetadataField(sourceMap, metadata, "exif:GPSLatitude");
+            copyMetadataField(sourceMap, metadata, "exif:GPSLongitude");
+
+            // Camera and image metadata
+            copyMetadataField(sourceMap, metadata, "exif:Model");
+            copyMetadataField(sourceMap, metadata, "exif:Make");
+            copyMetadataField(sourceMap, metadata, "tiff:Orientation");
+
+            // Original dimensions (useful for tracking resize ratios)
+            copyMetadataField(sourceMap, metadata, "width");
+            copyMetadataField(sourceMap, metadata, "height");
+
+            log.debug("Copied {} source metadata fields for rendition", metadata.size() - 6);
+        } else {
+            log.debug("No source metadata found at {}/jcr:content/metadata", resource.getPath());
+        }
+
+        return metadata;
+    }
+
+    /**
+     * Copies a single metadata field from source to destination if it exists.
+     *
+     * @param source      the source metadata map
+     * @param destination the destination metadata map
+     * @param key         the metadata field key
+     */
+    private void copyMetadataField(ValueMap source, Map<String, Object> destination, String key) {
+        Object value = source.get(key);
+        if (value != null) {
+            destination.put(key, value);
         }
     }
 }

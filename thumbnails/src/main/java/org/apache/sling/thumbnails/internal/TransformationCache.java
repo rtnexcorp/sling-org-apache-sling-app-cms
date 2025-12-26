@@ -30,7 +30,7 @@ import java.util.Set;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.thumbnails.Transformation;
+import org.apache.sling.cms.transformation.Transformation;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -72,17 +72,21 @@ public class TransformationCache implements EventHandler, Runnable {
     private Optional<String> findTransformation(String name) {
         try {
             try (ResourceResolver serviceResolver = transformationServiceUser.getTransformationServiceUser()) {
-                name = name.substring(1).replace("'", "''");
-                log.debug("Finding transformations with {}", name);
+                // Handle both absolute paths and simple names
+                // If name starts with /, remove it to get the transformation name
+                String transformationName = name.startsWith("/") ? name.substring(1) : name;
+                transformationName = transformationName.replace("'", "''");
+                log.debug("Finding transformations with name: {}", transformationName);
                 Iterator<Resource> transformations = serviceResolver.findResources(
                         "SELECT * FROM [nt:unstructured] WHERE (ISDESCENDANTNODE([/conf]) OR ISDESCENDANTNODE([/libs/conf]) OR ISDESCENDANTNODE([/apps/conf])) AND [sling:resourceType]='sling/thumbnails/transformation' AND [name]='"
-                                + name + "'",
+                                + transformationName + "'",
                         Query.JCR_SQL2);
                 if (transformations.hasNext()) {
                     Resource transformation = transformations.next();
                     log.debug("Found transformation resource: {}", transformation);
                     return Optional.of(transformation.getPath());
                 }
+                log.warn("No transformation found with name: {}", transformationName);
                 return Optional.empty();
             }
         } catch (LoginException le) {

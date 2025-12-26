@@ -26,14 +26,16 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.cms.transformation.Transformation;
+import org.apache.sling.cms.transformation.TransformationHandlerConfig;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.ChildResource;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
-import org.apache.sling.thumbnails.Transformation;
-import org.apache.sling.thumbnails.TransformationHandlerConfig;
 
-@Model(adaptables = Resource.class, adapters = Transformation.class)
+@Model(
+        adaptables = Resource.class,
+        adapters = {Transformation.class, org.apache.sling.thumbnails.Transformation.class})
 public class TransformationImpl implements Transformation {
 
     private final List<?> handlers;

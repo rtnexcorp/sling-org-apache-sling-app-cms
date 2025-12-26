@@ -31,13 +31,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
+import org.apache.sling.cms.transformation.Transformation;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.thumbnails.RenderedResource;
 import org.apache.sling.thumbnails.RenditionSupport;
 import org.apache.sling.thumbnails.ThumbnailSupport;
-import org.apache.sling.thumbnails.Transformation;
 import org.jetbrains.annotations.NotNull;
 
 @Model(

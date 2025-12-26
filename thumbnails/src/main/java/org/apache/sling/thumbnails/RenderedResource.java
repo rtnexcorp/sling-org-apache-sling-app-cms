@@ -21,6 +21,7 @@ package org.apache.sling.thumbnails;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.cms.transformation.Transformation;
 import org.jetbrains.annotations.NotNull;
 
 /**

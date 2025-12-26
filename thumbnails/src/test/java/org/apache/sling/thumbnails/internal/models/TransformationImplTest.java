@@ -23,10 +23,10 @@ import javax.jcr.LoginException;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.sling.cms.transformation.Transformation;
+import org.apache.sling.cms.transformation.TransformationHandlerConfig;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
-import org.apache.sling.thumbnails.Transformation;
-import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.internal.ContextHelper;
 import org.apache.sling.thumbnails.internal.transformers.RotateHandler;
 import org.junit.jupiter.api.BeforeEach;

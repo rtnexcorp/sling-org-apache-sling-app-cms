@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.cms.transformation.BadRequestException;
+import org.apache.sling.cms.transformation.OutputFileFormat;
+import org.apache.sling.cms.transformation.TransformationHandlerConfig;
+import org.apache.sling.cms.transformation.Transformer;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
-import org.apache.sling.thumbnails.BadRequestException;
-import org.apache.sling.thumbnails.OutputFileFormat;
 import org.apache.sling.thumbnails.ThumbnailSupport;
-import org.apache.sling.thumbnails.TransformationHandlerConfig;
-import org.apache.sling.thumbnails.Transformer;
 import org.apache.sling.thumbnails.extension.ThumbnailProvider;
 import org.apache.sling.thumbnails.extension.TransformationHandler;
 import org.apache.sling.thumbnails.internal.models.TransformationHandlerConfigImpl;

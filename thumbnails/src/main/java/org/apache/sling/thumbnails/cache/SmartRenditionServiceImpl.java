@@ -25,9 +25,9 @@ import java.io.InputStream;
 import java.util.Optional;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.thumbnails.OutputFileFormat;
-import org.apache.sling.thumbnails.Transformation;
-import org.apache.sling.thumbnails.Transformer;
+import org.apache.sling.cms.transformation.OutputFileFormat;
+import org.apache.sling.cms.transformation.Transformation;
+import org.apache.sling.cms.transformation.Transformer;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

@@ -26,8 +26,8 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
 import net.coobird.thumbnailator.filters.Transparency;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.cms.transformation.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.BadRequestException;
-import org.apache.sling.thumbnails.TransformationHandlerConfig;
 import org.apache.sling.thumbnails.extension.TransformationHandler;
 import org.osgi.service.component.annotations.Component;
 

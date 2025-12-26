@@ -200,6 +200,31 @@
                             }
                         }
                     },
+                    "separator3b": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Orientation"
+                    },
+                    "autoRotate": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Auto-Rotate (EXIF)",
+                        "name": "autoRotate",
+                        "description": "Automatically rotate images based on EXIF orientation metadata",
+                        "options": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "yes": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "Yes (recommended)",
+                                "value": "true"
+                            },
+                            "no": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "label": "No",
+                                "value": "false"
+                            }
+                        }
+                    },
                     "separator4": {
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/editor/fields/fieldset",

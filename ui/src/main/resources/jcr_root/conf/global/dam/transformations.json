@@ -46,5 +46,47 @@
         "sling:resourceType": "sling/thumbnails/transformers/crop"
       }
     }
+  },
+  "auto-rotate-thumbnail": {
+    "jcr:primaryType": "nt:unstructured",
+    "name": "auto-rotate-thumbnail",
+    "jcr:title": "Auto-Rotate Thumbnail",
+    "jcr:description": "Automatically corrects image orientation using EXIF metadata before cropping",
+    "sling:resourceType": "sling/thumbnails/transformation",
+    "handlers": {
+      "jcr:primaryType": "nt:unstructured",
+      "autorotate": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/transformers/autorotate"
+      },
+      "crop": {
+        "jcr:primaryType": "nt:unstructured",
+        "position": "CENTER",
+        "height": "480",
+        "width": "600",
+        "sling:resourceType": "sling/thumbnails/transformers/crop"
+      }
+    }
+  },
+  "auto-rotate-resize": {
+    "jcr:primaryType": "nt:unstructured",
+    "name": "auto-rotate-resize",
+    "jcr:title": "Auto-Rotate & Resize",
+    "jcr:description": "Automatically corrects image orientation and resizes to 800x600",
+    "sling:resourceType": "sling/thumbnails/transformation",
+    "handlers": {
+      "jcr:primaryType": "nt:unstructured",
+      "autorotate": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling/thumbnails/transformers/autorotate"
+      },
+      "resize": {
+        "jcr:primaryType": "nt:unstructured",
+        "width": "800",
+        "height": "600",
+        "keepAspectRatio": "true",
+        "sling:resourceType": "sling/thumbnails/transformers/resize"
+      }
+    }
   }
 }

@@ -29,11 +29,12 @@ import java.util.stream.StreamSupport;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
-import org.apache.sling.thumbnails.RenditionSupport;
+import org.apache.sling.cms.rendition.RenditionSupport;
 import org.apache.sling.thumbnails.ThumbnailSupport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -98,6 +99,16 @@ public class RenditionSupportImpl implements RenditionSupport {
     @Override
     public void setRendition(@NotNull Resource file, @NotNull String renditionName, @NotNull InputStream contents)
             throws PersistenceException {
+        setRendition(file, renditionName, contents, null);
+    }
+
+    @Override
+    public void setRendition(
+            @NotNull Resource file,
+            @NotNull String renditionName,
+            @NotNull InputStream contents,
+            @Nullable Map<String, Object> renditionMetadata)
+            throws PersistenceException {
         if (renditionName.indexOf("/") != 0) {
             renditionName = "/" + renditionName;
         }
@@ -112,12 +123,28 @@ public class RenditionSupportImpl implements RenditionSupport {
             Map<String, Object> properties = new HashMap<>();
             properties.put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED);
             properties.put(JcrConstants.JCR_DATA, contents);
-            ResourceUtil.getOrCreateResource(
+            Resource jcrContent = ResourceUtil.getOrCreateResource(
                     serviceResolver,
                     renditionFile.getPath() + "/" + JcrConstants.JCR_CONTENT,
                     properties,
                     JcrConstants.NT_UNSTRUCTURED,
-                    true);
+                    false);
+
+            // Store rendition metadata if provided
+            if (renditionMetadata != null && !renditionMetadata.isEmpty()) {
+                Resource metadataResource = ResourceUtil.getOrCreateResource(
+                        serviceResolver,
+                        jcrContent.getPath() + "/metadata",
+                        Collections.singletonMap(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED),
+                        JcrConstants.NT_UNSTRUCTURED,
+                        false);
+                ModifiableValueMap metadataMap = metadataResource.adaptTo(ModifiableValueMap.class);
+                if (metadataMap != null) {
+                    metadataMap.putAll(renditionMetadata);
+                }
+            }
+
+            serviceResolver.commit();
         } catch (LoginException le) {
             throw new PersistenceException("Could not save due to LoginException", le);
         }

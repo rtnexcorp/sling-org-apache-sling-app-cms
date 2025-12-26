@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "transformationNames": [
+    "sling-cms-thumbnail",
+    "auto-rotate-thumbnail"
+  ],
+  "supportedMimeTypes": [
+    "image/*",
+    "application/pdf",
+    "video/*"
+  ],
+  "contentPaths": [
+    "/content",
+    "/static"
+  ]
+}

@@ -23,21 +23,31 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * A configuration for an instance of a Transformation Handler.
+ *
+ * @deprecated Use {@link org.apache.sling.cms.transformation.TransformationHandlerConfig} instead.
+ *             This interface will be removed in version 2.0.0.
  */
+@Deprecated
 @ProviderType
-public interface TransformationHandlerConfig {
+public interface TransformationHandlerConfig extends org.apache.sling.cms.transformation.TransformationHandlerConfig {
 
     /**
      * Get the hander type, generally, this will be a Sling Resource type
      *
      * @return the handler type
+     * @deprecated Use {@link org.apache.sling.cms.transformation.TransformationHandlerConfig#getHandlerType()}
      */
+    @Override
+    @Deprecated
     String getHandlerType();
 
     /**
      * The configuration properties for the transformation hander
      *
      * @return the configuration properties
+     * @deprecated Use {@link org.apache.sling.cms.transformation.TransformationHandlerConfig#getProperties()}
      */
+    @Override
+    @Deprecated
     ValueMap getProperties();
 }

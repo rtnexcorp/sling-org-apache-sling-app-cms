@@ -20,6 +20,8 @@ package org.apache.sling.cms.core.internal.jobs;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.resource.LoginException;
@@ -32,6 +34,8 @@ import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobConsumer;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,11 +51,23 @@ public class FileMetadataExtractorConsumer implements JobConsumer {
 
     public static final String TOPIC = "org/apache/sling/cms/ExtractMetadata";
 
+    /**
+     * Event topic fired when metadata extraction completes successfully.
+     * This allows downstream processes (e.g., rendition generation) to wait
+     * for metadata availability before processing.
+     *
+     * @since 1.1.0
+     */
+    public static final String EVENT_METADATA_EXTRACTED = "org/apache/sling/cms/metadata/EXTRACTED";
+
     @Reference
     private FileMetadataExtractor extractor;
 
     @Reference
     private ResourceResolverFactory factory;
+
+    @Reference
+    private EventAdmin eventAdmin;
 
     @Override
     public JobResult process(Job job) {
@@ -64,6 +80,10 @@ public class FileMetadataExtractorConsumer implements JobConsumer {
             log.debug("Retrieved file {}", file);
             extractor.updateMetadata(file);
             log.debug("Metadata extracted successfully");
+
+            // Fire event to notify metadata extraction completion
+            fireMetadataExtractedEvent(path, resource);
+
             return JobResult.OK;
         } catch (LoginException e) {
             log.error("Exception getting service user", e);
@@ -71,5 +91,27 @@ public class FileMetadataExtractorConsumer implements JobConsumer {
             log.error("Failed to extract metadata from {}", path, e);
         }
         return JobResult.FAILED;
+    }
+
+    /**
+     * Fire OSGi event to notify that metadata extraction has completed.
+     * This allows downstream processes to wait for metadata availability.
+     *
+     * @param path the path of the file
+     * @param resource the file resource
+     */
+    private void fireMetadataExtractedEvent(String path, Resource resource) {
+        try {
+            Dictionary<String, Object> props = new Hashtable<>();
+            props.put(SlingConstants.PROPERTY_PATH, path);
+            props.put(SlingConstants.PROPERTY_RESOURCE_TYPE, resource.getResourceType());
+
+            Event event = new Event(EVENT_METADATA_EXTRACTED, props);
+            eventAdmin.postEvent(event);
+
+            log.debug("Fired metadata extracted event for {}", path);
+        } catch (Exception e) {
+            log.warn("Failed to fire metadata extracted event for {}", path, e);
+        }
     }
 }

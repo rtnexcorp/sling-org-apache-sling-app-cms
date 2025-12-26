@@ -23,18 +23,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.thumbnails.BadRequestException;
-import org.apache.sling.thumbnails.OutputFileFormat;
+import org.apache.sling.cms.transformation.BadRequestException;
+import org.apache.sling.cms.transformation.OutputFileFormat;
+import org.apache.sling.cms.transformation.Transformation;
+import org.apache.sling.cms.transformation.Transformer;
 import org.apache.sling.thumbnails.ThumbnailSupport;
-import org.apache.sling.thumbnails.Transformation;
-import org.apache.sling.thumbnails.TransformationHandlerConfig;
-import org.apache.sling.thumbnails.Transformer;
 import org.apache.sling.thumbnails.extension.ThumbnailProvider;
 import org.apache.sling.thumbnails.extension.TransformationHandler;
 import org.osgi.service.component.annotations.Activate;
@@ -121,10 +123,16 @@ public class TransformerImpl implements Transformer {
         }
         ThumbnailProvider provider = getThumbnailProvider(resource);
         log.debug("Using thumbnail provider {} for resource {}", provider, resource);
+
+        // Load source metadata for metadata-aware handlers
+        Map<String, Object> sourceMetadata = loadMetadata(resource);
+        log.debug("Loaded {} metadata fields for resource {}", sourceMetadata.size(), resource.getPath());
+
         try (InputStream thumbnailIs = provider.getThumbnail(resource)) {
 
             InputStream inputStream = thumbnailIs;
-            for (TransformationHandlerConfig config : transformation.getHandlers()) {
+            for (org.apache.sling.cms.transformation.TransformationHandlerConfig config :
+                    transformation.getHandlers()) {
                 log.debug("Handling command: {}", config);
 
                 TransformationHandler handler = getTransformationHandler(config.getHandlerType());
@@ -134,7 +142,15 @@ public class TransformerImpl implements Transformer {
                             "Invoking handler {} for command {}",
                             handler.getClass().getCanonicalName(),
                             config.getHandlerType());
-                    handler.handle(inputStream, outputStream, config);
+
+                    // Use metadata-aware method if handler supports it
+                    if (handler.usesMetadata()) {
+                        log.debug("Handler uses metadata, passing {} metadata fields", sourceMetadata.size());
+                        handler.handle(inputStream, outputStream, config, sourceMetadata);
+                    } else {
+                        handler.handle(inputStream, outputStream, config);
+                    }
+
                     inputStream = new ByteArrayInputStream(outputStream.toByteArray());
                 } else {
                     log.info("No handler found for: {}", config.getHandlerType());
@@ -152,5 +168,22 @@ public class TransformerImpl implements Transformer {
 
             IOUtils.copy(inputStream, out);
         }
+    }
+
+    /**
+     * Load metadata from the source resource.
+     * Metadata is expected to be stored at {resource}/jcr:content/metadata
+     *
+     * @param resource the source resource
+     * @return map of metadata key-value pairs (empty if no metadata exists)
+     */
+    private Map<String, Object> loadMetadata(Resource resource) {
+        Resource metadataResource = resource.getChild("jcr:content/metadata");
+        if (metadataResource != null) {
+            log.debug("Loading metadata from {}", metadataResource.getPath());
+            return new HashMap<>(metadataResource.getValueMap());
+        }
+        log.debug("No metadata found for resource {}", resource.getPath());
+        return Collections.emptyMap();
     }
 }

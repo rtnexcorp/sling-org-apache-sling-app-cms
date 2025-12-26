@@ -27,9 +27,13 @@ import org.osgi.annotation.versioning.ProviderType;
 /**
  * Transforms a resource using the registered TransformationHandlers to invoke
  * transformations on the file.
+ *
+ * @deprecated Use {@link org.apache.sling.cms.transformation.Transformer} instead.
+ *             This interface will be removed in version 2.0.0.
  */
+@Deprecated
 @ProviderType
-public interface Transformer {
+public interface Transformer extends org.apache.sling.cms.transformation.Transformer {
 
     /**
      * Transforms the resource
@@ -39,7 +43,14 @@ public interface Transformer {
      * @param format         the format of the stream to return
      * @param out            the OutputStream to which to write the transformed file
      * @throws IOException an exception occurs transforming the resource
+     * @deprecated Use {@link org.apache.sling.cms.transformation.Transformer#transform(Resource, org.apache.sling.cms.transformation.Transformation, org.apache.sling.cms.transformation.OutputFileFormat, OutputStream)}
      */
-    void transform(Resource resource, Transformation transformation, OutputFileFormat format, OutputStream out)
+    @Override
+    @Deprecated
+    void transform(
+            Resource resource,
+            org.apache.sling.cms.transformation.Transformation transformation,
+            org.apache.sling.cms.transformation.OutputFileFormat format,
+            OutputStream out)
             throws IOException;
 }

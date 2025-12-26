@@ -21,8 +21,8 @@ package org.apache.sling.thumbnails.cache;
 import java.io.InputStream;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.thumbnails.OutputFileFormat;
-import org.apache.sling.thumbnails.Transformation;
+import org.apache.sling.cms.transformation.OutputFileFormat;
+import org.apache.sling.cms.transformation.Transformation;
 
 /**
  * Service for smart rendition generation with caching.

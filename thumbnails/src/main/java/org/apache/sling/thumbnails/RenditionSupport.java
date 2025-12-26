@@ -29,9 +29,13 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Service for interacting with renditions
+ *
+ * @deprecated Use {@link org.apache.sling.cms.rendition.RenditionSupport} instead.
+ *             This interface will be removed in version 2.0.0.
  */
+@Deprecated
 @ProviderType
-public interface RenditionSupport {
+public interface RenditionSupport extends org.apache.sling.cms.rendition.RenditionSupport {
 
     /**
      * Retrieves the rendition with the specified rendition name, if one exists.
@@ -39,7 +43,10 @@ public interface RenditionSupport {
      * @param file          the file from which to retrieve the rendition
      * @param renditionName the rendition to retrieve
      * @return the rendition resource or null
+     * @deprecated Use {@link org.apache.sling.cms.rendition.RenditionSupport#getRendition(Resource, String)}
      */
+    @Override
+    @Deprecated
     @Nullable
     Resource getRendition(@NotNull Resource file, @NotNull String renditionName);
 
@@ -50,7 +57,10 @@ public interface RenditionSupport {
      * @param file          the file from which to retrieve the rendition
      * @param renditionName the rendition to retrieve
      * @return the rendition contents or null
+     * @deprecated Use {@link org.apache.sling.cms.rendition.RenditionSupport#getRenditionContent(Resource, String)}
      */
+    @Override
+    @Deprecated
     @Nullable
     InputStream getRenditionContent(@NotNull Resource file, @NotNull String renditionName);
 
@@ -59,7 +69,10 @@ public interface RenditionSupport {
      *
      * @param file the file from which to retrieve the renditions
      * @return the renditions
+     * @deprecated Use {@link org.apache.sling.cms.rendition.RenditionSupport#listRenditions(Resource)}
      */
+    @Override
+    @Deprecated
     @NotNull
     List<Resource> listRenditions(@NotNull Resource file);
 
@@ -69,7 +82,10 @@ public interface RenditionSupport {
      * @param file          the file to check
      * @param renditionName the rendition name to check (including extension)
      * @return true if the rendition exists, false otherwise
+     * @deprecated Use {@link org.apache.sling.cms.rendition.RenditionSupport#renditionExists(Resource, String)}
      */
+    @Override
+    @Deprecated
     boolean renditionExists(@NotNull Resource file, @NotNull String renditionName);
 
     /**
@@ -78,7 +94,10 @@ public interface RenditionSupport {
      *
      * @param file the file to check
      * @return true if the file supports renditons, false otherwise
+     * @deprecated Use {@link org.apache.sling.cms.rendition.RenditionSupport#supportsRenditions(Resource)}
      */
+    @Override
+    @Deprecated
     boolean supportsRenditions(@NotNull Resource file);
 
     /**
@@ -87,7 +106,10 @@ public interface RenditionSupport {
      * @param file
      * @param renditionName
      * @param baos
+     * @deprecated Use {@link org.apache.sling.cms.rendition.RenditionSupport#setRendition(Resource, String, InputStream)}
      */
+    @Override
+    @Deprecated
     void setRendition(@NotNull Resource file, @NotNull String renditionName, @NotNull InputStream baos)
             throws PersistenceException;
 }

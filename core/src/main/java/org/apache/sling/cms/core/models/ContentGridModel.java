@@ -215,6 +215,11 @@ public class ContentGridModel {
         public String getThumbnailPath() {
             String rt = getResourceType();
             if ("sling:File".equals(rt) || "nt:file".equals(rt)) {
+                // Use auto-rotate-thumbnail for images to automatically correct EXIF orientation
+                String mimeType = getMimeType();
+                if (mimeType != null && mimeType.startsWith("image/")) {
+                    return "/cms/file/preview.html" + getPath() + ".transform/auto-rotate-thumbnail.png";
+                }
                 return "/cms/file/preview.html" + getPath() + ".transform/sling-cms-thumbnail.png";
             } else if ("sling:Site".equals(rt)) {
                 return "/cms/file/preview.html" + getBrandingGridIconsBase() + "/site.png";

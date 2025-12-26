@@ -18,40 +18,40 @@
  */
 package org.apache.sling.thumbnails;
 
-import java.util.stream.Collectors;
-
 import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Exception to indicate that the request provided is invalid
+ *
+ * @deprecated Use {@link org.apache.sling.cms.transformation.BadRequestException} instead.
+ *             This class will be removed in version 2.0.0.
  */
+@Deprecated
 @ProviderType
-public class BadRequestException extends RuntimeException {
+public class BadRequestException extends org.apache.sling.cms.transformation.BadRequestException {
 
+    /** @deprecated Use {@link org.apache.sling.cms.transformation.BadRequestException#BadRequestException(String)} */
+    @Deprecated
     public BadRequestException(String message) {
         super(message);
     }
 
+    /** @deprecated Use {@link org.apache.sling.cms.transformation.BadRequestException#BadRequestException(String, Exception)} */
+    @Deprecated
     public BadRequestException(String message, Exception cause) {
         super(message, cause);
     }
 
+    /** @deprecated Use {@link org.apache.sling.cms.transformation.BadRequestException#BadRequestException(String, ValueMap)} */
+    @Deprecated
     public BadRequestException(String message, ValueMap properties) {
-        super(String.format(
-                message,
-                properties.entrySet().stream()
-                        .map(en -> en.getKey() + "=" + en.getValue())
-                        .collect(Collectors.joining("\n"))));
+        super(message, properties);
     }
 
+    /** @deprecated Use {@link org.apache.sling.cms.transformation.BadRequestException#BadRequestException(String, ValueMap, Exception)} */
+    @Deprecated
     public BadRequestException(String message, ValueMap properties, Exception cause) {
-        super(
-                String.format(
-                        message,
-                        properties.entrySet().stream()
-                                .map(en -> en.getKey() + "=" + en.getValue())
-                                .collect(Collectors.joining("\n"))),
-                cause);
+        super(message, properties, cause);
     }
 }

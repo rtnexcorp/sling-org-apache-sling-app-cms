@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -36,6 +37,9 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,14 +47,30 @@ import org.slf4j.LoggerFactory;
  * Resource Change Listener that queues jobs to automatically generate renditions
  * when assets are uploaded. This listener detects new sling:File resources and
  * creates background jobs for rendition generation.
+ * <p>
+ * This listener also implements EventHandler to listen for metadata extraction
+ * completion events, ensuring renditions are generated only after metadata is
+ * available. This prevents race conditions and enables metadata-aware transformations.
+ * </p>
+ *
+ * @since 1.1.0 - Added EventHandler for metadata extraction coordination
  */
 @Component(
-        service = {ResourceChangeListener.class, ExternalResourceChangeListener.class},
-        property = {ResourceChangeListener.CHANGES + "=ADDED"},
+        service = {ResourceChangeListener.class, ExternalResourceChangeListener.class, EventHandler.class},
+        property = {
+            ResourceChangeListener.CHANGES + "=ADDED",
+            EventConstants.EVENT_TOPIC + "=org/apache/sling/cms/metadata/EXTRACTED"
+        },
         immediate = true)
-public class AutoRenditionListener implements ResourceChangeListener, ExternalResourceChangeListener {
+public class AutoRenditionListener implements ResourceChangeListener, ExternalResourceChangeListener, EventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(AutoRenditionListener.class);
+
+    /**
+     * Event topic for metadata extraction completion.
+     * Must match the topic fired by FileMetadataExtractorConsumer.
+     */
+    private static final String EVENT_METADATA_EXTRACTED = "org/apache/sling/cms/metadata/EXTRACTED";
 
     @Reference
     private JobManager jobManager;
@@ -90,9 +110,60 @@ public class AutoRenditionListener implements ResourceChangeListener, ExternalRe
                     .map(rc -> serviceResolver.getResource(rc.getPath()))
                     .filter(this::isSupported)
                     .filter(this::matchesMimeType)
-                    .forEach(this::queueRenditionJob);
+                    .forEach(resource -> processResource(resource, serviceResolver));
         } catch (LoginException e) {
             log.error("Failed to get service user for auto-rendition processing", e);
+        }
+    }
+
+    /**
+     * Handle OSGi events, specifically metadata extraction completion events.
+     * When metadata extraction completes, queue rendition generation jobs.
+     *
+     * @param event the OSGi event
+     */
+    @Override
+    public void handleEvent(Event event) {
+        if (!autoRenditionConfig.isEnabled()) {
+            log.trace("Auto-rendition is disabled, skipping event");
+            return;
+        }
+
+        String topic = event.getTopic();
+        if (EVENT_METADATA_EXTRACTED.equals(topic)) {
+            String path = (String) event.getProperty(SlingConstants.PROPERTY_PATH);
+            log.debug("Metadata extraction completed for {}, queueing rendition jobs", path);
+
+            try (ResourceResolver serviceResolver = transformationServiceUser.getTransformationServiceUser()) {
+                Resource resource = serviceResolver.getResource(path);
+                if (resource != null && isSupported(resource) && matchesMimeType(resource)) {
+                    queueRenditionJob(resource);
+                }
+            } catch (LoginException e) {
+                log.error("Failed to get service user for metadata event processing", e);
+            }
+        }
+    }
+
+    /**
+     * Process a resource for rendition generation.
+     * Checks if metadata exists before queueing jobs.
+     *
+     * @param resource the resource to process
+     * @param resolver the resource resolver
+     */
+    private void processResource(Resource resource, ResourceResolver resolver) {
+        // Check if metadata already exists
+        Resource metadataResource = resource.getChild("jcr:content/metadata");
+
+        if (metadataResource != null) {
+            // Metadata exists, queue rendition jobs immediately
+            log.debug("Metadata exists for {}, queueing rendition jobs", resource.getPath());
+            queueRenditionJob(resource);
+        } else {
+            // Metadata doesn't exist yet, renditions will be queued when
+            // metadata extraction completes (via handleEvent)
+            log.debug("Metadata not yet available for {}, waiting for extraction event", resource.getPath());
         }
     }
 

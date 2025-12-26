@@ -26,6 +26,22 @@
     }
   ],
   "configurations": {
+    "org.apache.sling.thumbnails.internal.AutoRenditionConfigImpl": {
+      "enabled:Boolean": true,
+      "transformationNames": [
+        "sling-cms-thumbnail",
+        "auto-rotate-thumbnail"
+      ],
+      "supportedMimeTypes": [
+        "image/*",
+        "application/pdf",
+        "video/*"
+      ],
+      "contentPaths": [
+        "/content",
+        "/static"
+      ]
+    },
     "org.apache.sling.thumbnails.internal.ThumbnailSupportImpl": {
       "errorSuffix": "/sling-cms-thumbnail.png",
       "errorResourcePath": "/static/sling-cms/thumbnails/file.png",

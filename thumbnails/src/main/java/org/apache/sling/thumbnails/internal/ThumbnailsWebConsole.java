@@ -32,8 +32,8 @@ import java.util.Set;
 
 import org.apache.felix.webconsole.AbstractWebConsolePlugin;
 import org.apache.felix.webconsole.WebConsoleConstants;
+import org.apache.sling.cms.transformation.Transformer;
 import org.apache.sling.thumbnails.ThumbnailSupport;
-import org.apache.sling.thumbnails.Transformer;
 import org.apache.sling.thumbnails.extension.ThumbnailProvider;
 import org.apache.sling.thumbnails.extension.TransformationHandler;
 import org.osgi.framework.Constants;
