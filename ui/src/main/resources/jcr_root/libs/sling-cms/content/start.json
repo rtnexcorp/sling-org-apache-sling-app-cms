@@ -65,7 +65,7 @@
               "/cms/transformations/edit.html",
               "/cms/template/edit.html",
               "/cms/config/actions",
-              "/cms/config"
+              "/cms/config/configs"
             ],
             "link": "/cms/config/configs.html/conf",
             "text": "Configuration"
