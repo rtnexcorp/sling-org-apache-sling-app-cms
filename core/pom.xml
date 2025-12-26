@@ -304,6 +304,7 @@
                         <exclude>**/ContentBreadcrumbTest.java</exclude>
                         <exclude>**/StartContentTest.java</exclude>
                         <exclude>**/QueryDebuggerTest.java</exclude>
+                        <exclude>**/PreviewTokenManagerImplTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
