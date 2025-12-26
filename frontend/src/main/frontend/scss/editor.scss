@@ -77,6 +77,14 @@ $primary: #9E2165;
 
   .modal-content {
     overflow: auto;
+    max-height: 90vh;
+    
+    .box {
+      max-height: calc(90vh - 2rem);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   .modal-frame {
