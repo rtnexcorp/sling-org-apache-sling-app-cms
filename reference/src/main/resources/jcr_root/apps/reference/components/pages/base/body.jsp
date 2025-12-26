@@ -19,7 +19,7 @@
 <%@include file="/libs/sling-cms/global.jsp"%>
 <c:set var="site" value="${sling:adaptTo(resource,'org.apache.sling.cms.SiteManager').site}" />
 <body>
-	<sling:call script="/libs/sling-cms/components/editor/scripts/init.jsp" />
+	<sling:call script="/libs/sling-cms/components/editor/scripts/init.html" />
 	<div class="title">
 		<div class="logo">
 			<a href="/">
@@ -66,5 +66,5 @@
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<sling:call script="/libs/sling-cms/components/editor/scripts/finalize.jsp" />
+	<sling:call script="/libs/sling-cms/components/editor/scripts/finalize.html" />
 </body>

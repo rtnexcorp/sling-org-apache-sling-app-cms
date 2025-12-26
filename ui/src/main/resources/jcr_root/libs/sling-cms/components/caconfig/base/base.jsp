@@ -18,11 +18,11 @@
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
 <c:set var="cmsEditEnabled" value="true" scope="request" />
-<sling:call script="/libs/sling-cms/components/editor/scripts/init.jsp" />
+<sling:call script="/libs/sling-cms/components/editor/scripts/init.html" />
 
 <c:set var="oldAvailableTypes" value="${availableTypes}" />
 <sling:call script="include.jsp" />
 <c:set var="availableTypes" value="${oldAvailableTypes}" scope="request" />
 
-<sling:call script="/libs/sling-cms/components/editor/scripts/finalize.jsp" />
+<sling:call script="/libs/sling-cms/components/editor/scripts/finalize.html" />
 <c:set var="cmsEditEnabled" value="false" scope="request" />
