@@ -45,11 +45,11 @@
 <sly data-sly-use.unknownTemplate="previews/unknown.html"/>
 <sly data-sly-use.infoTemplate="panels/info.html"/>
 
-<div class="image-preview-modal">
-    <div class="columns">
+<div class="cms-preview-modal">
+    <div class="cms-preview-layout">
         <!-- LEFT: PREVIEW AREA -->
-        <div class="column is-three-quarters">
-            <h4 class="title is-5">${'Preview' @ i18n}</h4>
+        <div class="cms-preview-main">
+            <h4 class="cms-preview-title">${'Preview' @ i18n}</h4>
 
             <!--/* Dispatch to appropriate preview template based on file type */-->
             <sly data-sly-test="${preview.image}">
@@ -86,7 +86,7 @@
         </div>
 
         <!-- RIGHT: INFO & ACTIONS -->
-        <div class="column is-one-quarter">
+        <div class="cms-preview-sidebar">
             <sly data-sly-call="${infoTemplate.infoPanel @ preview=preview}"/>
         </div>
     </div>

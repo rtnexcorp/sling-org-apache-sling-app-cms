@@ -1,0 +1,74 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Icon Abstraction Layer
+// Provides semantic icon classes that abstract away the underlying icon library
+// Currently using Jam Icons, which is loaded via JavaScript (jam.min.css)
+// This file provides semantic class names that map to Jam Icons using ::before pseudo-elements
+
+.cms-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  font-family: 'jam-icons' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  // Icon mappings - using Jam Icons unicode characters
+  &--chevron-down::before { content: "\e9ba"; }
+  &--chevron-left::before { content: "\e9bb"; }
+  &--chevron-right::before { content: "\e9bc"; }
+  &--picture::before { content: "\eb6c"; }  // jam-picture
+  &--download::before { content: "\ea46"; }
+  &--close::before { content: "\ea05"; }
+  &--check::before { content: "\e9a7"; }
+  &--plus::before { content: "\eb87"; }
+  &--trash::before { content: "\ec1f"; }
+  &--edit::before { content: "\ec76"; }  // jam-write
+  &--filter::before { content: "\ea75"; }
+  &--refresh::before { content: "\eb99"; }
+  &--alert::before { content: "\e906"; }
+  &--video::before { content: "\ec4e"; }  // jam-video-camera
+  
+  // Spinning animation for loading states
+  &--spin {
+    animation: cms-icon-spin 1s infinite linear;
+  }
+}
+
+// Spinning animation keyframes
+@keyframes cms-icon-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// When switching icon libraries, update the font-family and unicode mappings:
+// Example for Font Awesome:
+// .cms-icon {
+//   font-family: 'Font Awesome 5 Free';
+//   &--chevron-down::before { content: '\f078'; }
+//   &--picture::before { content: '\f03e'; }
+//   &--download::before { content: '\f019'; }
+// }
+

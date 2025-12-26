@@ -20,14 +20,14 @@
 <template data-sly-template.powerPointPreview="${@ preview}">
     <div class="box has-background-light" data-docpreview="powerpoint" data-filepath="${preview.filePath}">
         <div class="docpreview-loading has-text-centered py-6">
-            <span class="icon is-large"><span class="jam jam-refresh jam-spin"></span></span>
+            <span class="icon is-large"><span class="cms-icon cms-icon--refresh cms-icon--spin"></span></span>
             <p>${'Loading presentation...' @ i18n}</p>
         </div>
         <div class="docpreview-controls level mb-2" style="display:none;">
             <div class="level-left">
                 <div class="level-item">
                     <button class="docpreview-prev button is-small" disabled>
-                        <span class="icon"><span class="jam jam-chevron-left"></span></span>
+                        <span class="icon"><span class="cms-icon cms-icon--chevron-left"></span></span>
                     </button>
                 </div>
                 <div class="level-item">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="level-item">
                     <button class="docpreview-next button is-small" disabled>
-                        <span class="icon"><span class="jam jam-chevron-right"></span></span>
+                        <span class="icon"><span class="cms-icon cms-icon--chevron-right"></span></span>
                     </button>
                 </div>
             </div>
@@ -51,7 +51,7 @@
             <div class="docpreview-slide" style="background:#fff; border:1px solid #ddd; padding:20px; min-height:300px;"></div>
         </div>
         <div class="docpreview-error has-text-centered py-6" style="display:none;">
-            <span class="icon is-large has-text-warning"><span class="jam jam-alert" style="font-size:2rem;"></span></span>
+            <span class="icon is-large has-text-warning"><span class="cms-icon cms-icon--alert" style="font-size:2rem;"></span></span>
             <p class="mt-2">${'Could not preview presentation' @ i18n}</p>
         </div>
     </div>

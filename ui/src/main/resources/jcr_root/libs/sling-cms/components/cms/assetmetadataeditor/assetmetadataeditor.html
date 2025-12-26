@@ -52,29 +52,56 @@
                     </tbody>
                 </table>
 
+                <!--/* Auto-Renditions Section */-->
                 <sly data-sly-test="${meta.hasRenditions}">
-                    <p class="is-size-7 has-text-weight-bold mb-1">${'Renditions' @ i18n}</p>
+                    <p class="is-size-7 has-text-weight-bold mb-1">${'Auto-Renditions' @ i18n}</p>
+                    <p class="is-size-7 has-text-grey-dark mb-2">
+                        Pre-generated variants automatically created on upload
+                    </p>
                     <div class="tags are-small">
                         <sly data-sly-list.rendition="${meta.renditions}">
                             <a href="${rendition.path}" class="tag is-link" target="_blank">${rendition.name}</a>
                         </sly>
                     </div>
                 </sly>
-                
+
                 <!--/* Delivery Presets Section */-->
                 <p class="is-size-7 has-text-weight-bold mb-1 mt-3">${'Delivery Presets' @ i18n}</p>
+                <p class="is-size-7 has-text-grey-dark mb-2">
+                    On-demand optimized image delivery for frontend use
+                </p>
                 <div class="tags are-small">
                     <a href="${meta.assetPath}.preset/hero-banner.webp" class="tag is-success" target="_blank" title="1920x600 WebP">hero-banner</a>
                     <a href="${meta.assetPath}.preset/card-thumbnail.webp" class="tag is-success" target="_blank" title="400x300 WebP">card-thumbnail</a>
                     <a href="${meta.assetPath}.preset/avatar.webp" class="tag is-success" target="_blank" title="128x128 WebP">avatar</a>
                     <a href="${meta.assetPath}.preset/social-share.jpg" class="tag is-success" target="_blank" title="1200x630 JPG">social-share</a>
                 </div>
-                
-                <!--/* Transformation Options */-->
-                <p class="is-size-7 has-text-weight-bold mb-1 mt-3">${'Transformations' @ i18n}</p>
+
+                <!--/* On-Demand Transformations */-->
+                <p class="is-size-7 has-text-weight-bold mb-1 mt-3">${'Manual Transformations' @ i18n}</p>
+                <p class="is-size-7 has-text-grey-dark mb-2">
+                    Real-time image transformations via Transform API
+                </p>
                 <div class="tags are-small">
                     <a href="${meta.assetPath}.transform/sling-cms-thumbnail/image.png" class="tag is-info" target="_blank" title="600x480 PNG">thumbnail</a>
                     <a href="${meta.assetPath}.transform/auto-rotate-thumbnail/image.png" class="tag is-info" target="_blank" title="Auto-rotated 600x480 PNG">auto-rotate</a>
+                </div>
+
+                <!--/* Info Section */-->
+                <div class="message is-info is-small mt-3">
+                    <div class="message-body is-size-7">
+                        <p class="has-text-weight-bold mb-1">${'Asset Processing Info' @ i18n}</p>
+                        <ul style="margin-left: 1rem;">
+                            <li><strong>Auto-Renditions:</strong> Generated automatically on file upload to /content or /static</li>
+                            <li><strong>Delivery Presets:</strong> Smart, cached image delivery optimized for web performance</li>
+                            <li><strong>Manual Transformations:</strong> Custom transformations applied on-demand</li>
+                        </ul>
+                        <p class="mt-2">
+                            <a href="https://sling.apache.org/documentation/bundles/thumbnails.html" target="_blank" class="has-text-info">
+                                Learn more about transformations →
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

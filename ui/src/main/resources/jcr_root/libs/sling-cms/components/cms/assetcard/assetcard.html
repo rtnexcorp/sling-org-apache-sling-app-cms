@@ -1,0 +1,92 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--/* Asset Card - Displays a thumbnail card for a DAM asset with metadata */-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.AssetCard">
+    <div class="cms-asset-card" 
+         title="${model.title}" 
+         data-value="${model.path}" 
+         data-mime-type="${model.mimeType}">
+        
+        <div class="cms-asset-card__image">
+            <figure class="cms-asset-figure">
+                <sly data-sly-test="${model.isImage}">
+                    <img src="${model.thumbnailUrl}" 
+                         loading="lazy" 
+                         alt="${model.title}" 
+                         class="cms-asset-thumbnail" 
+                         onerror="this.src='${model.fallbackThumbnailUrl}'">
+                </sly>
+                
+                <sly data-sly-test="${model.isVideo}">
+                    <img src="${model.thumbnailUrl}" 
+                         loading="lazy" 
+                         alt="${model.title}" 
+                         class="cms-asset-thumbnail">
+                    <span class="cms-asset-badge cms-asset-badge--video">
+                        <span class="cms-icon cms-icon--video"></span>
+                    </span>
+                </sly>
+                
+                <sly data-sly-test="${model.isPdf}">
+                    <img src="${model.thumbnailUrl}" 
+                         loading="lazy" 
+                         alt="${model.title}" 
+                         class="cms-asset-thumbnail">
+                    <span class="cms-asset-badge cms-asset-badge--pdf">PDF</span>
+                </sly>
+                
+                <sly data-sly-test="${!model.isImage && !model.isVideo && !model.isPdf}">
+                    <img src="${model.defaultIconUrl}" 
+                         loading="lazy" 
+                         alt="${model.title}" 
+                         class="cms-asset-thumbnail">
+                </sly>
+            </figure>
+            
+            <div class="cms-asset-card__overlay">
+                <div class="cms-asset-card__actions">
+                    <sly data-sly-test="${model.hasActionConfigs}">
+                        <sly data-sly-list.actionConfig="${model.actionConfigs}">
+                            <sly data-sly-resource="${model.path @ resourceType=actionConfig.valueMap.resourceType}"></sly>
+                        </sly>
+                    </sly>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cms-asset-card__content">
+            <p class="cms-asset-card__title" title="${model.title}">
+                ${model.title}
+            </p>
+            
+            <div class="cms-asset-card__meta">
+                <sly data-sly-test="${model.fileType}">
+                    <span class="cms-tag cms-tag--light cms-tag--small">${model.fileType}</span>
+                </sly>
+                <sly data-sly-test="${model.formattedFileSize}">
+                    <span class="cms-asset-card__size">${model.formattedFileSize}</span>
+                </sly>
+            </div>
+            
+            <sly data-sly-test="${model.lastModified}">
+                <small class="cms-asset-card__date">${model.lastModified}</small>
+            </sly>
+        </div>
+    </div>
+</sly>

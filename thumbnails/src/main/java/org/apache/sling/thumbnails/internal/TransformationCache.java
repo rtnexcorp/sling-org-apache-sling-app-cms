@@ -18,14 +18,11 @@
  */
 package org.apache.sling.thumbnails.internal;
 
-import javax.jcr.query.Query;
-
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
@@ -51,7 +48,7 @@ public class TransformationCache implements EventHandler, Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(TransformationCache.class);
     private final TransformationServiceUser transformationServiceUser;
-    private final Map<String, Optional<String>> cache = new HashMap<>();
+    private final Map<String, Optional<String>> cache = new ConcurrentHashMap<>();
 
     @Activate
     public TransformationCache(@Reference TransformationServiceUser transformationServiceUser) {
@@ -59,9 +56,22 @@ public class TransformationCache implements EventHandler, Runnable {
     }
 
     public Optional<Transformation> getTransformation(ResourceResolver resolver, String name) {
-        return cache.computeIfAbsent(name, this::findTransformation)
-                .map(resolver::getResource)
-                .map(r -> r.adaptTo(Transformation.class));
+        Optional<String> cachedPath = cache.computeIfAbsent(name, this::findTransformation);
+        if (!cachedPath.isPresent()) {
+            return Optional.empty();
+        }
+
+        // Use service resolver to get the transformation resource since the request resolver
+        // might not have access to /conf paths
+        try (ResourceResolver serviceResolver = transformationServiceUser.getTransformationServiceUser()) {
+            Resource transformationResource = serviceResolver.getResource(cachedPath.get());
+            if (transformationResource != null) {
+                return Optional.ofNullable(transformationResource.adaptTo(Transformation.class));
+            }
+        } catch (LoginException e) {
+            log.error("Could not get service resolver for transformation lookup", e);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -75,18 +85,31 @@ public class TransformationCache implements EventHandler, Runnable {
                 // Handle both absolute paths and simple names
                 // If name starts with /, remove it to get the transformation name
                 String transformationName = name.startsWith("/") ? name.substring(1) : name;
-                transformationName = transformationName.replace("'", "''");
-                log.debug("Finding transformations with name: {}", transformationName);
-                Iterator<Resource> transformations = serviceResolver.findResources(
-                        "SELECT * FROM [nt:unstructured] WHERE (ISDESCENDANTNODE([/conf]) OR ISDESCENDANTNODE([/libs/conf]) OR ISDESCENDANTNODE([/apps/conf])) AND [sling:resourceType]='sling/thumbnails/transformation' AND [name]='"
-                                + transformationName + "'",
-                        Query.JCR_SQL2);
-                if (transformations.hasNext()) {
-                    Resource transformation = transformations.next();
-                    log.debug("Found transformation resource: {}", transformation);
-                    return Optional.of(transformation.getPath());
+                log.debug("Finding transformation with name: {}", transformationName);
+
+                // Search in standard transformation paths
+                String[] searchPaths = {
+                    "/conf/global/dam/transformations/" + transformationName,
+                    "/libs/conf/global/dam/transformations/" + transformationName,
+                    "/apps/conf/global/dam/transformations/" + transformationName
+                };
+
+                for (String path : searchPaths) {
+                    log.debug("Checking path: {}", path);
+                    Resource transformation = serviceResolver.getResource(path);
+                    if (transformation != null) {
+                        String resourceType = transformation.getResourceType();
+                        log.debug("Found resource at {} with type: {}", path, resourceType);
+                        if ("sling/thumbnails/transformation".equals(resourceType)) {
+                            log.info("Found transformation at: {}", path);
+                            return Optional.of(path);
+                        }
+                    } else {
+                        log.debug("No resource at path: {}", path);
+                    }
                 }
-                log.warn("No transformation found with name: {}", transformationName);
+
+                log.warn("No transformation found with name: {} after checking all paths", transformationName);
                 return Optional.empty();
             }
         } catch (LoginException le) {

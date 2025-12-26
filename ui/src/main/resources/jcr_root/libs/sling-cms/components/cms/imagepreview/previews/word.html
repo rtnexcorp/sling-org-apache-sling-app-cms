@@ -20,12 +20,12 @@
 <template data-sly-template.wordPreview="${@ preview}">
     <div class="box has-background-light" data-docpreview="word" data-filepath="${preview.filePath}">
         <div class="docpreview-loading has-text-centered py-6">
-            <span class="icon is-large"><span class="jam jam-refresh jam-spin"></span></span>
+            <span class="icon is-large"><span class="cms-icon cms-icon--refresh cms-icon--spin"></span></span>
             <p>${'Loading document...' @ i18n}</p>
         </div>
         <div class="docpreview-content cms-document-preview" style="max-height:500px; overflow:auto; padding:1rem; display:none;"></div>
         <div class="docpreview-error has-text-centered py-6" style="display:none;">
-            <span class="icon is-large has-text-warning"><span class="jam jam-alert" style="font-size:2rem;"></span></span>
+            <span class="icon is-large has-text-warning"><span class="cms-icon cms-icon--alert" style="font-size:2rem;"></span></span>
             <p class="mt-2">${'Could not preview document' @ i18n}</p>
         </div>
     </div>
