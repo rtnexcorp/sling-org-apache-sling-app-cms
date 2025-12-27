@@ -1,4 +1,4 @@
-<%-- /*
+<!--
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,12 +15,11 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
-<%@include file="/libs/sling-cms/global.jsp"%>
-<sling:adaptTo adaptable="${resourceResolver}" adaptTo="org.apache.sling.cms.publication.PublicationManager" var="publicationManager" />
-<br/>
-<dl>
-    <dt><fmt:message key="Publication Mode" /></dt>
-    <dd><fmt:message key="${sling:encode(publicationManager.publicationMode,'HTML')}" /></dd>
-</dl>
-<br/>
+-->
+<div class="scroll-container contentnav">
+    <div class="columns is-multiline">
+        <sly data-sly-list.child="${resource.children}">
+            <sly data-sly-resource="${child}"></sly>
+        </sly>
+    </div>
+</div>

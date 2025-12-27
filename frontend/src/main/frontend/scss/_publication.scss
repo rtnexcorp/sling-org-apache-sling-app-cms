@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Publication Component Styles
+// Provides styling for the publication dashboard and related components
+
+.cms-publication-info {
+  padding: 0.5rem 0 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e8e8e8;
+
+  dl {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    margin: 0;
+  }
+
+  dt {
+    font-weight: 600;
+    color: #363636;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  dd {
+    padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, #9E2165 0%, #7a1950 100%);
+    color: white;
+    border-radius: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    box-shadow: 0 2px 4px rgba(158, 33, 101, 0.2);
+  }
+}

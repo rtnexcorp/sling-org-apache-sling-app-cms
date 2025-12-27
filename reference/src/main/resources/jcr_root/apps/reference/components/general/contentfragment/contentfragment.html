@@ -26,14 +26,11 @@
             
             <!-- Display all properties in a simple format -->
             <div class="content-fragment__content">
-                <sly data-sly-list.prop="${fragment.properties}">
-                    <!-- Skip system properties -->
-                    <sly data-sly-test="${!prop.key.startsWith('jcr:') && !prop.key.startsWith('sling:') && prop.key != 'schemaId'}">
-                        <div class="content-fragment__field">
-                            <strong>${prop.key}:</strong>
-                            ${prop.value}
-                        </div>
-                    </sly>
+                <sly data-sly-list.entry="${fragment.displayProperties}">
+                    <div class="content-fragment__field">
+                        <strong>${entry.key}:</strong>
+                        ${entry.value}
+                    </div>
                 </sly>
             </div>
             

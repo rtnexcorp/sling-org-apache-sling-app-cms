@@ -18,8 +18,6 @@
  */
 package org.apache.sling.cms.reference.models;
 
-import javax.inject.Inject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +27,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,9 +40,8 @@ import org.slf4j.LoggerFactory;
  *
  * <p>Usage in HTL:
  * <pre>
- * &lt;sly data-sly-use.fragment="org.apache.sling.cms.reference.models.ContentFragmentModel"
- *      data-sly-use.fragmentPath="/content/fragments/article-1"&gt;
- *   &lt;h1&gt;${fragment.properties.title}&lt;/h1&gt;
+ * &lt;sly data-sly-use.fragment="org.apache.sling.cms.reference.models.ContentFragmentModel"&gt;
+ *   &lt;h1&gt;${fragment.title}&lt;/h1&gt;
  *   &lt;p&gt;${fragment.properties.description}&lt;/p&gt;
  * &lt;/sly&gt;
  * </pre>
@@ -59,23 +57,24 @@ public class ContentFragmentModel {
     @SlingObject
     private ResourceResolver resourceResolver;
 
-    @Inject
+    @ValueMapValue
     private String fragmentPath;
 
     private Resource fragmentResource;
-    private Map<String, Object> properties;
+    private Map<String, Object> properties = new HashMap<>();
     private String schemaId;
     private String title;
+    private boolean initialized;
 
     /**
      * Initialize the model by loading fragment properties.
+     * Uses lazy initialization - called by getter methods.
      */
     private void init() {
-        if (properties != null) {
+        if (initialized) {
             return; // Already initialized
         }
-
-        properties = new HashMap<>();
+        initialized = true;
 
         // If fragmentPath is provided, load that fragment
         if (fragmentPath != null && !fragmentPath.isEmpty()) {
@@ -99,7 +98,8 @@ public class ContentFragmentModel {
 
             log.debug("Loaded content fragment: {} with schema: {}", fragmentResource.getPath(), schemaId);
         } else {
-            log.warn("Content fragment not found: {}", fragmentPath);
+            log.warn(
+                    "Content fragment not found at path: {}", fragmentPath != null ? fragmentPath : "current resource");
         }
     }
 
@@ -141,6 +141,23 @@ public class ContentFragmentModel {
     public Map<String, Object> getProperties() {
         init();
         return properties;
+    }
+
+    /**
+     * Gets display properties (filtered to exclude system properties).
+     * Excludes properties starting with jcr:, sling:, and schemaId.
+     *
+     * @return map of display properties only
+     */
+    public Map<String, Object> getDisplayProperties() {
+        init();
+        Map<String, Object> displayProps = new HashMap<>();
+        properties.forEach((key, value) -> {
+            if (!key.startsWith("jcr:") && !key.startsWith("sling:") && !"schemaId".equals(key)) {
+                displayProps.put(key, value);
+            }
+        });
+        return displayProps;
     }
 
     /**
