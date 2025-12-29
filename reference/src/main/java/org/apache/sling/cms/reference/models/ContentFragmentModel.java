@@ -18,7 +18,9 @@
  */
 package org.apache.sling.cms.reference.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
@@ -79,24 +81,43 @@ public class ContentFragmentModel {
         // If fragmentPath is provided, load that fragment
         if (fragmentPath != null && !fragmentPath.isEmpty()) {
             fragmentResource = resourceResolver.getResource(fragmentPath);
+            log.info("Loading fragment from path: {}", fragmentPath);
         } else {
             // Otherwise, use the current resource as the fragment
             fragmentResource = resource;
+            log.info("Loading fragment from current resource: {}", resource != null ? resource.getPath() : "null");
         }
 
         if (fragmentResource != null) {
-            ValueMap vm = fragmentResource.getValueMap();
+            // Try to get jcr:content child node if it exists
+            Resource contentResource = fragmentResource.getChild("jcr:content");
+            Resource dataResource = contentResource != null ? contentResource : fragmentResource;
+
+            ValueMap vm = dataResource.getValueMap();
+            log.info("Fragment resource: {}, has {} properties", dataResource.getPath(), vm.size());
 
             // Get schema ID
             schemaId = vm.get("schemaId", String.class);
 
-            // Get title
+            // Get title (try both locations)
             title = vm.get("jcr:title", String.class);
+            if (title == null && contentResource == null) {
+                // Try on the fragment resource itself
+                title = fragmentResource.getValueMap().get("jcr:title", String.class);
+            }
 
             // Load all properties into a map for easy access
-            vm.forEach((key, value) -> properties.put(key, value));
+            vm.forEach((key, value) -> {
+                properties.put(key, value);
+                log.debug("Property: {} = {}", key, value);
+            });
 
-            log.debug("Loaded content fragment: {} with schema: {}", fragmentResource.getPath(), schemaId);
+            log.info(
+                    "Loaded content fragment: {} with {} properties, schema: {}, title: {}",
+                    dataResource.getPath(),
+                    properties.size(),
+                    schemaId,
+                    title);
         } else {
             log.warn(
                     "Content fragment not found at path: {}", fragmentPath != null ? fragmentPath : "current resource");
@@ -201,5 +222,44 @@ public class ContentFragmentModel {
     public Resource getResource() {
         init();
         return fragmentResource;
+    }
+
+    /**
+     * Gets a list of property entries for iteration in HTL.
+     * Each entry has 'key' and 'value' properties that can be accessed in HTL.
+     * Filters out system properties (jcr:, sling:, schemaId).
+     *
+     * @return list of property entries
+     */
+    public List<PropertyEntry> getPropertyEntries() {
+        init();
+        List<PropertyEntry> entries = new ArrayList<>();
+        properties.forEach((key, value) -> {
+            if (!key.startsWith("jcr:") && !key.startsWith("sling:") && !"schemaId".equals(key)) {
+                entries.add(new PropertyEntry(key, value));
+            }
+        });
+        return entries;
+    }
+
+    /**
+     * Simple bean class to hold property key-value pairs for HTL iteration.
+     */
+    public static class PropertyEntry {
+        private final String key;
+        private final Object value;
+
+        public PropertyEntry(String key, Object value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public Object getValue() {
+            return value;
+        }
     }
 }
