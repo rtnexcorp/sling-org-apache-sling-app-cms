@@ -17,3 +17,63 @@
   max-height: calc(100vh - 400px);
   min-height: 200px;
 }
+
+// Content table component styles
+.cms-table {
+  // Semantic table wrapper - additional styles can be added here
+  // The .table class from Bulma is applied in HTL templates
+
+  // Ensure table layout is fixed for better column alignment
+  table-layout: auto;
+
+  &--fullwidth {
+    width: 100%;
+  }
+
+  &--striped {
+    // Striped table styles (mapped to .is-striped in HTL)
+  }
+
+  &--sortable {
+    // Sortable table specific styles
+  }
+}
+
+// Table cell and header modifiers
+.cms-table__cell {
+  &--hidden {
+    // Hidden cell (mapped to .is-hidden in HTL)
+    display: none !important;
+  }
+
+  &--visible-on-hover {
+    // Visible on hover cell (mapped to .is-vhidden in HTL)
+    // Uses absolute positioning to hide off-screen, shown when row is selected
+  }
+
+  &--static {
+    // Static cell styles (non-sortable)
+  }
+}
+
+.cms-table__header {
+  &--hidden {
+    // Hidden header (mapped to .is-hidden in HTL)
+    display: none !important;
+  }
+}
+
+// Ensure action cells in tables are properly hidden until row selection
+.contentnav__item {
+  .is-vhidden {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+  }
+
+  &.is-selected .is-vhidden {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+  }
+}

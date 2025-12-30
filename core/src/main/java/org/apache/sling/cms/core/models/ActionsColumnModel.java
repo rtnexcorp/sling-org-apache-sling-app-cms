@@ -55,10 +55,10 @@ public class ActionsColumnModel {
 
     /**
      * Get the CSS class for the cell
-     * @return "cell-actions is-vhidden" if not shown, empty string otherwise
+     * @return "is-vhidden cms-table__cell--visible-on-hover" if not shown, empty string otherwise
      */
     public String getCellClass() {
-        return isShow() ? "" : "cell-actions is-vhidden";
+        return isShow() ? "" : "is-vhidden cms-table__cell--visible-on-hover";
     }
 
     /**

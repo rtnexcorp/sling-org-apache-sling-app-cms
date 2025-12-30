@@ -19,13 +19,13 @@
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ContentTableModel">
 <div class="reload-container table__wrapper scroll-container contentnav" 
      data-path="${resource.path @ context='attribute'}.table.html${model.requestSuffix @ context='attribute'}">
-    <table class="table is-fullwidth is-striped sortable">
+    <table class="table is-fullwidth is-striped sortable cms-table cms-table--sortable">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <sly data-sly-list.column="${model.columns}">
-                    <th class="${column.actionsColumn ? 'is-hidden' : ''}" 
-                        data-attribute="${column.name @ context='attribute'}" 
+                    <th class="${column.actionsColumn ? 'is-hidden cms-table__header--hidden' : ''}"
+                        data-attribute="${column.name @ context='attribute'}"
                         scope="col">
                         ${column.title @ i18n}
                     </th>
@@ -34,14 +34,14 @@
         </thead>
         <tbody>
             <sly data-sly-list.row="${model.rows}">
-                <tr class="contentnav__item sortable__row" 
-                    data-resource="${row.path @ context='attribute'}" 
+                <tr 
+                    data-resource="${row.path @ context='attribute'}"
                     data-type="${row.typePath @ context='attribute'}"
                     data-mime-type="${row.mimeType @ context='attribute'}"
                     data-is-folder="${row.folder}"
                     data-taxonomy="${row.taxonomyString @ context='attribute'}">
-                    <td class="Cell-Static" 
-                        title="# ${row.rowNumber}" 
+                    <td class="Cell-Static cms-table__cell--static"
+                        title="# ${row.rowNumber}"
                         data-sort-value="${row.rowNumberFormatted}">
                         ${row.rowNumber}
                     </td>
