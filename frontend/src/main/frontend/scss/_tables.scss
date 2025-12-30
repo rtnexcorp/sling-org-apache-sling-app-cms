@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Tables Component Styles
+// Provides styling for content tables and table wrappers throughout the CMS
+
+// Table wrapper scroll behavior
+.table__wrapper {
+  overflow: auto;
+}
+
+// Fix for nested scroll containers with table wrappers
+// When a table wrapper is nested inside a scroll container, it should maintain
+// its scrolling behavior rather than inheriting overflow:visible from parent
+.scroll-container .table__wrapper.scroll-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: calc(100vh - 400px);
+  min-height: 200px;
+}

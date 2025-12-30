@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Utility Classes
+// Provides utility classes for common styling patterns
+
+@use "variables" as *;
+
+.has-padding-1 {
+  padding: 0.5em;
+}
+
+.is-linked {
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.is-draggable {
+  position: relative;
+}
+
+.is-selected .is-linked {
+  border: 1px solid $primary;
+}
+
+.is-vhidden {
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+}
+
+.loader {
+  margin: auto;
+  width: 5em;
+  height: 5em;
+  border: .2em solid $primary;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+#search-results .box {
+  overflow: hidden;
+}
+
+#search-results .tile {
+  flex-wrap: wrap;
+  padding: 0.5em;
+}
+
+#query-debug {
+  height: calc(100vh - 500px);
+}
+
+#query-debug h2 {
+  color: #363636;
+}
+
+// Table sorting icons
+table thead .sorting:after,
+table thead .sorting_asc:after,
+table thead .sorting_asc_disabled:after,
+table thead .sorting_desc:after,
+table thead .sorting_desc_disabled:after {
+  font-family: "jam-icons";
+}
+
+table thead .sorting:after {
+  content: "\e943";
+}
+
+table thead .sorting_asc:after {
+  content: "\e93f";
+}
+
+table thead .sorting_desc:after {
+  content: "\e92a";
+}
