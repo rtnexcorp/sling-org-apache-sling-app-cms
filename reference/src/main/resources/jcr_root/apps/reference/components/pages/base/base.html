@@ -17,15 +17,10 @@
   under the License.
 */-->
 
-<!-- HTL: Properties Editor for Page Edit Bar. Adapts content resource and includes editor form if available. -->
+<!-- HTL: Base page template -->
 
-<sly data-sly-use.model="org.apache.sling.cms.core.models.PagePropertiesEditorModel" />
-
-<sly data-sly-test.isEditable="${model.editable}">
-    <sly data-sly-resource="${model.editPath @ resourceType='sling-cms/components/editor/slingform', requestAttributes=request.requestAttributes, formActionPath=model.replaceSuffix, editResourcePath=model.replaceSuffix}" />
-</sly>
-<sly data-sly-test.notEditable="${!model.editable}">
-    <div class="notification is-warning is-light">
-        ${model.message @ i18n}
-    </div>
-</sly>
+<!DOCTYPE html>
+<html lang="en">
+	<sly data-sly-include="head.html" />
+	<sly data-sly-include="body.html" />
+</html>

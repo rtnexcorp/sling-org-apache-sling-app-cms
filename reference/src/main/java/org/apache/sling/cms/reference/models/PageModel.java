@@ -16,39 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.sling.cms.core.models;
+package org.apache.sling.cms.reference.models;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.cms.Site;
+import org.apache.sling.cms.SiteManager;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 /**
- * Sling Model for the Page Properties Include component.
- * Provides access to the fields resource from the suffix resource (page template).
+ * Sling Model for page components that need access to site information.
  */
-@Model(adaptables = SlingHttpServletRequest.class)
-public class PagePropertiesIncludeModel {
+@Model(adaptables = Resource.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+public class PageModel {
 
     @SlingObject
-    private SlingHttpServletRequest request;
+    private Resource resource;
 
-    /**
-     * Gets the 'fields' child resource from the request suffix resource.
-     * The suffix points to a page template configuration.
-     *
-     * @return the fields resource or null if not found
-     */
-    public Resource getFieldsResource() {
-        if (request == null || request.getRequestPathInfo() == null) {
-            return null;
-        }
+    public Site getSite() {
+        SiteManager siteManager = resource.adaptTo(SiteManager.class);
+        return siteManager != null ? siteManager.getSite() : null;
+    }
 
-        Resource suffixResource = request.getRequestPathInfo().getSuffixResource();
-        if (suffixResource == null) {
-            return null;
-        }
-
-        return suffixResource.getChild("fields");
+    public String getTitle() {
+        return resource.getValueMap().get("jcr:title", String.class);
     }
 }

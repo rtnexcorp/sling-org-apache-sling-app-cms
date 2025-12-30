@@ -9,20 +9,20 @@
             "jcr:primaryType": "nt:unstructured",
             "sling:resourceType": "sling-cms/components/editor/fields/text",
             "label": "Title",
-            "name": "jcr:title",
+            "name": "jcr:content/jcr:title",
             "required": true
         },
         "description": {
             "jcr:primaryType": "nt:unstructured",
             "sling:resourceType": "sling-cms/components/editor/fields/textarea",
             "label": "Description",
-            "name": "jcr:description"
+            "name": "jcr:content/jcr:description"
         },
         "taxonomy": {
             "jcr:primaryType": "nt:unstructured",
             "sling:resourceType": "sling-cms/components/editor/fields/taxonomy",
             "label": "Keywords",
-            "name": "sling:taxonomy"
+            "name": "jcr:content/sling:taxonomy"
         },
         "taxonomyTypeHint": {
             "jcr:primaryType": "nt:unstructured",
@@ -36,7 +36,7 @@
             "basePath": "/content",
             "type": "page",
             "label": "Canonical",
-            "name": "canonical"
+            "name": "jcr:content/canonical"
         },
         "publication": {
             "jcr:primaryType": "nt:unstructured",
@@ -47,7 +47,7 @@
             "jcr:primaryType": "nt:unstructured",
             "sling:resourceType": "sling-cms/components/editor/fields/select",
             "label": "Hide in Sitemap",
-            "name": "hideInSitemap",
+            "name": "jcr:content/hideInSitemap",
             "options": {
                 "no": {
                     "jcr:primaryType": "nt:unstructured",

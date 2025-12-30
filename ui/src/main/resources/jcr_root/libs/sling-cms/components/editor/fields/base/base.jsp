@@ -17,8 +17,13 @@
  * under the License.
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
-<c:if test="${slingRequest.requestPathInfo.suffix != null}">
-    <sling:getResource path="${slingRequest.requestPathInfo.suffix}" var="editedResource" />
+<%-- Check for editResourcePath attribute first (for Edit Properties modal) --%>
+<c:set var="editPath" value="${requestScope.editResourcePath}" />
+<c:if test="${empty editPath && slingRequest.requestPathInfo.suffix != null}">
+    <c:set var="editPath" value="${slingRequest.requestPathInfo.suffix}" />
+</c:if>
+<c:if test="${not empty editPath}">
+    <sling:getResource path="${editPath}" var="editedResource" />
     <c:set var="editProperties" value="${sling:adaptTo(editedResource,'org.apache.sling.api.resource.ValueMap')}" scope="request"/>
 </c:if>
 <%-- Handle multifield item context - get properties from the multifield item resource --%>

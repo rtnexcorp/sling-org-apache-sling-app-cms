@@ -17,15 +17,13 @@
   under the License.
 */-->
 
-<!-- HTL: Properties Editor for Page Edit Bar. Adapts content resource and includes editor form if available. -->
+<!-- HTL: Page Properties Component - Container for dynamic page property fields -->
 
-<sly data-sly-use.model="org.apache.sling.cms.core.models.PagePropertiesEditorModel" />
-
-<sly data-sly-test.isEditable="${model.editable}">
-    <sly data-sly-resource="${model.editPath @ resourceType='sling-cms/components/editor/slingform', requestAttributes=request.requestAttributes, formActionPath=model.replaceSuffix, editResourcePath=model.replaceSuffix}" />
-</sly>
-<sly data-sly-test.notEditable="${!model.editable}">
-    <div class="notification is-warning is-light">
-        ${model.message @ i18n}
-    </div>
-</sly>
+<div class="page-properties-container field"
+     data-path="${resource.path @ context='attribute'}.include.html"
+     data-source="select[name=pageTemplate]">
+</div>
+<input type="hidden" name=":operation" value="import" />
+<input type="hidden" name=":replaceProperties" value="true" />
+<input type="hidden" name=":contentType" value="json" />
+<input type="hidden" name=":content" value="" />
