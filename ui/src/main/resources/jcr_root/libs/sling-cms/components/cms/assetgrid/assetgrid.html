@@ -24,9 +24,9 @@
 
         <!-- Asset Grid Container -->
         <div class="asset-grid reload-container scroll-container contentnav" data-view="grid">
-            <div class="asset-grid__items columns is-multiline">
+            <div class="asset-grid__items cms-grid cms-grid--multiline">
                 <sly data-sly-list.item="${model.items}">
-                    <div class="column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd contentnav__item asset-item"
+                    <div class="cms-grid__item cms-grid__item--half-tablet cms-grid__item--third-widescreen cms-grid__item--quarter-fullhd contentnav__item asset-item"
                          data-name="${item.nameLowercase}"
                          data-mime-type="${item.mimeType}"
                          data-is-folder="${item.folder}"

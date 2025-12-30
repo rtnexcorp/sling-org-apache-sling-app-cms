@@ -54,6 +54,15 @@
   &--mobile {
     display: flex;
   }
+
+  &--gapped {
+    margin-left: -1rem;
+    margin-right: -1rem;
+
+    > .cms-grid__item {
+      padding: 1rem;
+    }
+  }
 }
 
 // Grid Item - maps to Bulma's .column
@@ -80,9 +89,19 @@
     width: 33.3333%;
   }
 
+  &--two-thirds {
+    flex: none;
+    width: 66.6667%;
+  }
+
   &--quarter {
     flex: none;
     width: 25%;
+  }
+
+  &--three-quarters {
+    flex: none;
+    width: 75%;
   }
 
   &--fifth {

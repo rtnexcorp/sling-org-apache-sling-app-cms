@@ -19,9 +19,9 @@
 <sly data-sly-use.meta="org.apache.sling.thumbnails.AssetMetadata"/>
 
 <div class="asset-metadata-editor">
-    <div class="columns is-variable is-4">
+    <div class="cms-grid cms-grid--gapped">
         <!--/* Preview Column */-->
-        <div class="column is-4">
+        <div class="cms-grid__item cms-grid__item--third">
             <div class="asset-metadata-editor__preview">
                 <figure class="image mb-3">
                     <sly data-sly-test="${meta.image}">
@@ -64,13 +64,13 @@
         </div>
 
         <!--/* Form Column */-->
-        <div class="column is-8">
+        <div class="cms-grid__item cms-grid__item--two-thirds">
             <form method="post" action="${meta.assetContentPath}" class="Form-Ajax" data-add-date="true">
                 <fieldset class="form-wrapper field">
                     <input type="hidden" name="_charset_" value="UTF-8"/>
 
-                    <div class="columns is-multiline">
-                        <div class="column is-6">
+                    <div class="cms-grid cms-grid--multiline">
+                        <div class="cms-grid__item cms-grid__item--half">
                             <div class="field">
                                 <label class="label is-small">${'Title' @ i18n}</label>
                                 <div class="control">
@@ -78,7 +78,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-6">
+                        <div class="cms-grid__item cms-grid__item--half">
                             <div class="field">
                                 <label class="label is-small">${'Alt Text' @ i18n}</label>
                                 <div class="control">
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-12">
+                        <div class="cms-grid__item cms-grid__item--full">
                             <div class="field">
                                 <label class="label is-small">${'Description' @ i18n}</label>
                                 <div class="control">
@@ -94,7 +94,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-6">
+                        <div class="cms-grid__item cms-grid__item--half">
                             <div class="field">
                                 <label class="label is-small">${'Copyright' @ i18n}</label>
                                 <div class="control">
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-6">
+                        <div class="cms-grid__item cms-grid__item--half">
                             <div class="field">
                                 <label class="label is-small">${'Creator' @ i18n}</label>
                                 <div class="control">
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-6">
+                        <div class="cms-grid__item cms-grid__item--half">
                             <div class="field">
                                 <label class="label is-small">${'Source' @ i18n}</label>
                                 <div class="control">
@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-6">
+                        <div class="cms-grid__item cms-grid__item--half">
                             <div class="field">
                                 <label class="label is-small">${'Keywords' @ i18n}</label>
                                 <div class="control">
@@ -128,7 +128,7 @@
                         </div>
                         
                         <!--/* Taxonomy / Tags field */-->
-                        <div class="column is-12">
+                        <div class="cms-grid__item cms-grid__item--full">
                             <div class="field">
                                 <label class="label is-small">${'Tags' @ i18n}</label>
                                 <div class="labelfield">

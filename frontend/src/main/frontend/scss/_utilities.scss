@@ -28,6 +28,11 @@
   left: -9999px !important;
 }
 
+// Hidden element (display: none)
+.is-hidden {
+  display: none !important;
+}
+
 // Screen reader only text
 .cms-sr-only {
   position: absolute;
