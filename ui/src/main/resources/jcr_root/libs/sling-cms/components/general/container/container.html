@@ -1,0 +1,52 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<sly data-sly-use.container="org.apache.sling.cms.core.models.Container">
+    <div class="${container.classes @ context='attribute'}" data-sly-unwrap="${!container.hasClasses}">
+        <sly data-sly-list.child="${container.children}">
+            <sly data-sly-resource="${child}"></sly>
+        </sly>
+        <sly data-sly-test="${container.editEnabled}">
+            <div class="sling-cms-droptarget"
+                 data-create="${!container.resourceExists}"
+                 data-path="${resource.path @ context='attribute'}"
+                 data-order="last"></div>
+            <div class="sling-cms-editor">
+                <div class="level has-background-light has-text-black-ter">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <a href="/cms/editor/add.html${resource.path @ context='attribute'}?availableTypes=${container.availableTypes @ context='attribute'}"
+                               class="button action-button is-small"
+                               data-sling-cms-action="add"
+                               data-sling-cms-path="${resource.path @ context='attribute'}"
+                               data-sling-cms-available-types="${container.availableTypes @ context='attribute'}"
+                               title="${'Add Components' @ i18n}">
+                                &#43;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            ${'Add Components' @ i18n}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </sly>
+    </div>
+</sly>

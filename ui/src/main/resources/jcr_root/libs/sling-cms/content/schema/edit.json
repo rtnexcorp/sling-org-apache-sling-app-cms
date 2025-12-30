@@ -12,140 +12,165 @@
                 "sling:resourceType": "sling-cms/components/cms/contentbreadcrumb",
                 "depth": 4
             },
-            "slingform": {
-                "jcr:primaryType": "nt:unstructured",
-                "sling:resourceType": "sling-cms/components/editor/slingform",
-                "button": "Save Schema",
-                "fields": {
-                    "jcr:primaryType": "nt:unstructured",
-                    "sling:resourceType": "sling-cms/components/general/container",
-                    "title": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/text",
-                        "label": "Title",
-                        "name": "jcr:title",
-                        "required": true
-                    },
-                    "description": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
-                        "label": "Description",
-                        "name": "jcr:description"
-                    },
-                    "version": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/text",
-                        "label": "Version",
-                        "name": "version",
-                        "required": true
-                    },
-                    "enabled": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/boolean",
-                        "label": "Enabled",
-                        "name": "enabled"
-                    }
-                }
-            },
-            "fieldsSection": {
+            "twoColumnLayout": {
                 "jcr:primaryType": "nt:unstructured",
                 "sling:resourceType": "sling-cms/components/general/container",
-                "heading": {
+                "classes": "columns",
+                "leftColumn": {
                     "jcr:primaryType": "nt:unstructured",
-                    "sling:resourceType": "sling-cms/components/general/textelement",
-                    "level": "h2",
-                    "text": "Schema Fields"
-                },
-                "contentactions": {
-                    "jcr:primaryType": "nt:unstructured",
-                    "sling:resourceType": "sling-cms/components/cms/contentactions",
-                    "suffix": "/fields",
-                    "actions": {
-                        "field": {
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "classes": "column is-one-third",
+                    "basicSection": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/general/container",
+                        "heading": {
                             "jcr:primaryType": "nt:unstructured",
-                            "label": "Field",
-                            "prefix": "/cms/schema/field/create.html"
+                            "sling:resourceType": "sling-cms/components/general/textelement",
+                            "level": "h2",
+                            "text": "Basic Information"
+                        },
+                        "slingform": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/editor/slingform",
+                            "button": "Save Schema",
+                            "fields": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/general/container",
+                                "title": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                                    "label": "Title",
+                                    "name": "jcr:title",
+                                    "required": true
+                                },
+                                "description": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                                    "label": "Description",
+                                    "name": "jcr:description"
+                                },
+                                "version": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                                    "label": "Version",
+                                    "name": "version",
+                                    "required": true
+                                },
+                                "enabled": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/editor/fields/boolean",
+                                    "label": "Enabled",
+                                    "name": "enabled"
+                                }
+                            }
                         }
                     }
                 },
-                "contenttable": {
+                "rightColumn": {
                     "jcr:primaryType": "nt:unstructured",
-                    "sling:resourceType": "sling-cms/components/cms/contenttable",
-                    "appendSuffix": "/fields",
-                    "columns": {
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "classes": "column is-two-thirds",
+                    "fieldsSection": {
                         "jcr:primaryType": "nt:unstructured",
-                        "name": {
+                        "sling:resourceType": "sling-cms/components/general/container",
+                        "heading": {
                             "jcr:primaryType": "nt:unstructured",
-                            "title": "Field Name"
+                            "sling:resourceType": "sling-cms/components/general/textelement",
+                            "level": "h2",
+                            "text": "Schema Fields"
                         },
-                        "label": {
+                        "contentactions": {
                             "jcr:primaryType": "nt:unstructured",
-                            "title": "Label"
+                            "sling:resourceType": "sling-cms/components/cms/contentactions",
+                            "suffix": "/fields",
+                            "actions": {
+                                "field": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "label": "Field",
+                                    "prefix": "/cms/schema/field/create.html"
+                                }
+                            }
                         },
-                        "type": {
+                        "contenttable": {
                             "jcr:primaryType": "nt:unstructured",
-                            "title": "Type"
-                        },
-                        "required": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "title": "Required"
-                        },
-                        "order": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "title": "Order"
-                        },
-                        "actions": {
-                            "jcr:primaryType": "nt:unstructured",
-                            "title": "Actions"
-                        }
-                    },
-                    "types": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "nt:unstructured": {
-                            "jcr:primaryType": "nt:unstructured",
+                            "sling:resourceType": "sling-cms/components/cms/contenttable",
+                            "appendSuffix": "/fields",
                             "columns": {
                                 "jcr:primaryType": "nt:unstructured",
                                 "name": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/cms/columns/name",
-                                    "link": false
+                                    "title": "Field Name"
                                 },
                                 "label": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/cms/columns/text",
-                                    "property": "label"
+                                    "title": "Label"
                                 },
                                 "type": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/cms/columns/text",
-                                    "property": "type"
+                                    "title": "Type"
                                 },
                                 "required": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/cms/columns/text",
-                                    "property": "required"
+                                    "title": "Required"
                                 },
                                 "order": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/cms/columns/text",
-                                    "property": "order"
+                                    "title": "Order"
                                 },
                                 "actions": {
                                     "jcr:primaryType": "nt:unstructured",
-                                    "sling:resourceType": "sling-cms/components/cms/columns/actions",
-                                    "edit": {
+                                    "title": "Actions"
+                                }
+                            },
+                            "types": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "nt:unstructured": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "columns": {
                                         "jcr:primaryType": "nt:unstructured",
-                                        "sling:resourceType": "sling-cms/components/cms/actions/modal",
-                                        "title": "Edit Field",
-                                        "icon": "pencil-f",
-                                        "prefix": "/cms/schema/field/edit.html"
-                                    },
-                                    "delete": {
-                                        "jcr:primaryType": "nt:unstructured",
-                                        "sling:resourceType": "sling-cms/components/cms/actions/modal",
-                                        "title": "Delete Field",
-                                        "icon": "trash",
-                                        "prefix": "/cms/shared/delete.html"
+                                        "name": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "sling:resourceType": "sling-cms/components/cms/columns/name",
+                                            "link": false
+                                        },
+                                        "label": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                            "property": "label"
+                                        },
+                                        "type": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                            "property": "type"
+                                        },
+                                        "required": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                            "property": "required"
+                                        },
+                                        "order": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                            "property": "order"
+                                        },
+                                        "actions": {
+                                            "jcr:primaryType": "nt:unstructured",
+                                            "sling:resourceType": "sling-cms/components/cms/columns/actions",
+                                            "edit": {
+                                                "jcr:primaryType": "nt:unstructured",
+                                                "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                                "title": "Edit Field",
+                                                "icon": "pencil-f",
+                                                "prefix": "/cms/schema/field/edit.html"
+                                            },
+                                            "delete": {
+                                                "jcr:primaryType": "nt:unstructured",
+                                                "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                                "title": "Delete Field",
+                                                "icon": "trash",
+                                                "prefix": "/cms/shared/delete.html"
+                                            }
+                                        }
                                     }
                                 }
                             }
