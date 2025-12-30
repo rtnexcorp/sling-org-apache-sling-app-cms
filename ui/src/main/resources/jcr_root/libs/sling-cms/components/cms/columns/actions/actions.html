@@ -19,14 +19,26 @@
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ActionsColumnModel"></sly>
 <td class="${model.cellClass}">
     <sly data-sly-list.action="${model.actions}">
-        <a class="button Fetch-Modal"
-           data-title="${action.title @ context='attribute'}"
-           data-path="${action.properties.ajaxPath ? action.properties.ajaxPath : '.Main-Content form' @ context='attribute'}"
-           href="${action.prefix @ context='attribute'}${resource.path @ context='attribute'}"
-           title="${action.title @ context='attribute'}">
-            <span class="jam jam-${action.icon @ context='attribute'}">
-                <span class="cms-sr-only">${action.title}</span>
-            </span>
-        </a>
+        <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/modal'}">
+            <a class="button Fetch-Modal"
+               data-title="${action.title @ context='attribute'}"
+               data-path="${action.properties.ajaxPath || '.Main-Content form' @ context='attribute'}"
+               href="${action.prefix @ context='attribute'}${resource.path @ context='attribute'}${action.properties.suffix @ context='attribute'}"
+               title="${action.title @ context='attribute'}">
+                <span class="jam jam-${action.icon @ context='attribute'}">
+                    <span class="cms-sr-only">${action.title}</span>
+                </span>
+            </a>
+        </sly>
+        <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/basic'}">
+            <a class="button"
+               target="${action.properties.openInNew ? '_blank' : '_self'}"
+               href="${action.prefix @ context='attribute'}${resource.path @ context='attribute'}${action.properties.suffix @ context='attribute'}"
+               title="${action.title @ context='attribute'}">
+                <span class="jam jam-${action.icon @ context='attribute'}">
+                    <span class="cms-sr-only">${action.title}</span>
+                </span>
+            </a>
+        </sly>
     </sly>
 </td>

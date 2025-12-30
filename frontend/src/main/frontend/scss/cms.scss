@@ -25,6 +25,9 @@
 @use "overrides";
 @use "variables" as *;
 
+// Framework abstraction layer
+@use "grid-abstraction";
+
 // Feature-specific styles (alphabetically ordered)
 @use "assets";
 @use "cards";
