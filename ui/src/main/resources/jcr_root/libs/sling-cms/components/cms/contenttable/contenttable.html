@@ -54,12 +54,18 @@
             </sly>
         </tbody>
     </table>
+    <sly data-sly-test="${model.rows.size == 0}">
+        <div class="notification is-info has-text-centered">
+            <p class="mb-3">No items found.</p>
+            <p class="has-text-grey-light">Use the button below to add your first item.</p>
+        </div>
+    </sly>
     <nav class="pagination" role="navigation" aria-label="pagination">
-        <a data-sly-test="${model.hasPreviousPage}" 
-           class="pagination-previous" 
+        <a data-sly-test="${model.hasPreviousPage}"
+           class="pagination-previous"
            href="?page=${model.previousPage}">${'Previous' @ i18n}</a>
-        <a data-sly-test="${model.hasNextPage}" 
-           class="pagination-next" 
+        <a data-sly-test="${model.hasNextPage}"
+           class="pagination-next"
            href="?page=${model.nextPage}">${'Next' @ i18n}</a>
     </nav>
 </div>

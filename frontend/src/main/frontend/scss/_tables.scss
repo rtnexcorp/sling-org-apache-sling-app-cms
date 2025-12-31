@@ -8,6 +8,51 @@
   overflow: auto;
 }
 
+// Content actions after table - ensure visibility and proper spacing
+// Matches nav.level that appears after table wrapper (potentially with pagination in between)
+.table__wrapper ~ nav.level,
+.cms-table + nav.level,
+nav.pagination + nav.level,
+.reload-container ~ nav.level,
+.contentnav ~ nav.level,
+.scroll-container ~ nav.level {
+  margin-top: 1.5rem;
+  display: flex !important;
+  align-items: center;
+  min-height: 3rem;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
+
+  .level-left {
+    display: flex !important;
+    flex-grow: 1;
+    visibility: visible !important;
+  }
+
+  .level-item {
+    margin-right: 0.75rem;
+    display: flex !important;
+    visibility: visible !important;
+  }
+
+  .buttons {
+    display: flex !important;
+    visibility: visible !important;
+
+    &.has-addons {
+      display: flex !important;
+    }
+  }
+
+  .button {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
 // Fix for nested scroll containers with table wrappers
 // When a table wrapper is nested inside a scroll container, it should maintain
 // its scrolling behavior rather than inheriting overflow:visible from parent
