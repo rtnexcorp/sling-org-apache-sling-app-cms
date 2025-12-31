@@ -1,0 +1,61 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Content Fragment Component
+// Displays content fragment data in the CMS
+
+.cms-fragment {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 1rem;
+  background-color: #fafafa;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  &__schema {
+    font-size: 0.875rem;
+    color: #666;
+    background-color: #e8e8e8;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__field {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #eee;
+  }
+
+  &__field-label {
+    font-weight: 600;
+    color: #555;
+    min-width: 120px;
+  }
+
+  &__field-value {
+    color: #333;
+    word-break: break-word;
+  }
+}

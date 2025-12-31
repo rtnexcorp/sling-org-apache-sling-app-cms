@@ -139,18 +139,32 @@
                 <sly data-sly-test="${field.type == 'TAG' || field.type == 'tag'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
-                        <input class="input tagfield" type="text" name="${field.name}" id="${field.name}" 
-                               value="${fragmentEditor.properties[field.name] @ context='attribute'}" 
-                               required="${field.required}" 
+                        <input class="input tagfield" type="text" name="${field.name}" id="${field.name}"
+                               value="${fragmentEditor.properties[field.name] @ context='attribute'}"
+                               required="${field.required}"
                                placeholder="${field.description}"/>
                     </div>
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
+
+                <sly data-sly-test="${field.type != 'STRING' && field.type != 'string' && field.type != 'TEXT' && field.type != 'text' && field.type != 'BOOLEAN' && field.type != 'boolean' && field.type != 'INTEGER' && field.type != 'integer' && field.type != 'DECIMAL' && field.type != 'decimal' && field.type != 'DATE' && field.type != 'date' && field.type != 'DATETIME' && field.type != 'datetime' && field.type != 'SELECT' && field.type != 'select' && field.type != 'RICHTEXT' && field.type != 'richtext' && field.type != 'REFERENCE' && field.type != 'reference' && field.type != 'ASSET' && field.type != 'asset' && field.type != 'TAG' && field.type != 'tag'}">
+                    <div class="notification is-warning">
+                        <p><strong>${field.label || field.name}</strong></p>
+                        <p>Unsupported field type: <code>${field.type}</code></p>
+                        <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                    </div>
+                </sly>
             </div>
         </sly>
-        
+
         <div class="notification is-warning" data-sly-test="${!fragmentEditor.schema}">
             <p>No schema found for this fragment. Please set the 'schemaId' property.</p>
+        </div>
+
+        <div class="notification is-info" data-sly-test="${fragmentEditor.schema}">
+            <p><strong>Debug Info:</strong></p>
+            <p>Schema: ${fragmentEditor.schema.title} (${fragmentEditor.schema.id})</p>
+            <p>Total fields: ${fragmentEditor.fields.size}</p>
         </div>
     </div>
 </sly>
