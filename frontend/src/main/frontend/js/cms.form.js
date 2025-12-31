@@ -94,11 +94,14 @@ rava.bind(".Form-Ajax", {
           } else if (window.parent.window.CMSEditor) {
             let reloadParent = false;
             let { path } = res;
-            res.changes.forEach((change) => {
-              if (change.type !== "modified") {
-                reloadParent = true;
-              }
-            });
+            // Check if changes array exists before iterating
+            if (res.changes && Array.isArray(res.changes)) {
+              res.changes.forEach((change) => {
+                if (change.type !== "modified") {
+                  reloadParent = true;
+                }
+              });
+            }
             if (reloadParent) {
               const pathArr = path.split("/");
               pathArr.pop();

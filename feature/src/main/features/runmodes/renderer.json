@@ -9,8 +9,8 @@
             "endpointPath": "libs/sling/distribution/services/importer/default"
         },
         "org.apache.sling.distribution.packaging.impl.importer.LocalDistributionPackageImporterFactory~default": {
-            "packageBuilder.target": "(name=default)",
-            "name": "default"
+            "name": "default",
+            "packageInstaller.target": "(name=jcrinstaller)"
         },
         "org.apache.sling.distribution.serialization.impl.vlt.VaultDistributionPackageBuilderFactory~default": {
             "aclHandling": "IGNORE",

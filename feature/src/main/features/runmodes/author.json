@@ -15,6 +15,33 @@
             "allowedRoots": ["/content", "/conf", "/etc/taxonomy"],
             "useContentPackage": false,
             "asyncDistribution": false
+        },
+        "org.apache.sling.distribution.agent.impl.ForwardDistributionAgentFactory~publish": {
+            "name": "publish",
+            "title": "Publish Agent",
+            "details": "Forwards content from author to publisher instances",
+            "enabled": true,
+            "serviceName": "publish",
+            "log.level": "info",
+            "packageImporter.endpoints": [
+                "http://localhost:8083/libs/sling/distribution/services/importers/default"
+            ],
+            "packageExporter.target": "(name=default)",
+            "packageBuilder.target": "(name=default)",
+            "queue.provider.target": "(name=priority)",
+            "priorityQueues": [
+                "high",
+                "normal"
+            ],
+            "retry.strategy": "exponential",
+            "retry.attempts:Integer": 3,
+            "retry.delay:Integer": 5000,
+            "allowed.roots": [
+                "/content",
+                "/conf",
+                "/etc/taxonomy"
+            ],
+            "passiveQueues": []
         }
     }
 }
