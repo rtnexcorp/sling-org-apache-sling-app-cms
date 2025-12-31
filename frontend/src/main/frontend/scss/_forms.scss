@@ -10,7 +10,9 @@ fieldset {
 }
 
 // Scrollable form container
-.Form-Ajax {
+// Only apply scrolling to forms in full-page context, not in modals
+.Main-Content .Form-Ajax,
+.cms-page .Form-Ajax {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
@@ -38,6 +40,12 @@ fieldset {
   // Firefox scrollbar
   scrollbar-width: thin;
   scrollbar-color: #888 #f1f1f1;
+}
+
+// Forms in modals should not have max-height restrictions
+.modal .Form-Ajax {
+  max-height: none;
+  overflow: visible;
 }
 
 .form-wrapper {

@@ -63,7 +63,18 @@ public class BulkPublicationJob extends ConfigurableJobExecutor {
 
     @Override
     public JobExecutionResult doProcess(Job job, JobExecutionContext context, ResourceResolver resolver) {
-        String[] paths = job.getProperty("paths", String[].class);
+        // Handle both single path (String) and multiple paths (String[])
+        String[] paths;
+        Object pathsProperty = job.getProperty("paths");
+        if (pathsProperty instanceof String[]) {
+            paths = (String[]) pathsProperty;
+        } else if (pathsProperty instanceof String) {
+            paths = new String[] {(String) pathsProperty};
+        } else {
+            log.error("Invalid paths property type: {}", pathsProperty != null ? pathsProperty.getClass() : "null");
+            return context.result().message("Invalid paths property").failed();
+        }
+
         PublicationType type = PublicationType.valueOf(job.getProperty("type", String.class));
         boolean deep = job.getProperty("deep", false);
 

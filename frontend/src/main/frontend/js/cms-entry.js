@@ -47,6 +47,7 @@ import './cms.draggable.js';
 import './cms.fields.js';
 import './cms.movecopy.js';
 import './cms.pathbrowser.js';
+import './cms.repeating-pathbrowser.js';
 import './cms.form.js';
 import './cms.job.js';
 import './cms.labelfield.js';

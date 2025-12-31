@@ -1,0 +1,103 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Repeating Path Browser Component
+// Allows multiple path selections with visual browser for each item
+
+.repeating-pathbrowser {
+  &__template {
+    display: none;
+  }
+
+  &__container {
+    margin-bottom: 0.75rem;
+  }
+
+  &__item {
+    margin-bottom: 0.5rem;
+
+    .pathbrowser-container {
+      width: 100%;
+    }
+
+    .pathbrowser-selected {
+      border: 1px solid #dbdbdb;
+      border-radius: 4px;
+
+      &__display {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        overflow: hidden;
+      }
+
+      &__path {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.875rem;
+        color: #363636;
+      }
+    }
+
+    .pathbrowser-toggle {
+      border-left: 1px solid #dbdbdb;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .pathbrowser-panel {
+      position: absolute;
+      z-index: 100;
+      background: white;
+      border: 1px solid #dbdbdb;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 0.25rem;
+      min-width: 400px;
+      max-width: 600px;
+    }
+  }
+
+  &__add {
+    margin-top: 0.5rem;
+  }
+
+  &__remove {
+    height: 100%;
+  }
+}
+
+// Make pathbrowser inline when used in repeating context
+.pathbrowser-selected--inline {
+  display: flex;
+  align-items: stretch;
+  background: white;
+
+  .pathbrowser-selected__display {
+    flex: 1;
+  }
+}
+
+// Mini variant for inline use
+.pathbrowser-container--mini {
+  .pathbrowser-panel {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .pathbrowser-breadcrumb {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .pathbrowser-list {
+    max-height: 250px;
+  }
+
+  .pathbrowser-item {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
