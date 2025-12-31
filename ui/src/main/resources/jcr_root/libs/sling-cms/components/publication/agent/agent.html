@@ -88,26 +88,22 @@
 
             <div class="column is-6">
                 <sly data-sly-test="${model.hasEndpoints}">
-                    <sly data-sly-list.endpoint="${model.endpoints}">
-                        <sly data-sly-resource="${'/libs/sling/distribution/services/agents/' @ appendPath=model.name, appendPath='/queues/endpoint' @ appendPath=endpointList.index, wcmmode='disabled'}"
-                             data-sly-unwrap></sly>
+                    <sly data-sly-list.queue="${model.queues}">
                         <article class="cms-publication-queue message is-light">
                             <div class="message-header">
-                                <p>${'Queue' @ i18n} #${endpointList.count}</p>
+                                <p>${'Queue' @ i18n} #${queue.count}</p>
                             </div>
                             <div class="message-body">
-                                <sly data-sly-resource="${'/libs/sling/distribution/services/agents/' @ prependPath=model.name, appendPath='/queues/endpoint' @ appendPath=endpointList.index}" data-sly-use.queue>
-                                    <dl>
-                                        <dt>${'Endpoint URL' @ i18n}</dt>
-                                        <dd>${endpoint @ context='html'}</dd>
+                                <dl>
+                                    <dt>${'Endpoint URL' @ i18n}</dt>
+                                    <dd>${queue.endpoint @ context='html'}</dd>
 
-                                        <dt>${'Count' @ i18n}</dt>
-                                        <dd>${queue.valueMap.itemsCount @ context='html'}</dd>
+                                    <dt>${'Count' @ i18n}</dt>
+                                    <dd>${queue.itemsCount @ context='html'}</dd>
 
-                                        <dt>${'State' @ i18n}</dt>
-                                        <dd>${queue.valueMap.state @ context='html'}</dd>
-                                    </dl>
-                                </sly>
+                                    <dt>${'State' @ i18n}</dt>
+                                    <dd>${queue.state @ context='html'}</dd>
+                                </dl>
                             </div>
                         </article>
                     </sly>

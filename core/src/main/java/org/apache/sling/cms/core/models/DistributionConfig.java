@@ -158,4 +158,78 @@ public class DistributionConfig {
         String[] endpoints = getEndpoints();
         return endpoints != null && endpoints.length > 0;
     }
+
+    /**
+     * Gets the queue resource path for a specific endpoint index.
+     *
+     * @param endpointIndex the endpoint index (0-based)
+     * @return the queue resource path
+     */
+    public String getQueuePath(int endpointIndex) {
+        return "/libs/sling/distribution/services/agents/" + getName() + "/queues/endpoint" + endpointIndex;
+    }
+
+    /**
+     * Gets queue information for all endpoints.
+     *
+     * @return list of queue info objects
+     */
+    public List<QueueInfo> getQueues() {
+        if (!hasEndpoints()) {
+            return Collections.emptyList();
+        }
+
+        List<QueueInfo> queues = new ArrayList<>();
+        String[] endpoints = getEndpoints();
+        for (int i = 0; i < endpoints.length; i++) {
+            queues.add(new QueueInfo(endpoints[i], i, this));
+        }
+        return queues;
+    }
+
+    /**
+     * Inner class to hold queue information for HTL.
+     */
+    public class QueueInfo {
+        private final String endpoint;
+        private final int index;
+        private Resource queueResource;
+
+        public QueueInfo(String endpoint, int index, DistributionConfig parent) {
+            this.endpoint = endpoint;
+            this.index = index;
+
+            // Try to get queue resource
+            if (parent.resource != null && parent.resource.getResourceResolver() != null) {
+                String queuePath = parent.getQueuePath(index);
+                this.queueResource = parent.resource.getResourceResolver().getResource(queuePath);
+            }
+        }
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public int getCount() {
+            return index + 1; // 1-based for display
+        }
+
+        public String getItemsCount() {
+            if (queueResource != null) {
+                return queueResource.getValueMap().get("itemsCount", "N/A");
+            }
+            return "N/A";
+        }
+
+        public String getState() {
+            if (queueResource != null) {
+                return queueResource.getValueMap().get("state", "N/A");
+            }
+            return "N/A";
+        }
+    }
 }
