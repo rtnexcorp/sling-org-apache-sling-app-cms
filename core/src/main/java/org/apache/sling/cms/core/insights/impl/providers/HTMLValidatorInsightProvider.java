@@ -20,8 +20,13 @@ package org.apache.sling.cms.core.insights.impl.providers;
 
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,15 +34,8 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.sling.cms.core.insights.impl.BaseInsightProvider;
-import org.apache.sling.cms.core.insights.impl.providers.HTMLValdiatorInsightProvider.Config;
+import org.apache.sling.cms.core.insights.impl.providers.HTMLValidatorInsightProvider.Config;
 import org.apache.sling.cms.i18n.I18NDictionary;
 import org.apache.sling.cms.i18n.I18NProvider;
 import org.apache.sling.cms.insights.Insight;
@@ -56,7 +54,7 @@ import org.slf4j.LoggerFactory;
 
 @Component(service = InsightProvider.class, immediate = true)
 @Designate(ocd = Config.class)
-public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
+public class HTMLValidatorInsightProvider extends BaseInsightProvider {
 
     public static final String I18N_KEY_HTMLVALIDATOR_DANGER = "There were {0} validation errors and {1} warnings";
     public static final String I18N_KEY_HTMLVALIDATOR_WARN = "There were {0} validation warnings";
@@ -76,7 +74,7 @@ public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
     @Reference
     private I18NProvider i18nProvider;
 
-    private static final Logger log = LoggerFactory.getLogger(HTMLValdiatorInsightProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(HTMLValidatorInsightProvider.class);
 
     private Config config;
 
@@ -93,51 +91,79 @@ public class HTMLValdiatorInsightProvider extends BaseInsightProvider {
 
         String html = pageRequest.getPageHtml();
 
-        HttpPost httpPost = new HttpPost("http://validator.w3.org/nu/?out=json&showsource=no&level=all");
-        httpPost.addHeader("Content-type", "text/html; charset=utf-8");
-        HttpEntity htmlEntity = new ByteArrayEntity(html.getBytes(StandardCharsets.UTF_8));
-        httpPost.setEntity(htmlEntity);
+        log.debug("Starting HTML validation for page: {}", pageRequest.getPage().getPath());
+
+        // Create HTTP client with timeouts
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+
+        // Build HTTP request with proper headers
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create("https://validator.w3.org/nu/?out=json&showsource=no&level=all"))
+                .header("Content-Type", "text/html; charset=utf-8")
+                .header("User-Agent", "Apache-Sling-CMS/1.1 (HTML Validator)")
+                .timeout(Duration.ofSeconds(30))
+                .POST(HttpRequest.BodyPublishers.ofString(html, StandardCharsets.UTF_8))
+                .build();
 
         I18NDictionary dictionary =
                 i18nProvider.getDictionary(request.getResource().getResourceResolver());
 
-        CloseableHttpResponse response = null;
-        JsonReader reader = null;
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
-            response = client.execute(httpPost);
-            HttpEntity entity = response.getEntity();
-            reader = Json.createReader(new StringReader(EntityUtils.toString(entity)));
-            JsonObject json = reader.readObject();
-            log.debug("Loaded response: {}", json);
-            JsonArray messages = json.getJsonArray("messages");
-            int errors = 0;
-            int warnings = 0;
-            Set<String> msgSet = new HashSet<>();
-            for (int i = 0; i < messages.size(); i++) {
-                JsonObject message = messages.getJsonObject(i);
-                if ("error".equals(message.getString("type"))) {
-                    errors++;
-                    String messageStr = message.getString("message");
-                    if (!msgSet.contains(messageStr)) {
-                        insight.addMessage(Message.danger(messageStr));
-                        msgSet.add(messageStr);
-                    }
-                } else if ("info".equals(message.getString("type"))
-                        && message.containsKey("subtype")
-                        && "warning".equals(message.getString("subtype"))) {
-                    warnings++;
-                    String messageStr = message.getString("message");
-                    if (!msgSet.contains(messageStr)) {
-                        insight.addMessage(Message.warn(messageStr));
-                        msgSet.add(messageStr);
+        try {
+            // Send request and process response
+            log.debug("Sending HTML validation request to W3C validator");
+            HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+            // Check response status
+            if (response.statusCode() != 200) {
+                log.error(
+                        "W3C validator returned status code: {} with body: {}", response.statusCode(), response.body());
+                throw new Exception("W3C validator returned status code: " + response.statusCode());
+            }
+
+            try (JsonReader reader = Json.createReader(new StringReader(response.body()))) {
+                JsonObject json = reader.readObject();
+                log.debug("Loaded response: {}", json);
+                JsonArray messages = json.getJsonArray("messages");
+                int errors = 0;
+                int warnings = 0;
+                Set<String> msgSet = new HashSet<>();
+                for (int i = 0; i < messages.size(); i++) {
+                    JsonObject message = messages.getJsonObject(i);
+                    if ("error".equals(message.getString("type"))) {
+                        errors++;
+                        String messageStr = message.getString("message");
+                        if (!msgSet.contains(messageStr)) {
+                            insight.addMessage(Message.danger(messageStr));
+                            msgSet.add(messageStr);
+                        }
+                    } else if ("info".equals(message.getString("type"))
+                            && message.containsKey("subtype")
+                            && "warning".equals(message.getString("subtype"))) {
+                        warnings++;
+                        String messageStr = message.getString("message");
+                        if (!msgSet.contains(messageStr)) {
+                            insight.addMessage(Message.warn(messageStr));
+                            msgSet.add(messageStr);
+                        }
                     }
                 }
+                updateInsight(insight, pageRequest, dictionary, errors, warnings);
+            } catch (Exception e) {
+                log.error("Failed to parse W3C validator response: {}", response.body(), e);
+                throw new Exception("Failed to parse W3C validator response: " + e.getMessage(), e);
             }
-            updateInsight(insight, pageRequest, dictionary, errors, warnings);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
+        } catch (java.net.http.HttpTimeoutException e) {
+            log.error("HTML validation timed out after 30 seconds", e);
+            throw new Exception("HTML validation timed out - W3C validator did not respond in time", e);
+        } catch (java.net.ConnectException | java.net.UnknownHostException e) {
+            log.error("Cannot connect to W3C validator at validator.w3.org", e);
+            throw new Exception("Cannot connect to W3C validator - check network connectivity", e);
+        } catch (Exception e) {
+            log.error("Unexpected error during HTML validation", e);
+            throw e;
         }
 
         return insight;

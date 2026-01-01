@@ -211,6 +211,19 @@
           }
         }
       }
+    },
+    "insights": {
+      "jcr:primaryType": "sling:OrderedFolder",
+      "jcr:content": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "Insights Configuration"
+      },
+      "readability": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "Readability",
+        "minGradeLevel": 8.0,
+        "maxGradeLevel": 12.0
+      }
     }
   }
   

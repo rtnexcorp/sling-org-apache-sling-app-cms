@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
 import org.apache.jackrabbit.api.JackrabbitSession;
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.jackrabbit.api.security.user.Group;
@@ -91,7 +90,7 @@ public class CMSSecurityFilter implements Filter {
                                 "Request to {} not allowed for user {}",
                                 slingRequest.getRequestURL(),
                                 slingRequest.getResourceResolver().getUserID());
-                        ((HttpServletResponse) response).sendError(HttpStatus.SC_UNAUTHORIZED);
+                        ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
                         return;
                     } else {
                         log.trace("Request {} allowed", slingRequest.getRequestURL());
