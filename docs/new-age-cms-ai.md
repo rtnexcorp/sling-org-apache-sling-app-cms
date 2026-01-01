@@ -13,8 +13,11 @@ AI is treated as:
 
 | Feature | Status | Location | Notes |
 |---------|--------|----------|-------|
-| AI Provider Interfaces | ❌ Not Started | - | Core interfaces need to be created in `api` module |
-| AI Service Implementations | ❌ Not Started | - | No providers exist yet |
+| AI Module | ✅ Created | `ai/` | Dedicated module for AI functionality |
+| AI Provider Interfaces | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/` | `AiService`, `AiTextService`, `AiClassificationService`, `AiImageService` |
+| AI Request/Response | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/` | `AiRequest`, `AiResponse` classes |
+| Audit Interfaces | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/audit/` | `AiAuditService`, `AiAuditEntry` |
+| Rules-Based Fallback | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/internal/` | `RulesBasedTextService` |
 | Taxonomy System | ✅ Complete | `api/TaxonomyService.java`, `api/TaxonomyItem.java` | Can be leveraged for AI tag suggestions |
 | Job Infrastructure | ✅ Complete | `api/CMSJobManager.java`, Sling Jobs | Ready for AI automation jobs |
 | Content Insights Framework | ✅ Complete | `api/insights/InsightProvider.java` | Pattern can be extended for AI insights |
@@ -22,7 +25,9 @@ AI is treated as:
 | Asset Metadata | ✅ Complete | `thumbnails/AssetMetadataModel.java` | Has altText field, taxonomy support |
 | Publication System | ✅ Complete | `api/publication/PublicationManager*.java` | Ready for AI-assisted publishing |
 | Path Suggestions | ✅ Complete | `core/PathSuggestionServlet.java` | Pattern for AI suggestions UI |
-| Audit Logging | ❌ Not Started | - | Needs implementation for AI traceability |
+| External AI Providers | 🔄 Planned | `ai/` | OpenAI, Azure OpenAI, Anthropic integrations |
+| AI UI Components | 🔄 Planned | `ui/` | AI assist panels and dialogs |
+| Audit Logging Impl | 🔄 Planned | `ai/` | JCR-based audit storage |
 
 ---
 
