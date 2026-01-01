@@ -17,10 +17,24 @@
  * under the License.
  */ --%>
  <%@include file="/libs/sling-cms/global.jsp"%>
-<c:if test="${slingRequest.requestPathInfo.suffix != null}">
-    <sling:getResource path="${slingRequest.requestPathInfo.suffix}" var="editedResource" />
+<%-- Check for editResourcePath attribute first (for Edit Properties modal) --%>
+<c:set var="editPath" value="${requestScope.editResourcePath}" />
+<c:if test="${empty editPath && slingRequest.requestPathInfo.suffix != null}">
+    <c:set var="editPath" value="${slingRequest.requestPathInfo.suffix}" />
+</c:if>
+<c:if test="${not empty editPath}">
+    <sling:getResource path="${editPath}" var="editedResource" />
     <c:set var="editProperties" value="${sling:adaptTo(editedResource,'org.apache.sling.api.resource.ValueMap')}" scope="request"/>
 </c:if>
+<%-- Handle multifield item context - get properties from the multifield item resource --%>
+<c:choose>
+    <c:when test="${not empty multifieldItemResource}">
+        <c:set var="itemProperties" value="${sling:adaptTo(multifieldItemResource,'org.apache.sling.api.resource.ValueMap')}" scope="request" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="itemProperties" value="${editProperties}" scope="request" />
+    </c:otherwise>
+</c:choose>
 <c:choose>
     <c:when test="${properties.required}">
         <c:set var="required" value="required='required'" scope="request" />
@@ -41,11 +55,20 @@
     <c:when test="${properties.skipload}">
         <c:set var="value" value="" scope="request" />
     </c:when>
-    <c:when test="${empty editProperties[properties.name] && properties.defaultValue}">
+    <c:when test="${empty itemProperties[properties.name] && properties.defaultValue}">
         <c:set var="value" value="${properties.defaultValue}" scope="request" />
     </c:when>
     <c:otherwise>
-        <c:set var="value" value="${editProperties[properties.name]}" scope="request" />
+        <c:set var="value" value="${itemProperties[properties.name]}" scope="request" />
+    </c:otherwise>
+</c:choose>
+<%-- Set the field name - prefix with multifield path if in multifield context --%>
+<c:choose>
+    <c:when test="${not empty multifieldBaseName && not empty multifieldItemName}">
+        <c:set var="fieldName" value="${multifieldBaseName}/${multifieldItemName}/${properties.name}" scope="request" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="fieldName" value="${properties.name}" scope="request" />
     </c:otherwise>
 </c:choose>
 <c:forEach var="event" items="${sling:getRelativeResource(resource,'./events').valueMap}">
@@ -53,7 +76,14 @@
         <c:set var="events" value="${events},${event.key}" />
     </c:if>
 </c:forEach>
-<div class="field" data-events="${events}" data-path="${sling:encode(resource.path,'HTML_ATTR')}">
+<%-- Build toggle-value class and attributes if configured --%>
+<c:set var="toggleClass" value="" />
+<c:set var="toggleAttrs" value="" />
+<c:if test="${not empty properties.toggleSource && not empty properties.toggleValue}">
+    <c:set var="toggleClass" value="is-hidden toggle-value" />
+    <c:set var="toggleAttrs" value="data-toggle-source=\"${sling:encode(properties.toggleSource,'HTML_ATTR')}\" data-toggle-value=\"${sling:encode(properties.toggleValue,'HTML_ATTR')}\"" />
+</c:if>
+<div class="field ${toggleClass}" data-events="${events}" data-path="${sling:encode(resource.path,'HTML_ATTR')}" ${toggleAttrs}>
     <c:if test="${not empty properties.label}">
         <label class="label" for="${sling:encode(properties.name,'HTML_ATTR')}">
             <fmt:message key="${properties.label}" var="label" />

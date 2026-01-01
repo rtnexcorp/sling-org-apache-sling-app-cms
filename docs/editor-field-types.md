@@ -67,6 +67,45 @@ Renders a path picker. Currently this uses HTML5 data lists to display the dropd
 - *titleProperty* - the property to retrieve a title for the result 
 - *type* - the node type to limit the results, by default `nt:hierarchyNode`
 
+## Multifield
+
+Renders a multifield widget that allows users to add, remove, and reorder composite items containing multiple fields. Each item can contain any combination of other field types.
+
+**Resource Type:** `sling-cms/components/editor/fields/multifield`
+
+**Properties**
+
+- *disabled* - if set to true the field will be disabled
+- *label* - the label text for the field
+- *name* - the name attribute for the multifield container node (items will be stored under this node)
+- *required* - if set to true the field will be required
+- *minItems* - minimum number of items required
+- *maxItems* - maximum number of items allowed
+
+**Template Node**
+
+The multifield requires a child node named `template` which contains the field definitions for each item. Example structure:
+
+```
+/multifield
+    name="links"
+    label="Links"
+    /template
+        jcr:primaryType=nt:unstructured
+        /title
+            jcr:primaryType=nt:unstructured
+            sling:resourceType=sling-cms/components/editor/fields/text
+            name=title
+            label=Title
+        /url
+            jcr:primaryType=nt:unstructured
+            sling:resourceType=sling-cms/components/editor/fields/path
+            name=url
+            label=URL
+```
+
+Items will be stored as child nodes under the specified name (e.g., `/content/page/jcr:content/links/item_0`, `/content/page/jcr:content/links/item_1`, etc.).
+
 ## Repeating
 
 Renders a repeating set of fields.
@@ -83,7 +122,7 @@ Renders a repeating set of fields.
 
 ## RichText
 
-Renders a rich text editor using Summernote.
+Renders a rich text editor using TipTap (ProseMirror-based editor).
 
 **Resource Type:** `sling-cms/components/editor/fields/richtext`
 
@@ -93,6 +132,23 @@ Renders a rich text editor using Summernote.
 - *label* - the label text for the field
 - *name* - the name attribute for the field
 - *required* - if set to true the field will be required
+- *toolbar* - optional path to a custom toolbar configuration
+
+**Features**
+
+The TipTap rich text editor supports:
+- Bold, Italic, Underline formatting
+- Headings (H1-H6)
+- Paragraph formatting
+- Text alignment (left, center, right)
+- Ordered and unordered lists
+- Indentation
+- Links with target selection
+- Image insertion
+- Blockquotes
+- Code blocks
+- Undo/Redo
+- Source view toggle
 
 ## Select
 
@@ -109,6 +165,48 @@ Renders a select field. This field can either specify a list of options in a pro
 - *multiple* - if set to true the field will allow multiple options to be selected
 - *options* - if set, this will be used to populate the options for the select field. These should be and array of strings in the format `{LABEL}={VALUE}`
 - *optionsScript* - the absolute path to a script to execute to get the select options
+
+## Tabs
+
+Renders a tabbed interface to organize dialog fields into logical groups. This improves the authoring experience for components with many configuration options.
+
+**Resource Type:** `sling-cms/components/editor/fields/tabs`
+
+**Structure**
+
+Each child node under the tabs node represents a tab panel. Tab nodes should have a `title` property and contain field nodes as children.
+
+**Tab Properties**
+
+- *title* - the display title of the tab shown in the tab bar
+
+**Example**
+
+```json
+{
+    "tabs": {
+        "sling:resourceType": "sling-cms/components/editor/fields/tabs",
+        "basicInfo": {
+            "title": "Basic Info",
+            "name": {
+                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                "label": "Name",
+                "name": "name"
+            }
+        },
+        "advancedTab": {
+            "title": "Advanced",
+            "cssClass": {
+                "sling:resourceType": "sling-cms/components/editor/fields/text",
+                "label": "CSS Class",
+                "name": "cssClass"
+            }
+        }
+    }
+}
+```
+
+For more detailed documentation and examples, see [Dialog Tabs](dialog-tabs.md).
 
 ## Taxonomy
 

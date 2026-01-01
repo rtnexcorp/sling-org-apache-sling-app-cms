@@ -1,31 +1,30 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.actions;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collections;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.ValueFactory;
 import javax.jcr.ValueFormatException;
+
+import java.util.Collections;
 
 import org.apache.jackrabbit.api.JackrabbitSession;
 import org.apache.jackrabbit.api.security.user.User;
@@ -41,18 +40,22 @@ import org.apache.sling.cms.reference.forms.FormRequest;
 import org.apache.sling.cms.reference.forms.impl.FormRequestImpl;
 import org.apache.sling.servlethelpers.MockSlingHttpServletRequest;
 import org.apache.sling.testing.resourceresolver.MockResource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestPasswordResetActionTest {
 
     private ResourceResolverFactory factory;
     private ResourceResolver resolver;
 
-    @Before
-    public void init() throws FormException, LoginException, AccessDeniedException,
-            UnsupportedRepositoryOperationException, RepositoryException {
+    @BeforeEach
+    public void init()
+            throws FormException, LoginException, AccessDeniedException, UnsupportedRepositoryOperationException,
+                    RepositoryException {
 
         factory = Mockito.mock(ResourceResolverFactory.class);
 
@@ -75,7 +78,6 @@ public class RequestPasswordResetActionTest {
                 // TODO Auto-generated method stub
 
             }
-
         };
         Mockito.when(session.getValueFactory()).thenReturn(vf);
 
@@ -83,7 +85,6 @@ public class RequestPasswordResetActionTest {
         Mockito.when(session.getUserManager()).thenReturn(userManager);
 
         Mockito.when(userManager.getAuthorizable("test@email.com")).thenReturn(Mockito.mock(User.class));
-
     }
 
     @Test
@@ -94,12 +95,11 @@ public class RequestPasswordResetActionTest {
         FormRequest request = new FormRequestImpl(new MockSlingHttpServletRequest(resolver), null, null);
         request.getFormData().put("email", "test@email.com");
 
-        Resource actionResource = new MockResource("/content",
-                Collections.singletonMap(RequestPasswordResetAction.PN_RESETTIMEOUT, 2), null);
+        Resource actionResource = new MockResource(
+                "/content", Collections.singletonMap(RequestPasswordResetAction.PN_RESETTIMEOUT, 2), null);
 
         FormActionResult result = action.handleForm(actionResource, request);
         assertTrue(result.isSucceeded());
-
     }
 
     @Test
@@ -110,12 +110,11 @@ public class RequestPasswordResetActionTest {
         FormRequest request = new FormRequestImpl(new MockSlingHttpServletRequest(resolver), null, null);
         request.getFormData().put("email", "test1@email.com");
 
-        Resource actionResource = new MockResource("/content",
-                Collections.singletonMap(RequestPasswordResetAction.PN_RESETTIMEOUT, 2), null);
+        Resource actionResource = new MockResource(
+                "/content", Collections.singletonMap(RequestPasswordResetAction.PN_RESETTIMEOUT, 2), null);
 
         FormActionResult result = action.handleForm(actionResource, request);
         assertFalse(result.isSucceeded());
-
     }
 
     @Test
@@ -130,5 +129,4 @@ public class RequestPasswordResetActionTest {
         Mockito.when(inValidResource.getResourceType()).thenReturn("something/else");
         assertFalse(action.handles(inValidResource));
     }
-
 }

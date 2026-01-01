@@ -1,0 +1,6 @@
+{
+  "jcr:primaryType": "sling:Config",
+  "jcr:title": "Site Settings",
+  "sling:resourceType": "sling-cms/components/caconfig/sitesettings",
+  "taxonomyroot": "/etc/taxonomy"
+}

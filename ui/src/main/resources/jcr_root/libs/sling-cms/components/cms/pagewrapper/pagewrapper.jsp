@@ -18,12 +18,23 @@
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
 <c:set var="cmsEditEnabled" value="true" scope="request" />
+<c:set var="wrappedResource" value="${sling:getResource(resourceResolver,slingRequest.requestPathInfo.suffix)}" />
 <c:choose>
     <c:when test="${not empty param.forceResourceType}">
-        <sling:include resource="${sling:getResource(resourceResolver,slingRequest.requestPathInfo.suffix)}" resourceType="${param.forceResourceType}" />
+        <c:if test="${not empty wrappedResource}">
+            <sling:include resource="${wrappedResource}" resourceType="${param.forceResourceType}" />
+        </c:if>
+        <c:if test="${empty wrappedResource}">
+            <!-- Page wrapper include resource not found: ${slingRequest.requestPathInfo.suffix} -->
+        </c:if>
     </c:when>
     <c:otherwise>
-        <sling:include resource="${sling:getResource(resourceResolver,slingRequest.requestPathInfo.suffix)}"  />
+        <c:if test="${not empty wrappedResource}">
+            <sling:include resource="${wrappedResource}"  />
+        </c:if>
+        <c:if test="${empty wrappedResource}">
+            <!-- Page wrapper include resource not found: ${slingRequest.requestPathInfo.suffix} -->
+        </c:if>
     </c:otherwise>
 </c:choose>
 <c:set var="cmsEditEnabled" value="false" scope="request" />

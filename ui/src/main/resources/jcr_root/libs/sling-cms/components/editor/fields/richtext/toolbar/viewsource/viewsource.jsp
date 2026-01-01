@@ -17,6 +17,6 @@
  * under the License.
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
-<a class="button is-small" data-wysihtml-action="change_view">
+<a class="button is-small" data-tiptap-action="change_view">
     <strong class="icon">&lt;/&gt;</strong>
 </a>

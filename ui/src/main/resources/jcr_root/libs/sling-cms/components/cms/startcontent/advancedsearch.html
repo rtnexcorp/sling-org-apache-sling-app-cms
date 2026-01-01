@@ -1,0 +1,132 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--/* Advanced Search Results with Taxonomy Badges */-->
+<sly data-sly-use.searchResults="org.apache.sling.cms.core.models.AdvancedSearchResults"></sly>
+<div class="advanced-search-results-container">
+    <sly data-sly-test="${searchResults.results.size > 0}">
+        <!--/* Results Count */-->
+        <div class="panel-block has-background-light">
+            <small class="has-text-grey">
+                ${'Found' @ i18n} <strong>${searchResults.results.size}</strong> ${'results' @ i18n}
+                <sly data-sly-test="${searchResults.term}">
+                    ${'for' @ i18n} "<em>${searchResults.term}</em>"
+                </sly>
+            </small>
+        </div>
+        
+        <!--/* Search Results List */-->
+        <sly data-sly-list.item="${searchResults.results}">
+            <a class="panel-block search-result-item" 
+               title="${item.path}" 
+               href="/cms/site/content.html${item.resource.parent.path}?resource=${item.path}">
+                <div class="search-result-content">
+                    <div class="search-result-header">
+                        <!--/* Icon based on type */-->
+                        <span class="panel-icon">
+                            <sly data-sly-test="${item.page}">
+                                <i class="jam jam-document" aria-hidden="true"></i>
+                            </sly>
+                            <sly data-sly-test="${item.file}">
+                                <i class="jam jam-file" aria-hidden="true"></i>
+                            </sly>
+                            <sly data-sly-test="${item.folder}">
+                                <i class="jam jam-folder" aria-hidden="true"></i>
+                            </sly>
+                            <sly data-sly-test="${!item.page && !item.file && !item.folder}">
+                                <i class="jam jam-sitemap" aria-hidden="true"></i>
+                            </sly>
+                        </span>
+                        
+                        <!--/* Title */-->
+                        <span class="search-result-title">
+                            ${item.title}
+                        </span>
+                    </div>
+                    
+                    <!--/* Path */-->
+                    <small class="search-result-path has-text-grey is-size-7">
+                        ${item.path}
+                    </small>
+                    
+                    <!--/* Metadata row: author and date */-->
+                    <sly data-sly-test="${item.lastModifiedBy || item.lastModified}">
+                        <div class="search-result-meta is-size-7 has-text-grey-light mt-1">
+                            <sly data-sly-test="${item.lastModifiedBy}">
+                                <span class="icon-text">
+                                    <span class="icon is-small">
+                                        <i class="jam jam-user" aria-hidden="true"></i>
+                                    </span>
+                                    <span>${item.lastModifiedBy}</span>
+                                </span>
+                            </sly>
+                            <sly data-sly-test="${item.lastModified}">
+                                <span class="icon-text ml-2">
+                                    <span class="icon is-small">
+                                        <i class="jam jam-calendar" aria-hidden="true"></i>
+                                    </span>
+                                    <span>${item.lastModifiedFormatted}</span>
+                                </span>
+                            </sly>
+                        </div>
+                    </sly>
+                    
+                    <!--/* Taxonomy Badges */-->
+                    <sly data-sly-test="${item.hasTaxonomy}">
+                        <div class="search-result-tags mt-1">
+                            <sly data-sly-list.tag="${item.taxonomyItems}">
+                                <span class="tag is-small is-info is-light taxonomy-badge" 
+                                      title="${tag.path}">
+                                    <span class="icon is-small">
+                                        <i class="jam jam-tag" aria-hidden="true"></i>
+                                    </span>
+                                    <span>${tag.title}</span>
+                                </span>
+                            </sly>
+                        </div>
+                    </sly>
+                </div>
+            </a>
+        </sly>
+    </sly>
+    
+    <!--/* No Results Message */-->
+    <sly data-sly-test="${searchResults.results.empty && searchResults.hasSearchCriteria}">
+        <div class="panel-block has-text-centered">
+            <div class="has-text-grey py-4" style="width:100%;">
+                <span class="icon is-large">
+                    <i class="jam jam-search" style="font-size:2rem;"></i>
+                </span>
+                <p class="mt-2">${'No results found' @ i18n}</p>
+                <p class="is-size-7">${'Try adjusting your search criteria' @ i18n}</p>
+            </div>
+        </div>
+    </sly>
+    
+    <!--/* Initial State - No Search Yet */-->
+    <sly data-sly-test="${!searchResults.hasSearchCriteria}">
+        <div class="panel-block has-text-centered">
+            <div class="has-text-grey-light py-4" style="width:100%;">
+                <span class="icon is-large">
+                    <i class="jam jam-search" style="font-size:2rem;"></i>
+                </span>
+                <p class="mt-2 is-size-7">${'Enter a search term or select filters' @ i18n}</p>
+            </div>
+        </div>
+    </sly>
+</div>

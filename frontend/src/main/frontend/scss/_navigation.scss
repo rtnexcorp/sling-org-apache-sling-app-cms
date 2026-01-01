@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Navigation Component Styles
+// Provides styling for navigation elements including breadcrumbs, menus, and navbar
+
+@use "variables" as *;
+
+.breadcrumb {
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu {
+  overflow: auto;
+}
+
+.menu-label {
+  text-transform: none;
+  font-size: 1.25em;
+  letter-spacing: normal;
+  display: block;
+  padding: 0.25em 0;
+  color: #363636;
+}
+
+.menu-label:not(:last-child) {
+  margin: 0;
+}
+
+.menu .is-selected,
+.table tr.is-selected {
+  background-color: #b3b4b5;
+  color: hsl(0, 0%, 21%);
+}
+
+.navbar {
+  border-bottom: 0.5px solid hsl(0, 0%, 86%);
+}
+
+nav .level-left,
+nav .level-right {
+  flex-shrink: inherit;
+}
+
+.contentnav-search {
+  margin-block-end: 0;
+}
+
+.content-filter-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .content-filter__controls {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+}

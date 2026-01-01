@@ -1,0 +1,128 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+@use "variables" as *;
+
+/* TipTap Editor Styles */
+.tiptap-editor-content {
+  width: 100%;
+  max-height: 600px;
+  min-height: 300px;
+  overflow-y: auto;
+  border: 1px solid $grey-lighter;
+  border-radius: 4px;
+  padding: 0.75em;
+  background-color: $white;
+}
+
+.tiptap-editor-content:focus {
+  outline: none;
+  border-color: $primary;
+  box-shadow: 0 0 0 0.125em rgba($primary, 0.25);
+}
+
+.tiptap-editor-content .ProseMirror {
+  min-height: 250px;
+  outline: none;
+}
+
+.tiptap-editor-content .ProseMirror > * + * {
+  margin-top: 0.75em;
+}
+
+.tiptap-editor-content p {
+  margin: 0;
+}
+
+.tiptap-editor-content h1,
+.tiptap-editor-content h2,
+.tiptap-editor-content h3,
+.tiptap-editor-content h4,
+.tiptap-editor-content h5,
+.tiptap-editor-content h6 {
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.tiptap-editor-content h1 {
+  font-size: 2em;
+}
+
+.tiptap-editor-content h2 {
+  font-size: 1.5em;
+}
+
+.tiptap-editor-content h3 {
+  font-size: 1.25em;
+}
+
+.tiptap-editor-content ul,
+.tiptap-editor-content ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.tiptap-editor-content ul {
+  list-style-type: disc;
+}
+
+.tiptap-editor-content ol {
+  list-style-type: decimal;
+}
+
+.tiptap-editor-content li > p {
+  margin: 0;
+}
+
+.tiptap-editor-content blockquote {
+  border-left: 3px solid $grey-light;
+  padding-left: 1em;
+  margin-left: 0;
+  color: $grey;
+}
+
+.tiptap-editor-content pre {
+  background-color: $grey-darker;
+  color: $white;
+  padding: 0.75em 1em;
+  border-radius: 4px;
+  font-family: monospace;
+  overflow-x: auto;
+}
+
+.tiptap-editor-content code {
+  background-color: $grey-lighter;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.tiptap-editor-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.tiptap-editor-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.tiptap-editor-content a {
+  color: $primary;
+  text-decoration: underline;
+}

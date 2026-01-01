@@ -1,0 +1,41 @@
+<!--/*
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+*/-->
+<sly data-sly-use.fragment="org.apache.sling.cms.reference.models.ContentFragmentModel">
+    <div class="cms-fragment">
+        <sly data-sly-test="${fragment.loaded}">
+            <div class="cms-fragment__header">
+                <h3 class="cms-fragment__title">${fragment.title}</h3>
+                <span class="cms-fragment__schema" data-sly-test="${fragment.schemaId}">
+                    Schema: ${fragment.schemaId}
+                </span>
+            </div>
+            <div class="cms-fragment__content">
+                <sly data-sly-list.entry="${fragment.propertyEntries}">
+                    <div class="cms-fragment__field">
+                        <span class="cms-fragment__field-label">${entry.key}:</span>
+                        <span class="cms-fragment__field-value">${entry.value}</span>
+                    </div>
+                </sly>
+            </div>
+        </sly>
+        <div class="notification is-warning" data-sly-test="${!fragment.loaded}">
+            <p>Content fragment not found or could not be loaded.</p>
+        </div>
+    </div>
+</sly>

@@ -5,6 +5,10 @@
       "start-order": "20"
     },
     {
+      "id": "org.apache.sling:org.apache.sling.cms.asset:${cms-version}",
+      "start-order": "20"
+    },
+    {
       "id": "org.apache.sling:org.apache.sling.cms.ui:${cms-version}",
       "start-order": "19"
     },
@@ -15,6 +19,10 @@
     {
       "id": "org.apache.sling:org.apache.sling.cms.login:${cms-version}",
       "start-order": "20"
+    },
+    {
+      "id": "org.apache.sling:org.apache.sling.cms.frontend:${cms-version}",
+      "start-order": "19"
     }
   ],
   "configurations": {

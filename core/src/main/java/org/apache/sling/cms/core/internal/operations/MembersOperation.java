@@ -1,27 +1,29 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.operations;
+
+import javax.jcr.RepositoryException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import javax.jcr.RepositoryException;
 
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.jackrabbit.api.security.user.Group;
@@ -39,8 +41,10 @@ import org.slf4j.LoggerFactory;
 /**
  * The <code>MembersOperation</code> will update the membership of a group.
  */
-@Component(immediate = true, service = { PostOperation.class }, property = PostOperation.PROP_OPERATION_NAME
-        + "=members")
+@Component(
+        immediate = true,
+        service = {PostOperation.class},
+        property = PostOperation.PROP_OPERATION_NAME + "=members")
 public class MembersOperation implements PostOperation {
 
     private static final Logger log = LoggerFactory.getLogger(MembersOperation.class);
@@ -54,8 +58,8 @@ public class MembersOperation implements PostOperation {
             List<String> auths = new ArrayList<>();
             Optional.ofNullable(request.getParameterValues(PN_MEMBERS)).ifPresent(p -> auths.addAll(Arrays.asList(p)));
 
-            AuthorizableWrapper groupWrapper = Optional
-                    .ofNullable(request.getResource().adaptTo(AuthorizableWrapper.class))
+            AuthorizableWrapper groupWrapper = Optional.ofNullable(
+                            request.getResource().adaptTo(AuthorizableWrapper.class))
                     .orElseThrow(() -> new RepositoryException("Failed to get group"));
             if (!groupWrapper.getAuthorizable().isGroup()) {
                 throw new RepositoryException("Provided authorizable is not a group");
@@ -106,5 +110,4 @@ public class MembersOperation implements PostOperation {
             response.setError(e);
         }
     }
-
 }

@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Typography Styles
+// Provides heading and text formatting styles for the CMS
+
+h1 {
+  font-size: 200%;
+  margin-bottom: 1em;
+}
+
+h2 {
+  font-size: 180%;
+  margin-bottom: .8em;
+}
+
+h3 {
+  font-size: 160%;
+  margin-bottom: .6em;
+}
+
+h4 {
+  font-size: 140%;
+  margin-bottom: .4em;
+}
+
+h5 {
+  font-size: 120%;
+  margin-bottom: .2em;
+}
+
+dl {
+  padding: 1em 0;
+}
+
+dd {
+  padding-left: 1em;
+}
+
+dt {
+  font-weight: bold;
+}

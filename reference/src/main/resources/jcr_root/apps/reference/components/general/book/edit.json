@@ -1,0 +1,125 @@
+{
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "sling-cms/components/editor/slingform",
+    "button": "Save Book",
+    "fields": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/container",
+        "bookTitle": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Book Title",
+            "name": "bookTitle",
+            "required": true
+        },
+        "subtitle": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Subtitle",
+            "name": "subtitle"
+        },
+        "publishingYear": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Publishing Year",
+            "name": "publishingYear",
+            "required": true
+        },
+        "isbn": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "ISBN",
+            "name": "isbn"
+        },
+        "publisher": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Publisher",
+            "name": "publisher"
+        },
+        "coverImage": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/path",
+            "label": "Cover Image",
+            "name": "coverImage",
+            "basePath": "/content",
+            "type": "file"
+        },
+        "description": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+            "label": "Description",
+            "name": "description"
+        },
+        "authors": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/multifield",
+            "label": "Authors",
+            "name": "authors",
+            "minItems": "1",
+            "maxItems": "20",
+            "template": {
+                "jcr:primaryType": "nt:unstructured",
+                "authorName": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                    "label": "Author Name",
+                    "name": "authorName",
+                    "required": true
+                },
+                "email": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                    "label": "Email",
+                    "name": "email"
+                },
+                "role": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/select",
+                    "label": "Role",
+                    "name": "role",
+                    "options": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "author": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "label": "Author",
+                            "value": "author"
+                        },
+                        "coauthor": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "label": "Co-Author",
+                            "value": "coauthor"
+                        },
+                        "editor": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "label": "Editor",
+                            "value": "editor"
+                        },
+                        "translator": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "label": "Translator",
+                            "value": "translator"
+                        },
+                        "contributor": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "label": "Contributor",
+                            "value": "contributor"
+                        }
+                    }
+                },
+                "bio": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                    "label": "Short Bio",
+                    "name": "bio"
+                },
+                "website": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/editor/fields/text",
+                    "label": "Website",
+                    "name": "website"
+                }
+            }
+        }
+    }
+}

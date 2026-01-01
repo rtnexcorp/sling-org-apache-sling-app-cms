@@ -1,0 +1,102 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Layout Component Styles
+// Provides layout-related styles for the CMS interface including containers,
+// sections, and overall page structure
+
+// Bulma breakpoints (for compatibility)
+$tablet: 769px;
+$mobile-max: 768px;
+
+@media screen and (min-width: $tablet) {
+  html {
+    overflow: hidden;
+  }
+}
+
+body.cms {
+  min-height: 100vh;
+  @media screen and (min-width: $tablet), print {
+    background: url("../img/gradient.jpg") no-repeat;
+    background-attachment: fixed;
+    display: flex;
+  }
+}
+
+.gradient {
+  @media screen and (min-width: $tablet), print {
+    height: 100vh;
+    width: 16px;
+  }
+}
+
+.container {
+  height: 100vh;
+  overflow: hidden;
+  @media screen and (max-width: $mobile-max) {
+    height: 100%;
+    overflow: visible;
+  }
+}
+
+.Main-Content {
+  padding: 12px 0;
+}
+
+.Main-Content .level-left {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.main-section {
+  flex-grow: 1;
+  @media screen and (min-width: $tablet), print {
+    width: calc(1vw - 16px);
+  }
+}
+
+.main-section .columns {
+  padding: 0 16px;
+}
+
+.sidebar {
+  @media screen and (min-width: $tablet) {
+    border-right: 0.5px solid hsl(0, 0%, 86%);
+  }
+}
+
+.is-full-height {
+  @media screen and (min-width: $tablet), print {
+    height: calc(100vh - 65px);
+  }
+}
+
+.scroll-container {
+  overflow-y: auto;
+  height: calc(100vh - 205px);
+  overflow-x: hidden;
+  padding: 2px;
+  @media screen and (max-width: $mobile-max) {
+    height: 100%;
+    overflow: visible;
+    padding: 0;
+  }
+}
+
+.scroll-container .scroll-container {
+  height: auto;
+  overflow: visible;
+  padding: 0;
+}
+
+.scroll-container > .is-ancestor {
+  flex-wrap: wrap;
+}
+
+.editor-page {
+  overflow-y: auto;
+}
+
+.sling-cms-include-config {
+  min-height: 200px;
+}

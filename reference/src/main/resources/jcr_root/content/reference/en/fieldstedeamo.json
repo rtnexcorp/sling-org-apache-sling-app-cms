@@ -1,0 +1,71 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Book Component Demo",
+    "sling:template": "/conf/asf/site/templates/base-page",
+    "sling:resourceType": "reference/components/pages/base",
+    "published": true,
+    "hideInSitemap": false,
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "intro": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h1>Book Component Demo</h1><p>This page demonstrates the <strong>Book Component</strong> with multifield author support.</p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "book1": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/book",
+        "bookTitle": "Clean Code: A Handbook of Agile Software Craftsmanship",
+        "subtitle": "A Handbook of Agile Software Craftsmanship",
+        "publishingYear": "2008",
+        "isbn": "978-0132350884",
+        "publisher": "Prentice Hall",
+        "description": "Even bad code can function. But if code isn't clean, it can bring a development organization to its knees.",
+        "authors": {
+          "jcr:primaryType": "nt:unstructured",
+          "author1": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Robert C. Martin",
+            "email": "unclebob@example.com",
+            "role": "author",
+            "bio": "Robert Cecil Martin, known as Uncle Bob, is an American software engineer and author."
+          }
+        }
+      },
+      "book2": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/book",
+        "bookTitle": "Design Patterns",
+        "publishingYear": "1994",
+        "isbn": "978-0201633610",
+        "publisher": "Addison-Wesley Professional",
+        "description": "The Gang of Four's classic book on software design patterns.",
+        "authors": {
+          "jcr:primaryType": "nt:unstructured",
+          "author1": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Erich Gamma",
+            "role": "author"
+          },
+          "author2": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Richard Helm",
+            "role": "author"
+          },
+          "author3": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "Ralph Johnson",
+            "role": "author"
+          },
+          "author4": {
+            "jcr:primaryType": "nt:unstructured",
+            "authorName": "John Vlissides",
+            "role": "author"
+          }
+        }
+      }
+    }
+  }
+}

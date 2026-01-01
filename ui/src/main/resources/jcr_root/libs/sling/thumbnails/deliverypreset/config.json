@@ -1,0 +1,5 @@
+{
+	"jcr:primaryType": "sling:Component",
+    "jcr:title": "Delivery Preset Configuration",
+    "jcr:description": "Configuration component for delivery preset (optimized image delivery profile)"
+}

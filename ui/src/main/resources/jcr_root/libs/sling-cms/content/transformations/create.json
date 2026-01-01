@@ -2,8 +2,8 @@
     "jcr:primaryType": "sling:Page",
     "jcr:content": {
         "sling:resourceType": "sling-cms/components/pages/modal",
-        "jcr:title": "Add Transformation ",
-        "modalText": "Create Transformation",
+        "jcr:title": "Create Transformation",
+        "modalText": "Create New Image Transformation",
         "jcr:primaryType": "nt:unstructured",
         "container": {
             "jcr:primaryType": "nt:unstructured",
@@ -16,10 +16,17 @@
                 "fields": {
                     "jcr:primaryType": "nt:unstructured",
                     "sling:resourceType": "sling-cms/components/general/container",
+                    "helpText": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/general/textelement",
+                        "level": "p",
+                        "text": "Create a new image transformation pipeline. After creation, you can add handlers to process images."
+                    },
                     "transformationName": {
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/editor/fields/text",
-                        "label": "Transformation Name",
+                        "label": "Display Name",
+                        "description": "Human-readable name for the transformation",
                         "name": "name",
                         "required": true,
                         "skipload":true
@@ -28,6 +35,7 @@
                         "jcr:primaryType": "nt:unstructured",
                         "sling:resourceType": "sling-cms/components/editor/fields/text",
                         "label": "Node Name",
+                        "description": "Unique identifier (lowercase, no spaces)",
                         "name": ":name"
                     },
                     "nameParam": {

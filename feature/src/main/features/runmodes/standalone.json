@@ -1,6 +1,6 @@
 {
     "configurations": {
-        "org.apache.sling.cms.core.publication.PublicationManagerFactoryImpl": {
+        "org.apache.sling.cms.distribution.impl.PublicationManagerFactoryImpl": {
             "instanceType": "STANDALONE",
             "publicationMode": "STANDALONE",
             "agents": []

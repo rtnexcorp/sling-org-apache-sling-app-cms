@@ -1,4 +1,4 @@
 {
-	"jcr:primaryType": "nt:unstructured",
-	"jcr:title": "i18n"
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "i18n Dictionaries"
 }

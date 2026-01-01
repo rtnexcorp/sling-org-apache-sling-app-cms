@@ -1,0 +1,49 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Edit Action Configuration",
+        "modalText": "Edit Action Configuration",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "button": "Save Configuration",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Title",
+                        "name": "jcr:title",
+                        "required": true,
+                        "description": "Human-readable name for this action configuration"
+                    },
+                    "description": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                        "label": "Description",
+                        "name": "jcr:description",
+                        "description": "Describe the purpose of this action configuration"
+                    },
+                    "separator1": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/fieldset",
+                        "label": "Actions"
+                    },
+                    "actionshelp": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/general/textelement",
+                        "i18n": true,
+                        "level": "p",
+                        "text": "To manage individual actions within this configuration, navigate to the configuration in the content browser and add child nodes with action properties."
+                    }
+                }
+            }
+        }
+    }
+}

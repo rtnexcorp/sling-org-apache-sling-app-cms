@@ -1,0 +1,128 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Publication Component Styles
+// Provides styling for the publication dashboard and related components
+
+// Publication Info - Dashboard mode indicator
+.cms-publication-info {
+  padding: 0.5rem 0 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e8e8e8;
+
+  dl {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    margin: 0;
+  }
+
+  dt {
+    font-weight: 600;
+    color: #363636;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  dd {
+    padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, #9E2165 0%, #7a1950 100%);
+    color: white;
+    border-radius: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    box-shadow: 0 2px 4px rgba(158, 33, 101, 0.2);
+  }
+}
+
+// Publication Status - Displays publication metadata for a resource
+.cms-publication-status {
+  dt {
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  dd {
+    margin-bottom: 1rem;
+    margin-left: 0;
+    color: #363636;
+    font-size: 0.9rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Publication Config - Agent/Exporter/Importer configuration display
+.cms-publication-config {
+  dl {
+    dt {
+      font-weight: 600;
+      color: #4a4a4a;
+      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+    }
+
+    dd {
+      margin-bottom: 1rem;
+      margin-left: 0;
+      color: #363636;
+      font-size: 0.9rem;
+      word-break: break-all;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .button {
+    margin-top: 1rem;
+  }
+
+  .level {
+    margin-top: 1rem;
+  }
+}
+
+// Publication Queue - Queue status for distribution agents
+.cms-publication-queue {
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  dl {
+    dt {
+      font-weight: 600;
+      color: #4a4a4a;
+      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+    }
+
+    dd {
+      margin-bottom: 1rem;
+      margin-left: 0;
+      color: #363636;
+      font-size: 0.9rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Publication Logs - Agent log viewer
+.cms-publication-logs {
+  margin-top: 2rem;
+
+  iframe {
+    border: 1px solid #dbdbdb;
+    background: #fafafa;
+  }
+}

@@ -1,26 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.fields;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.lang.annotation.Annotation;
@@ -34,19 +30,27 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.cms.reference.forms.FormException;
 import org.apache.sling.cms.reference.forms.impl.SlingContextHelper;
 import org.apache.sling.cms.reference.forms.impl.fields.TextfieldHandler.Config;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+@ExtendWith(SlingContextExtension.class)
 public class TextfieldHandlerTest {
 
-    @Rule
-    public final SlingContext context = new SlingContext();
+    public SlingContext context = new SlingContext();
+
     private TextfieldHandler handler;
     private ResourceResolver resolver;
 
-    @Before
+    @BeforeEach
     public void init() {
         SlingContextHelper.initContext(context);
         context.request().setResource(context.resourceResolver().getResource("/form/jcr:content/container/form"));
@@ -61,9 +65,8 @@ public class TextfieldHandlerTest {
 
             @Override
             public String[] supportedTypes() {
-                return new String[] { TextfieldHandler.DEFAULT_RESOURCE_TYPE };
+                return new String[] {TextfieldHandler.DEFAULT_RESOURCE_TYPE};
             }
-
         });
     }
 
@@ -71,12 +74,11 @@ public class TextfieldHandlerTest {
     public void testDatefield() throws FormException {
         ResourceResolver resolver = context.resourceResolver();
 
-        context.request()
-                .setParameterMap(Collections.singletonMap("datefield", "2019-02-12"));
+        context.request().setParameterMap(Collections.singletonMap("datefield", "2019-02-12"));
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/datefield");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/datefield");
         handler.handleField(context.request(), fieldResource, formData);
         assertTrue(formData.get("datefield") instanceof Calendar);
 
@@ -89,8 +91,7 @@ public class TextfieldHandlerTest {
             // expected
         }
 
-        context.request()
-                .setParameterMap(Collections.singletonMap("invaliddate", "2019-99-99"));
+        context.request().setParameterMap(Collections.singletonMap("invaliddate", "2019-99-99"));
 
         Resource invalidType = resolver.getResource("/form/jcr:content/container/invalidtype");
         try {
@@ -107,7 +108,6 @@ public class TextfieldHandlerTest {
         } catch (FormException pe) {
 
         }
-
     }
 
     @Test
@@ -130,8 +130,8 @@ public class TextfieldHandlerTest {
             // expected
         }
 
-        fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/unvalidateddouble");
+        fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/unvalidateddouble");
         try {
             handler.handleField(context.request(), fieldResource, formData);
             fail();
@@ -156,13 +156,13 @@ public class TextfieldHandlerTest {
     @Test
     public void testHandles() {
 
-        assertTrue(handler
-                .handles(resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield")));
+        assertTrue(handler.handles(
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield")));
 
         assertFalse(handler.handles(resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields")));
 
-        assertFalse(handler
-                .handles(resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea")));
+        assertFalse(handler.handles(
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textarea")));
     }
 
     @Test
@@ -172,8 +172,8 @@ public class TextfieldHandlerTest {
         context.request().setParameterMap(Collections.singletonMap("integer", "123"));
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/integer");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/integer");
         handler.handleField(context.request(), fieldResource, formData);
         assertEquals(123, formData.get("integer"));
 
@@ -185,8 +185,8 @@ public class TextfieldHandlerTest {
             // expected
         }
 
-        fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/unvalidatedinteger");
+        fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/unvalidatedinteger");
         try {
             handler.handleField(context.request(), fieldResource, formData);
             fail();
@@ -202,8 +202,8 @@ public class TextfieldHandlerTest {
         context.request().getParameterMap().put("textfield", new String[] {});
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield");
         handler.handleField(context.request(), fieldResource, formData);
         assertFalse(formData.containsKey("textfield"));
     }
@@ -218,8 +218,8 @@ public class TextfieldHandlerTest {
         context.request().setParameterMap(params);
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/textfield");
         handler.handleField(context.request(), fieldResource, formData);
         assertEquals("Hello World", formData.get("textfield"));
         assertFalse(formData.containsKey("textfield2"));
@@ -229,11 +229,11 @@ public class TextfieldHandlerTest {
     public void testPatternfield() throws FormException {
         ResourceResolver resolver = context.resourceResolver();
 
-        context.request().getParameterMap().put("patternfield", new String[] { "valasd" });
+        context.request().getParameterMap().put("patternfield", new String[] {"valasd"});
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/patternfield");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/patternfield");
         try {
             handler.handleField(context.request(), fieldResource, formData);
             fail();
@@ -254,8 +254,8 @@ public class TextfieldHandlerTest {
         context.request().getParameterMap().put("money", new String[0]);
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextfield");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextfield");
         try {
             handler.handleField(context.request(), fieldResource, formData);
             fail();
@@ -271,8 +271,8 @@ public class TextfieldHandlerTest {
         context.request().setParameterMap(Collections.singletonMap("money", "123"));
 
         Map<String, Object> formData = new HashMap<>();
-        Resource fieldResource = resolver
-                .getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextfield");
+        Resource fieldResource =
+                resolver.getResource("/form/jcr:content/container/form/fields/fieldset/fields/requiredtextfield");
         handler.handleField(context.request(), fieldResource, formData);
         assertEquals(123, formData.get("money"));
     }

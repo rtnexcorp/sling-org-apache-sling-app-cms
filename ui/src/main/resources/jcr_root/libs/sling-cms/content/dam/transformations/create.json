@@ -1,0 +1,81 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Create Transformation",
+        "modalText": "Create New Image Transformation",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "actionSuffix": "/transformations/",
+                "button": "Create Transformation",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "helpText": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/general/textelement",
+                        "level": "p",
+                        "text": "Create a new image transformation pipeline. After creation, you can add handlers to process images."
+                    },
+                    "transformationName": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Display Name",
+                        "description": "Human-readable name for the transformation",
+                        "name": "name",
+                        "required": true,
+                        "skipload":true
+                    },
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Node Name",
+                        "description": "Unique identifier (lowercase, no spaces)",
+                        "name": ":name"
+                    },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Title",
+                        "description": "Optional title for better organization",
+                        "name": "jcr:title",
+                        "required": false,
+                        "skipload":true
+                    },
+                    "description": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                        "label": "Description",
+                        "description": "Detailed description of what this transformation does",
+                        "name": "jcr:description",
+                        "required": false,
+                        "skipload":true
+                    },
+                    "nameParam": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": ":nameParam",
+                        "value": "name"
+                    },
+                    "primaryType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "jcr:primaryType",
+                        "value": "nt:unstructured"
+                    },
+                    "resourceType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "sling:resourceType",
+                        "value": "sling/thumbnails/transformation"
+                    }
+                }
+            }
+        }
+    }
+}

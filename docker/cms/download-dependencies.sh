@@ -11,38 +11,14 @@
 #        and limitations under the License.
 #
 
-mkdir -p /opt/slingcms/features
 cd /opt/slingcms
 
-echo "Downloading Feature Launcher..."
+# Download the pre-built runnable JAR based on RUNMODE (standalone, author, renderer)
+echo "Downloading Sling CMS ${RUNMODE} JAR..."
 mvn -q org.apache.maven.plugins:maven-dependency-plugin:copy \
-    -Dartifact=org.apache.sling:org.apache.sling.feature.launcher:${LAUNCHER_VERSION}:jar \
+    -Dartifact=${CMS_GROUP_ID}:${CMS_ARTIFACT_ID}:${CMS_VERSION}:jar:${RUNMODE} \
     -DoutputDirectory=/opt/slingcms \
     -Dmdep.stripVersion=true \
-    || { echo 'Failed to download Feature Launcher' ; exit 1; } 
- 
-echo "Downloading Feature Models..."
-mvn -q org.apache.maven.plugins:maven-dependency-plugin:copy \
-    -Dartifact=${CMS_GROUP_ID}:${CMS_ARTIFACT_ID}:${CMS_VERSION}:slingosgifeature:${FM_SEED_CLASSIFIER} \
-    -DoutputDirectory=/opt/slingcms/setup \
-    -Dmdep.stripVersion=true \
-    || { echo 'Failed to download composite seed' ; exit 1; }
-mvn -q org.apache.maven.plugins:maven-dependency-plugin:copy \
-    -Dartifact=${CMS_GROUP_ID}:${CMS_ARTIFACT_ID}:${CMS_VERSION}:slingosgifeature:${FM_RUNTIME_CLASSIFIER} \
-    -DoutputDirectory=/opt/slingcms \
-    -Dmdep.stripVersion=true \
-    || { echo 'Failed to download composite runtime' ; exit 1; }
-mvn -q org.apache.maven.plugins:maven-dependency-plugin:copy \
-    -Dartifact=${CMS_GROUP_ID}:${CMS_ARTIFACT_ID}:${CMS_VERSION}:slingosgifeature:${RUNMODE} \
-    -DoutputDirectory=/opt/slingcms/features \
-    -Dmdep.stripVersion=true \
-    || { echo 'Failed to download author feature' ; exit 1; }
+    || { echo "Failed to download ${RUNMODE} JAR" ; exit 1; }
 
-if [[ ! -z ${ADDITIONAL_FEATURE_COORDINATE} ]]; then
-    echo "Downloading Additional Feature ${ADDITIONAL_FEATURE_COORDINATE}"
-    mvn -q org.apache.maven.plugins:maven-dependency-plugin:copy \
-        -Dartifact=${ADDITIONAL_FEATURE_COORDINATE} \
-        -DoutputDirectory=/opt/slingcms/features \
-        -Dmdep.stripVersion=true \
-        || { echo "Failed to download feature ${ADDITIONAL_FEATURE_COORDINATE}" ; exit 1; }
-fi
+mv ${CMS_ARTIFACT_ID}-${RUNMODE}.jar slingcms.jar

@@ -1,0 +1,106 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Editor Fieldsets Component
+// Bulma-style collapsible fieldset sections
+
+.editor-fieldsets {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.editor-fieldset {
+  // Uses Bulma's .box class for styling
+  padding: 0 !important; // Override box padding
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #dbdbdb;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: #eeeeee;
+    }
+    
+    &:focus {
+      outline: 2px solid #3273dc;
+      outline-offset: -2px;
+    }
+  }
+  
+  &__icon {
+    transition: transform 0.2s ease;
+    
+    i {
+      font-size: 1rem;
+    }
+  }
+  
+  &__title {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #363636;
+  }
+  
+  &__content {
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+    
+    &.is-hidden {
+      display: none;
+    }
+  }
+  
+  // Collapsed state
+  &.is-collapsed {
+    .editor-fieldset__header {
+      border-bottom: none;
+      background-color: #fafafa;
+    }
+  }
+}
+
+// Responsive adjustments
+@media screen and (max-width: 768px) {
+  .editor-fieldsets {
+    gap: 0.75rem;
+  }
+  
+  .editor-fieldset {
+    &__header {
+      padding: 0.75rem 1rem;
+    }
+    
+    &__title {
+      font-size: 0.875rem;
+    }
+    
+    &__content {
+      padding: 1rem;
+    }
+  }
+}

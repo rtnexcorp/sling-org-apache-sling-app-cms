@@ -1,0 +1,63 @@
+{
+    "name": "apache-sling-cms-front-end",
+    "version": "1.0.0",
+    "description": "Scripts to power the front-end of Apache Sling's CMS example.",
+    "engines": {
+        "node": ">=20.0.0",
+        "npm": ">=10.0.0",
+        "bun": ">=1.0.0"
+    },
+    "scripts": {
+        "dev": "vite --host",
+        "build": "vite build",
+        "build:prod": "cross-env NODE_ENV=production vite build",
+        "preview": "vite preview",
+        "analyze": "vite build && vite-plugin-visualizer"
+    },
+    "dependencies": {
+        "@tiptap/core": "^3.13.0",
+        "@tiptap/extension-blockquote": "^3.13.0",
+        "@tiptap/extension-bold": "^3.13.0",
+        "@tiptap/extension-bullet-list": "^3.13.0",
+        "@tiptap/extension-code-block": "^3.13.0",
+        "@tiptap/extension-document": "^3.13.0",
+        "@tiptap/extension-hard-break": "^3.13.0",
+        "@tiptap/extension-heading": "^3.13.0",
+        "@tiptap/extension-history": "^3.13.0",
+        "@tiptap/extension-image": "^3.13.0",
+        "@tiptap/extension-italic": "^3.13.0",
+        "@tiptap/extension-link": "^3.13.0",
+        "@tiptap/extension-list-item": "^3.13.0",
+        "@tiptap/extension-ordered-list": "^3.13.0",
+        "@tiptap/extension-paragraph": "^3.13.0",
+        "@tiptap/extension-text": "^3.13.0",
+        "@tiptap/extension-text-align": "^3.13.0",
+        "@tiptap/extension-underline": "^3.13.0",
+        "@tiptap/pm": "^3.13.0",
+        "bulma": "^1.0.4",
+        "dompurify": "^3.3.0",
+        "handlebars": "^4.7.6",
+        "jam-icons": "^2.0.0",
+        "js-autocomplete": "^1.0.4",
+        "jszip": "^3.10.1",
+        "mammoth": "^1.11.0",
+        "merge-stream": "^2.0.0",
+        "rava": "^2.1.0",
+        "sorttable": "^1.0.2",
+        "xlsx": "^0.18.5"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^29.0.0",
+        "@rollup/plugin-node-resolve": "^16.0.3",
+        "@rollup/plugin-terser": "^0.4.4",
+        "cross-env": "^7.0.3",
+        "postcss": "^8.5.6",
+        "postcss-preset-env": "^10.5.0",
+        "rollup": "^4.9.1",
+        "rollup-plugin-visualizer": "^5.14.0",
+        "sass-embedded": "^1.93.3",
+        "vite": "^6.4.1",
+        "vite-plugin-copy": "^0.1.6"
+    },
+    "license": "Apache-2.0"
+}

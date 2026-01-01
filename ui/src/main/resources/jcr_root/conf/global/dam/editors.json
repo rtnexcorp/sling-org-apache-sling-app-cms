@@ -1,0 +1,61 @@
+{
+  "jcr:primaryType": "sling:Config",
+  "jcr:title": "File Editors",
+  "sling:resourceType": "sling-cms/components/caconfig/fileeditor",
+  "default": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Default File Editor",
+    "sling:resourceType": "sling-cms/components/caconfig/fileeditor/config",
+    "fields": {
+      "jcr:primaryType": "nt:unstructured",
+      "title": {
+        "jcr:primaryType": "nt:unstructured",
+        "required": false,
+        "name": "jcr:content/jcr:title",
+        "type": "text",
+        "label": "Title",
+        "sling:resourceType": "sling-cms/components/editor/fields/text"
+      },
+      "jcrmimeType": {
+        "jcr:primaryType": "nt:unstructured",
+        "required": true,
+        "name": "jcr:content/jcr:mimeType",
+        "type": "text",
+        "label": "MIME Type",
+        "sling:resourceType": "sling-cms/components/editor/fields/text"
+      },
+      "licensing": {
+        "jcr:primaryType": "nt:unstructured",
+        "required": false,
+        "name": "jcr:content/licensing",
+        "type": "text",
+        "label": "Licensing",
+        "sling:resourceType": "sling-cms/components/editor/fields/text"
+      },
+      "taxonomy": {
+        "jcr:primaryType": "nt:unstructured",
+        "name": "jcr:content/sling:taxonomy",
+        "label": "Taxonomy",
+        "sling:resourceType": "sling-cms/components/editor/fields/taxonomy"
+      },
+      "taxonomyTypeHint": {
+        "jcr:primaryType": "nt:unstructured",
+        "name": "jcr:content/sling:taxonomy@TypeHint",
+        "value": "String[]",
+        "sling:resourceType": "sling-cms/components/editor/fields/hidden"
+      },
+      "published": {
+        "jcr:primaryType": "nt:unstructured",
+        "name": "jcr:content/sling:published",
+        "label": "Published",
+        "sling:resourceType": "sling-cms/components/editor/fields/publication"
+      },
+      "filemetadata": {
+        "jcr:primaryType": "nt:unstructured",
+        "name": "jcr:content/filemetadata",
+        "label": "File Metadata",
+        "sling:resourceType": "sling-cms/components/editor/fields/filemetadata"
+      }
+    }
+  }
+}

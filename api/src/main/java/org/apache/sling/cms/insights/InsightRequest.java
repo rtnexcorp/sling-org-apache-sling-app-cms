@@ -26,19 +26,20 @@ import org.apache.sling.api.resource.Resource;
 public interface InsightRequest {
 
     public enum TYPE {
-        FILE, PAGE
+        FILE,
+        PAGE
     }
 
     /**
      * Gets the resource used to create this request.
-     * 
+     *
      * @return the resource used to create the request
      */
     Resource getResource();
 
     /**
      * Get the type of this request.
-     * 
+     *
      * @return the type
      */
     TYPE getType();

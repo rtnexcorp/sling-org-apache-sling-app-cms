@@ -1,29 +1,31 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.i18n.impl;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -80,7 +82,8 @@ public class I18NProviderImpl implements I18NProvider {
             final ResourceBundleProvider[] sp = sortedProviders;
             for (int i = sp.length - 1; i >= 0; i--) {
                 final ResourceBundleProvider provider = sp[i];
-                final ResourceBundle bundle = baseName != null ? provider.getResourceBundle(baseName, locale)
+                final ResourceBundle bundle = baseName != null
+                        ? provider.getResourceBundle(baseName, locale)
                         : provider.getResourceBundle(locale);
                 if (bundle != null) {
                     log.trace("Using bundle {}", bundle);
@@ -103,17 +106,26 @@ public class I18NProviderImpl implements I18NProvider {
 
     private ResourceBundleProvider[] sortedProviders = new ResourceBundleProvider[0];
 
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
+    @Reference(
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            policyOption = ReferencePolicyOption.GREEDY)
     protected void bindLocaleResolver(final LocaleResolver resolver) {
         this.localeResolver = resolver;
     }
 
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
+    @Reference(
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            policyOption = ReferencePolicyOption.GREEDY)
     protected void bindRequestLocaleResolver(final RequestLocaleResolver resolver) {
         this.requestLocaleResolver = resolver;
     }
 
-    @Reference(service = ResourceBundleProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+    @Reference(
+            service = ResourceBundleProvider.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC)
     protected void bindResourceBundleProvider(final ResourceBundleProvider provider, final Map<String, Object> props) {
         synchronized (this.providers) {
             this.providers.put(ServiceUtil.getComparableForServiceRanking(props, Order.ASCENDING), provider);
@@ -124,25 +136,29 @@ public class I18NProviderImpl implements I18NProvider {
     @Override
     public I18NDictionary getDictionary(ResourceResolver resolver) {
         AuthorizableWrapper wrapper = resolver.adaptTo(AuthorizableWrapper.class);
-        Locale locale = Optional.ofNullable(wrapper).map(AuthorizableWrapper::getAuthorizable).map(a -> {
-            try {
-                Value[] val = a.getProperty("profile/locale");
-                if (val != null && val.length == 0) {
-                    return val[0].getString();
-                } else {
-                    return Locale.ENGLISH.toLanguageTag();
-                }
-            } catch (RepositoryException e) {
-                return Locale.ENGLISH.toLanguageTag();
-            }
-        }).map(Locale::forLanguageTag).orElse(Locale.ENGLISH);
+        Locale locale = Optional.ofNullable(wrapper)
+                .map(AuthorizableWrapper::getAuthorizable)
+                .map(a -> {
+                    try {
+                        Value[] val = a.getProperty("profile/locale");
+                        if (val != null && val.length == 0) {
+                            return val[0].getString();
+                        } else {
+                            return Locale.ENGLISH.toLanguageTag();
+                        }
+                    } catch (RepositoryException e) {
+                        return Locale.ENGLISH.toLanguageTag();
+                    }
+                })
+                .map(Locale::forLanguageTag)
+                .orElse(Locale.ENGLISH);
         CombinedBundleProvider cbp = new CombinedBundleProvider();
         return new I18NDictionaryImpl(cbp.getResourceBundle(locale));
     }
 
     @Override
     public I18NDictionary getDictionary(SlingHttpServletRequest request) {
-       return getDictionary(request.getResourceResolver());
+        return getDictionary(request.getResourceResolver());
     }
 
     protected void unbindLocaleResolver(final LocaleResolver resolver) {
@@ -159,12 +175,11 @@ public class I18NProviderImpl implements I18NProvider {
 
     // ---------- internal -----------------------------------------------------
 
-    protected void unbindResourceBundleProvider(final ResourceBundleProvider provider,
-            final Map<String, Object> props) {
+    protected void unbindResourceBundleProvider(
+            final ResourceBundleProvider provider, final Map<String, Object> props) {
         synchronized (this.providers) {
             this.providers.remove(ServiceUtil.getComparableForServiceRanking(props, Order.ASCENDING));
             this.sortedProviders = this.providers.values().toArray(new ResourceBundleProvider[this.providers.size()]);
         }
     }
-
 }

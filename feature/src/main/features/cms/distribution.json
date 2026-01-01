@@ -1,11 +1,11 @@
 {
   "bundles":[
     {
-      "id":"org.apache.sling:org.apache.sling.distribution.api:0.7.0",
+      "id":"org.apache.sling:org.apache.sling.distribution.api:0.7.2",
       "start-order":"20"
     },
     {
-      "id":"org.apache.sling:org.apache.sling.distribution.core:0.5.0",
+      "id":"org.apache.sling:org.apache.sling.distribution.core:0.7.2",
       "start-order":"20"
     }
   ],
@@ -42,9 +42,27 @@
     "org.apache.sling.distribution.agent.impl.PrivilegeDistributionRequestAuthorizationStrategyFactory~default":{
       "name":"default",
       "jcrPrivilege":"sling:publish"
+    },
+    "org.apache.sling.distribution.packaging.impl.ResourceDistributionPackageBuilderFactory~default":{
+      "name":"default",
+      "type":"resource",
+      "package.filters":["/content"],
+      "useBinaryReferences":true,
+      "tempFsFolder":"/var/sling/distribution/packages"
+    },
+    "org.apache.sling.distribution.packaging.impl.exporter.LocalDistributionPackageExporterFactory~default":{
+      "name":"default",
+      "packageBuilder.target":"(name=default)"
     }
   },
   "repoinit:TEXT|true":[
-    "register privilege sling:publish"
+    "register privilege sling:publish",
+    "create service user sling-package-install with path system/sling",
+    "set ACL for sling-package-install",
+    "  allow jcr:all on /content",
+    "  allow jcr:all on /conf",
+    "  allow jcr:all on /etc/taxonomy",
+    "  allow jcr:versionManagement on /content",
+    "end"
   ]
 }

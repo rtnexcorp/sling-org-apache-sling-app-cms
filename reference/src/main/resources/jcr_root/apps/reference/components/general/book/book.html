@@ -1,0 +1,117 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.book="org.apache.sling.cms.reference.models.BookModel">
+    <sly data-sly-test="${book.hasTitle}">
+        <article class="book-card">
+            <!-- Cover Image -->
+            <sly data-sly-test="${book.hasCoverImage}">
+                <div class="book-cover">
+                    <img src="${book.coverImage}" alt="${book.bookTitle}"/>
+                </div>
+            </sly>
+            
+            <div class="book-details">
+                <!-- Title -->
+                <h2 class="book-title">${book.bookTitle}</h2>
+                
+                <!-- Subtitle -->
+                <sly data-sly-test="${book.hasSubtitle}">
+                    <h3 class="book-subtitle">${book.subtitle}</h3>
+                </sly>
+                
+                <!-- Authors Byline -->
+                <sly data-sly-test="${book.hasAuthors}">
+                    <div class="book-authors">
+                        <span class="authors-label">By: </span>
+                        <sly data-sly-list.author="${book.authors}">
+                            <span class="author">
+                                <span class="author-name">${author.authorName}</span>
+                                <sly data-sly-test="${author.showRole}">
+                                    <span class="author-role">(${author.role})</span>
+                                </sly>
+                                <sly data-sly-test="${!authorList.last}">, </sly>
+                            </span>
+                        </sly>
+                    </div>
+                </sly>
+                
+                <!-- Book Metadata -->
+                <div class="book-meta">
+                    <sly data-sly-test="${book.hasPublishingYear}">
+                        <span class="book-year">
+                            <strong>Year:</strong> ${book.publishingYear}
+                        </span>
+                    </sly>
+                    <sly data-sly-test="${book.hasPublisher}">
+                        <span class="book-publisher">
+                            <strong>Publisher:</strong> ${book.publisher}
+                        </span>
+                    </sly>
+                    <sly data-sly-test="${book.hasIsbn}">
+                        <span class="book-isbn">
+                            <strong>ISBN:</strong> ${book.isbn}
+                        </span>
+                    </sly>
+                </div>
+                
+                <!-- Description -->
+                <sly data-sly-test="${book.hasDescription}">
+                    <div class="book-description">
+                        <p>${book.description}</p>
+                    </div>
+                </sly>
+                
+                <!-- Detailed Author Information -->
+                <sly data-sly-test="${book.hasAuthors}">
+                    <div class="book-authors-detail">
+                        <h4>About the Authors</h4>
+                        <sly data-sly-list.author="${book.authors}">
+                            <div class="author-detail">
+                                <h5 class="author-detail-name">
+                                    ${author.authorName}
+                                    <sly data-sly-test="${author.hasRole}">
+                                        <span class="author-detail-role">(${author.role})</span>
+                                    </sly>
+                                </h5>
+                                <sly data-sly-test="${author.hasBio}">
+                                    <p class="author-detail-bio">${author.bio}</p>
+                                </sly>
+                                <div class="author-detail-contact">
+                                    <sly data-sly-test="${author.hasEmail}">
+                                        <a href="${author.mailtoLink}" class="author-email">
+                                            ${author.email}
+                                        </a>
+                                    </sly>
+                                    <sly data-sly-test="${author.hasWebsite}">
+                                        <a href="${author.website}" 
+                                           target="_blank" 
+                                           rel="noopener noreferrer" 
+                                           class="author-website">
+                                            Website
+                                        </a>
+                                    </sly>
+                                </div>
+                            </div>
+                        </sly>
+                    </div>
+                </sly>
+            </div>
+        </article>
+    </sly>
+</sly>

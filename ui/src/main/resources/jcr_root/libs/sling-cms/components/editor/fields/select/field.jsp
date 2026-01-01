@@ -21,21 +21,21 @@
     <c:set var="multiple" value="multiple = \"multiple\"" />
 </c:if>
 <div class="select is-fullwidth">
-    <select name="${sling:encode(properties.name,'HTML_ATTR')}" id="${sling:encode(properties.name,'HTML_ATTR')}" ${required} ${disabled} ${multiple}>
+    <select name="${sling:encode(not empty fieldName ? fieldName : properties.name,'HTML_ATTR')}" id="${sling:encode(properties.name,'HTML_ATTR')}" ${required} ${disabled} ${multiple}>
         <c:choose>
             <c:when test="${not empty properties.options}">
                 <c:forEach var="option" items="${properties.options}">
                     <c:set var="label" value="${fn:split(option,'=')[0]}" />
-                    <c:set var="value" value="${fn:split(option,'=')[1]}" />
+                    <c:set var="optVal" value="${fn:split(option,'=')[1]}" />
                     <c:choose>
-                        <c:when test="${val eq value}">
+                        <c:when test="${value eq optVal}">
                             <c:set var="selected" value="selected=\"selected\"" />
                         </c:when>
                         <c:otherwise>
                             <c:set var="selected" value="" />
                         </c:otherwise>
                     </c:choose>
-                    <option ${selected} value="${sling:encode(value,'HTML_ATTR')}">
+                    <option ${selected} value="${sling:encode(optVal,'HTML_ATTR')}">
                         <fmt:message key="${label}" var="labelMessage" />
                         <sling:encode value="${labelMessage}" mode="HTML" />
                     </option>
@@ -44,7 +44,7 @@
             <c:when test="${sling:getRelativeResource(resource,'options') != null}">
                 <c:forEach var="option" items="${sling:listChildren(sling:getRelativeResource(resource,'options'))}">
                     <c:choose>
-                        <c:when test="${option.valueMap.value eq editProperties[properties.name]}">
+                        <c:when test="${option.valueMap.value eq value}">
                             <c:set var="selected" value="selected=\"selected\"" />
                         </c:when>
                         <c:otherwise>

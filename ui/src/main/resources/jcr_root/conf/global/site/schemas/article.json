@@ -1,0 +1,140 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "sling:resourceType": "sling-cms/components/cms/schema",
+  "jcr:title": "Article",
+  "description": "Blog article or news post",
+  "version": "1.0",
+  "enabled": true,
+  "fields": {
+    "jcr:primaryType": "nt:unstructured",
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "title",
+      "label": "Title",
+      "type": "string",
+      "required": true,
+      "order": 10
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "summary",
+      "label": "Summary",
+      "description": "Brief summary of the article",
+      "type": "text",
+      "required": false,
+      "order": 20
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "body",
+      "label": "Body",
+      "type": "richtext",
+      "required": true,
+      "order": 30
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "author",
+      "label": "Author",
+      "type": "reference",
+      "required": false,
+      "order": 40
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "publishDate",
+      "label": "Publish Date",
+      "type": "date",
+      "required": true,
+      "order": 50
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "expiryDate",
+      "label": "Expiry Date",
+      "type": "date",
+      "required": false,
+      "order": 60
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "category",
+      "label": "Category",
+      "type": "select",
+      "required": true,
+      "order": 70,
+      "options": {
+        "jcr:primaryType": "nt:unstructured",
+        "technology": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Technology",
+          "value": "technology"
+        },
+        "business": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Business",
+          "value": "business"
+        },
+        "lifestyle": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Lifestyle",
+          "value": "lifestyle"
+        },
+        "news": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "News",
+          "value": "news"
+        },
+        "opinion": {
+          "jcr:primaryType": "nt:unstructured",
+          "label": "Opinion",
+          "value": "opinion"
+        }
+      }
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "tags",
+      "label": "Tags",
+      "type": "tag",
+      "required": false,
+      "multiple": true,
+      "order": 80
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "featuredImage",
+      "label": "Featured Image",
+      "type": "asset",
+      "required": false,
+      "order": 90
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "featured",
+      "label": "Featured Article",
+      "type": "boolean",
+      "required": false,
+      "order": 100
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "viewCount",
+      "label": "View Count",
+      "type": "integer",
+      "required": false,
+      "defaultValue": "0",
+      "order": 110
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "name": "rating",
+      "label": "Rating",
+      "type": "decimal",
+      "required": false,
+      "min": "0",
+      "max": "5",
+      "order": 120
+    }
+  }
+}

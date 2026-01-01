@@ -1,0 +1,60 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Create Content Fragment",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "slingform": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/slingform",
+                "actionSuffix": "/*",
+                "button": "Create Fragment",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "schemaSelect": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/select",
+                        "label": "Content Type",
+                        "description": "Select the content type/schema for this fragment",
+                        "name": "schemaId",
+                        "required": true,
+                        "skipload": true,
+                        "optionsScript": "/libs/sling-cms/components/editor/fields/select/schemaoptions.jsp"
+                    },
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Name",
+                        "description": "Technical name for the fragment (URL-friendly)",
+                        "name": ":name",
+                        "required": true
+                    },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/text",
+                        "label": "Title",
+                        "name": "jcr:title",
+                        "required": true,
+                        "skipload": true
+                    },
+                    "primaryType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "jcr:primaryType",
+                        "value": "nt:unstructured"
+                    },
+                    "resourceType": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
+                        "name": "sling:resourceType",
+                        "value": "sling-cms/components/cms/fragment"
+                    }
+                }
+            }
+        }
+    }
+}

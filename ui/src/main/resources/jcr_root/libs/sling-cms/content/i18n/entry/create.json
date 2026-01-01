@@ -10,38 +10,15 @@
             "slingform": {
                 "jcr:primaryType": "nt:unstructured",
                 "sling:resourceType": "sling-cms/components/editor/slingform",
-                "actionSuffix": "/*",
+                "actionSuffix": "",
                 "addDate": false,
-                "button": "Create Language",
-                "successPrepend": "/libs/sling-cms/content/site/content.html",
+                "button": "Create Entry",
                 "fields": {
                     "jcr:primaryType": "nt:unstructured",
                     "sling:resourceType": "sling-cms/components/general/container",
-                    "key": {
+                    "i18nfields": {
                         "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/text",
-                        "label": "Key",
-                        "name": "sling:key",
-                        "required": true,
-                        "skipload":true
-                    },
-                    "value": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
-                        "name": "sling:message",
-                        "value": ""
-                    },
-                    "nameParam": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
-                        "name": ":nameParam",
-                        "value": "sling:key"
-                    },
-                    "primaryType": {
-                        "jcr:primaryType": "nt:unstructured",
-                        "sling:resourceType": "sling-cms/components/editor/fields/hidden",
-                        "name": "jcr:primaryType",
-                        "value": "sling:MessageEntry"
+                        "sling:resourceType": "sling-cms/components/editor/fields/i18nentryfields"
                     }
                 }
             }

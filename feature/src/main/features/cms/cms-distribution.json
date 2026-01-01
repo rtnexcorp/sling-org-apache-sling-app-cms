@@ -1,0 +1,27 @@
+{
+  "bundles":[
+    {
+      "id":"com.google.code.gson:gson:2.10.1",
+      "start-order":"5"
+    },
+    {
+      "id":"org.apache.sling:org.apache.sling.cms.distribution:${cms-version}",
+      "start-order":"20"
+    }
+  ],
+  "configurations":{
+    "org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~cms-distribution":{
+      "user.mapping":[
+        "org.apache.sling.cms.distribution:distribution=sling-distribution"
+      ]
+    }
+  },
+  "repoinit:TEXT|true":[
+    "create service user sling-distribution with path system/sling",
+    "set ACL for sling-distribution",
+    "  allow jcr:all on /content",
+    "  allow jcr:all on /conf",
+    "  allow jcr:all on /etc/taxonomy",
+    "end"
+  ]
+}

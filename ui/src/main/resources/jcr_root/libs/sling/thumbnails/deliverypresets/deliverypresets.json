@@ -1,0 +1,5 @@
+{
+    "jcr:primaryType": "sling:Component",
+    "jcr:title": "Delivery Presets List",
+    "jcr:description": "Lists all delivery presets for a site configuration"
+}

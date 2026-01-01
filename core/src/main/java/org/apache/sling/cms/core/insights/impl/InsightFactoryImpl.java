@@ -36,7 +36,9 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 /**
  * Implementation of the InsightFactory service interface
  */
-@Component(immediate = true, service = { InsightFactory.class })
+@Component(
+        immediate = true,
+        service = {InsightFactory.class})
 public class InsightFactoryImpl implements InsightFactory {
 
     @Reference(policyOption = ReferencePolicyOption.GREEDY)
@@ -51,9 +53,13 @@ public class InsightFactoryImpl implements InsightFactory {
     }
 
     private List<Insight> getInsights(InsightRequest request) {
-        List<Insight> insights = providers.stream().filter(ip -> ip.isEnabled(request))
-                .map(ip -> ip.evaluateRequest(request)).collect(Collectors.toList());
-        Collections.sort(insights, (o1, o2) -> o1.getProvider().getTitle().compareTo(o2.getProvider().getTitle()));
+        List<Insight> insights = providers.stream()
+                .filter(ip -> ip.isEnabled(request))
+                .map(ip -> ip.evaluateRequest(request))
+                .collect(Collectors.toList());
+        Collections.sort(insights, (o1, o2) -> o1.getProvider()
+                .getTitle()
+                .compareTo(o2.getProvider().getTitle()));
         return insights;
     }
 
@@ -65,5 +71,4 @@ public class InsightFactoryImpl implements InsightFactory {
     public List<InsightProvider> getProviders() {
         return providers;
     }
-
 }

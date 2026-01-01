@@ -21,10 +21,9 @@ package org.apache.sling.cms.core.insights.impl.providers;
 import java.io.StringReader;
 import java.net.URLEncoder;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -53,9 +52,14 @@ import org.slf4j.LoggerFactory;
 @Designate(ocd = Config.class)
 public class PageSpeedInsightProvider extends BaseInsightProvider {
 
-    @ObjectClassDefinition(name = "%pagespeed.config.name", description = "%pagespeed.config.description", localization = "OSGI-INF/l10n/bundle")
+    @ObjectClassDefinition(
+            name = "%pagespeed.config.name",
+            description = "%pagespeed.config.description",
+            localization = "OSGI-INF/l10n/bundle")
     public @interface Config {
-        @AttributeDefinition(name = "%pagespeed.param.enabled.name", description = "%pagespeed.param.enabled.description")
+        @AttributeDefinition(
+                name = "%pagespeed.param.enabled.name",
+                description = "%pagespeed.param.enabled.description")
         boolean enabled();
 
         @AttributeDefinition(name = "%pagespeed.param.apikey.name", description = "%pagespeed.param.apikey.description")
@@ -65,10 +69,13 @@ public class PageSpeedInsightProvider extends BaseInsightProvider {
     @Reference
     private I18NProvider i18nProvider;
 
-    public static final String MESSAGE_RESULT_DANGER = "This website is much slower than average, page performance must be optimized";
-    public static final String MESSAGE_RESULT_WARN = "This website is slower than average, page performance should be optimized";
+    public static final String MESSAGE_RESULT_DANGER =
+            "This website is much slower than average, page performance must be optimized";
+    public static final String MESSAGE_RESULT_WARN =
+            "This website is slower than average, page performance should be optimized";
     public static final String MESSAGE_RESULT_SUCCESS = "This website has acceptable performance";
-    private static final String REQUEST_FORMAT = "https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=%s&fields=%s&key=%s";
+    private static final String REQUEST_FORMAT =
+            "https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=%s&fields=%s&key=%s";
     private static final String PARAMETERS = "id%2CinvalidRules%2CresponseCode%2CruleGroups";
     private static final String PAGESPEED_FORMAT = "https://developers.google.com/speed/pagespeed/insights/?url=%s";
     private static final Logger log = LoggerFactory.getLogger(PageSpeedInsightProvider.class);
@@ -85,8 +92,8 @@ public class PageSpeedInsightProvider extends BaseInsightProvider {
         Insight insight = new Insight(this, request);
         PageInsightRequest pageRequest = (PageInsightRequest) request;
         String publishedUrl = pageRequest.getPage().getPublishedUrl();
-        String checkUrl = String.format(REQUEST_FORMAT, URLEncoder.encode(publishedUrl, "UTF-8"), PARAMETERS,
-                config.apikey());
+        String checkUrl =
+                String.format(REQUEST_FORMAT, URLEncoder.encode(publishedUrl, "UTF-8"), PARAMETERS, config.apikey());
 
         HttpGet httpGet = new HttpGet(checkUrl);
 
@@ -94,7 +101,8 @@ public class PageSpeedInsightProvider extends BaseInsightProvider {
         JsonReader reader = null;
         try (CloseableHttpClient client = HttpClients.createDefault()) {
 
-            I18NDictionary dictionary = i18nProvider.getDictionary(request.getResource().getResourceResolver());
+            I18NDictionary dictionary =
+                    i18nProvider.getDictionary(request.getResource().getResourceResolver());
 
             log.debug("Requesting page speed via: {}", checkUrl);
             response = client.execute(httpGet);
@@ -105,7 +113,10 @@ public class PageSpeedInsightProvider extends BaseInsightProvider {
             log.debug("Retrieved response: {}", resp);
 
             insight.setScored(true);
-            double score = resp.getJsonObject("ruleGroups").getJsonObject("SPEED").getJsonNumber("score").doubleValue()
+            double score = resp.getJsonObject("ruleGroups")
+                            .getJsonObject("SPEED")
+                            .getJsonNumber("score")
+                            .doubleValue()
                     / 100.0;
             insight.setScore(score);
             log.debug("Parsed pagespeed score {}", score);
@@ -155,5 +166,4 @@ public class PageSpeedInsightProvider extends BaseInsightProvider {
         }
         return true;
     }
-
 }

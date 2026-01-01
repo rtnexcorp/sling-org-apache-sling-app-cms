@@ -5,12 +5,35 @@
     "fields": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "sling-cms/components/general/container",
+        "helpText": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/textelement",
+            "level": "p",
+            "text": "Configure transformation properties. The name field is used for display purposes and identification."
+        },
         "name": {
             "jcr:primaryType": "nt:unstructured",
             "sling:resourceType": "sling-cms/components/editor/fields/text",
-            "label": "Name",
+            "label": "Display Name",
+            "description": "Human-readable name for the transformation",
             "name": "name",
             "required": true
+        },
+        "title": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Title",
+            "description": "Optional title for better organization",
+            "name": "jcr:title",
+            "required": false
+        },
+        "description": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+            "label": "Description",
+            "description": "Detailed description of what this transformation does",
+            "name": "jcr:description",
+            "required": false
         }
     }
 }

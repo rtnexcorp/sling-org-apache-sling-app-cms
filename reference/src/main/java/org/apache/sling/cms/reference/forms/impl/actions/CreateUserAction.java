@@ -1,28 +1,30 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.actions;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
@@ -52,7 +54,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(service = { FormAction.class })
+@Component(service = {FormAction.class})
 public class CreateUserAction implements FormAction {
 
     private static final Logger log = LoggerFactory.getLogger(CreateUserAction.class);
@@ -93,8 +95,8 @@ public class CreateUserAction implements FormAction {
                 if (userManager.getAuthorizable(username) == null) {
 
                     log.debug("Creating user {}", username);
-                    User user = userManager.createUser(username, password, new PrincipalImpl(username),
-                            intermediatePath);
+                    User user =
+                            userManager.createUser(username, password, new PrincipalImpl(username), intermediatePath);
 
                     String[] groups = properties.get(GROUPS, new String[0]);
                     for (String g : groups) {
@@ -106,10 +108,12 @@ public class CreateUserAction implements FormAction {
                         } else {
                             ((Group) group).addMember(user);
                         }
-
                     }
                     log.debug("Updating profile for {}", username);
-                    updateProfile(adminResolver, user, properties.get(PROFILE_PROPERTIES, new String[0]),
+                    updateProfile(
+                            adminResolver,
+                            user,
+                            properties.get(PROFILE_PROPERTIES, new String[0]),
                             request.getFormData());
 
                     log.debug("Saving changes!");
@@ -133,18 +137,17 @@ public class CreateUserAction implements FormAction {
             throws PersistenceException, RepositoryException {
         if (toset.length > 0) {
             Map<String, Object> properties = new HashMap<>();
-            Arrays.stream(toset).filter(k -> formData.keySet().contains(k))
+            Arrays.stream(toset)
+                    .filter(k -> formData.keySet().contains(k))
                     .forEach(k -> properties.put(k, formData.get(k)));
             properties.put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED);
-            ResourceUtil.getOrCreateResource(adminResolver, user.getPath() + "/profile", properties,
-                    JcrConstants.NT_UNSTRUCTURED, false);
+            ResourceUtil.getOrCreateResource(
+                    adminResolver, user.getPath() + "/profile", properties, JcrConstants.NT_UNSTRUCTURED, false);
         }
-
     }
 
     @Override
     public boolean handles(Resource actionResource) {
         return RESOURCE_TYPE.equals(actionResource.getResourceType());
     }
-
 }

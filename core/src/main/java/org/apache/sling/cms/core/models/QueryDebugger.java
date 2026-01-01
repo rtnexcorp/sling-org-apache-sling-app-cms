@@ -18,13 +18,6 @@
  */
 package org.apache.sling.cms.core.models;
 
-import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.inject.Inject;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -43,6 +36,13 @@ import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
 
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
@@ -55,7 +55,8 @@ import org.slf4j.LoggerFactory;
 @Model(adaptables = SlingHttpServletRequest.class)
 public class QueryDebugger {
 
-    private static final String MBEAN_NAME = "org.apache.jackrabbit.oak:name=Oak Query Statistics (Extended),type=QueryStats";
+    private static final String MBEAN_NAME =
+            "org.apache.jackrabbit.oak:name=Oak Query Statistics (Extended),type=QueryStats";
 
     private static final Logger log = LoggerFactory.getLogger(QueryDebugger.class);
     private final String plan;
@@ -74,7 +75,9 @@ public class QueryDebugger {
         Optional<String> statementParam = Optional.ofNullable(request.getParameter("statement"));
         String language = Optional.ofNullable(request.getParameter("language")).orElse(Query.JCR_SQL2);
 
-        int limit = Optional.ofNullable(request.getParameter("sample")).map(s -> Integer.parseInt(s, 10)).orElse(0);
+        int limit = Optional.ofNullable(request.getParameter("sample"))
+                .map(s -> Integer.parseInt(s, 10))
+                .orElse(0);
 
         boolean lenabled = false;
         long lestimate = 0;
@@ -85,7 +88,9 @@ public class QueryDebugger {
         try {
             if (statementParam.isPresent()) {
 
-                QueryManager queryManager = request.getResourceResolver().adaptTo(Session.class).getWorkspace()
+                QueryManager queryManager = request.getResourceResolver()
+                        .adaptTo(Session.class)
+                        .getWorkspace()
                         .getQueryManager();
                 Query explainQuery = queryManager.createQuery("explain measure " + statementParam.get(), language);
                 Row row = explainQuery.execute().getRows().nextRow();
@@ -130,19 +135,24 @@ public class QueryDebugger {
         try {
             collectMbeanData("PopularQueries", popularQueries);
             collectMbeanData("SlowQueries", slowQueries);
-        } catch (MBeanException | MalformedObjectNameException | InstanceNotFoundException | AttributeNotFoundException
-                | NullPointerException | ReflectionException e) {
+        } catch (MBeanException
+                | MalformedObjectNameException
+                | InstanceNotFoundException
+                | AttributeNotFoundException
+                | NullPointerException
+                | ReflectionException e) {
             log.warn("Failed to load mBean data", e);
         }
     }
 
     private void collectMbeanData(String attributeName, List<Map<String, Object>> target)
             throws MalformedObjectNameException, NullPointerException, InstanceNotFoundException,
-            AttributeNotFoundException, ReflectionException, MBeanException {
+                    AttributeNotFoundException, ReflectionException, MBeanException {
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         ObjectName mbeanName = ObjectName.getInstance(MBEAN_NAME);
         TabularData data = (TabularData) mBeanServer.getAttribute(mbeanName, attributeName);
-        data.values().stream().map(CompositeData.class::cast)
+        data.values().stream()
+                .map(CompositeData.class::cast)
                 .forEach(compositeData -> target.add(compositeData.getCompositeType().keySet().stream()
                         .collect(Collectors.toMap(k -> k, compositeData::get))));
     }
@@ -209,5 +219,4 @@ public class QueryDebugger {
     public List<Map<String, Object>> getPopularQueries() {
         return popularQueries;
     }
-
 }

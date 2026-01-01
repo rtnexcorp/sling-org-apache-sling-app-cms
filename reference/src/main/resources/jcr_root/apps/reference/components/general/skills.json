@@ -1,0 +1,6 @@
+{
+	"jcr:primaryType": "sling:Component",
+    "componentType": "General",
+    "jcr:title": "Skills",
+    "jcr:description": "Displays author skills with name, level, and description"
+}

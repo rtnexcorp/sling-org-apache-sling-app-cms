@@ -31,9 +31,8 @@ public interface FileInsightRequest extends InsightRequest {
 
     /**
      * Returns the file used to create this request
-     * 
+     *
      * @return the file
      */
     public File getFile();
-
 }

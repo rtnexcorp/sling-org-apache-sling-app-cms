@@ -1,0 +1,130 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/base",
+        "jcr:title": "Delivery Presets",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "richtext": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/textelement",
+                "i18n": true,
+                "level": "h3",
+                "text": "Delivery Presets"
+            },
+            "description": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/textelement",
+                "i18n": true,
+                "level": "p",
+                "text": "Manage delivery presets for optimized image delivery. Presets define output format, dimensions, quality, and cropping for front-end asset delivery."
+            },
+            "contentactions": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contentactions",
+                "actions": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "preset": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "label": "Delivery Preset",
+                        "prefix": "/cms/dam/deliverypresets/create.html"
+                    }
+                }
+            },
+            "contenttable": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contenttable",
+                "columns": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "name": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Name"
+                    },
+                    "title": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Title"
+                    },
+                    "width": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Width"
+                    },
+                    "height": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Height"
+                    },
+                    "format": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Format"
+                    },
+                    "quality": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Quality"
+                    },
+                    "actions": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "title": "Actions"
+                    }
+                },
+                "types": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "nt:unstructured": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "columns": {
+                            "jcr:primaryType": "nt:unstructured",
+                            "name": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/name",
+                                "link": false
+                            },
+                            "title": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "jcr:title"
+                            },
+                            "width": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "width"
+                            },
+                            "height": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "height"
+                            },
+                            "format": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "format"
+                            },
+                            "quality": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/text",
+                                "property": "quality"
+                            },
+                            "actions": {
+                                "jcr:primaryType": "nt:unstructured",
+                                "sling:resourceType": "sling-cms/components/cms/columns/actions",
+                                "edit": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Edit Delivery Preset",
+                                    "icon": "pencil-f",
+                                    "prefix": "/cms/dam/deliverypresets/edit.html"
+                                },
+                                "delete": {
+                                    "jcr:primaryType": "nt:unstructured",
+                                    "sling:resourceType": "sling-cms/components/cms/actions/modal",
+                                    "title": "Delete Delivery Preset",
+                                    "icon": "trash",
+                                    "prefix": "/cms/shared/delete.html"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

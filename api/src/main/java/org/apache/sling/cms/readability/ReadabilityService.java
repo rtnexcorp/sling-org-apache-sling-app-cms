@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.readability;
 
@@ -25,7 +27,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Automated Readability Index for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Automated Readability Index for text
      */
@@ -33,7 +35,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Automated Readability Index for text
-     * 
+     *
      * @param text the analyzed text
      * @return the Automated Readability Index for text
      */
@@ -41,7 +43,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates the average grade level
-     * 
+     *
      * @param text the text string to analyze
      * @return the average grade level for text
      */
@@ -49,7 +51,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates the average grade level
-     * 
+     *
      * @param text the analyzed text
      * @return the average grade level for text
      */
@@ -57,7 +59,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Coleman-Liau Index for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Coleman-Liau Index for text
      */
@@ -65,7 +67,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Coleman-Liau Index for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Coleman-Liau Index for text
      */
@@ -73,7 +75,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Flesch-Kincaid Readability for text
-     * 
+     *
      * @param text the text string to analyze
      * @return Returns the Flesch-Kincaid Readability value for the text
      */
@@ -81,7 +83,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Flesch-Kincaid Readability for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Flesch-Kincaid Readability value for the text
      */
@@ -89,7 +91,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Flesch-Kincaid Reading Ease for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Flesch-Kincaid Reading Ease value for the text
      */
@@ -97,7 +99,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Flesch-Kincaid Reading Ease for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Flesch-Kincaid Reading Ease value for the text
      */
@@ -105,7 +107,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Gunning-Fog Index for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Gunning-Fog Index for text
      */
@@ -113,7 +115,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Gunning-Fog Index for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the Gunning-Fog Index for text
      */
@@ -121,7 +123,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Simple Measure of Gobbledygook Grade for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the SMOG value for the text
      */
@@ -129,7 +131,7 @@ public interface ReadabilityService {
 
     /**
      * Calculates Simple Measure of Gobbledygook Grade for text
-     * 
+     *
      * @param text the text string to analyze
      * @return the SMOG value for the text
      */
@@ -137,7 +139,7 @@ public interface ReadabilityService {
 
     /**
      * Extracts the sentences from the text including the words and various counts.
-     * 
+     *
      * @param text the text to analyze
      * @return the analyzied text
      */
@@ -145,7 +147,7 @@ public interface ReadabilityService {
 
     /**
      * Gets the locale for this configuration.
-     * 
+     *
      * @return the locale
      */
     Locale getLocale();

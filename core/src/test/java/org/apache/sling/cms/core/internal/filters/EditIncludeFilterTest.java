@@ -1,26 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.filters;
-
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
@@ -28,34 +24,46 @@ import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.apache.sling.cms.core.helpers.SlingCMSTestHelper;
 import org.apache.sling.cms.i18n.I18NProvider;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(SlingContextExtension.class)
 public class EditIncludeFilterTest {
 
-    @Rule
     public SlingContext context = new SlingContext();
+
     private EditIncludeFilter includeFilter;
 
-    @Before
+    @BeforeEach
     public void init()
             throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException, IOException {
         SlingCMSTestHelper.initAuthContext(context);
 
         Bundle bundle = Mockito.mock(Bundle.class);
         Mockito.when(bundle.getEntryPaths(Mockito.anyString()))
-                .thenReturn(Collections.enumeration(Arrays.asList(EditIncludeFilter.ENTRY_BASE + "delete.html",
-                        EditIncludeFilter.ENTRY_BASE + "droptarget.html", EditIncludeFilter.ENTRY_BASE + "edit.html",
-                        EditIncludeFilter.ENTRY_BASE + "end.html", EditIncludeFilter.ENTRY_BASE + "header.html",
-                        EditIncludeFilter.ENTRY_BASE + "reorder.html", EditIncludeFilter.ENTRY_BASE + "start.html")));
+                .thenReturn(Collections.enumeration(Arrays.asList(
+                        EditIncludeFilter.ENTRY_BASE + "delete.html",
+                        EditIncludeFilter.ENTRY_BASE + "droptarget.html",
+                        EditIncludeFilter.ENTRY_BASE + "edit.html",
+                        EditIncludeFilter.ENTRY_BASE + "end.html",
+                        EditIncludeFilter.ENTRY_BASE + "header.html",
+                        EditIncludeFilter.ENTRY_BASE + "reorder.html",
+                        EditIncludeFilter.ENTRY_BASE + "start.html")));
         Mockito.when(bundle.getEntry(Mockito.anyString())).thenAnswer((in) -> {
             String entry = in.getArgument(0, String.class);
             return getClass().getClassLoader().getResource(entry);
@@ -70,7 +78,6 @@ public class EditIncludeFilterTest {
         I18NProvider provider = SlingCMSTestHelper.getEchoingi18nProvider();
 
         includeFilter = new EditIncludeFilter(componentContext, provider);
-
     }
 
     @Test
@@ -129,5 +136,4 @@ public class EditIncludeFilterTest {
                 "<div class=\"sling-cms-droptarget\" data-path=\"/content/apache/sling-apache-org/index/jcr:content\" data-order=\"before container\"></div><div class=\"sling-cms-component\" data-reload=\"false\" data-component=\"/libs/sling-cms/components/general/container\" data-sling-cms-title=\"Container\" data-sling-cms-resource-path=\"/content/apache/sling-apache-org/index/jcr:content/container\" data-sling-cms-resource-type=\"sling-cms/components/general/container\" data-sling-cms-edit=\"\"></div>",
                 context.response().getOutputAsString());
     }
-
 }

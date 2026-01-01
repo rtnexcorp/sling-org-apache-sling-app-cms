@@ -24,7 +24,10 @@ package org.apache.sling.cms.insights;
 public class Message {
 
     public enum STYLE {
-        DANGER, DEFAULT, SUCCESS, WARNING
+        DANGER,
+        DEFAULT,
+        SUCCESS,
+        WARNING
     }
 
     public static Message danger(String text) {
@@ -55,7 +58,7 @@ public class Message {
     public STYLE getStyle() {
         return style;
     }
-    
+
     public String getStyleClass() {
         String styleClass = "";
         if (style != STYLE.DEFAULT) {

@@ -36,7 +36,7 @@ public abstract class BaseInsightProvider implements InsightProvider {
     /**
      * Method for the extending classes to implement, this can safely throw
      * exceptions and this will trigger a failure result to be returned.
-     * 
+     *
      * @param request the request to evaluate
      * @return the result of evaluation
      * @throws Exception any exception
@@ -52,11 +52,11 @@ public abstract class BaseInsightProvider implements InsightProvider {
         } catch (Exception e) {
             log.error("Unable to perform check " + getTitle() + " for request " + request, e);
             insight = new Insight(this, request);
-            insight.getScoreDetails().add(new Message(
-                    "Unable to perform check " + getTitle() + " due to unexpected exception", STYLE.DANGER));
+            insight.getScoreDetails()
+                    .add(new Message(
+                            "Unable to perform check " + getTitle() + " due to unexpected exception", STYLE.DANGER));
             insight.setSucceeded(false);
             insight.setScored(false);
-
         }
         return insight;
     }

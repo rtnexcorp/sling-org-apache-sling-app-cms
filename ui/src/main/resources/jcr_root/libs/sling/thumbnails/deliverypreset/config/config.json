@@ -1,0 +1,5 @@
+{
+    "jcr:primaryType": "sling:Component",
+    "jcr:title": "Delivery Preset Config Form",
+    "jcr:description": "Edit form for delivery preset configuration"
+}

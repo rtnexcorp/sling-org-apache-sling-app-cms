@@ -1,0 +1,44 @@
+<!--/*
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+*/-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.ActionsColumnModel"></sly>
+<td class="${model.cellClass}">
+    <sly data-sly-list.action="${model.actions}">
+        <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/modal'}">
+            <a class="button Fetch-Modal"
+               data-title="${action.title @ context='attribute'}"
+               data-path="${action.properties.ajaxPath || '.Main-Content form' @ context='attribute'}"
+               href="${action.prefix @ context='attribute'}${resource.path @ context='attribute'}${action.properties.suffix @ context='attribute'}"
+               title="${action.title @ context='attribute'}">
+                <span class="jam jam-${action.icon @ context='attribute'}">
+                    <span class="cms-sr-only">${action.title}</span>
+                </span>
+            </a>
+        </sly>
+        <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/basic'}">
+            <a class="button"
+               target="${action.properties.openInNew ? '_blank' : '_self'}"
+               href="${action.prefix @ context='attribute'}${resource.path @ context='attribute'}${action.properties.suffix @ context='attribute'}"
+               title="${action.title @ context='attribute'}">
+                <span class="jam jam-${action.icon @ context='attribute'}">
+                    <span class="cms-sr-only">${action.title}</span>
+                </span>
+            </a>
+        </sly>
+    </sly>
+</td>

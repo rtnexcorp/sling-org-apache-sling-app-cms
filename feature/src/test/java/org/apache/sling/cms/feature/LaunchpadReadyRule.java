@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.feature;
 
@@ -27,9 +29,10 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class LaunchpadReadyRule extends ExternalResource {
+public class LaunchpadReadyRule implements BeforeAllCallback {
 
     private static final int TRIES = 60;
     private static final int WAIT_BETWEEN_TRIES_MILLIS = 1000;
@@ -42,7 +45,8 @@ public class LaunchpadReadyRule extends ExternalResource {
         checks.add(new Check("http://localhost:" + launchpadPort + "/system/sling/form/login") {
             @Override
             public String runCheck(HttpResponse response) throws Exception {
-                try (InputStreamReader isr = new InputStreamReader(response.getEntity().getContent());
+                try (InputStreamReader isr =
+                                new InputStreamReader(response.getEntity().getContent());
                         BufferedReader reader = new BufferedReader(isr)) {
 
                     String line;
@@ -59,7 +63,7 @@ public class LaunchpadReadyRule extends ExternalResource {
     }
 
     @Override
-    protected void before() throws Throwable {
+    public void beforeAll(ExtensionContext context) throws Exception {
 
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             for (Check check : checks) {
@@ -72,7 +76,7 @@ public class LaunchpadReadyRule extends ExternalResource {
 
         String lastFailure = null;
         HttpGet get = new HttpGet(check.getUrl());
-        
+
         for (int i = 0; i < TRIES; i++) {
             try (CloseableHttpResponse response = client.execute(get)) {
 
@@ -86,15 +90,15 @@ public class LaunchpadReadyRule extends ExternalResource {
                 if (lastFailure == null) {
                     return;
                 }
-            } catch ( ConnectException e ) {
+            } catch (ConnectException e) {
                 lastFailure = e.getClass().getName() + " : " + e.getMessage();
             }
 
             Thread.sleep(WAIT_BETWEEN_TRIES_MILLIS);
         }
-        
-        throw new RuntimeException(String.format("Launchpad not ready. Failed check for URL %s with message '%s'",
-                check.getUrl(), lastFailure));
+
+        throw new RuntimeException(String.format(
+                "Launchpad not ready. Failed check for URL %s with message '%s'", check.getUrl(), lastFailure));
     }
 
     static class Check {
@@ -117,5 +121,4 @@ public class LaunchpadReadyRule extends ExternalResource {
             return null;
         }
     }
-
 }

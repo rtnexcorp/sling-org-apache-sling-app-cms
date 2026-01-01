@@ -1,8 +1,9 @@
 {
-  "prototype": {
-    "id": "org.apache.sling:org.apache.sling.thumbnails:slingosgifeature:default:1.0.2"
-  },
   "bundles": [
+    {
+      "id": "org.apache.sling:org.apache.sling.thumbnails:1.1.9-SNAPSHOT",
+      "start-order": "20"
+    },
     {
       "id": "org.apache.servicemix.bundles:org.apache.servicemix.bundles.batik:1.14_1",
       "start-order": "20"
@@ -28,7 +29,9 @@
     "org.apache.sling.thumbnails.internal.ThumbnailSupportImpl": {
       "errorSuffix": "/sling-cms-thumbnail.png",
       "errorResourcePath": "/static/sling-cms/thumbnails/file.png",
-      "persistableTypes": ["sling:File=jcr:content/renditions"],
+      "persistableTypes": [
+        "sling:File=jcr:content/renditions"
+      ],
       "supportedTypes": [
         "nt:file=jcr:content/jcr:mimeType",
         "sling:File=jcr:content/jcr:mimeType"
@@ -36,8 +39,21 @@
     },
     "org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~sling-thumbnails": {
       "user.mapping": [
-        "org.apache.sling.thumbnails:sling-thumbnails=[sling-thumbnails]"
+        "org.apache.sling.thumbnails:sling-thumbnails=[sling-thumbnails]",
+        "org.apache.sling.thumbnails:sling-cms-thumbnails=[sling-thumbnails]"
       ]
+    },
+    "org.apache.sling.thumbnails.internal.providers.video.FFmpegVideoFrameExtractor": {
+      "ffmpeg_path": "",
+      "ffprobe_path": "",
+      "timeout_seconds:Long": 30,
+      "enabled:Boolean": true
+    },
+    "org.apache.sling.thumbnails.internal.providers.VideoThumbnailProvider": {
+      "samplePositions:Integer[]": [10, 25, 50],
+      "useSharpnessDetection:Boolean": true,
+      "useFaceDetection:Boolean": false,
+      "timeoutMs:Long": 30000
     }
   }
 }

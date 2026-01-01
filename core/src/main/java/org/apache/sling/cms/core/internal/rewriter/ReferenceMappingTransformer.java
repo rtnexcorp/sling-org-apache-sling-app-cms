@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.rewriter;
 
@@ -54,8 +56,8 @@ public class ReferenceMappingTransformer implements Transformer {
 
     private String[] attributes;
 
-    public ReferenceMappingTransformer(ReferenceMappingTransformerConfig config,
-            ConfigurationResourceResolver resolver) {
+    public ReferenceMappingTransformer(
+            ReferenceMappingTransformerConfig config, ConfigurationResourceResolver resolver) {
         this.config = config;
         this.resolver = resolver;
     }
@@ -150,7 +152,8 @@ public class ReferenceMappingTransformer implements Transformer {
 
         // make sure that the configuration is specified and that we're not currently in
         // edit mode
-        if (config != null && config.enabledPaths() != null
+        if (config != null
+                && config.enabledPaths() != null
                 && !"true".equals(slingRequest.getAttribute(CMSConstants.ATTR_EDIT_ENABLED))) {
             for (String enabledPath : config.enabledPaths()) {
                 if (slingRequest.getResource().getPath().startsWith(enabledPath)) {
@@ -171,5 +174,4 @@ public class ReferenceMappingTransformer implements Transformer {
     public void setContentHandler(ContentHandler handler) {
         this.contentHandler = handler;
     }
-
 }

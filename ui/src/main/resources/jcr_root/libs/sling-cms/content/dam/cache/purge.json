@@ -1,0 +1,42 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/modal",
+        "jcr:title": "Purge All Renditions",
+        "modalText": "Purge All Renditions",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            "form": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/form",
+                "method": "POST",
+                "action": "/bin/cms/dam/cache/purge.json",
+                "fields": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/container",
+                    "warning": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/general/textelement",
+                        "level": "p",
+                        "text": "This will delete all cached renditions. They will be regenerated on next request. This operation cannot be undone."
+                    },
+                    "confirm": {
+                        "jcr:primaryType": "nt:unstructured",
+                        "sling:resourceType": "sling-cms/components/editor/fields/checkbox",
+                        "label": "I understand and want to proceed",
+                        "name": "confirm",
+                        "required": true
+                    }
+                },
+                "button": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/button",
+                    "label": "Purge All Renditions",
+                    "type": "submit"
+                }
+            }
+        }
+    }
+}

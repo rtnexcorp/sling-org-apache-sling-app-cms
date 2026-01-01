@@ -1,0 +1,59 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<!--/* PowerPoint Preview - renders PPTX files slide by slide */-->
+<template data-sly-template.powerPointPreview="${@ preview}">
+    <div class="box has-background-light" data-docpreview="powerpoint" data-filepath="${preview.filePath}">
+        <div class="docpreview-loading has-text-centered py-6">
+            <span class="icon is-large"><span class="jam jam-refresh jam-spin"></span></span>
+            <p>${'Loading presentation...' @ i18n}</p>
+        </div>
+        <div class="docpreview-controls level mb-2" style="display:none;">
+            <div class="level-left">
+                <div class="level-item">
+                    <button class="docpreview-prev button is-small" disabled>
+                        <span class="icon"><span class="jam jam-chevron-left"></span></span>
+                    </button>
+                </div>
+                <div class="level-item">
+                    <span class="docpreview-slide-info tag is-info">Slide 1 of 1</span>
+                </div>
+                <div class="level-item">
+                    <button class="docpreview-next button is-small" disabled>
+                        <span class="icon"><span class="jam jam-chevron-right"></span></span>
+                    </button>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <div class="select is-small">
+                        <select class="docpreview-slide-select"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="docpreview-content cms-presentation-preview" style="max-height:450px; overflow:auto; display:none;">
+            <div class="docpreview-slide" style="background:#fff; border:1px solid #ddd; padding:20px; min-height:300px;"></div>
+        </div>
+        <div class="docpreview-error has-text-centered py-6" style="display:none;">
+            <span class="icon is-large has-text-warning"><span class="jam jam-alert" style="font-size:2rem;"></span></span>
+            <p class="mt-2">${'Could not preview presentation' @ i18n}</p>
+        </div>
+    </div>
+    <p class="help has-text-centered">${'PowerPoint preview - use controls to navigate slides' @ i18n}</p>
+</template>

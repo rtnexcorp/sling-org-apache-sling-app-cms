@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.fields;
 
@@ -46,6 +48,7 @@ public class TextfieldHandler implements FieldHandler {
     private static final Logger log = LoggerFactory.getLogger(TextfieldHandler.class);
     private static final Map<String, String> typePatterns = new HashMap<>();
     public static final String DEFAULT_RESOURCE_TYPE = "reference/components/forms/fields/textfield";
+
     static {
         typePatterns.put("date", "\\d{4}-\\d{2}-\\d{2}");
         typePatterns.put("datetime-local", "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}");
@@ -54,6 +57,7 @@ public class TextfieldHandler implements FieldHandler {
     }
 
     private static final Map<String, String> dateFormats = new HashMap<>();
+
     static {
         dateFormats.put("date", "yyyy-MM-dd");
         dateFormats.put("datetime-local", "yyyy-MM-ddThh:mm");
@@ -61,12 +65,17 @@ public class TextfieldHandler implements FieldHandler {
 
     private Config config;
 
-    @ObjectClassDefinition(name = "%cms.reference.textfield.name", description = "%cms.reference.textfield.description", localization = "OSGI-INF/l10n/bundle")
+    @ObjectClassDefinition(
+            name = "%cms.reference.textfield.name",
+            description = "%cms.reference.textfield.description",
+            localization = "OSGI-INF/l10n/bundle")
     public @interface Config {
 
-        @AttributeDefinition(name = "%cms.reference.supportedTypes.name", description = "%cms.reference.supportedTypes.description", defaultValue = {
-                DEFAULT_RESOURCE_TYPE })
-        String[] supportedTypes() default { DEFAULT_RESOURCE_TYPE };
+        @AttributeDefinition(
+                name = "%cms.reference.supportedTypes.name",
+                description = "%cms.reference.supportedTypes.description",
+                defaultValue = {DEFAULT_RESOURCE_TYPE})
+        String[] supportedTypes() default {DEFAULT_RESOURCE_TYPE};
     }
 
     @Activate
@@ -136,7 +145,6 @@ public class TextfieldHandler implements FieldHandler {
                 formData.put(name, value);
             }
         }
-
     }
 
     protected void validateValue(Resource fieldResource, String value) throws FormException {
@@ -154,5 +162,4 @@ public class TextfieldHandler implements FieldHandler {
             throw new FormException("Field " + FieldHandler.getName(fieldResource) + " is not a number");
         }
     }
-
 }

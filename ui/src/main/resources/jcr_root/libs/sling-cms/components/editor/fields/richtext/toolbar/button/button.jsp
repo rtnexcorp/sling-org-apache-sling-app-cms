@@ -19,7 +19,7 @@
 <%@include file="/libs/sling-cms/global.jsp"%>
 <c:choose>
     <c:when test="${not empty properties.value}">
-        <a class="button is-small" data-wysihtml-command="${sling:encode(properties.command,'HTML_ATTR')}" data-wysihtml-command-value="${sling:encode(properties.value,'HTML_ATTR')}">
+        <a class="button is-small" data-tiptap-command="${sling:encode(properties.command,'HTML_ATTR')}" data-tiptap-command-value="${sling:encode(properties.value,'HTML_ATTR')}">
             <c:choose>
                 <c:when test="${not empty properties.icon}">
                     <em class="jam jam-${sling:encode(properties.icon,'HTML_ATTR')} icon"></em>
@@ -32,7 +32,7 @@
         </a>
     </c:when>
     <c:otherwise>
-        <a class="button is-small" data-wysihtml-command="${sling:encode(properties.command,'HTML_ATTR')}">
+        <a class="button is-small" data-tiptap-command="${sling:encode(properties.command,'HTML_ATTR')}">
             <c:choose>
                 <c:when test="${not empty properties.icon}">
                     <em class="jam jam-${sling:encode(properties.icon,'HTML_ATTR')} icon"></em>

@@ -1,0 +1,170 @@
+<!--/*
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+*/-->
+<sly data-sly-use.fragmentEditor="${'org.apache.sling.cms.core.models.FragmentEditor' @ request=request}">
+    <div class="cms-fragment-editor">
+        <sly data-sly-list.field="${fragmentEditor.fields}">
+            <div class="field">
+                <sly data-sly-test="${field.type == 'STRING' || field.type == 'string'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <input class="input" type="text" name="${field.name}" id="${field.name}" 
+                               value="${fragmentEditor.properties[field.name] @ context='attribute'}" 
+                               required="${field.required}" 
+                               placeholder="${field.description}"/>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'TEXT' || field.type == 'text'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <textarea class="textarea" name="${field.name}" id="${field.name}" 
+                                  required="${field.required}" 
+                                  placeholder="${field.description}" 
+                                  rows="5">${fragmentEditor.properties[field.name]}</textarea>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'BOOLEAN' || field.type == 'boolean'}">
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" name="${field.name}" value="true" 
+                                   checked="${fragmentEditor.properties[field.name] == 'true' || fragmentEditor.properties[field.name] == true}" />
+                            ${field.label || field.name}
+                        </label>
+                        <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                    </div>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'INTEGER' || field.type == 'integer' || field.type == 'DECIMAL' || field.type == 'decimal'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <input class="input" type="number" name="${field.name}" id="${field.name}" 
+                               value="${fragmentEditor.properties[field.name]}" 
+                               required="${field.required}" 
+                               step="${field.type == 'DECIMAL' || field.type == 'decimal' ? '0.01' : '1'}"
+                               placeholder="${field.description}"/>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'DATE' || field.type == 'date'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <input class="input" type="date" name="${field.name}" id="${field.name}" 
+                               value="${fragmentEditor.properties[field.name]}" 
+                               required="${field.required}"/>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'DATETIME' || field.type == 'datetime'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <input class="input" type="datetime-local" name="${field.name}" id="${field.name}" 
+                               value="${fragmentEditor.properties[field.name]}" 
+                               required="${field.required}"/>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'SELECT' || field.type == 'select'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="${field.name}" id="${field.name}" required="${field.required}">
+                                <option value="">-- Select --</option>
+                                <sly data-sly-list.option="${field.options}">
+                                    <option value="${option.value}" selected="${fragmentEditor.properties[field.name] == option.value}">
+                                        ${option.label}
+                                    </option>
+                                </sly>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'RICHTEXT' || field.type == 'richtext'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <textarea class="textarea richtext-editor" name="${field.name}" id="${field.name}" 
+                                  required="${field.required}" 
+                                  placeholder="${field.description}" 
+                                  rows="10">${fragmentEditor.properties[field.name]}</textarea>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'REFERENCE' || field.type == 'reference'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <input class="input pathfield" type="text" name="${field.name}" id="${field.name}" 
+                               value="${fragmentEditor.properties[field.name] @ context='attribute'}" 
+                               required="${field.required}" 
+                               placeholder="${field.description}"/>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'ASSET' || field.type == 'asset'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <input class="input pathfield" type="text" name="${field.name}" id="${field.name}" 
+                               value="${fragmentEditor.properties[field.name] @ context='attribute'}" 
+                               required="${field.required}" 
+                               data-base-path="/content/apache/sling-cms/assets"
+                               placeholder="${field.description}"/>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+                
+                <sly data-sly-test="${field.type == 'TAG' || field.type == 'tag'}">
+                    <label class="label" for="${field.name}">${field.label || field.name}</label>
+                    <div class="control">
+                        <input class="input tagfield" type="text" name="${field.name}" id="${field.name}"
+                               value="${fragmentEditor.properties[field.name] @ context='attribute'}"
+                               required="${field.required}"
+                               placeholder="${field.description}"/>
+                    </div>
+                    <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                </sly>
+
+                <sly data-sly-test="${field.type != 'STRING' && field.type != 'string' && field.type != 'TEXT' && field.type != 'text' && field.type != 'BOOLEAN' && field.type != 'boolean' && field.type != 'INTEGER' && field.type != 'integer' && field.type != 'DECIMAL' && field.type != 'decimal' && field.type != 'DATE' && field.type != 'date' && field.type != 'DATETIME' && field.type != 'datetime' && field.type != 'SELECT' && field.type != 'select' && field.type != 'RICHTEXT' && field.type != 'richtext' && field.type != 'REFERENCE' && field.type != 'reference' && field.type != 'ASSET' && field.type != 'asset' && field.type != 'TAG' && field.type != 'tag'}">
+                    <div class="notification is-warning">
+                        <p><strong>${field.label || field.name}</strong></p>
+                        <p>Unsupported field type: <code>${field.type}</code></p>
+                        <p class="help" data-sly-test="${field.description}">${field.description}</p>
+                    </div>
+                </sly>
+            </div>
+        </sly>
+
+        <div class="notification is-warning" data-sly-test="${!fragmentEditor.schema}">
+            <p>No schema found for this fragment. Please set the 'schemaId' property.</p>
+        </div>
+
+        <div class="notification is-info" data-sly-test="${fragmentEditor.schema}">
+            <p><strong>Debug Info:</strong></p>
+            <p>Schema: ${fragmentEditor.schema.title} (${fragmentEditor.schema.id})</p>
+            <p>Total fields: ${fragmentEditor.fields.size}</p>
+        </div>
+    </div>
+</sly>

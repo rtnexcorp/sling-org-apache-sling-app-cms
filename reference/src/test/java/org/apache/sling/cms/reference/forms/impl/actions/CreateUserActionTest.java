@@ -1,32 +1,31 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl.actions;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.ValueFactory;
 import javax.jcr.ValueFormatException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.jackrabbit.api.JackrabbitSession;
 import org.apache.jackrabbit.api.security.user.Group;
@@ -44,9 +43,12 @@ import org.apache.sling.cms.reference.forms.FormRequest;
 import org.apache.sling.cms.reference.forms.impl.FormRequestImpl;
 import org.apache.sling.servlethelpers.MockSlingHttpServletRequest;
 import org.apache.sling.testing.resourceresolver.MockResource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateUserActionTest {
 
@@ -54,9 +56,10 @@ public class CreateUserActionTest {
     private ResourceResolver resolver;
     private MockResource actionResource;
 
-    @Before
-    public void init() throws FormException, LoginException, AccessDeniedException,
-            UnsupportedRepositoryOperationException, RepositoryException {
+    @BeforeEach
+    public void init()
+            throws FormException, LoginException, AccessDeniedException, UnsupportedRepositoryOperationException,
+                    RepositoryException {
 
         factory = Mockito.mock(ResourceResolverFactory.class);
 
@@ -81,7 +84,6 @@ public class CreateUserActionTest {
                 // TODO Auto-generated method stub
 
             }
-
         };
         Mockito.when(session.getValueFactory()).thenReturn(vf);
 
@@ -98,14 +100,13 @@ public class CreateUserActionTest {
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(CreateUserAction.PN_INTERMEDIATE_PATH, "app");
-        properties.put(CreateUserAction.GROUPS, new String[] { "group1" });
-        properties.put(CreateUserAction.PROFILE_PROPERTIES, new String[] { "profile", "anotherfield" });
+        properties.put(CreateUserAction.GROUPS, new String[] {"group1"});
+        properties.put(CreateUserAction.PROFILE_PROPERTIES, new String[] {"profile", "anotherfield"});
         actionResource = new MockResource("/content", properties, null);
 
-        Mockito.when(
-                userManager.createUser(Mockito.anyString(), Mockito.anyString(), Mockito.any(), Mockito.anyString()))
+        Mockito.when(userManager.createUser(
+                        Mockito.anyString(), Mockito.anyString(), Mockito.any(), Mockito.anyString()))
                 .thenReturn(existingUser);
-
     }
 
     @Test
@@ -119,7 +120,7 @@ public class CreateUserActionTest {
         request.getFormData().put(CreateUserAction.PN_USERNAME, "new@email.com");
         request.getFormData().put(FormConstants.PN_PASSWORD, "password1");
         request.getFormData().put("profile", "value");
-        request.getFormData().put(CreateUserAction.GROUPS, new String[] { "group1" });
+        request.getFormData().put(CreateUserAction.GROUPS, new String[] {"group1"});
 
         FormActionResult result = action.handleForm(actionResource, request);
         assertTrue(result.isSucceeded());
@@ -149,5 +150,4 @@ public class CreateUserActionTest {
         Mockito.when(inValidResource.getResourceType()).thenReturn("something/else");
         assertFalse(action.handles(inValidResource));
     }
-
 }

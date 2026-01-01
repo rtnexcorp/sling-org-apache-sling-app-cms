@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Cards Component Styles
+// Provides styling for card components used throughout the CMS
+
+@use "variables" as *;
+
+.card-footer-group {
+  display: flex !important;
+  flex-direction: column;
+}
+
+.card-footer-group small {
+  font-size: 0.75em;
+}
+
+.card.is-selected {
+  border: 1px solid $selected;
+}
+
+.card-footer-item {
+  word-break: break-all;
+  display: block;
+  padding: 0.25em;
+  text-align: center;
+}
+
+.card-image {
+  background-color: #b3b4b5;
+}
+
+small.card-footer-item {
+  font-size: 12px;
+}
+
+.file-icon {
+  font-size: xx-large;
+}
+
+.file-label {
+  text-align: center;
+}

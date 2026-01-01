@@ -22,6 +22,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><fmt:message key="${properties['jcr:title']}" var="title" />${sling:encode(title,'HTML')} :: ${sling:encode(branding.appName,'HTML')}</title>
+    <link href="/static/sling-cms/css/jam.min.css" rel="stylesheet" />
     <link href="${sling:encode(branding.css, 'HTML_ATTR')}" rel="stylesheet" />
     <link rel="apple-touch-icon" sizes="180x180" href="${sling:encode(branding.appleTouchIcon, 'HTML_ATTR')}" />
     <link rel="icon" type="image/png" sizes="32x32" href="${sling:encode(branding.favicon32, 'HTML_ATTR')}" />

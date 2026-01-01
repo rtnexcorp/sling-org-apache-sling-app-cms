@@ -72,11 +72,11 @@ describe("Reference Component Tests", () => {
       cy.get("a.action-button").should("be.visible");
       cy.pa11y();
 
-      cy.visit("/cms/config/edit.html/conf/global/files/transformations");
+      cy.visit("/cms/config/edit.html/conf/global/dam/transformations");
       cy.get('a[data-title="Add Transformation"]').should("be.visible");
 
       cy.visit(
-        "/cms/transformations/edit.html/conf/global/files/transformations/sling-cms-thumbnail"
+        "/cms/transformations/edit.html/conf/global/dam/transformations/sling-cms-thumbnail"
       );
       cy.get("a.action-button").should("be.visible");
       cy.pa11y();
@@ -164,7 +164,7 @@ describe("Reference Component Tests", () => {
     });
 
     it("Static", () => {
-      cy.visit("/cms/static/content.html/static/clientlibs/sling-cms");
+      cy.visit("/cms/static/content.html/static/sling-cms");
       cy.get('a[data-title="Add File"]').should("be.visible");
       cy.get('a[data-title="Add Folder"]').should("be.visible");
     });

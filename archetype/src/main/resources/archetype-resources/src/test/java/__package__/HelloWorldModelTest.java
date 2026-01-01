@@ -16,19 +16,21 @@
  */
 package ${package};
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
+import org.junit.jupiter.api.Test;
 
+@ExtendWith(SlingContextExtension.class)
 public class HelloWorldModelTest {
-    @Rule
-    public final SlingContext context = new SlingContext();
+    
+    public SlingContext context = new SlingContext();
 
-    @Before
+    @BeforeEach
     public void init() {
         context.addModelsForPackage("${package}");
         context.load().json("/resource.json", "/content");

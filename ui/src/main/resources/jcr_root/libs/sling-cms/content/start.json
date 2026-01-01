@@ -64,7 +64,8 @@
             "alternatives": [
               "/cms/transformations/edit.html",
               "/cms/template/edit.html",
-              "/cms/config"
+              "/cms/config/actions",
+              "/cms/config/configs"
             ],
             "link": "/cms/config/configs.html/conf",
             "text": "Configuration"
@@ -74,6 +75,64 @@
             "alternatives": ["/cms/usergenerated/review.html"],
             "link": "/cms/usergenerated/content.html/etc/usergenerated",
             "text": "User Generated"
+          }
+        }
+      },
+      "damnav": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/cms/staticnav",
+        "title": "Digital Assets",
+        "links": {
+          "jcr:primaryType": "nt:unstructured",
+          "schemas": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/schema"],
+            "link": "/cms/schema/list.html/conf/global/site/schemas",
+            "text": "Content Schemas"
+          },
+          "fragments": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/fragment"],
+            "link": "/cms/fragment/list.html/content/fragments",
+            "text": "Content Fragments"
+          },
+          "cache": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/dam/cache"],
+            "link": "/cms/dam/cache.html",
+            "text": "Cache Management"
+          },
+          "deliverypresets": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/dam/deliverypresets"],
+            "link": "/cms/dam/deliverypresets.html/conf/global/dam/delivery-presets",
+            "text": "Delivery Presets"
+          },
+          "editors": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/config/edit.html/conf/global/dam/editors"],
+            "link": "/cms/config/edit.html/conf/global/dam/editors",
+            "text": "File Editors"
+          },
+          "transformations": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/dam/transformations"],
+            "link": "/cms/dam/transformations.html/conf/global/dam/transformations",
+            "text": "Transformations"
+          }
+        }
+      },
+      "cmsnav": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/cms/staticnav",
+        "title": "CMS Configuration",
+        "links": {
+          "jcr:primaryType": "nt:unstructured",
+          "pageeditbar": {
+            "jcr:primaryType": "nt:unstructured",
+            "alternatives": ["/cms/config/actions/pageeditbar"],
+            "link": "/cms/config/actions/pageeditbar.html/conf/global/actions/pageeditbar",
+            "text": "Page Edit Bar Actions"
           }
         }
       },

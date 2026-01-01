@@ -1,0 +1,109 @@
+<!--/*
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+*/-->
+<sly data-sly-use.slingProps="org.apache.sling.api.resource.ValueMap">
+  <div class="field">
+    <label class="label" data-sly-test="${properties.label}">
+      ${properties.label}
+      <span class="has-text-danger" data-sly-test="${properties.required}">*</span>
+    </label>
+
+    <div class="repeating-pathbrowser"
+         data-field-name="${properties.name @ context='attribute'}"
+         data-base-path="${properties.basePath || '/content' @ context='attribute'}"
+         data-filter-type="${properties.type @ context='attribute'}"
+         data-required="${properties.required ? 'true' : 'false' @ context='attribute'}">
+
+      <!-- Template for new items (hidden) -->
+      <div class="repeating-pathbrowser__template is-hidden">
+        <div class="repeating-pathbrowser__item field has-addons">
+          <div class="control is-expanded">
+            <!-- Path Browser for each item -->
+            <div class="pathbrowser-container pathbrowser-container--mini"
+                 data-field-name="${properties.name @ context='attribute'}"
+                 data-base-path="${properties.basePath || '/content' @ context='attribute'}"
+                 data-filter-type="${properties.type @ context='attribute'}">
+
+              <!-- Hidden input for path value -->
+              <input type="hidden"
+                     name="${properties.name}"
+                     class="pathbrowser-input"
+                     value="" />
+
+              <!-- Selected Path Display -->
+              <div class="pathbrowser-selected pathbrowser-selected--inline">
+                <div class="pathbrowser-selected__display">
+                  <span class="icon is-small">
+                    <span class="jam jam-folder"></span>
+                  </span>
+                  <span class="pathbrowser-selected__path">No path selected</span>
+                </div>
+                <button type="button" class="button is-small pathbrowser-toggle" title="Browse folders">
+                  <span class="icon is-small">
+                    <span class="jam jam-chevron-down"></span>
+                  </span>
+                </button>
+              </div>
+
+              <!-- Browser Panel -->
+              <div class="pathbrowser-panel is-hidden">
+                <nav class="breadcrumb pathbrowser-breadcrumb" aria-label="breadcrumbs">
+                  <ul class="pathbrowser-breadcrumb__list"></ul>
+                </nav>
+                <div class="pathbrowser-list">
+                  <div class="pathbrowser-loading">
+                    <div class="loader is-loading"></div>
+                    <p>Loading...</p>
+                  </div>
+                  <div class="pathbrowser-items"></div>
+                  <div class="pathbrowser-empty is-hidden">
+                    <p class="has-text-grey">No items found</p>
+                  </div>
+                </div>
+                <div class="pathbrowser-actions">
+                  <button type="button" class="button is-small pathbrowser-cancel">Cancel</button>
+                  <button type="button" class="button is-small is-primary pathbrowser-select" disabled>Select</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="control">
+            <button type="button" class="button is-small repeating-pathbrowser__remove" title="Remove">
+              <span class="icon is-small">
+                <span class="jam jam-minus"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Container for items -->
+      <div class="repeating-pathbrowser__container">
+        <!-- Items will be added here by JavaScript or pre-populated -->
+      </div>
+
+      <!-- Add button -->
+      <button type="button" class="button is-small repeating-pathbrowser__add" title="Add Path">
+        <span class="icon is-small">
+          <span class="jam jam-plus"></span>
+        </span>
+        <span>Add Path</span>
+      </button>
+    </div>
+  </div>
+</sly>

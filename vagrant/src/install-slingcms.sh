@@ -22,7 +22,7 @@
 #
 
 yum update -y
-yum install -y java-11-openjdk
+yum install -y java-21-openjdk
 echo "Dependencies installed..."
 
 adduser sling

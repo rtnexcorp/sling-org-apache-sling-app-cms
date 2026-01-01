@@ -1,0 +1,72 @@
+<!--/*
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+*/-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.ContentTableModel">
+<div class="reload-container table__wrapper scroll-container contentnav" 
+     data-path="${resource.path @ context='attribute'}.table.html${model.requestSuffix @ context='attribute'}">
+    <table class="table is-fullwidth is-striped sortable cms-table cms-table--sortable">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <sly data-sly-list.column="${model.columns}">
+                    <th class="${column.actionsColumn ? 'is-hidden cms-table__header--hidden' : ''}"
+                        data-attribute="${column.name @ context='attribute'}"
+                        scope="col">
+                        ${column.title @ i18n}
+                    </th>
+                </sly>
+            </tr>
+        </thead>
+        <tbody>
+            <sly data-sly-list.row="${model.rows}">
+                <tr class="contentnav__item"
+                    data-resource="${row.path @ context='attribute'}"
+                    data-type="${row.typePath @ context='attribute'}"
+                    data-mime-type="${row.mimeType @ context='attribute'}"
+                    data-is-folder="${row.folder}"
+                    data-taxonomy="${row.taxonomyString @ context='attribute'}">
+                    <td class="Cell-Static cms-table__cell--static"
+                        title="# ${row.rowNumber}"
+                        data-sort-value="${row.rowNumberFormatted}">
+                        ${row.rowNumber}
+                    </td>
+                    <sly data-sly-list.colConfig="${row.columnConfigs}">
+                        <sly data-sly-test="${colConfig.hasResourceType}">
+                            <sly data-sly-resource="${row.path @ resourceType=colConfig.resourceType, requestAttributes=colConfig.properties}"></sly>
+                        </sly>
+                    </sly>
+                </tr>
+            </sly>
+        </tbody>
+    </table>
+    <sly data-sly-test="${model.rows.size == 0}">
+        <div class="notification is-info has-text-centered">
+            <p class="mb-3">No items found.</p>
+            <p class="has-text-grey-light">Use the button below to add your first item.</p>
+        </div>
+    </sly>
+    <nav class="pagination" role="navigation" aria-label="pagination">
+        <a data-sly-test="${model.hasPreviousPage}"
+           class="pagination-previous"
+           href="?page=${model.previousPage}">${'Previous' @ i18n}</a>
+        <a data-sly-test="${model.hasNextPage}"
+           class="pagination-next"
+           href="?page=${model.nextPage}">${'Next' @ i18n}</a>
+    </nav>
+</div>
+</sly>

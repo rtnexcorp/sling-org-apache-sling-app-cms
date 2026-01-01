@@ -17,12 +17,12 @@
  * under the License.
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
-<div data-wysihtml-dialog="insertImage" style="display:none">
+<div data-tiptap-dialog="insertImage" style="display:none">
     <div class="has-padding-1 has-background-white-ter rte-form">
         <p><fmt:message key="Image" /></p>
         <div class="field has-addons">
             <div class="control is-expanded">
-                <input class="input pathfield is-small" data-wysihtml-dialog-field="src" data-type="nt:file" data-base="/content" autocomplete="off" />
+                <input class="input pathfield is-small" data-tiptap-dialog-field="src" data-type="nt:file" data-base="/content" autocomplete="off" />
             </div>
             <div class="control">
               <fmt:message key="Search" var="searchMessage" />
@@ -33,13 +33,13 @@
         </div>
         <div class="field">
             <fmt:message key="Alternative text..." var="altTextMessage" />
-            <input class="input is-small" data-wysihtml-dialog-field="alt" placeholder="${altTextMessage}" />
+            <input class="input is-small" data-tiptap-dialog-field="alt" placeholder="${altTextMessage}" />
         </div>
         <div class="buttons">
-            <a data-wysihtml-dialog-action="save" class="button is-small is-success">
+            <a data-tiptap-dialog-action="save" class="button is-small is-success">
                 <em class="jam jam-check icon"></em>
             </a>
-            <a data-wysihtml-dialog-action="cancel" class="button is-small">
+            <a data-tiptap-dialog-action="cancel" class="button is-small">
                 <em class="jam jam-close icon"></em>
             </a>
         </div>

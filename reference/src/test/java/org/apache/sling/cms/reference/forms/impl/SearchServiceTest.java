@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.reference.forms.impl;
 
@@ -20,16 +22,16 @@ import java.lang.annotation.Annotation;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.request.SlingRequestEvent;
-import org.apache.sling.api.request.SlingRequestListener;
 import org.apache.sling.api.request.SlingRequestEvent.EventType;
+import org.apache.sling.api.request.SlingRequestListener;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.cms.reference.SearchService;
 import org.apache.sling.cms.reference.impl.SearchServiceImpl;
 import org.apache.sling.cms.reference.impl.SearchServiceImpl.Config;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class SearchServiceTest {
@@ -38,7 +40,7 @@ public class SearchServiceTest {
     private SlingHttpServletRequest request;
     private ResourceResolver resolver;
 
-    @Before
+    @BeforeEach
     public void init() {
         factory = Mockito.mock(ResourceResolverFactory.class);
         request = Mockito.mock(SlingHttpServletRequest.class);
@@ -86,7 +88,6 @@ public class SearchServiceTest {
         listener.onEvent(new SlingRequestEvent(null, request, EventType.EVENT_DESTROY));
         Mockito.verify(resolver).close();
     }
-
 }
 
 class ConfigImpl implements Config {
@@ -105,5 +106,4 @@ class ConfigImpl implements Config {
     public String searchServiceUsername() {
         return name;
     }
-
 }

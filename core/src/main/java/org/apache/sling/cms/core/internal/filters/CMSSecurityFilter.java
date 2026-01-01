@@ -1,25 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.filters;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -30,6 +27,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -54,7 +56,10 @@ import org.slf4j.LoggerFactory;
  * Checks to ensure that the user is logged in for requests which otherwise
  * would be allowed when accessing through a CMS-specific domain name.
  */
-@Component(service = { Filter.class }, property = { "sling.filter.scope=request" }, immediate = true)
+@Component(
+        service = {Filter.class},
+        property = {"sling.filter.scope=request"},
+        immediate = true)
 public class CMSSecurityFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(CMSSecurityFilter.class);
@@ -82,7 +87,9 @@ public class CMSSecurityFilter implements Filter {
                     boolean allowed = checkAllowed(securityConfig, slingRequest);
                     // permission checked failed, so return an unauthorized error
                     if (!allowed) {
-                        log.trace("Request to {} not allowed for user {}", slingRequest.getRequestURL(),
+                        log.trace(
+                                "Request to {} not allowed for user {}",
+                                slingRequest.getRequestURL(),
                                 slingRequest.getResourceResolver().getUserID());
                         ((HttpServletResponse) response).sendError(HttpStatus.SC_UNAUTHORIZED);
                         return;
@@ -90,7 +97,10 @@ public class CMSSecurityFilter implements Filter {
                         log.trace("Request {} allowed", slingRequest.getRequestURL());
                     }
                 } else {
-                    log.trace("Security config {} does not apply to request to {}", securityConfig, request.getServerName());
+                    log.trace(
+                            "Security config {} does not apply to request to {}",
+                            securityConfig,
+                            request.getServerName());
                 }
             }
         } else {
@@ -109,9 +119,18 @@ public class CMSSecurityFilter implements Filter {
             allowed = true;
         }
 
-        PublishableResource publishableResource = Optional
-                .ofNullable(CMSUtils.findPublishableParent(slingRequest.getResource()))
-                .map(r -> r.adaptTo(PublishableResource.class)).orElse(null);
+        // Check if preview mode is enabled via valid preview token
+        Boolean previewEnabled =
+                (Boolean) slingRequest.getAttribute(org.apache.sling.cms.CMSConstants.ATTR_PREVIEW_ENABLED);
+        if (Boolean.TRUE.equals(previewEnabled)) {
+            log.trace("Preview mode enabled, allowing access to unpublished content");
+            allowed = true;
+        }
+
+        PublishableResource publishableResource = Optional.ofNullable(
+                        CMSUtils.findPublishableParent(slingRequest.getResource()))
+                .map(r -> r.adaptTo(PublishableResource.class))
+                .orElse(null);
 
         if (publishableResource != null && publishableResource.isPublished()) {
             log.trace("Resource is published");
@@ -136,8 +155,8 @@ public class CMSSecurityFilter implements Filter {
         return allowed;
     }
 
-    private boolean checkGroupMembership(CMSSecurityConfigInstance securityConfig,
-            SlingHttpServletRequest slingRequest) {
+    private boolean checkGroupMembership(
+            CMSSecurityConfigInstance securityConfig, SlingHttpServletRequest slingRequest) {
         boolean allowed = false;
         try {
             Session session = slingRequest.getResourceResolver().adaptTo(Session.class);
@@ -156,8 +175,8 @@ public class CMSSecurityFilter implements Filter {
                 return false;
             }
 
-            log.trace("Checking to see if user {} is in required group {}", auth.getID(),
-                    securityConfig.getGroupName());
+            log.trace(
+                    "Checking to see if user {} is in required group {}", auth.getID(), securityConfig.getGroupName());
             Iterator<Group> groups = ((User) auth).memberOf();
             while (groups.hasNext()) {
                 if (groups.next().getID().equals(securityConfig.getGroupName())) {
@@ -177,5 +196,4 @@ public class CMSSecurityFilter implements Filter {
     public void destroy() {
         // Nothing required
     }
-
 }

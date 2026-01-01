@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms;
 
@@ -32,13 +34,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CMSUtils {
 
-    private CMSUtils() {
-    }
+    private CMSUtils() {}
 
     /**
      * Adapts the collection of resources ensuring that if any cannot be adapted it
      * is excluded from the returned list.
-     * 
+     *
      * @param resources the collection of resources to adapt
      * @param type      the type to which to adapt the resources
      * @param           <T> the type to which the resources are adapted
@@ -61,7 +62,7 @@ public class CMSUtils {
     /**
      * Adapts the array of resources ensuring that if any cannot be adapted it is
      * excluded from the returned list.
-     * 
+     *
      * @param resources the array of resources to adapt
      * @param type      the type to which to adapt the resources
      * @param           <T> the type to which the resources are adapted
@@ -75,7 +76,7 @@ public class CMSUtils {
     /**
      * Looks up the resource tree to find the parent resource with the specified
      * jcr:primaryType.
-     * 
+     *
      * @param resource the resource to search from
      * @param type     the primary type to find
      * @return the parent of the type or null
@@ -94,7 +95,7 @@ public class CMSUtils {
 
     /**
      * Look up the resource tree to find a parent of a publishable type.
-     * 
+     *
      * @param resource the resource to search from
      * @return the parent publishable type
      */
@@ -115,7 +116,7 @@ public class CMSUtils {
      * Return true of the resource (or it's publishable parent) is published or
      * false otherwise. If the resource is not contained within a publishable parent
      * it is considered published.
-     * 
+     *
      * @param resource the resource to check
      * @return whether or not the resource is published
      */
@@ -130,5 +131,4 @@ public class CMSUtils {
         }
         return published;
     }
-
 }

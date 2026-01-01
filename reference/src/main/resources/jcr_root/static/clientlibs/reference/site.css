@@ -98,7 +98,7 @@ img {
     top: 25px;
     height: 81px;
     background:
-        url(https://sling.apache.org/site/media.data/gradient.png)
+        url(/static/sling-cms/img/gradient.jpg)
         repeat-x;
     background-position: bottom;
 }

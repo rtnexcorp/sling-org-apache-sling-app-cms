@@ -1,0 +1,7 @@
+{
+    "jcr:primaryType": "sling:Component",
+    "jcr:title": "Multifield",
+    "jcr:description": "A multifield component that allows users to add multiple sets of fields",
+    "componentType": "Form Field",
+    "reloadPage": true
+}

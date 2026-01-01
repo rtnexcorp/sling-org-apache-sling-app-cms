@@ -30,19 +30,17 @@ public interface InsightFactory {
 
     /**
      * Get the insights which are enabled for a particular file.
-     * 
+     *
      * @param file the file for which to retrieve the insights
      * @return the insights
      */
     List<Insight> getInsights(File file);
-    
 
     /**
      * Get the insights which are enabled for a particular page.
-     * 
+     *
      * @param page the page for which to retrieve the insights
      * @return the insights
      */
     List<Insight> getInsights(Page page);
-
 }

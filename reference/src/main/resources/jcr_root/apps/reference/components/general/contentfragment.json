@@ -1,0 +1,6 @@
+{
+	"jcr:primaryType": "sling:Component",
+    "componentType": "General",
+    "jcr:title": "Contentfragment",
+    "jcr:description": "Displays content fragment information with title, summary, body, and metadata"
+}

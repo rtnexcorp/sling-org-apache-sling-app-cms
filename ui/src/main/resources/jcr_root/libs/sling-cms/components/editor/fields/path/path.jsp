@@ -21,6 +21,15 @@
     <sling:getResource path="${slingRequest.requestPathInfo.suffix}" var="editedResource" />
     <c:set var="editProperties" value="${sling:adaptTo(editedResource,'org.apache.sling.api.resource.ValueMap')}" scope="request"/>
 </c:if>
+<%-- Handle multifield item context - get properties from the multifield item resource --%>
+<c:choose>
+    <c:when test="${not empty multifieldItemResource}">
+        <c:set var="itemProperties" value="${sling:adaptTo(multifieldItemResource,'org.apache.sling.api.resource.ValueMap')}" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="itemProperties" value="${editProperties}" />
+    </c:otherwise>
+</c:choose>
 <c:choose>
     <c:when test="${properties.required}">
         <c:set var="required" value="required='required'" scope="request" />
@@ -41,11 +50,20 @@
     <c:when test="${properties.skipload}">
         <c:set var="value" value="" scope="request" />
     </c:when>
-    <c:when test="${empty editProperties[properties.name] && properties.defaultValue}">
+    <c:when test="${empty itemProperties[properties.name] && properties.defaultValue}">
         <c:set var="value" value="${properties.defaultValue}" scope="request" />
     </c:when>
     <c:otherwise>
-        <c:set var="value" value="${editProperties[properties.name]}" scope="request" />
+        <c:set var="value" value="${itemProperties[properties.name]}" scope="request" />
+    </c:otherwise>
+</c:choose>
+<%-- Set the field name - prefix with multifield path if in multifield context --%>
+<c:choose>
+    <c:when test="${not empty multifieldBaseName && not empty multifieldItemName}">
+        <c:set var="fieldName" value="${multifieldBaseName}/${multifieldItemName}/${properties.name}" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="fieldName" value="${properties.name}" />
     </c:otherwise>
 </c:choose>
 <c:if test="${not empty properties.label}">
@@ -64,7 +82,7 @@
     <c:when test="${properties.hidesearch != true}">
         <div class="field has-addons" data-events="${events}" data-path="${sling:encode(resource.path,'HTML_ATTR')}">
           <div class="control is-expanded">
-              <input class="input pathfield" type="text" id="${sling:encode(properties.name,'HTML_ATTR')}" name="${sling:encode(properties.name,'HTML_ATTR')}" value="${sling:encode(value,'HTML_ATTR')}" ${required} ${disabled} data-type="${sling:encode(properties.type,'HTML_ATTR')}" data-base="${sling:encode(properties.basePath,'HTML_ATTR')}" autocomplete="off" />
+              <input class="input pathfield" type="text" id="${sling:encode(properties.name,'HTML_ATTR')}" name="${sling:encode(fieldName,'HTML_ATTR')}" value="${sling:encode(value,'HTML_ATTR')}" ${required} ${disabled} data-type="${sling:encode(properties.type,'HTML_ATTR')}" data-base="${sling:encode(properties.basePath,'HTML_ATTR')}" autocomplete="off" />
           </div>
           <div class="control">
             <fmt:message key="Search" var="searchMessage" />
@@ -79,7 +97,7 @@
     <c:otherwise>
         <div class="field" data-events="${events}" data-path="${sling:encode(resource.path,'HTML_ATTR')}">
             <div class="control">
-                <input class="input pathfield" type="text" name="${sling:encode(properties.name,'HTML_ATTR')}" value="${sling:encode(value,'HTML_ATTR')}" ${required} ${disabled} data-type="${sling:encode(properties.type,'HTML_ATTR')}" data-base="${sling:encode(properties.basePath,'HTML_ATTR')}" autocomplete="off" />
+                <input class="input pathfield" type="text" name="${sling:encode(fieldName,'HTML_ATTR')}" value="${sling:encode(value,'HTML_ATTR')}" ${required} ${disabled} data-type="${sling:encode(properties.type,'HTML_ATTR')}" data-base="${sling:encode(properties.basePath,'HTML_ATTR')}" autocomplete="off" />
             </div>
         </div>
     </c:otherwise>

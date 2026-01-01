@@ -16,9 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-const fetch = require("node-fetch-commonjs");
+// Using native fetch (Node 18+)
 
-const url = process.env.CYPRESS_BASE_URL;
+/**
+ * Default ports for Sling CMS instances
+ */
+const PORTS = {
+  standalone: 8080,
+  author: 8082,
+  renderer: 8083
+};
+
+/**
+ * Get the base URL based on environment variables or SLING_MODE
+ */
+function getBaseUrl() {
+  if (process.env.CYPRESS_BASE_URL) {
+    return process.env.CYPRESS_BASE_URL;
+  }
+  const mode = process.env.SLING_MODE || 'standalone';
+  const port = PORTS[mode] || PORTS.standalone;
+  return `http://localhost:${port}`;
+}
+
+const url = getBaseUrl();
 const auth = Buffer.from("admin:admin").toString("base64");
 
 async function sleep(ms) {

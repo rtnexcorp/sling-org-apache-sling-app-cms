@@ -1,25 +1,27 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.operations;
 
+import javax.jcr.RepositoryException;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.api.security.user.User;
@@ -40,8 +42,10 @@ import org.slf4j.LoggerFactory;
 /**
  * The <code>CreateUserOperation</code> will create a new user
  */
-@Component(immediate = true, service = { PostOperation.class }, property = PostOperation.PROP_OPERATION_NAME
-        + "=createuser")
+@Component(
+        immediate = true,
+        service = {PostOperation.class},
+        property = PostOperation.PROP_OPERATION_NAME + "=createuser")
 public class CreateUserOperation implements PostOperation {
 
     private static final Logger log = LoggerFactory.getLogger(CreateUserOperation.class);
@@ -63,7 +67,8 @@ public class CreateUserOperation implements PostOperation {
             if (userManager.getAuthorizable(new SimplePrincipal(name)) != null) {
                 throw new RepositoryException("Authorizable with id " + name + " already exists");
             }
-            String intermediatePath = StringUtils.substringBeforeLast(request.getResource().getPath(), "/")
+            String intermediatePath = StringUtils.substringBeforeLast(
+                            request.getResource().getPath(), "/")
                     .replaceAll("\\/home\\/users\\/?", "");
 
             User user = userManager.createUser(name, password, new SimplePrincipal(name), intermediatePath);
@@ -84,5 +89,4 @@ public class CreateUserOperation implements PostOperation {
             response.setError(e);
         }
     }
-
 }

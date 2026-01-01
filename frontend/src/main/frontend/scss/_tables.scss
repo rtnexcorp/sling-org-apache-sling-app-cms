@@ -1,0 +1,124 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Tables Component Styles
+// Provides styling for content tables and table wrappers throughout the CMS
+
+// Table wrapper scroll behavior
+.table__wrapper {
+  overflow: auto;
+}
+
+// Content actions after table - ensure visibility and proper spacing
+// Matches nav.level that appears after table wrapper (potentially with pagination in between)
+.table__wrapper ~ nav.level,
+.cms-table + nav.level,
+nav.pagination + nav.level,
+.reload-container ~ nav.level,
+.contentnav ~ nav.level,
+.scroll-container ~ nav.level {
+  margin-top: 1.5rem;
+  display: flex !important;
+  align-items: center;
+  min-height: 3rem;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
+
+  .level-left {
+    display: flex !important;
+    flex-grow: 1;
+    visibility: visible !important;
+  }
+
+  .level-item {
+    margin-right: 0.75rem;
+    display: flex !important;
+    visibility: visible !important;
+  }
+
+  .buttons {
+    display: flex !important;
+    visibility: visible !important;
+
+    &.has-addons {
+      display: flex !important;
+    }
+  }
+
+  .button {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+// Fix for nested scroll containers with table wrappers
+// When a table wrapper is nested inside a scroll container, it should maintain
+// its scrolling behavior rather than inheriting overflow:visible from parent
+.scroll-container .table__wrapper.scroll-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: calc(100vh - 400px);
+  min-height: 200px;
+}
+
+// Content table component styles
+.cms-table {
+  // Semantic table wrapper - additional styles can be added here
+  // The .table class from Bulma is applied in HTL templates
+
+  // Ensure table layout is fixed for better column alignment
+  table-layout: auto;
+
+  &--fullwidth {
+    width: 100%;
+  }
+
+  &--striped {
+    // Striped table styles (mapped to .is-striped in HTL)
+  }
+
+  &--sortable {
+    // Sortable table specific styles
+  }
+}
+
+// Table cell and header modifiers
+.cms-table__cell {
+  &--hidden {
+    // Hidden cell (mapped to .is-hidden in HTL)
+    display: none !important;
+  }
+
+  &--visible-on-hover {
+    // Visible on hover cell (mapped to .is-vhidden in HTL)
+    // Uses absolute positioning to hide off-screen, shown when row is selected
+  }
+
+  &--static {
+    // Static cell styles (non-sortable)
+  }
+}
+
+.cms-table__header {
+  &--hidden {
+    // Hidden header (mapped to .is-hidden in HTL)
+    display: none !important;
+  }
+}
+
+// Ensure action cells in tables are properly hidden until row selection
+.contentnav__item {
+  .is-vhidden {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+  }
+
+  &.is-selected .is-vhidden {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+  }
+}

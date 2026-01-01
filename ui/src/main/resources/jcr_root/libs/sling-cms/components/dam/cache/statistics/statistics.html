@@ -1,0 +1,67 @@
+<!--/*
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+*/-->
+<sly data-sly-use.model="org.apache.sling.thumbnails.cache.CacheStatisticsModel"></sly>
+
+<div class="cache-statistics" data-sly-test="${model.available}">
+    <h4>Cache Statistics</h4>
+    <div class="columns">
+        <div class="column">
+            <div class="box">
+                <p class="heading">Total Requests</p>
+                <p class="title">${model.totalRequests}</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="box">
+                <p class="heading">Cache Hits</p>
+                <p class="title has-text-success">${model.hits}</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="box">
+                <p class="heading">Cache Misses</p>
+                <p class="title has-text-warning">${model.misses}</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="box">
+                <p class="heading">Hit Ratio</p>
+                <p class="title has-text-info">${model.hitRatioPercent}</p>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="box">
+                <p class="heading">Cached Entries</p>
+                <p class="title">${model.entries}</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="box">
+                <p class="heading">Cache Size</p>
+                <p class="title">${model.sizeMB} MB</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="notification is-warning" data-sly-test="${!model.available}">
+    <p>Smart Rendition Service is not available. Please check the OSGi console.</p>
+</div>

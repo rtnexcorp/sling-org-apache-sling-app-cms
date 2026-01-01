@@ -1,0 +1,148 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Forms and Rich Text Editor Styles
+// Provides styling for forms, inputs, and RTE components
+
+@use "variables" as *;
+
+fieldset {
+  min-inline-size: auto;
+}
+
+// Scrollable form container
+// Only apply scrolling to forms in full-page context, not in modals
+.Main-Content .Form-Ajax,
+.cms-page .Form-Ajax {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 1rem;
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+
+    &:hover {
+      background: #555;
+    }
+  }
+
+  // Firefox scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+// Forms in modals should not have max-height restrictions
+.modal .Form-Ajax {
+  max-height: none;
+  overflow: visible;
+}
+
+.form-wrapper {
+  border: none;
+  min-height: 100px;
+}
+
+.form-wrapper[disabled] .button,
+.form-wrapper[disabled] .input,
+.form-wrapper[disabled] .textarea,
+.form-wrapper[disabled] select {
+  background-color: #f5f5f5;
+  border-color: #f5f5f5;
+  box-shadow: none;
+  color: #7a7a7a;
+  cursor: not-allowed;
+}
+
+.rte-form {
+  margin: 0.5em 0;
+}
+
+.rte-form .buttons {
+  margin: 0.5em 0;
+}
+
+.rte-toolbar .jam:before {
+  font-size: x-large;
+}
+
+.rte-toolbar .level {
+  margin-bottom: 0.5em;
+}
+
+/* RTE Toolbar horizontal layout fixes */
+.rte-toolbar {
+  .level {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .level-left {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  .level-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 0.5em;
+    margin-bottom: 0.25em;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    &.has-addons {
+      .button {
+        margin-right: 0;
+
+        &:not(:last-child) {
+          border-right: none;
+        }
+      }
+    }
+  }
+}
+
+/* Toolbar button active state */
+.rte-toolbar .button.is-active,
+.rte-toolbar .button.is-selected {
+  background-color: $primary;
+  color: $white;
+}
+
+.note-group-select-from-files {
+  display: none;
+}
+
+.note-toolbar-wrapper {
+  height: auto !important;
+}
+
+/* Legacy wysihtml sandbox styles - kept for backward compatibility */
+.wysihtml-sandbox {
+  width: 100% !important;
+  max-height: 600px !important;
+  min-height: 300px !important;
+}

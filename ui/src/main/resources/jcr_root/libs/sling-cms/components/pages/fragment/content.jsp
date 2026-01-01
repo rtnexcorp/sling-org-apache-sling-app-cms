@@ -17,6 +17,6 @@
  * under the License.
  */ --%>
 <%@include file="/libs/sling-cms/global.jsp"%>
-<sling:call script="/libs/sling-cms/components/editor/scripts/init.jsp" />
+<sling:call script="/libs/sling-cms/components/editor/scripts/init.html" />
 <sling:include path="container" resourceType="sling-cms/components/general/container" />
-<sling:call script="/libs/sling-cms/components/editor/scripts/finalize.jsp" />
+<sling:call script="/libs/sling-cms/components/editor/scripts/finalize.html" />

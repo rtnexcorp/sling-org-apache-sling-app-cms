@@ -1,41 +1,33 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.sling.cms.core.internal.models;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import javax.jcr.AccessDeniedException;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Value;
 
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.stream.Collectors;
-
-import javax.jcr.AccessDeniedException;
-import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.Value;
 
 import org.apache.jackrabbit.api.JackrabbitSession;
 import org.apache.jackrabbit.api.security.user.Authorizable;
@@ -47,9 +39,19 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.cms.AuthorizableWrapper;
 import org.apache.sling.cms.core.helpers.SlingCMSTestHelper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AuthorizableWrapperImplTest {
 
@@ -69,9 +71,10 @@ public class AuthorizableWrapperImplTest {
     private Resource throwyResource;
     private Resource group2Resource;
 
-    @Before
-    public void init() throws AccessDeniedException, AuthorizableExistsException,
-            UnsupportedRepositoryOperationException, RepositoryException {
+    @BeforeEach
+    public void init()
+            throws AccessDeniedException, AuthorizableExistsException, UnsupportedRepositoryOperationException,
+                    RepositoryException {
 
         userResource = Mockito.mock(Resource.class);
         Mockito.when(userResource.getPath()).thenReturn(USER_PATH);
@@ -119,23 +122,25 @@ public class AuthorizableWrapperImplTest {
         group = Mockito.mock(Group.class);
         Mockito.when(group.getID()).thenReturn("456");
         Mockito.when(group.isGroup()).thenReturn(true);
-        Mockito.when(group.getMembers()).thenReturn(Collections.singletonList((Authorizable) user).iterator());
+        Mockito.when(group.getMembers())
+                .thenReturn(Collections.singletonList((Authorizable) user).iterator());
         Mockito.when(group.getPrincipal()).thenReturn(new Principal() {
             @Override
             public String getName() {
                 return "456";
             }
         });
-        Mockito.when(user.memberOf()).thenReturn(Collections.singletonList(group).iterator());
+        Mockito.when(user.memberOf())
+                .thenReturn(Collections.singletonList(group).iterator());
         Mockito.when(userManager.getAuthorizableByPath(GROUP_PATH)).thenReturn(group);
 
         group2 = Mockito.mock(Group.class);
         Mockito.when(group2.isGroup()).thenReturn(true);
-        Mockito.when(adminUser.declaredMemberOf()).thenReturn(Collections.singletonList(group2).iterator());
+        Mockito.when(adminUser.declaredMemberOf())
+                .thenReturn(Collections.singletonList(group2).iterator());
         Mockito.when(group2.getDeclaredMembers())
                 .thenReturn(Collections.singletonList((Authorizable) adminUser).iterator());
         Mockito.when(userManager.getAuthorizableByPath(GROUP2_PATH)).thenReturn(group2);
-
     }
 
     @Test
@@ -221,7 +226,7 @@ public class AuthorizableWrapperImplTest {
 
         Value value = mock(Value.class);
         when(value.getString()).thenReturn("de");
-        Mockito.when(user.getProperty(anyString())).thenReturn(new Value[] { value });
+        Mockito.when(user.getProperty(anyString())).thenReturn(new Value[] {value});
 
         assertEquals("de", authWrapper.getLocaleTag());
         assertEquals(Locale.GERMAN, authWrapper.getLocale());
@@ -248,7 +253,8 @@ public class AuthorizableWrapperImplTest {
             throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException {
         AuthorizableWrapper authWrapper = new AuthorizableWrapperImpl(userResource);
 
-        assertEquals(Collections.singletonList("456"),
+        assertEquals(
+                Collections.singletonList("456"),
                 SlingCMSTestHelper.toStream(authWrapper.getGroupNames()).collect(Collectors.toList()));
 
         authWrapper = new AuthorizableWrapperImpl(throwyResource);
@@ -287,14 +293,14 @@ public class AuthorizableWrapperImplTest {
 
         authWrapper = new AuthorizableWrapperImpl(throwyResource);
         assertFalse(authWrapper.isMember("456"));
-
     }
 
     @Test
     public void testDeclaredMembership()
             throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException {
         AuthorizableWrapper authWrapper = new AuthorizableWrapperImpl(adminResource);
-        assertTrue(SlingCMSTestHelper.toStream(authWrapper.getDeclaredMembership()).anyMatch(g -> g == group2));
+        assertTrue(
+                SlingCMSTestHelper.toStream(authWrapper.getDeclaredMembership()).anyMatch(g -> g == group2));
 
         authWrapper = new AuthorizableWrapperImpl(throwyResource);
         assertFalse(authWrapper.getDeclaredMembership().hasNext());
@@ -316,5 +322,4 @@ public class AuthorizableWrapperImplTest {
         AuthorizableWrapper authWrapper = new AuthorizableWrapperImpl(userResource);
         assertFalse(SlingCMSTestHelper.toStream(authWrapper.getMembership()).anyMatch(g -> g == group2));
     }
-
 }
