@@ -19,13 +19,13 @@
 package org.apache.sling.cms.core.models;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +35,13 @@ import org.jetbrains.annotations.Nullable;
  * Provides properties and logic for rendering text fields with AI suggestion
  * capabilities.
  */
-@Model(adaptables = {Resource.class, SlingHttpServletRequest.class})
+@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class AiSuggestField {
 
-    @Self
+    @SlingObject
     private Resource resource;
 
-    @Inject
+    @SlingObject
     private SlingHttpServletRequest request;
 
     @ValueMapValue
@@ -78,18 +78,48 @@ public class AiSuggestField {
     @ValueMapValue
     private boolean disabled;
 
+    @ValueMapValue
+    @Nullable
+    private String defaultValue;
+
     private String value;
     private String fieldName;
 
     @PostConstruct
     protected void init() {
-        // Get field name from request attribute or property
-        Object fieldNameAttr = request.getAttribute("fieldName");
-        this.fieldName = fieldNameAttr != null ? fieldNameAttr.toString() : name;
+        // Get field name - check for multifield context first
+        Object multifieldBaseName = request.getAttribute("multifieldBaseName");
+        Object multifieldItemName = request.getAttribute("multifieldItemName");
 
-        // Get value from request attribute
-        Object valueAttr = request.getAttribute("value");
-        this.value = valueAttr != null ? valueAttr.toString() : "";
+        if (multifieldBaseName != null && multifieldItemName != null) {
+            this.fieldName = multifieldBaseName.toString() + "/" + multifieldItemName.toString() + "/" + name;
+        } else {
+            this.fieldName = name;
+        }
+
+        // Get value from edited resource
+        // Check for editResourcePath attribute first (for Edit Properties modal)
+        String editPath = (String) request.getAttribute("editResourcePath");
+        if (StringUtils.isBlank(editPath)) {
+            editPath = request.getRequestPathInfo().getSuffix();
+        }
+
+        if (StringUtils.isNotBlank(editPath) && StringUtils.isNotBlank(name)) {
+            Resource editedResource = request.getResourceResolver().getResource(editPath);
+            if (editedResource != null) {
+                this.value = editedResource.getValueMap().get(name, String.class);
+            }
+        }
+
+        // Fall back to default value if no value found
+        if (StringUtils.isBlank(this.value) && StringUtils.isNotBlank(defaultValue)) {
+            this.value = defaultValue;
+        }
+
+        // Ensure value is never null
+        if (this.value == null) {
+            this.value = "";
+        }
     }
 
     /**
