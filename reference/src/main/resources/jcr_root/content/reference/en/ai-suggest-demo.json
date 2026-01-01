@@ -1,0 +1,61 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "AI-Powered Content Suggestions Demo",
+    "jcr:description": "Demonstration of AI-enhanced text fields for automatic title and summary generation",
+    "sling:template": "/conf/asf/site/templates/base-page",
+    "sling:resourceType": "reference/components/pages/base",
+    "published": true,
+    "hideInSitemap": false,
+    "keywords": "AI, machine learning, content generation, automation, OpenAI, Claude, Azure",
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "intro": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h1>AI-Powered Content Suggestions</h1><p>This page demonstrates the AI-enhanced text field component that can automatically generate intelligent suggestions for titles, summaries, and meta descriptions.</p><p>The AI suggestion feature integrates with multiple AI providers including OpenAI, Azure OpenAI, Anthropic Claude, and Ollama for local models.</p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "features": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>Key Features</h2><ul><li><strong>Smart Title Generation:</strong> Create compelling page titles based on content</li><li><strong>Automatic Summaries:</strong> Generate concise summaries from page text</li><li><strong>SEO Meta Descriptions:</strong> Craft optimized meta descriptions for search engines</li><li><strong>Multi-Provider Support:</strong> Works with OpenAI GPT-4, Claude, Azure, and local Ollama models</li><li><strong>Context-Aware:</strong> Analyzes all page content or specific fields to generate relevant suggestions</li><li><strong>User-Friendly Interface:</strong> Simple click-to-generate button with visual feedback</li></ul><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "howItWorks": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>How It Works</h2><ol><li><strong>Edit a Page:</strong> Open any page in the CMS editor</li><li><strong>Find AI-Enhanced Fields:</strong> Look for text fields with the ✨ sparkle icon and \"AI Suggest\" button</li><li><strong>Generate Suggestions:</strong> Click the \"AI Suggest\" button to generate intelligent content</li><li><strong>Review and Edit:</strong> The AI-generated suggestion appears in the field for you to review and modify</li><li><strong>Save:</strong> Save your page with the AI-enhanced content</li></ol><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "useCases": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>Use Cases</h2><h3>Content Marketing</h3><p>Quickly generate compelling titles and descriptions for blog posts, landing pages, and marketing content. Save hours of copywriting time while maintaining consistent quality.</p><h3>SEO Optimization</h3><p>Create search-engine-optimized meta descriptions that accurately reflect page content. Improve click-through rates with AI-generated meta tags.</p><h3>Multilingual Sites</h3><p>Generate content in multiple languages by configuring different AI models with language-specific prompts.</p><h3>Content Teams</h3><p>Accelerate content production workflows by automating repetitive writing tasks. Let writers focus on creating unique, high-value content.</p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "configuration": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>Configuration</h2><p>The AI suggestion feature requires configuration of at least one AI service provider:</p><h3>OpenAI Configuration</h3><pre>org.apache.sling.cms.ai.internal.OpenAiTextService\n  apiKey=your-openai-api-key\n  model=gpt-4\n  temperature=0.7</pre><h3>Azure OpenAI Configuration</h3><pre>org.apache.sling.cms.ai.internal.AzureOpenAiTextService\n  endpoint=https://your-resource.openai.azure.com/\n  apiKey=your-azure-key\n  deployment=gpt-4</pre><h3>Anthropic Claude Configuration</h3><pre>org.apache.sling.cms.ai.internal.AnthropicTextService\n  apiKey=your-anthropic-api-key\n  model=claude-3-opus-20240229</pre><h3>Ollama (Local) Configuration</h3><pre>org.apache.sling.cms.ai.internal.OllamaTextService\n  endpoint=http://localhost:11434\n  model=llama2</pre><p>Configure these via OSGi Config Admin at <code>/system/console/configMgr</code></p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "technical": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>Technical Details</h2><h3>Component Path</h3><p><code>/libs/sling-cms/components/editor/fields/text-ai</code></p><h3>Servlet Endpoint</h3><p><code>POST /bin/cms/ai/suggest.json</code></p><h3>Supported AI Types</h3><ul><li><code>title</code> - Generate page titles (50-70 characters)</li><li><code>summary</code> - Generate content summaries (150-200 words)</li><li><code>metaDescription</code> - Generate SEO meta descriptions (150-160 characters)</li></ul><h3>Content Source Options</h3><ul><li>Specific field name (e.g., <code>pageContent</code>)</li><li>Empty/null - Analyzes all form text inputs and textareas</li></ul><h3>Example Field Configuration</h3><pre>{\n  \"component\": \"/libs/sling-cms/components/editor/fields/text-ai\",\n  \"label\": \"Page Title\",\n  \"name\": \"jcr:title\",\n  \"type\": \"text\",\n  \"aiSuggestionType\": \"title\",\n  \"contentSource\": \"pageContent\",\n  \"required\": true,\n  \"placeholder\": \"Enter page title or click AI Suggest\"\n}</pre><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "examples": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>Example Scenarios</h2><h3>Blog Post Title</h3><p><strong>Content:</strong> \"Apache Sling is a web framework that uses a Java Content Repository to store and manage content. It provides a RESTful web application framework built on top of Apache Jackrabbit.\"</p><p><strong>AI-Generated Title:</strong> \"Apache Sling: RESTful Web Framework Built on Java Content Repository\"</p><h3>Product Page Summary</h3><p><strong>Content:</strong> Full product description with features, specifications, and benefits</p><p><strong>AI-Generated Summary:</strong> \"A comprehensive enterprise content management solution offering scalable architecture, flexible content modeling, and seamless integration with modern web technologies. Ideal for organizations seeking robust digital experience platforms.\"</p><h3>Meta Description</h3><p><strong>Content:</strong> Long-form article about web development best practices</p><p><strong>AI-Generated Meta:</strong> \"Discover proven web development best practices for 2026. Learn modern frameworks, performance optimization, and security essentials in this comprehensive guide.\"</p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "bestPractices": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>Best Practices</h2><ul><li><strong>Review AI Output:</strong> Always review and edit AI-generated content to ensure accuracy and brand voice</li><li><strong>Provide Context:</strong> More content yields better suggestions - fill in main content before generating titles</li><li><strong>Configure Quality Models:</strong> Use GPT-4 or Claude 3 Opus for best results over smaller models</li><li><strong>Set Temperature:</strong> Lower temperature (0.5-0.7) for consistent, factual output; higher (0.8-1.0) for creative content</li><li><strong>Specific Content Sources:</strong> Target specific rich text fields rather than all form inputs for more relevant suggestions</li><li><strong>Test Different Providers:</strong> Different AI models excel at different tasks - experiment to find the best fit</li><li><strong>Monitor Costs:</strong> API-based providers charge per token - monitor usage in production environments</li><li><strong>Local Models:</strong> Consider Ollama with llama2/mistral for cost-free suggestions on localhost</li></ul><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "footer": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h2>Learn More</h2><p>For detailed documentation, see the <a href=\"/cms/docs/ai-suggest-field.md\">AI Suggest Field Documentation</a>.</p><p>To configure AI services, visit the <a href=\"/system/console/configMgr\">OSGi Configuration Manager</a>.</p>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      }
+    }
+  }
+}

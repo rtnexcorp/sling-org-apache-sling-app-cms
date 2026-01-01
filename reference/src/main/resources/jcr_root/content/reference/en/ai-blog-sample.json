@@ -1,0 +1,47 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "AI Blog Post Sample",
+    "jcr:description": "Sample page demonstrating the AI-enhanced blog post component",
+    "sling:template": "/conf/asf/site/templates/base-page",
+    "sling:resourceType": "reference/components/pages/base",
+    "published": true,
+    "hideInSitemap": false,
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "intro": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<h1>AI-Enhanced Blog Post Demo</h1><p>This page demonstrates a blog post component that uses AI-powered fields for automatic title, summary, and meta description generation.</p><p><strong>Try editing this component to see the AI suggestion feature in action!</strong></p><hr/>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      },
+      "sample-blog-post-1": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/ai-blog-post",
+        "title": "Getting Started with Apache Sling CMS",
+        "summary": "Discover how Apache Sling CMS brings the fun back into content management with its innovative approach to building web applications on top of a Java Content Repository.",
+        "author": "Jane Developer",
+        "publishDate": "2026-01-01",
+        "content": "<p>Apache Sling CMS is a modern, flexible content management system built on Apache Sling and Jackrabbit. It provides a powerful framework for creating and managing web content with a focus on developer experience and extensibility.</p><h3>Key Features</h3><ul><li><strong>Component-Based Architecture:</strong> Build reusable components that can be combined to create complex page layouts</li><li><strong>HTL Templates:</strong> Use HTML Template Language for clean, secure template development</li><li><strong>RESTful API:</strong> Everything is a resource with a clean REST API</li><li><strong>JCR Backend:</strong> Leverage the power of Java Content Repository for content storage</li><li><strong>OSGi Modularity:</strong> Extend functionality through OSGi bundles</li><li><strong>AI Integration:</strong> New AI-powered features for content generation and automation</li></ul><h3>Getting Started</h3><p>To get started with Apache Sling CMS, you'll need Java 21 and Maven installed. Clone the repository, build the project, and start exploring the powerful features that make content management fun again!</p><p>The AI suggestion features allow content authors to quickly generate compelling titles, summaries, and SEO-optimized meta descriptions by analyzing the main content. Simply write your content first, then click the AI Suggest button on any AI-enhanced field to see intelligent suggestions.</p>",
+        "metaDescription": "Learn how to get started with Apache Sling CMS, a modern content management system built on Apache Sling with AI-powered features for content generation.",
+        "tags": "Apache Sling, CMS, Content Management, AI, Open Source"
+      },
+      "sample-blog-post-2": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "reference/components/general/ai-blog-post",
+        "title": "AI-Powered Content Creation: The Future of CMS",
+        "summary": "Explore how artificial intelligence is revolutionizing content management systems, making content creation faster, more efficient, and more intelligent than ever before.",
+        "author": "John AI Expert",
+        "publishDate": "2026-01-01",
+        "content": "<p>The integration of AI into content management systems represents a paradigm shift in how we create and manage digital content. With AI-powered features, content authors can now accomplish in seconds what previously took hours.</p><h3>Benefits of AI in CMS</h3><ul><li><strong>Time Savings:</strong> Generate titles, summaries, and meta descriptions instantly</li><li><strong>Consistency:</strong> Maintain consistent tone and style across all content</li><li><strong>SEO Optimization:</strong> Automatically optimize content for search engines</li><li><strong>Multilingual Support:</strong> Create content in multiple languages effortlessly</li><li><strong>Content Enhancement:</strong> Get intelligent suggestions for improving existing content</li></ul><h3>Real-World Applications</h3><p>Organizations using AI-powered CMS features report significant improvements in productivity. Marketing teams can produce more content in less time, while maintaining quality standards. SEO specialists appreciate the automatic generation of optimized meta descriptions that drive higher click-through rates.</p><p>The Apache Sling CMS implementation supports multiple AI providers including OpenAI, Azure OpenAI, Anthropic Claude, and even local models via Ollama, giving organizations flexibility in choosing the solution that best fits their needs and budget.</p>",
+        "metaDescription": "Discover how AI is transforming content management systems. Learn about AI-powered features in Apache Sling CMS for faster, smarter content creation.",
+        "tags": "AI, Machine Learning, CMS, Content Automation, Digital Transformation"
+      },
+      "instructions": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "<hr/><h2>How to Use This Component</h2><ol><li><strong>Edit Mode:</strong> Click the edit icon on any blog post above to enter edit mode</li><li><strong>Fill Content:</strong> Start by writing your main blog post content in the rich text editor</li><li><strong>AI Suggestions:</strong> Click the ✨ \"AI Suggest\" button next to Title, Summary, or Meta Description fields</li><li><strong>Review & Modify:</strong> The AI will analyze your content and generate intelligent suggestions. Review and edit as needed</li><li><strong>Save:</strong> Save your changes to see the updated blog post</li></ol><h3>AI Configuration Required</h3><p>To use the AI suggestion features, you must configure at least one AI service provider:</p><ul><li><strong>OpenAI:</strong> Configure at <code>/system/console/configMgr</code> → Search for \"OpenAI\"</li><li><strong>Azure OpenAI:</strong> Configure with your Azure resource endpoint and API key</li><li><strong>Anthropic Claude:</strong> Configure with your Anthropic API key</li><li><strong>Ollama (Local):</strong> Install Ollama and configure the endpoint (no API key required)</li></ul><p>See the <a href=\"/content/reference/en/ai-suggest-demo.html\">AI Suggestion Demo page</a> for detailed configuration instructions.</p>",
+        "sling:resourceType": "sling-cms/components/general/richtext"
+      }
+    }
+  }
+}

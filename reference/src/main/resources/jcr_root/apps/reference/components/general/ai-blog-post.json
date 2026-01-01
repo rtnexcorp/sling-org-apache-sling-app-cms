@@ -1,0 +1,6 @@
+{
+    "jcr:primaryType": "sling:Component",
+    "jcr:title": "AI-Enhanced Blog Post",
+    "componentType": "General",
+    "jcr:description": "A blog post component with AI-powered title, summary, and meta description generation"
+}

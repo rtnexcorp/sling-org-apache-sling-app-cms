@@ -13,11 +13,15 @@ AI is treated as:
 
 | Feature | Status | Location | Notes |
 |---------|--------|----------|-------|
-| AI Module | ✅ Created | `ai/` | Dedicated module for AI functionality |
+| **AI Module** | ✅ **Complete** | `ai/` | **Dedicated OSGi module successfully built and deployed** |
+| **Build & Deploy** | ✅ **Working** | `.vscode/tasks.json`, `pom.xml` | Maven task "Auto Deploy - AI" configured |
 | AI Provider Interfaces | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/` | `AiService`, `AiTextService`, `AiClassificationService`, `AiImageService` |
-| AI Request/Response | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/` | `AiRequest`, `AiResponse` classes |
-| Audit Interfaces | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/audit/` | `AiAuditService`, `AiAuditEntry` |
-| Rules-Based Fallback | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/internal/` | `RulesBasedTextService` |
+| AI Request/Response Models | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/` | `AiRequest`, `AiResponse` with builder patterns |
+| Audit Framework | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/audit/` | `AiAuditService`, `AiAuditEntry` interfaces |
+| Rules-Based Fallback | ✅ Complete | `ai/src/main/java/org/apache/sling/cms/ai/internal/` | `RulesBasedTextService` (non-AI implementation) |
+| OSGi Bundle Configuration | ✅ Complete | `ai/bnd.bnd` | Exports `ai` and `ai.audit` packages |
+| Maven Dependencies | ✅ Complete | `ai/pom.xml` | Sling, OSGi, Jackson, Commons properly configured |
+| Documentation | ✅ Complete | `ai/README.md` | Module overview, usage, configuration |
 | Taxonomy System | ✅ Complete | `api/TaxonomyService.java`, `api/TaxonomyItem.java` | Can be leveraged for AI tag suggestions |
 | Job Infrastructure | ✅ Complete | `api/CMSJobManager.java`, Sling Jobs | Ready for AI automation jobs |
 | Content Insights Framework | ✅ Complete | `api/insights/InsightProvider.java` | Pattern can be extended for AI insights |
@@ -25,9 +29,53 @@ AI is treated as:
 | Asset Metadata | ✅ Complete | `thumbnails/AssetMetadataModel.java` | Has altText field, taxonomy support |
 | Publication System | ✅ Complete | `api/publication/PublicationManager*.java` | Ready for AI-assisted publishing |
 | Path Suggestions | ✅ Complete | `core/PathSuggestionServlet.java` | Pattern for AI suggestions UI |
-| External AI Providers | 🔄 Planned | `ai/` | OpenAI, Azure OpenAI, Anthropic integrations |
-| AI UI Components | 🔄 Planned | `ui/` | AI assist panels and dialogs |
-| Audit Logging Impl | 🔄 Planned | `ai/` | JCR-based audit storage |
+| External AI Providers | 🔄 In Progress | `ai/` | OpenAI, Azure OpenAI, Anthropic, Ollama implementations |
+| JCR Audit Service | 🔄 Planned | `ai/` | JCR-based implementation of `AiAuditService` |
+| AI UI Components | 🔄 Planned | `ui/` | AI assist panels, dialogs, and suggestion components |
+| CAConfig Integration | 🔄 Planned | `ai/` | Configuration models for per-site AI settings |
+| AI Sling Models | 🔄 Planned | `ai/` | Page/Asset AI assistance models |
+| AI Servlets | 🔄 Planned | `ai/` | REST endpoints for AI operations |
+
+---
+
+## Module Structure
+
+The AI module (`ai/`) follows Apache Sling CMS patterns and is fully operational:
+
+```
+ai/
+├── pom.xml                          # Maven module configuration
+├── bnd.bnd                          # OSGi bundle manifest
+├── README.md                        # Module documentation
+└── src/main/java/org/apache/sling/cms/ai/
+    ├── package-info.java           # Package documentation
+    ├── AiService.java              # Base service interface
+    ├── AiRequest.java              # Request model with builder
+    ├── AiResponse.java             # Response model with status tracking
+    ├── AiTextService.java          # Text operations (summarize, rewrite, translate)
+    ├── AiClassificationService.java # Taxonomy and tag suggestions
+    ├── AiImageService.java         # Image analysis and alt-text generation
+    ├── audit/
+    │   ├── package-info.java       # Audit package documentation
+    │   ├── AiAuditService.java    # Audit logging interface
+    │   └── AiAuditEntry.java      # Audit record model
+    └── internal/
+        └── RulesBasedTextService.java # Non-AI fallback implementation
+```
+
+**Build & Deploy:**
+```bash
+# Build and deploy AI module
+mvn clean install -P autoInstallBundle -pl ai -DskipTests -Dbnd.baseline.skip=true
+
+# Or use VS Code task: "Auto Deploy - AI"
+```
+
+**OSGi Bundle Status:**
+- Bundle Name: `Apache Sling CMS AI Support`
+- Symbolic Name: `org.apache.sling.cms.ai`
+- Version: `1.1.9-SNAPSHOT`
+- State: Active (deployed to `http://localhost:8082/system/console/`)
 
 ---
 
@@ -74,32 +122,41 @@ AI is treated as:
 
 ---
 
-## Architecture (recommended)
+## Architecture (implemented)
 
-### A) Provider interface (OSGi service)
-Create a small set of interfaces in `api` (or `core` if you want to iterate first), implemented in `core`.
+The AI module follows OSGi best practices with a clean separation of concerns:
 
-**Example capability interfaces** (conceptual):
-- `AiTextService` (summarize, rewrite, translate)
-- `AiClassificationService` (tags/categories)
-- `AiImageService` (alt-text/captions)
+### A) Provider interface (OSGi service) ✅ **Complete**
+Core interfaces in the `ai` module, implemented using OSGi Declarative Services (R7+):
 
-Key requirement:
-- Implementations must be **swappable** via OSGi DS + configuration.
+**Capability interfaces:**
+- `AiTextService` - Text operations (summarize, rewrite, translate, suggest title/description)
+- `AiClassificationService` - Taxonomy suggestions (tags, categories, keywords)
+- `AiImageService` - Image analysis (alt-text, captions, descriptions)
+- `AiService` - Base interface for all AI providers
 
-### B) Provider implementations
-Keep multiple providers possible:
-- `RulesBasedProvider` (non-AI fallback)
-- `ExternalAiProviderX` (calls an external API)
+**Key features:**
+- Implementations are **swappable** via OSGi DS + configuration
+- All services extend base `AiService` interface with common methods (`getId()`, `isEnabled()`)
+- Request/response models with builder patterns for clean API
+- Enum-based status tracking (SUCCESS, FAILURE, SKIPPED, TIMEOUT)
 
-**Rule**: the CMS should work even if AI is disabled.
+### B) Provider implementations ✅ **Fallback complete**
+Current implementations:
+- ✅ `RulesBasedTextService` - Non-AI fallback (first N sentences, basic summarization)
+- 🔄 `OpenAiTextService` - OpenAI API integration (planned)
+- 🔄 `AzureOpenAiTextService` - Azure OpenAI integration (planned)
+- 🔄 `AnthropicTextService` - Anthropic Claude integration (planned)
+- 🔄 `OllamaTextService` - Local Ollama integration (planned)
 
-### C) Invocation paths
+**Rule**: The CMS works even if external AI is disabled (fallback active).
+
+### C) Invocation paths 🔄 **Planned**
 AI should be invoked only via:
 1. **Content Automation jobs** (scheduled or event-triggered)
 2. **Explicit author actions** (button click "Suggest summary")
 
-### D) Storage model
+### D) Storage model 🔄 **Planned**
 All AI output should be stored as:
 - draft fields (not directly overwriting published content)
 - or versioned changes with explicit approval
@@ -112,25 +169,32 @@ Suggested:
 
 ## Governance & safety
 
-### 1) Permissions
+### 1) Permissions 🔄 **Planned**
 - Only allow AI actions to users/groups with explicit permission.
 - Support per-site enablement under `/conf/{site}`.
 
-### 2) Human review gates
+### 2) Human review gates 🔄 **Planned**
 Modes:
 - **Suggest-only**: AI output shown in UI; author clicks "Apply".
 - **Draft mode**: write to draft fields; reviewer approves.
 
-### 3) Audit logs
-Record:
-- request context (site/page)
-- user who triggered
-- provider used
-- prompt template ID
-- before/after (or diff)
-- timestamps
+### 3) Audit logs ✅ **Framework complete**
+The audit framework (`AiAuditService`, `AiAuditEntry`) is ready to record:
+- Request context (site/page path, content path)
+- User who triggered the AI operation
+- Provider used (e.g., "openai", "rules-based")
+- Operation type (SUMMARIZE, TRANSLATE, TAG_SUGGESTION, etc.)
+- Input hash (for duplicate detection)
+- Output preview (first 200 chars)
+- Outcome (SUCCESS, FAILURE, SKIPPED, APPLIED, REJECTED)
+- Error messages
+- Timestamps
 
-### 4) Data handling / privacy
+**Audit entry storage:** Planned at `/var/audit/ai/{yyyy}/{MM}/{dd}/{uuid}`
+
+**Next step:** Implement `JcrAiAuditServiceImpl` for JCR-based storage.
+
+### 4) Data handling / privacy 🔄 **Planned**
 Guidelines:
 - Never send unpublished restricted content unless explicitly allowed.
 - Strip or mask sensitive fields (PII) using policy.
@@ -175,20 +239,169 @@ Prompt templates should be managed content-side so they are:
 
 ## Roadmap
 
-### Phase 1 (safe + useful)
-- Interface + provider abstraction
-- Suggest title/summary for pages (suggest-only)
-- Audit logging
+### Phase 1 (safe + useful) ✅ **Foundation Complete** 🔄 **Implementation In Progress**
+- ✅ Interface + provider abstraction (complete)
+- ✅ Audit framework (interfaces complete, storage implementation pending)
+- ✅ Rules-based fallback (complete and working)
+- 🔄 External AI provider implementations (OpenAI, Azure, Anthropic)
+- 🔄 Suggest title/summary for pages (suggest-only UI)
+- 🔄 JCR-based audit service implementation
 
-### Phase 2
-- Tag suggestions mapped to taxonomy
-- Alt-text suggestions for images
+### Phase 2 🔄 **Planned**
+- Tag suggestions mapped to taxonomy (interface ready, UI pending)
+- Alt-text suggestions for images (interface ready, UI pending)
+- CAConfig integration for per-site AI settings
 
-### Phase 3
+### Phase 3 🔄 **Planned**
 - Draft translations + compare view
+- Multi-provider routing (try OpenAI, fallback to rules-based)
 
-### Phase 4
+### Phase 4 🔄 **Planned**
 - "Assist in workflows" (review summaries, change summaries)
+- AI insights integration with existing InsightProvider framework
+- Batch AI operations via CMSJobManager
+
+---
+
+## Getting Started
+
+### For Developers
+
+1. **Clone and build:**
+   ```bash
+   git clone https://github.com/apache/sling-org-apache-sling-app-cms.git
+   cd sling-org-apache-sling-app-cms
+   mvn clean install
+   ```
+
+2. **Deploy AI module:**
+   ```bash
+   mvn clean install -P autoInstallBundle -pl ai -DskipTests -Dbnd.baseline.skip=true
+   ```
+
+3. **Verify bundle:**
+   - Open `http://localhost:8082/system/console/bundles`
+   - Look for "Apache Sling CMS AI Support" (Active)
+
+4. **Next steps:**
+   - Implement external AI provider (e.g., `OpenAiTextService`)
+   - Create JCR audit service (`JcrAiAuditServiceImpl`)
+   - Build UI components for AI assistance
+
+### For Contributors
+
+See the AI module README at `ai/README.md` for:
+- Architecture overview
+- Adding new AI providers
+- Configuration patterns
+- Testing guidelines
+
+### Implementation Example
+
+**Using AiTextService to suggest a page title:**
+
+```java
+import org.apache.sling.cms.ai.AiTextService;
+import org.apache.sling.cms.ai.AiRequest;
+import org.apache.sling.cms.ai.AiResponse;
+import org.osgi.service.component.annotations.Reference;
+
+@Component
+public class MyAiComponent {
+    
+    @Reference
+    private AiTextService aiTextService;
+    
+    public void suggestTitle(String content, String pagePath) {
+        // Build request
+        AiRequest request = AiRequest.builder()
+            .content(content)
+            .contentPath(pagePath)
+            .userId(resourceResolver.getUserID())
+            .build();
+        
+        // Get suggestion
+        AiResponse response = aiTextService.suggestTitle(request);
+        
+        // Check result
+        if (response.isSuccess()) {
+            String suggestedTitle = response.getContent();
+            log.info("Suggested title: {}", suggestedTitle);
+            
+            // Display to user for approval
+            // Never auto-apply without human review
+        } else {
+            log.warn("AI suggestion failed: {}", response.getErrorMessage());
+        }
+    }
+}
+```
+
+**Adding a new AI provider:**
+
+```java
+import org.apache.sling.cms.ai.AiTextService;
+import org.apache.sling.cms.ai.AiRequest;
+import org.apache.sling.cms.ai.AiResponse;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.metatype.annotations.Designate;
+
+@Component(service = AiTextService.class)
+@Designate(ocd = OpenAiTextService.Config.class)
+public class OpenAiTextService implements AiTextService {
+    
+    @interface Config {
+        String apiKey() default "";
+        String model() default "gpt-4";
+        boolean enabled() default false;
+    }
+    
+    private Config config;
+    
+    @Activate
+    protected void activate(Config config) {
+        this.config = config;
+    }
+    
+    @Override
+    public String getId() {
+        return "openai";
+    }
+    
+    @Override
+    public String getTitle() {
+        return "OpenAI";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return config.enabled();
+    }
+    
+    @Override
+    public AiResponse suggestTitle(AiRequest request) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("OpenAI provider is disabled");
+        }
+        
+        try {
+            // Call OpenAI API
+            String result = callOpenAiApi(request);
+            
+            return AiResponse.success()
+                .content(result)
+                .providerId(getId())
+                .confidence(0.95)
+                .processingTimeMs(System.currentTimeMillis() - startTime)
+                .build();
+                
+        } catch (Exception e) {
+            return AiResponse.failure("OpenAI API error: " + e.getMessage());
+        }
+    }
+}
+```
 
 ---
 

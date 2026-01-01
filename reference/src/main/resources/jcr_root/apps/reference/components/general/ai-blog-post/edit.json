@@ -1,0 +1,75 @@
+{
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "sling-cms/components/editor/slingform",
+    "button": "Save Blog Post",
+    "fields": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/general/container",
+        "title": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "aiSuggestionType": "title",
+            "contentSource": "content",
+            "required": true,
+            "placeholder": "Enter blog post title or click AI Suggest"
+        },
+        "summary": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+            "label": "Summary",
+            "name": "summary",
+            "type": "text",
+            "aiSuggestionType": "summary",
+            "contentSource": "content",
+            "required": true,
+            "placeholder": "Enter summary or click AI Suggest",
+            "help": "A brief summary of the blog post (AI will generate from content)"
+        },
+        "author": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Author",
+            "name": "author",
+            "required": true,
+            "placeholder": "Author name"
+        },
+        "publishDate": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Publish Date",
+            "name": "publishDate",
+            "type": "date",
+            "required": true
+        },
+        "content": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/richtext",
+            "label": "Content",
+            "name": "content",
+            "required": true,
+            "help": "Main blog post content. Fill this first before using AI suggestions for title/summary."
+        },
+        "metaDescription": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+            "label": "Meta Description (SEO)",
+            "name": "metaDescription",
+            "type": "text",
+            "aiSuggestionType": "metaDescription",
+            "contentSource": "content",
+            "placeholder": "Enter meta description or click AI Suggest",
+            "help": "SEO meta description for search engines (150-160 characters)"
+        },
+        "tags": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/text",
+            "label": "Tags",
+            "name": "tags",
+            "placeholder": "e.g., technology, AI, CMS",
+            "help": "Comma-separated tags"
+        }
+    }
+}
