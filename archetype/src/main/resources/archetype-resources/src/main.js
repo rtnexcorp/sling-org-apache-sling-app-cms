@@ -1,4 +1,4 @@
-<%-- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,14 +15,17 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ --%>
- <%@include file="/libs/sling-cms/global.jsp"%>
-<body>
-  <sling:call script="/libs/sling-cms/components/editor/scripts/init.html" />
-  <main role="main" class="container">
-    <sling:adaptTo adaptable="${resource}" adaptTo="${package}.HelloWorldModel" var="helloWorld" />
-    <sling:encode value="${helloWorld.message}" mode="HTML" />
-    <sling:include path="container" resourceType="sling-cms/components/general/container"/>
-  </main>
-  <sling:call script="/libs/sling-cms/components/editor/scripts/finalize.html" />
-</body>
+ */
+
+// Import CSS
+import './styles/main.scss';
+
+// Main application logic
+console.log('${appName} frontend loaded successfully');
+
+// Example: Initialize any JavaScript functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded for ${appName}');
+    
+    // Add any custom JavaScript initialization here
+});

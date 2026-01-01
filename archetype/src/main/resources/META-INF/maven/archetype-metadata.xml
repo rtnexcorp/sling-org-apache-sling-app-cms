@@ -57,9 +57,12 @@ License. -->
       <directory></directory>
       <includes>
         <include>package.json</include>
-        <include>gulpfile.js</include>
+        <include>vite.config.js</include>
         <include>README.md</include>
       </includes>
+    </fileSet>
+    <fileSet filtered="true">
+      <directory>src</directory>
     </fileSet>
     <fileSet filtered="true">
       <directory>src/main/java</directory>
