@@ -2,7 +2,7 @@
 
 ## Overview
 
-A reference component demonstrating the use of AI-powered text fields in Apache Sling CMS. This component uses a Sling Model for clean HTL rendering and leverages the text-ai field for intelligent content generation.
+A comprehensive reference component demonstrating **all four types** of AI-powered fields in Apache Sling CMS: AI Text, AI Textarea, AI Richtext, and AI Select. This component showcases intelligent content generation across different field types.
 
 ## Component Details
 
@@ -18,40 +18,69 @@ A reference component demonstrating the use of AI-powered text fields in Apache 
 
 ## AI-Enhanced Fields
 
-The component includes three AI-powered fields:
+This component showcases **all four types** of AI-powered fields:
 
-### 1. Title Field
+### 1. Title Field (AI Text Input)
 ```json
 {
-  "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
   "aiSuggestionType": "title",
   "contentSource": "content"
 }
 ```
-- Generates compelling page titles (50-70 characters)
-- Analyzes the main content field
+- **Field Type**: Single-line text input
+- **AI Function**: Generates compelling page titles (50-70 characters)
+- **Use Case**: Blog post titles, article headlines
 
-### 2. Summary Field
+### 2. Excerpt Field (AI Textarea)
 ```json
 {
-  "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
-  "aiSuggestionType": "summary",
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/textarea",
+  "aiSuggestionType": "excerpt",
+  "contentSource": "content",
+  "rows": 4
+}
+```
+- **Field Type**: Multi-line textarea
+- **AI Function**: Creates longer excerpts/summaries (150-300 words)
+- **Use Case**: Article excerpts, detailed summaries
+
+### 3. Introduction Field (AI Richtext Editor)
+```json
+{
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/richtext",
+  "aiSuggestionType": "description",
   "contentSource": "content"
 }
 ```
-- Creates concise summaries (150-200 words)
-- Extracts key points from content
+- **Field Type**: WYSIWYG rich text editor
+- **AI Function**: Generates formatted introductions with HTML
+- **Use Case**: Engaging introductions, formatted descriptions
 
-### 3. Meta Description Field
+### 4. Category Field (AI Select Dropdown)
 ```json
 {
-  "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/select",
+  "aiSuggestionType": "category",
+  "contentSource": "content"
+}
+```
+- **Field Type**: Dropdown select
+- **AI Function**: Suggests best matching category from predefined options
+- **Use Case**: Auto-categorization, content classification
+- **Options**: Technology, Business, Design, Development, Marketing, AI, CMS, Tutorial, News, Other
+
+### 5. Meta Description Field (AI Text Input)
+```json
+{
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
   "aiSuggestionType": "metaDescription",
   "contentSource": "content"
 }
 ```
-- Generates SEO-optimized meta descriptions (150-160 characters)
-- Designed for search engine snippets
+- **Field Type**: Single-line text input
+- **AI Function**: SEO-optimized meta descriptions (150-160 characters)
+- **Use Case**: Search engine snippets, social media previews
 
 ## Sample Page
 
@@ -78,9 +107,11 @@ The sample page includes:
    
 4. **Use AI Suggestions:**
    - Click the ✨ "AI Suggest" button next to:
-     - Title field
-     - Summary field
-     - Meta Description field
+     - Title field (AI Text)
+     - Excerpt field (AI Textarea)
+     - Introduction field (AI Richtext)
+     - Category field (AI Select)
+     - Meta Description field (AI Text)
    
 5. **Review and save:**
    - Review the AI-generated suggestions
@@ -107,15 +138,17 @@ The sample page includes:
 
 ## Component Fields
 
-| Field | Type | Required | AI-Enhanced | Description |
-|-------|------|----------|-------------|-------------|
-| Title | Text | Yes | ✅ | Blog post title |
-| Summary | Text | Yes | ✅ | Brief summary |
-| Author | Text | Yes | ❌ | Author name |
-| Publish Date | Date | Yes | ❌ | Publication date |
-| Content | Rich Text | Yes | ❌ | Main blog content |
-| Meta Description | Text | No | ✅ | SEO meta description |
-| Tags | Text | No | ❌ | Comma-separated tags |
+| Field | Type | Required | AI-Enhanced | AI Type | Description |
+|-------|------|----------|-------------|---------|-------------|
+| Title | Text | Yes | ✅ AI Text | title | Blog post title |
+| Excerpt | Textarea | Yes | ✅ AI Textarea | excerpt | Longer summary/excerpt |
+| Author | Text | Yes | ❌ | - | Author name |
+| Publish Date | Date | Yes | ❌ | - | Publication date |
+| Content | Rich Text | Yes | ❌ | - | Main blog content (source for AI) |
+| Introduction | Rich Text | No | ✅ AI Richtext | description | AI-generated formatted introduction |
+| Meta Description | Text | No | ✅ AI Text | metaDescription | SEO meta description |
+| Category | Select | Yes | ✅ AI Select | category | Auto-categorization with 10 options |
+| Tags | Text | No | ❌ | - | Comma-separated tags |
 
 ## Rendering
 
@@ -153,9 +186,10 @@ Custom styles included in the HTL template:
 ## Next Steps
 
 1. Configure an AI service provider (OpenAI, Azure, Claude, or Ollama)
-2. Test the AI suggestions on the sample page
-3. Create your own components using the text-ai field
+2. Test all four AI field types on the sample page
+3. Create your own components using AI Text, Textarea, Richtext, or Select fields
 4. Customize the blog post styling to match your design system
+5. Explore combining multiple AI field types in your forms
 
 ## Notes
 

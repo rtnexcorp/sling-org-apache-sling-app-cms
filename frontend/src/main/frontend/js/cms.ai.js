@@ -19,13 +19,14 @@
 
 /**
  * AI Suggestion functionality for editor fields
+ * Supports text, textarea, richtext, and select fields
  * Uses document-level event delegation to handle dynamically loaded dialogs
  */
 
 async function handleAiSuggestClick(event) {
   const button = event.target.closest('.cms-ai-suggest-btn');
   if (!button) return;
-  
+
   event.preventDefault();
   event.stopPropagation();
 
@@ -34,10 +35,14 @@ async function handleAiSuggestClick(event) {
     console.error('AI Suggest: Could not find parent field element');
     return;
   }
-  
+
   const input = field.querySelector('.cms-ai-suggest-input');
   const aiType = field.dataset.aiType;
   const contentSource = field.dataset.contentSource;
+
+  // Determine field type
+  const isRichtext = field.classList.contains('cms-ai-suggest-field--richtext');
+  const isSelect = field.classList.contains('cms-ai-suggest-field--select');
 
   // Disable button and show loading state
   button.disabled = true;
@@ -95,8 +100,34 @@ async function handleAiSuggestClick(event) {
     const result = await response.json();
 
     if (result.success && result.suggestion) {
-      // Fill the input with suggestion
-      input.value = result.suggestion;
+      // Fill the input with suggestion based on field type
+      if (isRichtext) {
+        // For richtext, check if ProseMirror editor exists
+        const prosemirror = field.querySelector('.ProseMirror');
+        if (prosemirror && prosemirror.pmView) {
+          // Update ProseMirror editor if available
+          const { state, dispatch } = prosemirror.pmView;
+          const transaction = state.tr.insertText(result.suggestion, 0, state.doc.content.size);
+          dispatch(transaction);
+        } else {
+          // Fallback to textarea
+          input.value = result.suggestion;
+        }
+      } else if (isSelect) {
+        // For select, find matching option or set first option
+        const option = Array.from(input.options).find(opt =>
+          opt.value.toLowerCase() === result.suggestion.toLowerCase() ||
+          opt.text.toLowerCase().includes(result.suggestion.toLowerCase())
+        );
+        if (option) {
+          input.value = option.value;
+        }
+      } else {
+        // For text and textarea fields
+        input.value = result.suggestion;
+      }
+
+      // Trigger change events
       input.dispatchEvent(new Event('change', { bubbles: true }));
       input.dispatchEvent(new Event('input', { bubbles: true }));
 

@@ -16,7 +16,7 @@
  */
 
 // AI Suggestion Field Component
-// Provides AI-powered suggestions for text fields
+// Provides AI-powered suggestions for text, textarea, richtext, and select fields
 
 // Brand color from _bulma-config.scss
 $magenta: #9E2165;
@@ -73,6 +73,43 @@ $magenta: #9E2165;
 
   .cms-ai-suggest-input {
     padding-right: 7rem;
+  }
+
+  // Textarea-specific adjustments
+  &--textarea {
+    .cms-ai-suggest-btn {
+      top: 0.5rem;
+      transform: none;
+      height: auto;
+    }
+
+    textarea.cms-ai-suggest-input {
+      padding-right: 7rem;
+    }
+  }
+
+  // Richtext-specific adjustments
+  &--richtext {
+    .cms-ai-suggest-btn {
+      top: 0.5rem;
+      transform: none;
+      height: auto;
+    }
+
+    .rte {
+      position: relative;
+    }
+  }
+
+  // Select-specific adjustments
+  &--select {
+    .cms-ai-suggest-btn {
+      right: 3rem; // Offset for select dropdown arrow
+    }
+
+    .select {
+      width: 100%;
+    }
   }
 }
 

@@ -7,7 +7,7 @@
         "sling:resourceType": "sling-cms/components/general/container",
         "title": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+            "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
             "label": "Title",
             "name": "title",
             "type": "text",
@@ -16,17 +16,17 @@
             "required": true,
             "placeholder": "Enter blog post title or click AI Suggest"
         },
-        "summary": {
+        "excerpt": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
-            "label": "Summary",
-            "name": "summary",
-            "type": "text",
-            "aiSuggestionType": "summary",
+            "sling:resourceType": "sling-cms/components/editor/fields/ai/textarea",
+            "label": "Excerpt",
+            "name": "excerpt",
+            "rows": 4,
+            "aiSuggestionType": "excerpt",
             "contentSource": "content",
             "required": true,
-            "placeholder": "Enter summary or click AI Suggest",
-            "help": "A brief summary of the blog post (AI will generate from content)"
+            "placeholder": "Enter excerpt or click AI Suggest",
+            "help": "A longer excerpt/summary for the blog post (AI will generate from content)"
         },
         "author": {
             "jcr:primaryType": "nt:unstructured",
@@ -50,11 +50,21 @@
             "label": "Content",
             "name": "content",
             "required": true,
-            "help": "Main blog post content. Fill this first before using AI suggestions for title/summary."
+            "help": "Main blog post content. Fill this first before using AI suggestions for other fields."
+        },
+        "introduction": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/ai/richtext",
+            "label": "Introduction (AI-Enhanced)",
+            "name": "introduction",
+            "aiSuggestionType": "description",
+            "contentSource": "content",
+            "placeholder": "Write introduction or click AI Suggest",
+            "help": "AI can generate an engaging introduction based on your main content"
         },
         "metaDescription": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+            "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
             "label": "Meta Description (SEO)",
             "name": "metaDescription",
             "type": "text",
@@ -62,6 +72,69 @@
             "contentSource": "content",
             "placeholder": "Enter meta description or click AI Suggest",
             "help": "SEO meta description for search engines (150-160 characters)"
+        },
+        "category": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/ai/select",
+            "label": "Category (AI-Enhanced)",
+            "name": "category",
+            "aiSuggestionType": "category",
+            "contentSource": "content",
+            "required": true,
+            "help": "AI can suggest the best category based on your content",
+            "options": {
+                "jcr:primaryType": "nt:unstructured",
+                "technology": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Technology",
+                    "value": "technology"
+                },
+                "business": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Business",
+                    "value": "business"
+                },
+                "design": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Design",
+                    "value": "design"
+                },
+                "development": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Development",
+                    "value": "development"
+                },
+                "marketing": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Marketing",
+                    "value": "marketing"
+                },
+                "ai": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Artificial Intelligence",
+                    "value": "ai"
+                },
+                "cms": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Content Management",
+                    "value": "cms"
+                },
+                "tutorial": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Tutorial",
+                    "value": "tutorial"
+                },
+                "news": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "News",
+                    "value": "news"
+                },
+                "other": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "label": "Other",
+                    "value": "other"
+                }
+            }
         },
         "tags": {
             "jcr:primaryType": "nt:unstructured",

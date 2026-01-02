@@ -31,9 +31,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Sling Model for AI-enhanced text input field.
- * Provides properties and logic for rendering text fields with AI suggestion
- * capabilities.
+ * Sling Model for AI-enhanced form fields.
+ * Provides properties and logic for rendering various field types (text, textarea, richtext, select)
+ * with AI suggestion capabilities.
  */
 @Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class AiSuggestField {
@@ -81,6 +81,20 @@ public class AiSuggestField {
     @ValueMapValue
     @Nullable
     private String defaultValue;
+
+    // Textarea-specific
+    @ValueMapValue
+    @Nullable
+    private Integer rows;
+
+    // Richtext-specific
+    @ValueMapValue
+    @Nullable
+    private String toolbar;
+
+    // Select-specific
+    @ValueMapValue
+    private boolean multiple;
 
     private String value;
     private String fieldName;
@@ -257,5 +271,44 @@ public class AiSuggestField {
      */
     public boolean hasAiSuggestions() {
         return StringUtils.isNotBlank(aiSuggestionType);
+    }
+
+    /**
+     * Gets the number of rows for textarea field.
+     *
+     * @return the number of rows, or null if not specified
+     */
+    @Nullable
+    public Integer getRows() {
+        return rows;
+    }
+
+    /**
+     * Gets the toolbar path for richtext field.
+     *
+     * @return the toolbar resource path, or null if not specified
+     */
+    @Nullable
+    public String getToolbar() {
+        return toolbar;
+    }
+
+    /**
+     * Checks if multiple selection is enabled for select field.
+     *
+     * @return true if multiple selection is allowed
+     */
+    public boolean isMultiple() {
+        return multiple;
+    }
+
+    /**
+     * Gets the HTML multiple attribute for select field.
+     *
+     * @return "multiple" if multiple selection is enabled, empty string otherwise
+     */
+    @NotNull
+    public String getMultipleAttr() {
+        return multiple ? "multiple" : "";
     }
 }

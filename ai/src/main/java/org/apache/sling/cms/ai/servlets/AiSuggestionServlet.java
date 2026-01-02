@@ -41,8 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servlet for generating AI-powered content suggestions (titles, summaries,
- * meta descriptions).
+ * Servlet for generating AI-powered content suggestions for various field types.
  * <p>
  * Endpoint: POST /bin/cms/ai/suggest
  * </p>
@@ -50,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * Parameters:
  * </p>
  * <ul>
- * <li>type - Type of suggestion: "title", "summary", or "metaDescription"</li>
+ * <li>type - Type of suggestion: "title", "summary", "metaDescription", "excerpt", "description", "content", "category", "tags", "classification"</li>
  * <li>content - The page content to analyze</li>
  * <li>maxLength - (optional) Maximum length for summaries</li>
  * </ul>
@@ -107,6 +106,7 @@ public class AiSuggestionServlet extends SlingAllMethodsServlet {
                     aiResponse = aiService.suggestTitle(aiRequest);
                     break;
                 case "summary":
+                case "excerpt":
                     if (maxLengthParam != null && !maxLengthParam.isEmpty()) {
                         int maxLength = Integer.parseInt(maxLengthParam);
                         aiResponse = aiService.summarize(aiRequest, maxLength);
@@ -114,12 +114,23 @@ public class AiSuggestionServlet extends SlingAllMethodsServlet {
                         aiResponse = aiService.summarize(aiRequest);
                     }
                     break;
+                case "description":
+                case "content":
+                    aiResponse = aiService.summarize(aiRequest);
+                    break;
                 case "metadescription":
                     aiResponse = aiService.suggestMetaDescription(aiRequest);
                     break;
+                case "category":
+                case "tags":
+                case "classification":
+                    aiResponse = aiService.suggestTitle(aiRequest);
+                    break;
                 default:
                     sendErrorResponse(
-                            response, 400, "Invalid type parameter. Must be 'title', 'summary', or 'metaDescription'");
+                            response,
+                            400,
+                            "Invalid type parameter. Must be one of: title, summary, metaDescription, excerpt, description, content, category, tags, classification");
                     return;
             }
         } catch (Exception e) {

@@ -9,6 +9,10 @@
       "start-order": "20"
     },
     {
+      "id": "org.apache.sling:org.apache.sling.cms.ai:${cms-version}",
+      "start-order": "20"
+    },
+    {
       "id": "org.apache.sling:org.apache.sling.cms.ui:${cms-version}",
       "start-order": "19"
     },

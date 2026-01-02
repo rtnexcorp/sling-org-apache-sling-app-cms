@@ -1,0 +1,122 @@
+{
+	"jcr:primaryType": "nt:unstructured",
+	"sling:resourceType": "sling-cms/components/editor/slingform",
+	"button": "Save Field",
+	"fields": {
+		"jcr:primaryType": "nt:unstructured",
+		"sling:resourceType": "sling-cms/components/general/container",
+		"label": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Label",
+			"name": "label",
+			"required": true
+		},
+		"name": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Name",
+			"name": "name",
+			"required": true
+		},
+		"aiSuggestionType": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/select",
+			"label": "AI Suggestion Type",
+			"name": "aiSuggestionType",
+			"required": true,
+			"options": {
+				"content": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Rich Content",
+					"value": "content"
+				},
+				"summary": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Summary",
+					"value": "summary"
+				},
+				"description": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Description",
+					"value": "description"
+				}
+			}
+		},
+		"contentSource": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Content Source Field",
+			"name": "contentSource",
+			"placeholder": "Leave empty to analyze entire form",
+			"help": "Optional: Name of a specific field to analyze"
+		},
+		"toolbar": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/path",
+			"label": "Toolbar",
+			"name": "toolbar",
+			"help": "Path to custom toolbar configuration (defaults to /libs/sling-cms/components/editor/fields/richtext/toolbar/default)"
+		},
+		"placeholder": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Placeholder",
+			"name": "placeholder"
+		},
+		"help": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Help Text",
+			"name": "help"
+		},
+		"required": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/select",
+			"label": "Required",
+			"name": "required",
+			"options": {
+				"yes": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Yes",
+					"value": "true"
+				},
+				"no": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "No",
+					"value": "false"
+				}
+			}
+		},
+		"requiredTypeHint": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/hidden",
+			"name": "required@TypeHint",
+			"value": "Boolean"
+		},
+		"disabled": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/select",
+			"label": "Disabled",
+			"name": "disabled",
+			"options": {
+				"yes": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Yes",
+					"value": "true"
+				},
+				"no": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "No",
+					"value": "false"
+				}
+			}
+		},
+		"disabledTypeHint": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/hidden",
+			"name": "disabled@TypeHint",
+			"value": "Boolean"
+		}
+	}
+}

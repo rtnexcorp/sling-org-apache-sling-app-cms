@@ -6,7 +6,7 @@ The **Text Field with AI Suggestions** component provides intelligent content ge
 
 ## Component Location
 
-- **Path**: `/libs/sling-cms/components/editor/fields/text-ai`
+- **Path**: `/libs/sling-cms/components/editor/fields/ai/text`
 - **Type**: HTL Component with Sling Model
 - **Group**: SlingCMS-FieldConfig
 
@@ -25,7 +25,7 @@ The **Text Field with AI Suggestions** component provides intelligent content ge
 ```json
 {
   "jcr:primaryType": "nt:unstructured",
-  "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
   "label": "Page Title",
   "name": "jcr:title",
   "required": true,
@@ -39,7 +39,7 @@ The **Text Field with AI Suggestions** component provides intelligent content ge
 ```json
 {
   "jcr:primaryType": "nt:unstructured",
-  "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
   "label": "Summary",
   "name": "summary",
   "type": "text",
@@ -54,7 +54,7 @@ The **Text Field with AI Suggestions** component provides intelligent content ge
 ```json
 {
   "jcr:primaryType": "nt:unstructured",
-  "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+  "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
   "label": "Meta Description",
   "name": "metaDescription",
   "aiSuggestionType": "metaDescription",
@@ -118,14 +118,14 @@ The `contentSource` property controls where the AI gets content to analyze:
     
     "title": {
       "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+      "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
       "label": "Title",
       "name": "jcr:title",
       "required": true,
       "aiSuggestionType": "title",
       "contentSource": "description"
     },
-    
+
     "description": {
       "jcr:primaryType": "nt:unstructured",
       "sling:resourceType": "sling-cms/components/editor/fields/textarea",
@@ -134,19 +134,19 @@ The `contentSource` property controls where the AI gets content to analyze:
       "required": true,
       "rows": 5
     },
-    
+
     "summary": {
       "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+      "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
       "label": "Summary",
       "name": "summary",
       "aiSuggestionType": "summary",
       "help": "Auto-generated from description"
     },
-    
+
     "metaDescription": {
       "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "sling-cms/components/editor/fields/text-ai",
+      "sling:resourceType": "sling-cms/components/editor/fields/ai/text",
       "label": "Meta Description",
       "name": "metaDescription",
       "aiSuggestionType": "metaDescription",
