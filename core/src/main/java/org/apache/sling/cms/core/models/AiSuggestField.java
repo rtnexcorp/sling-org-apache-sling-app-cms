@@ -20,6 +20,10 @@ package org.apache.sling.cms.core.models;
 
 import javax.annotation.PostConstruct;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -310,5 +314,72 @@ public class AiSuggestField {
     @NotNull
     public String getMultipleAttr() {
         return multiple ? "multiple" : "";
+    }
+
+    /**
+     * Gets the select options for select field type.
+     * Reads child nodes under the "options" child resource.
+     *
+     * @return list of options, or empty list if none defined
+     */
+    @NotNull
+    public List<Option> getOptions() {
+        if (resource == null) {
+            return Collections.emptyList();
+        }
+
+        Resource optionsResource = resource.getChild("options");
+        if (optionsResource == null) {
+            return Collections.emptyList();
+        }
+
+        List<Option> options = new ArrayList<>();
+        for (Resource optionResource : optionsResource.getChildren()) {
+            String optionLabel = optionResource.getValueMap().get("label", String.class);
+            String optionValue = optionResource.getValueMap().get("value", String.class);
+
+            if (StringUtils.isNotBlank(optionValue)) {
+                boolean isSelected = optionValue.equals(this.value);
+                options.add(new Option(StringUtils.defaultIfBlank(optionLabel, optionValue), optionValue, isSelected));
+            }
+        }
+
+        return options;
+    }
+
+    /**
+     * Inner class representing a select option.
+     */
+    public static class Option {
+        private final String label;
+        private final String value;
+        private final boolean selected;
+
+        public Option(String label, String value, boolean selected) {
+            this.label = label;
+            this.value = value;
+            this.selected = selected;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        /**
+         * Gets the HTML selected attribute.
+         *
+         * @return "selected" if this option is selected, empty string otherwise
+         */
+        public String getSelected() {
+            return selected ? "selected" : "";
+        }
     }
 }

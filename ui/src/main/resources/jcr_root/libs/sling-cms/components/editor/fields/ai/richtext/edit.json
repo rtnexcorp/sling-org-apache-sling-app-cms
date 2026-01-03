@@ -56,7 +56,7 @@
 			"sling:resourceType": "sling-cms/components/editor/fields/path",
 			"label": "Toolbar",
 			"name": "toolbar",
-			"help": "Path to custom toolbar configuration (defaults to /libs/sling-cms/components/editor/fields/richtext/toolbar/default)"
+			"help": "Path to custom toolbar configuration (defaults to /libs/sling-cms/components/editor/fields/ai/richtext/toolbar/default)"
 		},
 		"placeholder": {
 			"jcr:primaryType": "nt:unstructured",

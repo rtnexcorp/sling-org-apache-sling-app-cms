@@ -49,9 +49,10 @@ import org.slf4j.LoggerFactory;
  * Parameters:
  * </p>
  * <ul>
- * <li>type - Type of suggestion: "title", "summary", "metaDescription", "excerpt", "description", "content", "category", "tags", "classification"</li>
+ * <li>type - Type of suggestion: "title", "summary", "metaDescription", "excerpt", "description", "content", "category", "tags", "classification", "improve", "expand"</li>
  * <li>content - The page content to analyze</li>
  * <li>maxLength - (optional) Maximum length for summaries</li>
+ * <li>tone - (optional) Tone for rewrite operations: "formal", "informal", "concise", "detailed", "friendly", "technical"</li>
  * </ul>
  */
 @Component(
@@ -77,6 +78,7 @@ public class AiSuggestionServlet extends SlingAllMethodsServlet {
         String type = request.getParameter("type");
         String content = request.getParameter("content");
         String maxLengthParam = request.getParameter("maxLength");
+        String toneParam = request.getParameter("tone");
 
         if (type == null || content == null || content.trim().isEmpty()) {
             sendErrorResponse(response, 400, "Missing required parameters: type and content");
@@ -126,11 +128,22 @@ public class AiSuggestionServlet extends SlingAllMethodsServlet {
                 case "classification":
                     aiResponse = aiService.suggestTitle(aiRequest);
                     break;
+                case "improve":
+                case "rewrite":
+                    // Default to FORMAL tone for improve, can be overridden with tone param
+                    AiTextService.Tone improveTone = parseTone(toneParam, AiTextService.Tone.FORMAL);
+                    aiResponse = aiService.rewrite(aiRequest, improveTone);
+                    break;
+                case "expand":
+                    // Use DETAILED tone for expand to get more content
+                    AiTextService.Tone expandTone = parseTone(toneParam, AiTextService.Tone.DETAILED);
+                    aiResponse = aiService.rewrite(aiRequest, expandTone);
+                    break;
                 default:
                     sendErrorResponse(
                             response,
                             400,
-                            "Invalid type parameter. Must be one of: title, summary, metaDescription, excerpt, description, content, category, tags, classification");
+                            "Invalid type parameter. Must be one of: title, summary, metaDescription, excerpt, description, content, category, tags, classification, improve, expand, rewrite");
                     return;
             }
         } catch (Exception e) {
@@ -180,6 +193,25 @@ public class AiSuggestionServlet extends SlingAllMethodsServlet {
         }
 
         return null;
+    }
+
+    /**
+     * Parse tone parameter to Tone enum.
+     *
+     * @param toneParam    the tone parameter string
+     * @param defaultTone  the default tone to use if parsing fails
+     * @return the parsed tone or default
+     */
+    private AiTextService.Tone parseTone(String toneParam, AiTextService.Tone defaultTone) {
+        if (toneParam == null || toneParam.trim().isEmpty()) {
+            return defaultTone;
+        }
+        try {
+            return AiTextService.Tone.valueOf(toneParam.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid tone parameter '{}', using default: {}", toneParam, defaultTone);
+            return defaultTone;
+        }
     }
 
     private void sendErrorResponse(SlingHttpServletResponse response, int status, String message) throws IOException {

@@ -90,25 +90,55 @@ $magenta: #9E2165;
 
   // Richtext-specific adjustments
   &--richtext {
+    // AI button is now in toolbar, not positioned absolutely
     .cms-ai-suggest-btn {
-      top: 0.5rem;
+      position: static;
       transform: none;
       height: auto;
+      background: transparent;
+      border: 1px solid transparent;
+
+      &:hover {
+        background-color: lighten($magenta, 45%);
+        border-color: lighten($magenta, 30%);
+      }
     }
 
     .rte {
       position: relative;
     }
+
+    // No need for extra padding on RTE input
+    .cms-ai-suggest-input {
+      padding-right: 0.75rem;
+    }
   }
 
   // Select-specific adjustments
   &--select {
+    .control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cms-ai-suggest-wrapper {
+      flex: 1;
+    }
+
     .cms-ai-suggest-btn {
-      right: 3rem; // Offset for select dropdown arrow
+      position: static;
+      transform: none;
+      flex-shrink: 0;
     }
 
     .select {
       width: 100%;
+    }
+
+    // Remove padding override for select
+    .cms-ai-suggest-input {
+      padding-right: 2.5rem; // Standard select padding for arrow
     }
   }
 }

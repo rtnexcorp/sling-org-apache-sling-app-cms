@@ -28,10 +28,10 @@
         <div class="control">
             <div class="rte">
                 <sly data-sly-test="${model.toolbar}">
-                    <sly data-sly-resource="${model.toolbar @ resourceType='sling-cms/components/editor/fields/richtext/toolbar'}"></sly>
+                    <sly data-sly-resource="${model.toolbar @ resourceType='sling-cms/components/editor/fields/ai/richtext/toolbar'}"></sly>
                 </sly>
                 <sly data-sly-test="${!model.toolbar}">
-                    <sly data-sly-resource="${'/libs/sling-cms/components/editor/fields/richtext/toolbar/default' @ resourceType='sling-cms/components/editor/fields/richtext/toolbar'}"></sly>
+                    <sly data-sly-resource="${'/libs/sling-cms/components/editor/fields/ai/richtext/toolbar/default' @ resourceType='sling-cms/components/editor/fields/ai/richtext/toolbar'}"></sly>
                 </sly>
                 <textarea class="rte-editor textarea cms-ai-suggest-input"
                           id="${model.name}"
@@ -40,14 +40,6 @@
                           required="${model.requiredAttr}"
                           disabled="${model.disabledAttr}">${model.value}</textarea>
             </div>
-            <sly data-sly-test="${model.hasAiSuggestions}">
-                <button type="button"
-                        class="button is-small is-text cms-ai-suggest-btn cms-ai-suggest-btn--richtext"
-                        title="Generate AI suggestion">
-                    <span class="cms-icon cms-icon--ai"></span>
-                    <span>AI Suggest</span>
-                </button>
-            </sly>
         </div>
         <sly data-sly-test="${model.help}">
             <p class="help">
