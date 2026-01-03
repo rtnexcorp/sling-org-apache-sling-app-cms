@@ -17,7 +17,7 @@
   ~ under the License.
   */-->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.AiSuggestField">
-    <div class="field cms-ai-suggest-field" 
+    <div class="field cms-ai-suggest-field cms-ai-suggest-field--text" 
          data-ai-type="${model.aiSuggestionType}"
          data-content-source="${model.contentSource}">
         <sly data-sly-test="${model.label}">
@@ -25,22 +25,24 @@
                 ${model.label @ i18n}
             </label>
         </sly>
-        <div class="control has-icons-right">
-            <input type="${model.type}" 
-                   class="input cms-ai-suggest-input" 
-                   id="${model.name}" 
-                   name="${model.fieldName}" 
-                   value="${model.value}" 
-                   placeholder="${model.placeholder}"
-                   aria-required="${model.required}"
-                   required="${model.requiredAttr}"
-                   disabled="${model.disabledAttr}" />
+        <div class="control">
+            <div class="cms-ai-suggest-wrapper">
+                <input type="${model.type}" 
+                       class="input cms-ai-suggest-input" 
+                       id="${model.name}" 
+                       name="${model.fieldName}" 
+                       value="${model.value}" 
+                       placeholder="${model.placeholder}"
+                       aria-required="${model.required}"
+                       required="${model.requiredAttr}"
+                       disabled="${model.disabledAttr}" />
+            </div>
             <sly data-sly-test="${model.hasAiSuggestions}">
                 <button type="button" 
-                        class="button is-small is-text cms-ai-suggest-btn" 
+                        class="button is-small cms-ai-suggest-btn" 
                         title="Generate AI suggestion">
                     <span class="cms-icon cms-icon--ai"></span>
-                    <span>AI Suggest</span>
+                    <span>AI</span>
                 </button>
             </sly>
         </div>

@@ -24,26 +24,31 @@ $magenta: #9E2165;
 .cms-ai-suggest-field {
   position: relative;
 
+  // Common flexbox layout for control with AI button outside
   .control {
-    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .cms-ai-suggest-wrapper {
+    flex: 1;
+    min-width: 0; // Prevent flex item from overflowing
   }
 
   .cms-ai-suggest-btn {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    height: calc(100% - 1rem);
-    border: none;
+    flex-shrink: 0;
+    border: 1px solid $magenta;
     background: transparent;
     color: $magenta;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    z-index: 4;
+    border-radius: 4px;
+    white-space: nowrap;
 
     &:hover {
       background-color: lighten($magenta, 45%);
@@ -71,30 +76,37 @@ $magenta: #9E2165;
     }
   }
 
+  // No extra padding needed - button is outside
   .cms-ai-suggest-input {
-    padding-right: 7rem;
+    width: 100%;
+  }
+
+  // Text field adjustments
+  &--text {
+    .control {
+      align-items: center; // Vertically center for single-line input
+    }
   }
 
   // Textarea-specific adjustments
   &--textarea {
-    .cms-ai-suggest-btn {
-      top: 0.5rem;
-      transform: none;
-      height: auto;
+    .control {
+      align-items: flex-start; // Align button to top for textarea
     }
 
-    textarea.cms-ai-suggest-input {
-      padding-right: 7rem;
+    .cms-ai-suggest-btn {
+      margin-top: 0.25rem; // Small offset to align with textarea
     }
   }
 
   // Richtext-specific adjustments
   &--richtext {
-    // AI button is now in toolbar, not positioned absolutely
+    // AI button is in toolbar for richtext
+    .control {
+      display: block; // Override flex for richtext
+    }
+
     .cms-ai-suggest-btn {
-      position: static;
-      transform: none;
-      height: auto;
       background: transparent;
       border: 1px solid transparent;
 
@@ -107,38 +119,16 @@ $magenta: #9E2165;
     .rte {
       position: relative;
     }
-
-    // No need for extra padding on RTE input
-    .cms-ai-suggest-input {
-      padding-right: 0.75rem;
-    }
   }
 
   // Select-specific adjustments
   &--select {
     .control {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .cms-ai-suggest-wrapper {
-      flex: 1;
-    }
-
-    .cms-ai-suggest-btn {
-      position: static;
-      transform: none;
-      flex-shrink: 0;
+      align-items: center; // Vertically center for select
     }
 
     .select {
       width: 100%;
-    }
-
-    // Remove padding override for select
-    .cms-ai-suggest-input {
-      padding-right: 2.5rem; // Standard select padding for arrow
     }
   }
 }
