@@ -1,0 +1,138 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// AI Taxonomy Field Component
+// Provides AI-powered taxonomy suggestions for content tagging
+// Follows the labelfield pattern used by existing taxonomy fields
+
+@import 'variables';
+
+// Brand color from _bulma-config.scss
+$magenta: #9E2165;
+
+.cms-ai-taxonomy-field {
+  margin-bottom: 1rem;
+
+  .label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+
+    .has-text-danger {
+      color: #ff3860;
+      margin-left: 0.25rem;
+    }
+  }
+
+  // AI Suggest button styling
+  .cms-ai-suggest-btn {
+    border: 1px solid $magenta;
+    background: transparent;
+    color: $magenta;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    margin-bottom: 0.75rem;
+
+    .icon {
+      font-size: 1rem;
+      width: auto;
+      height: auto;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    &:hover {
+      background-color: lighten($magenta, 45%);
+      color: darken($magenta, 10%);
+      border-color: darken($magenta, 10%);
+    }
+
+    &:focus {
+      outline: 2px solid $magenta;
+      outline-offset: 2px;
+    }
+
+    &.is-loading {
+      opacity: 0.6;
+      cursor: wait;
+    }
+  }
+
+  // Labelfield structure matches existing taxonomy field
+  .labelfield {
+    .labelfield__template {
+      display: none;
+    }
+
+    // Clickable dropdown caret
+    .control.has-icons-right {
+      .icon.is-right {
+        cursor: pointer;
+        pointer-events: auto;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: $magenta;
+        }
+
+        .jam-chevron-down {
+          display: inline-block;
+        }
+      }
+    }
+
+    .labelfield__container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      min-height: 2rem;
+
+      &:empty {
+        display: none;
+      }
+    }
+  }
+
+  .help {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+  }
+}
+
+// Animation for adding items
+@keyframes taxonomy-item-added {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cms-ai-taxonomy-field .labelfield__item {
+  animation: taxonomy-item-added 0.2s ease-out;
+}

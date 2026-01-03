@@ -1,0 +1,100 @@
+<!--/*
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  */-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.AiTaxonomyField">
+    <div class="field cms-ai-taxonomy-field" 
+         data-ai-type="${model.aiSuggestionType}"
+         data-taxonomy-base="${model.basePath}"
+         data-content-source="${model.contentSource}">
+        
+        <sly data-sly-test="${model.label}">
+            <label class="label">
+                ${model.label @ i18n}
+                <sly data-sly-test="${model.required}">
+                    <span class="has-text-danger">*</span>
+                </sly>
+            </label>
+        </sly>
+        
+        <!-- AI Suggestion Button -->
+        <sly data-sly-test="${model.hasAiSuggestions}">
+            <div class="field">
+                <button type="button" 
+                        class="button is-small cms-ai-suggest-btn" 
+                        data-action="suggest-taxonomy"
+                        title="Generate AI-powered taxonomy suggestions">
+                    <span class="icon">✨</span>
+                    <span>AI Suggest</span>
+                </button>
+            </div>
+        </sly>
+        
+        <!-- Labelfield Structure (matches existing labelfield/taxonomy pattern) -->
+        <div class="labelfield">
+            <!-- Template for new items (must be hidden fieldset with disabled attribute) -->
+            <fieldset disabled="disabled" class="labelfield__template is-hidden">
+                <a class="tag labelfield__item" title="">
+                    <input type="hidden" name="${model.fieldName}" value="" />
+                    <span class="labelfield__title"></span>
+                    <button class="delete is-small" type="button">
+                        <span class="is-sr-only">${'Delete' @ i18n}</span>
+                    </button>
+                </a>
+            </fieldset>
+            
+            <!-- Input field with add button -->
+            <div class="labelfield__field field has-addons">
+                <div class="control is-expanded has-icons-right">
+                    <input type="text" 
+                           class="input"
+                           placeholder="${model.placeholder}"
+                           list="labelfield-${model.fieldId}"
+                           autocomplete="off" />
+                    <span class="icon is-small is-right">
+                        <span class="jam jam-chevron-down"></span>
+                    </span>
+                </div>
+                <div class="control">
+                    <button type="button" class="button labelfield__add">
+                        <span class="jam jam-plus">
+                            <span class="is-sr-only">${'Add' @ i18n}</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Container for selected items -->
+            <div class="labelfield__container tags are-large">
+                <sly data-sly-resource="${resource @ resourceType='sling-cms/components/editor/fields/ai/taxonomy/values'}"></sly>
+            </div>
+            
+            <!-- Datalist for autocomplete options -->
+            <datalist id="labelfield-${model.fieldId}">
+                <sly data-sly-list.option="${model.availableOptions}">
+                    <option value="${option.path}">${option.title}</option>
+                </sly>
+            </datalist>
+        </div>
+        
+        <sly data-sly-test="${model.help}">
+            <p class="help">
+                ${model.help @ i18n}
+            </p>
+        </sly>
+    </div>
+</sly>

@@ -138,11 +138,19 @@
         },
         "tags": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/text",
-            "label": "Tags",
+            "sling:resourceType": "sling-cms/components/editor/fields/ai/taxonomy",
+            "label": "Tags (AI-Enhanced)",
             "name": "tags",
-            "placeholder": "e.g., technology, AI, CMS",
-            "help": "Comma-separated tags"
+            "aiSuggestionType": "content-taxonomy",
+            "contentSource": "content",
+            "placeholder": "Select tags or click AI Suggest",
+            "help": "AI can automatically suggest relevant tags based on your blog post content"
+        },
+        "tagsTypeHint": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "tags@TypeHint",
+            "value": "String[]",
+            "sling:resourceType": "sling-cms/components/editor/fields/hidden"
         }
     }
 }
