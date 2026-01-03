@@ -18,7 +18,6 @@
  */
 package org.apache.sling.cms.ai.servlets;
 
-import javax.jcr.query.Query;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
@@ -79,7 +78,7 @@ import org.slf4j.LoggerFactory;
  */
 @Component(
         service = Servlet.class,
-        property = {"sling.servlet.methods=POST", "sling.servlet.paths=/bin/cms/ai/suggest-taxonomy.json"})
+        property = {"sling.servlet.methods=POST", "sling.servlet.paths=/bin/cms/ai/suggest-taxonomy"})
 public class AiTaxonomySuggestionServlet extends SlingAllMethodsServlet {
 
     private static final long serialVersionUID = 1L;
@@ -210,21 +209,43 @@ public class AiTaxonomySuggestionServlet extends SlingAllMethodsServlet {
                 taxonomyBase = DEFAULT_TAXONOMY_BASE;
             }
 
-            String query = "SELECT * FROM [sling:Taxonomy] WHERE ISDESCENDANTNODE([" + taxonomyBase + "])";
-            java.util.Iterator<Resource> results = resolver.findResources(query, Query.JCR_SQL2);
+            log.info("Loading taxonomies from base path: {}", taxonomyBase);
 
-            while (results.hasNext()) {
-                Resource res = results.next();
-                ValueMap vm = res.getValueMap();
-                String title = vm.get("jcr:title", res.getName());
-                String description = vm.get("jcr:description", "");
-                taxonomies.add(new TaxonomyOption(res.getPath(), title, description));
+            // Try direct resource traversal first for better compatibility
+            Resource baseResource = resolver.getResource(taxonomyBase);
+            if (baseResource != null) {
+                log.info("Base resource found, iterating children recursively");
+                iterateAndCollectTaxonomies(baseResource, taxonomies);
+                log.info("Loaded {} taxonomies from {}", taxonomies.size(), taxonomyBase);
+            } else {
+                log.warn("Base resource not found: {}", taxonomyBase);
             }
         } catch (Exception e) {
             log.error("Error loading taxonomies (taxonomyBase={})", taxonomyBase, e);
         }
 
         return taxonomies;
+    }
+
+    /**
+     * Recursively iterate through resources and collect taxonomy items.
+     */
+    private void iterateAndCollectTaxonomies(Resource resource, List<TaxonomyOption> taxonomies) {
+        // Check if this resource is a taxonomy (but not the root we started from to avoid duplicates)
+        ValueMap vm = resource.getValueMap();
+        String primaryType = vm.get("jcr:primaryType", String.class);
+
+        if ("sling:Taxonomy".equals(primaryType)) {
+            String title = vm.get("jcr:title", resource.getName());
+            String description = vm.get("jcr:description", "");
+            taxonomies.add(new TaxonomyOption(resource.getPath(), title, description));
+            log.info("Found taxonomy: {} ({})", title, resource.getPath());
+        }
+
+        // Recursively process children
+        for (Resource child : resource.getChildren()) {
+            iterateAndCollectTaxonomies(child, taxonomies);
+        }
     }
 
     /**

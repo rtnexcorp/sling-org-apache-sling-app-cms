@@ -141,6 +141,7 @@
             "sling:resourceType": "sling-cms/components/editor/fields/ai/taxonomy",
             "label": "Tags (AI-Enhanced)",
             "name": "tags",
+            "basePath": "/etc/taxonomy/reference",
             "aiSuggestionType": "content-taxonomy",
             "contentSource": "content",
             "placeholder": "Select tags or click AI Suggest",

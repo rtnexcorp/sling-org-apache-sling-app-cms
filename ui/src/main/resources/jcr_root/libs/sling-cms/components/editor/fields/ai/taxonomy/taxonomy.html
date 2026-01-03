@@ -16,7 +16,7 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   */-->
-<sly data-sly-use.model="org.apache.sling.cms.core.models.AiTaxonomyField">
+<sly data-sly-use.model="${'org.apache.sling.cms.core.models.AiTaxonomyField' @ request=request}">
     <div class="field cms-ai-taxonomy-field" 
          data-ai-type="${model.aiSuggestionType}"
          data-taxonomy-base="${model.basePath}"

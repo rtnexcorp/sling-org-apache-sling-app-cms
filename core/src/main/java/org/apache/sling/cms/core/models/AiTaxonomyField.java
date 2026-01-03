@@ -19,7 +19,6 @@
 package org.apache.sling.cms.core.models;
 
 import javax.annotation.PostConstruct;
-import javax.jcr.query.Query;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -150,26 +149,21 @@ public class AiTaxonomyField {
             String taxonomyBasePath = basePath;
             if (StringUtils.isBlank(taxonomyBasePath)) {
                 taxonomyBasePath = getSiteTaxonomyRoot();
-                log.debug("Using site taxonomy root: {}", taxonomyBasePath);
+                log.info("Using site taxonomy root: {}", taxonomyBasePath);
             } else {
-                log.debug("Using configured basePath: {}", taxonomyBasePath);
+                log.info("Using configured basePath: {}", taxonomyBasePath);
             }
 
             if (StringUtils.isNotBlank(taxonomyBasePath)) {
-                // Query for taxonomy items
-                String query = "SELECT * FROM [sling:Taxonomy] WHERE ISDESCENDANTNODE([" + taxonomyBasePath + "])";
-                log.debug("Executing taxonomy query: {}", query);
-
-                java.util.Iterator<Resource> results = resolver.findResources(query, Query.JCR_SQL2);
-                int count = 0;
-                while (results.hasNext()) {
-                    Resource res = results.next();
-                    ValueMap vm = res.getValueMap();
-                    String title = vm.get("jcr:title", res.getName());
-                    options.add(new TaxonomyItem(res.getPath(), title));
-                    count++;
+                // Use direct resource traversal for better compatibility
+                Resource baseResource = resolver.getResource(taxonomyBasePath);
+                if (baseResource != null) {
+                    log.info("Base resource found, iterating children recursively");
+                    collectTaxonomyItems(baseResource, options);
+                    log.info("Found {} taxonomy items", options.size());
+                } else {
+                    log.warn("Base resource not found: {}", taxonomyBasePath);
                 }
-                log.debug("Found {} taxonomy items", count);
             } else {
                 log.warn("No taxonomy base path configured and could not determine site taxonomy root");
             }
@@ -177,7 +171,31 @@ public class AiTaxonomyField {
             log.error("Error loading taxonomy options", e);
         }
 
+        log.info("Returning {} taxonomy options", options.size());
         return options;
+    }
+
+    /**
+     * Recursively collect taxonomy items from a resource and its children.
+     *
+     * @param resource the resource to process
+     * @param items list to collect taxonomy items into
+     */
+    private void collectTaxonomyItems(Resource resource, List<TaxonomyItem> items) {
+        ValueMap vm = resource.getValueMap();
+        String primaryType = vm.get("jcr:primaryType", String.class);
+
+        // Check if this resource is a taxonomy node
+        if ("sling:Taxonomy".equals(primaryType)) {
+            String title = vm.get("jcr:title", resource.getName());
+            items.add(new TaxonomyItem(resource.getPath(), title));
+            log.debug("Added taxonomy item: {} -> {}", resource.getPath(), title);
+        }
+
+        // Recursively process children
+        for (Resource child : resource.getChildren()) {
+            collectTaxonomyItems(child, items);
+        }
     }
 
     /**
