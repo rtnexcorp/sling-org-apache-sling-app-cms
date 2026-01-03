@@ -66,10 +66,10 @@ Build a modern, developer-friendly CMS that:
 *Add intelligence and deeper integrations*
 
 ### AI Provider Abstraction
-| Feature | ID | Modules | Effort | Notes |
-|---------|-----|---------|--------|-------|
-| AI provider abstraction | NA-AI-001 | `api`, `core` | M | OSGi services; CMS works when AI disabled |
-| Suggest title/summary | NA-AI-002 | `core`, `ui` | M | Human-in-the-loop only; author approves |
+| Feature | ID | Modules | Effort | Status | Notes |
+|---------|-----|---------|--------|--------|-------|
+| AI provider abstraction | NA-AI-001 | `api`, `core` | M | ✅ Completed | OSGi services; CMS works when AI disabled |
+| Suggest title/summary | NA-AI-002 | `core`, `ui` | M | ✅ Completed | Human-in-the-loop only; author approves |
 
 ### Platform Observability
 | Feature | ID | Modules | Effort | Notes |

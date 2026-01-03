@@ -31,6 +31,20 @@
   const editorInstances = new Map();
 
   /**
+   * Show a notification message to the user
+   */
+  function showNotification(title, message) {
+    if (window.SlingCMS && window.SlingCMS.ui && typeof window.SlingCMS.ui.confirmMessage === 'function') {
+      window.SlingCMS.ui.confirmMessage(title, message);
+    } else if (window.Sling && window.Sling.CMS && window.Sling.CMS.ui && typeof window.Sling.CMS.ui.confirmMessage === 'function') {
+      window.Sling.CMS.ui.confirmMessage(title, message);
+    } else {
+      // Fallback to alert
+      alert(title + ': ' + message);
+    }
+  }
+
+  /**
    * Command mapping from legacy wysihtml commands to TipTap commands
    */
   const COMMAND_MAP = {
@@ -112,6 +126,133 @@
         case 'blockquote':
           editor.chain().focus().toggleBlockquote().run();
           break;
+      }
+    },
+    
+    // AI Commands
+    'aiImproveText': async (editor) => {
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to, ' ');
+      const textToImprove = selectedText || editor.getHTML();
+      
+      if (!textToImprove || textToImprove.trim() === '') {
+        showNotification('AI Improve', 'Please select some text or enter content first.');
+        return;
+      }
+      
+      try {
+        const formData = new FormData();
+        formData.append('type', 'improve');
+        formData.append('content', textToImprove);
+        
+        const response = await fetch('/bin/cms/ai/suggest.json', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const result = await response.json();
+        
+        if (result.success && result.suggestion) {
+          if (selectedText) {
+            // Replace selected text
+            editor.chain().focus().deleteRange({ from, to }).insertContent(result.suggestion).run();
+          } else {
+            // Replace all content
+            editor.chain().focus().setContent(result.suggestion).run();
+          }
+          showNotification('AI Improve', 'Text improved successfully!');
+        } else {
+          throw new Error(result.error || 'Failed to improve text');
+        }
+      } catch (error) {
+        console.error('AI improve error:', error);
+        showNotification('AI Improve Failed', error.message || 'An error occurred');
+      }
+    },
+    
+    'aiSummarize': async (editor) => {
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to, ' ');
+      const textToSummarize = selectedText || editor.getHTML();
+      
+      if (!textToSummarize || textToSummarize.trim() === '') {
+        showNotification('AI Summarize', 'Please select some text or enter content first.');
+        return;
+      }
+      
+      try {
+        const formData = new FormData();
+        formData.append('type', 'summary');
+        formData.append('content', textToSummarize);
+        
+        const response = await fetch('/bin/cms/ai/suggest.json', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const result = await response.json();
+        
+        if (result.success && result.suggestion) {
+          if (selectedText) {
+            // Replace selected text with summary
+            editor.chain().focus().deleteRange({ from, to }).insertContent(result.suggestion).run();
+          } else {
+            // Insert summary at cursor position
+            editor.chain().focus().insertContent('<p><strong>Summary:</strong> ' + result.suggestion + '</p>').run();
+          }
+          showNotification('AI Summarize', 'Summary generated successfully!');
+        } else {
+          throw new Error(result.error || 'Failed to generate summary');
+        }
+      } catch (error) {
+        console.error('AI summarize error:', error);
+        showNotification('AI Summarize Failed', error.message || 'An error occurred');
+      }
+    },
+    
+    'aiExpandText': async (editor) => {
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to, ' ');
+      const textToExpand = selectedText || editor.getHTML();
+      
+      if (!textToExpand || textToExpand.trim() === '') {
+        showNotification('AI Expand', 'Please select some text or enter content first.');
+        return;
+      }
+      
+      try {
+        const formData = new FormData();
+        formData.append('type', 'expand');
+        formData.append('content', textToExpand);
+        
+        const response = await fetch('/bin/cms/ai/suggest.json', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const result = await response.json();
+        
+        if (result.success && result.suggestion) {
+          if (selectedText) {
+            // Replace selected text with expanded version
+            editor.chain().focus().deleteRange({ from, to }).insertContent(result.suggestion).run();
+          } else {
+            // Replace all content with expanded version
+            editor.chain().focus().setContent(result.suggestion).run();
+          }
+          showNotification('AI Expand', 'Text expanded successfully!');
+        } else {
+          throw new Error(result.error || 'Failed to expand text');
+        }
+      } catch (error) {
+        console.error('AI expand error:', error);
+        showNotification('AI Expand Failed', error.message || 'An error occurred');
       }
     }
   };
@@ -247,7 +388,7 @@
     window.SlingCMS.logger.debug('[TipTap] Setting up', buttons.length, 'toolbar buttons');
     
     buttons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
         
@@ -266,10 +407,23 @@
           return;
         }
         
-        // Execute command
+        // Execute command (handle both sync and async commands)
         const commandFn = COMMAND_MAP[command];
         if (commandFn) {
-          commandFn(editor, value);
+          try {
+            // Add loading state for AI commands
+            if (command.startsWith('ai')) {
+              btn.classList.add('is-loading');
+            }
+            await commandFn(editor, value);
+          } catch (error) {
+            console.error('[TipTap] Command error:', command, error);
+            showNotification('Error', error.message || 'Command failed');
+          } finally {
+            btn.classList.remove('is-loading');
+          }
+        } else {
+          window.SlingCMS.logger.warn('[TipTap] Unknown command:', command);
         }
         
         // Update toolbar state

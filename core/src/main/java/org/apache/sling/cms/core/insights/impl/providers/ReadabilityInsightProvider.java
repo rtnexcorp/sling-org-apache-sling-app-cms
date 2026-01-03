@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 @Component(service = InsightProvider.class, immediate = true)
 public class ReadabilityInsightProvider extends BaseInsightProvider {
 
-    public static final String I18N_KEY_READABILITY_RESULT_DANGER = "Failed to calculate readability for {1}";
+    public static final String I18N_KEY_READABILITY_RESULT_DANGER = "Failed to calculate readability for {0}";
     public static final String I18N_KEY_READABILITY_RESULT_SUCCESS =
             "Readability grade {2} is between expected range: ({0}-{1})";
     public static final String I18N_KEY_READABILITY_RESULT_WARN =
@@ -83,7 +83,17 @@ public class ReadabilityInsightProvider extends BaseInsightProvider {
         Insight insight = new Insight(this, request);
 
         PageInsightRequest pageRequest = (PageInsightRequest) request;
+
+        log.debug(
+                "Starting readability check for page: {}", pageRequest.getPage().getPath());
+
         String text = pageRequest.getPageBodyElement().text();
+
+        if (text == null || text.trim().isEmpty()) {
+            log.warn("No text content found for page: {}", pageRequest.getPage().getPath());
+            throw new Exception("No text content found on page - cannot calculate readability");
+        }
+
         Site site = null;
         SiteManager smgr = request.getResource().adaptTo(SiteManager.class);
         if (smgr != null) {
@@ -100,19 +110,31 @@ public class ReadabilityInsightProvider extends BaseInsightProvider {
 
         I18NDictionary dictionary =
                 i18nProvider.getDictionary(request.getResource().getResourceResolver());
-        if (site != null && config != null) {
-            executeReadabilityCheck(insight, pageRequest, text, site, config, dictionary);
 
-        } else {
-            log.warn(
-                    "Failed to get readability for resource {} site or config were null",
-                    pageRequest.getPage().getResource());
+        if (site == null) {
+            log.error(
+                    "Cannot find site for resource: {}",
+                    pageRequest.getPage().getResource().getPath());
             insight.setScored(false);
             insight.setSucceeded(false);
             insight.setPrimaryMessage(Message.danger(dictionary.get(
                     I18N_KEY_READABILITY_RESULT_DANGER,
                     new Object[] {pageRequest.getPage().getPath()})));
+            return insight;
         }
+
+        if (config == null) {
+            log.error(
+                    "Cannot find readability configuration for site: {} at path: {}", site.getTitle(), site.getPath());
+            insight.setScored(false);
+            insight.setSucceeded(false);
+            insight.setPrimaryMessage(Message.danger(dictionary.get(
+                    I18N_KEY_READABILITY_RESULT_DANGER,
+                    new Object[] {pageRequest.getPage().getPath()})));
+            return insight;
+        }
+
+        executeReadabilityCheck(insight, pageRequest, text, site, config, dictionary);
 
         return insight;
     }

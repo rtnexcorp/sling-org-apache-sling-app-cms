@@ -1,0 +1,16 @@
+{
+    "bundles": [
+        {
+            "id": "org.apache.sling:org.apache.sling.cms.ai:${project.version}",
+            "start-order": "20"
+        }
+    ],
+    "configurations": {
+        "org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~ai": {
+            "user.mapping": [
+                "org.apache.sling.cms.ai:sling-cms-ai=sling-cms-ai"
+            ]
+        }
+    },
+    "repoinit:TEXT|true": "@file"
+}

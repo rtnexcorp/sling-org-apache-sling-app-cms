@@ -1,0 +1,357 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.sling.cms.ai.internal;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.cms.ai.AiRequest;
+import org.apache.sling.cms.ai.AiResponse;
+import org.apache.sling.cms.ai.AiTextService;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Anthropic Claude implementation of AI text services.
+ * Supports Claude 3 models (Opus, Sonnet, Haiku).
+ */
+@Component(service = AiTextService.class, immediate = true)
+@Designate(ocd = AnthropicTextService.Config.class)
+public class AnthropicTextService implements AiTextService {
+
+    private static final Logger log = LoggerFactory.getLogger(AnthropicTextService.class);
+
+    private static final String API_BASE_URL = "https://api.anthropic.com/v1";
+    private static final String MESSAGES_ENDPOINT = "/messages";
+    private static final int MAX_RETRIES = 3;
+    private static final int RETRY_DELAY_MS = 1000;
+
+    @ObjectClassDefinition(
+            name = "Apache Sling CMS - Anthropic Claude Text Service",
+            description = "Anthropic Claude API integration for AI text operations")
+    public @interface Config {
+
+        @AttributeDefinition(name = "Enabled", description = "Enable the Anthropic Claude text service")
+        boolean enabled() default false;
+
+        @AttributeDefinition(name = "API Key", description = "Anthropic API key")
+        String apiKey() default "";
+
+        @AttributeDefinition(
+                name = "Model",
+                description =
+                        "Claude model to use (e.g., claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-haiku-20240307)")
+        String model() default "claude-3-sonnet-20240229";
+
+        @AttributeDefinition(name = "API Version", description = "Anthropic API version")
+        String apiVersion() default "2023-06-01";
+
+        @AttributeDefinition(
+                name = "Temperature",
+                description = "Sampling temperature (0.0 = deterministic, 1.0 = very creative)")
+        double temperature() default 0.7;
+
+        @AttributeDefinition(name = "Max Tokens", description = "Maximum tokens in response")
+        int maxTokens() default 1000;
+
+        @AttributeDefinition(name = "Timeout (seconds)", description = "Request timeout in seconds")
+        int timeout() default 30;
+    }
+
+    private Config config;
+    private HttpClient httpClient;
+    private ObjectMapper objectMapper;
+
+    @Activate
+    protected void activate(Config config) {
+        this.config = config;
+        this.objectMapper = new ObjectMapper();
+        this.httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(config.timeout()))
+                .build();
+
+        if (config.enabled() && StringUtils.isBlank(config.apiKey())) {
+            log.warn("Anthropic service is enabled but API key is not configured");
+        } else if (config.enabled()) {
+            log.info("Anthropic text service activated with model: {}", config.model());
+        }
+    }
+
+    @Deactivate
+    protected void deactivate() {
+        log.info("Anthropic text service deactivated");
+    }
+
+    @Override
+    public String getId() {
+        return "anthropic";
+    }
+
+    @Override
+    public String getTitle() {
+        return "Anthropic Claude";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return config.enabled() && StringUtils.isNotBlank(config.apiKey());
+    }
+
+    @Override
+    public boolean requiresExternalApi() {
+        return true;
+    }
+
+    @Override
+    public AiResponse summarize(AiRequest request) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String prompt = "Summarize the following content in 2-3 sentences. Focus on the main points.\n\n"
+                + request.getContent();
+
+        return executeRequest(request, prompt, "summarize");
+    }
+
+    @Override
+    public AiResponse summarize(AiRequest request, int maxLength) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String prompt = "Summarize the following content in no more than " + maxLength
+                + " characters. Keep it concise and focused on the main points.\n\n"
+                + request.getContent();
+
+        return executeRequest(request, prompt, "summarize");
+    }
+
+    @Override
+    public AiResponse suggestTitle(AiRequest request) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String prompt =
+                "Generate a concise, engaging title (max 60 characters) for the following content. Return only the title, no quotes or explanations.\n\n"
+                        + request.getContent();
+
+        return executeRequest(request, prompt, "suggest-title");
+    }
+
+    @Override
+    public AiResponse suggestMetaDescription(AiRequest request) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String prompt =
+                "Generate a compelling meta description (max 155 characters) for the following content. Return only the description, no quotes.\n\n"
+                        + request.getContent();
+
+        return executeRequest(request, prompt, "suggest-meta-description");
+    }
+
+    @Override
+    public AiResponse rewrite(AiRequest request, Tone tone) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String toneInstruction = getToneInstruction(tone);
+        String prompt = "Rewrite the following content in a " + toneInstruction
+                + " tone. Preserve the key information but adjust the style.\n\n"
+                + request.getContent();
+
+        return executeRequest(request, prompt, "rewrite-" + tone.name().toLowerCase());
+    }
+
+    @Override
+    public AiResponse translate(AiRequest request, String targetLocale) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String languageName = new java.util.Locale(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
+        String prompt = "Translate the following content to " + languageName
+                + ". Maintain the tone and structure.\n\n"
+                + request.getContent();
+
+        return executeRequest(request, prompt, "translate-" + targetLocale);
+    }
+
+    @Override
+    public AiResponse explain(AiRequest request) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String prompt = "Explain what this content is about in simple terms. What is the main message or purpose?\n\n"
+                + request.getContent();
+
+        return executeRequest(request, prompt, "explain");
+    }
+
+    @Override
+    public AiResponse summarizeChanges(String originalContent, String updatedContent) {
+        if (!isEnabled()) {
+            return AiResponse.skipped("Anthropic service is not enabled or configured");
+        }
+
+        String prompt = String.format(
+                "Compare these two versions of content and summarize what changed:\n\nBEFORE:\n%s\n\nAFTER:\n%s\n\nProvide a brief summary of the changes.",
+                originalContent, updatedContent);
+
+        return executeRequest(null, prompt, "summarize-changes");
+    }
+
+    /**
+     * Execute an API request with retry logic
+     */
+    private AiResponse executeRequest(AiRequest request, String prompt, String operation) {
+        long startTime = System.currentTimeMillis();
+
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                String responseText = callAnthropicApi(prompt);
+                long processingTime = System.currentTimeMillis() - startTime;
+
+                return AiResponse.success(responseText.trim(), getId());
+            } catch (IOException e) {
+                log.warn("Anthropic API call failed (attempt {}/{}): {}", attempt, MAX_RETRIES, e.getMessage());
+
+                if (attempt == MAX_RETRIES) {
+                    return AiResponse.failure(
+                            "Anthropic API error after " + MAX_RETRIES + " attempts: " + e.getMessage(), getId());
+                }
+
+                // Exponential backoff
+                try {
+                    Thread.sleep(RETRY_DELAY_MS * attempt);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return AiResponse.failure("Request interrupted", getId());
+                }
+            }
+        }
+
+        return AiResponse.failure("Unexpected error in Anthropic request", getId());
+    }
+
+    /**
+     * Call the Anthropic API with the given prompt
+     */
+    private String callAnthropicApi(String prompt) throws IOException {
+        ObjectNode requestBody = objectMapper.createObjectNode();
+        requestBody.put("model", config.model());
+        requestBody.put("max_tokens", config.maxTokens());
+        requestBody.put("temperature", config.temperature());
+
+        ArrayNode messages = requestBody.putArray("messages");
+        ObjectNode message = messages.addObject();
+        message.put("role", "user");
+        message.put("content", prompt);
+
+        String requestJson = objectMapper.writeValueAsString(requestBody);
+
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(API_BASE_URL + MESSAGES_ENDPOINT))
+                .header("Content-Type", "application/json")
+                .header("x-api-key", config.apiKey())
+                .header("anthropic-version", config.apiVersion())
+                .timeout(Duration.ofSeconds(config.timeout()))
+                .POST(HttpRequest.BodyPublishers.ofString(requestJson, StandardCharsets.UTF_8))
+                .build();
+
+        try {
+            HttpResponse<String> response =
+                    httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+            if (response.statusCode() != 200) {
+                throw new IOException(
+                        "Anthropic API returned status " + response.statusCode() + ": " + response.body());
+            }
+
+            return parseAnthropicResponse(response.body());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Request interrupted", e);
+        }
+    }
+
+    /**
+     * Parse the Anthropic API response and extract the generated text
+     */
+    private String parseAnthropicResponse(String responseBody) throws IOException {
+        JsonNode root = objectMapper.readTree(responseBody);
+        JsonNode content = root.get("content");
+
+        if (content == null || !content.isArray() || content.size() == 0) {
+            throw new IOException("Invalid Anthropic response: no content found");
+        }
+
+        JsonNode firstContent = content.get(0);
+        JsonNode text = firstContent.get("text");
+
+        if (text == null) {
+            throw new IOException("Invalid Anthropic response: no text found");
+        }
+
+        return text.asText();
+    }
+
+    /**
+     * Get tone instruction for rewriting
+     */
+    private String getToneInstruction(Tone tone) {
+        switch (tone) {
+            case FORMAL:
+                return "formal and professional";
+            case INFORMAL:
+                return "informal and conversational";
+            case CONCISE:
+                return "concise and to-the-point";
+            case DETAILED:
+                return "detailed and comprehensive";
+            case FRIENDLY:
+                return "friendly and approachable";
+            case TECHNICAL:
+                return "technical and precise";
+            default:
+                return "clear";
+        }
+    }
+}

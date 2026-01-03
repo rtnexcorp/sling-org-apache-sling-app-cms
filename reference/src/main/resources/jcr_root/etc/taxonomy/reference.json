@@ -3,6 +3,290 @@
 	"jcr:title": "Reference",
 	"community": {
 		"jcr:primaryType": "sling:Taxonomy",
-		"jcr:title": "Community"
+		"jcr:title": "Community",
+		"open-source": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Open Source"
+		},
+		"collaboration": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Collaboration"
+		},
+		"events": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Events"
+		},
+		"meetups": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Meetups"
+		}
+	},
+	"technology": {
+		"jcr:primaryType": "sling:Taxonomy",
+		"jcr:title": "Technology",
+		"java": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Java",
+			"spring": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Spring Framework"
+			},
+			"spring-boot": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Spring Boot"
+			},
+			"hibernate": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Hibernate"
+			},
+			"maven": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Maven"
+			},
+			"gradle": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Gradle"
+			}
+		},
+		"javascript": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "JavaScript",
+			"react": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "React"
+			},
+			"vue": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Vue.js"
+			},
+			"nodejs": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Node.js"
+			}
+		},
+		"python": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Python",
+			"django": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Django"
+			},
+			"flask": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Flask"
+			}
+		},
+		"cloud": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Cloud Computing",
+			"aws": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Amazon Web Services"
+			},
+			"azure": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Microsoft Azure"
+			},
+			"gcp": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Google Cloud Platform"
+			}
+		},
+		"devops": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "DevOps",
+			"docker": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Docker"
+			},
+			"kubernetes": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Kubernetes"
+			},
+			"ci-cd": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "CI/CD"
+			}
+		},
+		"databases": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Databases",
+			"sql": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "SQL Databases"
+			},
+			"nosql": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "NoSQL Databases"
+			},
+			"mongodb": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "MongoDB"
+			}
+		},
+		"ai-ml": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "AI & Machine Learning",
+			"machine-learning": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Machine Learning"
+			},
+			"deep-learning": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Deep Learning"
+			},
+			"nlp": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Natural Language Processing"
+			}
+		}
+	},
+	"content-type": {
+		"jcr:primaryType": "sling:Taxonomy",
+		"jcr:title": "Content Type",
+		"tutorial": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Tutorial"
+		},
+		"documentation": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Documentation"
+		},
+		"blog": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Blog Post"
+		},
+		"news": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "News"
+		},
+		"case-study": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Case Study"
+		},
+		"whitepaper": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "White Paper"
+		},
+		"video": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Video"
+		},
+		"podcast": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Podcast"
+		}
+	},
+	"industry": {
+		"jcr:primaryType": "sling:Taxonomy",
+		"jcr:title": "Industry",
+		"healthcare": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Healthcare"
+		},
+		"finance": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Finance & Banking"
+		},
+		"retail": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Retail & E-commerce"
+		},
+		"education": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Education"
+		},
+		"manufacturing": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Manufacturing"
+		},
+		"media": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Media & Entertainment"
+		}
+	},
+	"topics": {
+		"jcr:primaryType": "sling:Taxonomy",
+		"jcr:title": "Topics",
+		"architecture": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Software Architecture",
+			"microservices": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Microservices"
+			},
+			"serverless": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Serverless"
+			},
+			"rest-api": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "REST API"
+			}
+		},
+		"security": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Security",
+			"authentication": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Authentication"
+			},
+			"authorization": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Authorization"
+			},
+			"encryption": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Encryption"
+			}
+		},
+		"performance": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Performance Optimization",
+			"caching": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Caching"
+			},
+			"load-balancing": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Load Balancing"
+			}
+		},
+		"testing": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Testing",
+			"unit-testing": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Unit Testing"
+			},
+			"integration-testing": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "Integration Testing"
+			},
+			"e2e-testing": {
+				"jcr:primaryType": "sling:Taxonomy",
+				"jcr:title": "End-to-End Testing"
+			}
+		}
+	},
+	"difficulty": {
+		"jcr:primaryType": "sling:Taxonomy",
+		"jcr:title": "Difficulty Level",
+		"beginner": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Beginner"
+		},
+		"intermediate": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Intermediate"
+		},
+		"advanced": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Advanced"
+		},
+		"expert": {
+			"jcr:primaryType": "sling:Taxonomy",
+			"jcr:title": "Expert"
+		}
 	}
 }

@@ -1,0 +1,213 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// AI Suggestion Field Component
+// Provides AI-powered suggestions for text, textarea, richtext, and select fields
+
+// Brand color from _bulma-config.scss
+$magenta: #9E2165;
+
+.cms-ai-suggest-field {
+  position: relative;
+
+  // Common flexbox layout for control with AI button outside
+  .control {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .cms-ai-suggest-wrapper {
+    flex: 1;
+    min-width: 0; // Prevent flex item from overflowing
+  }
+
+  .cms-ai-suggest-btn {
+    flex-shrink: 0;
+    border: 1px solid $magenta;
+    background: transparent;
+    color: $magenta;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 4px;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: lighten($magenta, 45%);
+      color: darken($magenta, 10%);
+    }
+
+    &:focus {
+      outline: 2px solid $magenta;
+      outline-offset: 2px;
+    }
+
+    &.is-loading {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .cms-icon {
+      width: 1em;
+      height: 1em;
+      font-size: 1rem;
+    }
+
+    span:not(.cms-icon) {
+      font-weight: 500;
+    }
+  }
+
+  // No extra padding needed - button is outside
+  .cms-ai-suggest-input {
+    width: 100%;
+  }
+
+  // Text field adjustments
+  &--text {
+    .control {
+      align-items: center; // Vertically center for single-line input
+    }
+  }
+
+  // Textarea-specific adjustments
+  &--textarea {
+    .control {
+      align-items: flex-start; // Align button to top for textarea
+    }
+
+    .cms-ai-suggest-btn {
+      margin-top: 0.25rem; // Small offset to align with textarea
+    }
+  }
+
+  // Richtext-specific adjustments
+  &--richtext {
+    // AI button is in toolbar for richtext
+    .control {
+      display: block; // Override flex for richtext
+    }
+
+    .cms-ai-suggest-btn {
+      background: transparent;
+      border: 1px solid transparent;
+
+      &:hover {
+        background-color: lighten($magenta, 45%);
+        border-color: lighten($magenta, 30%);
+      }
+    }
+
+    .rte {
+      position: relative;
+    }
+  }
+
+  // Select-specific adjustments
+  &--select {
+    .control {
+      align-items: center; // Vertically center for select
+    }
+
+    .select {
+      width: 100%;
+    }
+  }
+}
+
+// AI Icon (using sparkle/star icon concept)
+.cms-icon--ai {
+  &::before {
+    content: '✨';
+    font-style: normal;
+  }
+}
+
+// Asset Metadata Editor AI Suggestions
+// Specific styling for AI suggestion buttons in asset metadata editor
+.ai-suggest-button {
+  flex-shrink: 0;
+  border: 1px solid $magenta;
+  background: transparent;
+  color: $magenta;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  .icon {
+    color: $magenta;
+  }
+
+  &:hover {
+    background-color: lighten($magenta, 50%);
+    border-color: darken($magenta, 5%);
+    color: darken($magenta, 10%);
+
+    .icon {
+      color: darken($magenta, 10%);
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.125em rgba($magenta, 0.25);
+  }
+
+  &.is-loading {
+    opacity: 0.6;
+    cursor: wait;
+
+    &::after {
+      animation: spinAround 500ms infinite linear;
+      border: 2px solid $magenta;
+      border-radius: 50%;
+      border-right-color: transparent;
+      border-top-color: transparent;
+      content: "";
+      display: block;
+      height: 1em;
+      width: 1em;
+      position: absolute;
+      right: 0.5em;
+    }
+  }
+
+  .ai-button-text {
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+}
+
+// Asset metadata editor specific adjustments
+.asset-metadata-editor {
+  .field.has-addons {
+    display: flex;
+    align-items: stretch;
+
+    .control {
+      &.is-expanded {
+        flex: 1;
+      }
+    }
+  }
+}

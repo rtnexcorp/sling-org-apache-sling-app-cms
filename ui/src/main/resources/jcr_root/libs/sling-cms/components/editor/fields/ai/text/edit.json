@@ -1,0 +1,144 @@
+{
+	"jcr:primaryType": "nt:unstructured",
+	"sling:resourceType": "sling-cms/components/editor/slingform",
+	"button": "Save Field",
+	"fields": {
+		"jcr:primaryType": "nt:unstructured",
+		"sling:resourceType": "sling-cms/components/general/container",
+		"label": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Label",
+			"name": "label",
+			"required": true
+		},
+		"name": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Name",
+			"name": "name",
+			"required": true
+		},
+		"inputType": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/select",
+			"label": "Input Type",
+			"name": "type",
+			"options": {
+				"text": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Text",
+					"value": "text"
+				},
+				"email": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Email",
+					"value": "email"
+				},
+				"url": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "URL",
+					"value": "url"
+				}
+			}
+		},
+		"aiSuggestionType": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/select",
+			"label": "AI Suggestion Type",
+			"name": "aiSuggestionType",
+			"required": true,
+			"options": {
+				"title": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Title",
+					"value": "title"
+				},
+				"summary": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Summary",
+					"value": "summary"
+				},
+				"metaDescription": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Meta Description",
+					"value": "metaDescription"
+				},
+				"keywords": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Keywords",
+					"value": "keywords"
+				}
+			}
+		},
+		"contentSource": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Content Source Field",
+			"name": "contentSource",
+			"required": true,
+			"placeholder": "e.g., content",
+			"help": "Name of the field containing the content to analyze (usually 'content' for rich text editor)"
+		},
+		"placeholder": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Placeholder",
+			"name": "placeholder"
+		},
+		"help": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/text",
+			"label": "Help Text",
+			"name": "help"
+		},
+		"required": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/select",
+			"label": "Required",
+			"name": "required",
+			"options": {
+				"yes": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Yes",
+					"value": "true"
+				},
+				"no": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "No",
+					"value": "false"
+				}
+			}
+		},
+		"requiredTypeHint": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/hidden",
+			"name": "required@TypeHint",
+			"value": "Boolean"
+		},
+		"disabled": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/select",
+			"label": "Disabled",
+			"name": "disabled",
+			"options": {
+				"yes": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "Yes",
+					"value": "true"
+				},
+				"no": {
+					"jcr:primaryType": "nt:unstructured",
+					"label": "No",
+					"value": "false"
+				}
+			}
+		},
+		"disabledTypeHint": {
+			"jcr:primaryType": "nt:unstructured",
+			"sling:resourceType": "sling-cms/components/editor/fields/hidden",
+			"name": "disabled@TypeHint",
+			"value": "Boolean"
+		}
+	}
+}

@@ -1,0 +1,3 @@
+Sling-Model-Packages: org.apache.sling.cms.ai,org.apache.sling.cms.ai.internal.models
+
+Export-Package: org.apache.sling.cms.ai,org.apache.sling.cms.ai.audit
