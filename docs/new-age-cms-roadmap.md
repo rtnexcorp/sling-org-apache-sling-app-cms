@@ -68,7 +68,7 @@ Build a modern, developer-friendly CMS that:
 ### AI Provider Abstraction
 | Feature | ID | Modules | Effort | Status | Notes |
 |---------|-----|---------|--------|--------|-------|
-| AI provider abstraction | NA-AI-001 | `api`, `core` | M | 🔄 In Progress | OSGi services; CMS works when AI disabled |
+| AI provider abstraction | NA-AI-001 | `api`, `core` | M | ✅ Completed | OSGi services; CMS works when AI disabled |
 | Suggest title/summary | NA-AI-002 | `core`, `ui` | M | ✅ Completed | Human-in-the-loop only; author approves |
 
 ### Platform Observability

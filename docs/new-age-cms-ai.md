@@ -29,9 +29,9 @@ AI is treated as:
 | Asset Metadata | ✅ Complete | `thumbnails/AssetMetadataModel.java` | Has altText field, taxonomy support |
 | Publication System | ✅ Complete | `api/publication/PublicationManager*.java` | Ready for AI-assisted publishing |
 | Path Suggestions | ✅ Complete | `core/PathSuggestionServlet.java` | Pattern for AI suggestions UI |
-| External AI Providers | 🔄 In Progress | `ai/` | OpenAI, Azure OpenAI, Anthropic, Ollama implementations |
+| External AI Providers | ✅ Complete | `ai/` | OpenAI, Azure OpenAI, Anthropic, Ollama implementations |
+| AI UI Components | ✅ Complete | `ui/` | AI suggest fields (text, textarea, select) for editor fields |
 | JCR Audit Service | 🔄 Planned | `ai/` | JCR-based implementation of `AiAuditService` |
-| AI UI Components | 🔄 Planned | `ui/` | AI assist panels, dialogs, and suggestion components |
 | CAConfig Integration | 🔄 Planned | `ai/` | Configuration models for per-site AI settings |
 | AI Sling Models | 🔄 Planned | `ai/` | Page/Asset AI assistance models |
 | AI Servlets | 🔄 Planned | `ai/` | REST endpoints for AI operations |
