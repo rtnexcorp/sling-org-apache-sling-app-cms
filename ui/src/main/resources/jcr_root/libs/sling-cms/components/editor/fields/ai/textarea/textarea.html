@@ -34,15 +34,17 @@
                       aria-required="${model.required}"
                       required="${model.requiredAttr}"
                       disabled="${model.disabledAttr}">${model.value}</textarea>
-            <sly data-sly-test="${model.hasAiSuggestions}">
-                <button type="button"
-                        class="button is-small is-text cms-ai-suggest-btn cms-ai-suggest-btn--textarea"
-                        title="Generate AI suggestion">
-                    <span class="cms-icon cms-icon--ai"></span>
-                    <span>AI Suggest</span>
-                </button>
-            </sly>
         </div>
+        <sly data-sly-test="${model.hasAiSuggestions}">
+            <button type="button"
+                    class="button is-small is-primary cms-ai-suggest-btn cms-ai-suggest-btn--textarea"
+                    title="Generate AI suggestion">
+                <span class="icon is-small">
+                    <i class="jam jam-magic"></i>
+                </span>
+                <span>✨ AI Suggest</span>
+            </button>
+        </sly>
         <sly data-sly-test="${model.help}">
             <p class="help">
                 ${model.help @ i18n}
