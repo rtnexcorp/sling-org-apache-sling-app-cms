@@ -81,8 +81,23 @@
                         <div class="cms-grid__item cms-grid__item--half">
                             <div class="field">
                                 <label class="label is-small">${'Alt Text' @ i18n}</label>
-                                <div class="control">
-                                    <input class="input is-small" type="text" name="alt" value="${meta.altText}"/>
+                                <div class="field has-addons">
+                                    <div class="control is-expanded">
+                                        <input class="input is-small" type="text" name="alt" value="${meta.altText}" id="alt-text-input"/>
+                                    </div>
+                                    <sly data-sly-test="${meta.image}">
+                                        <div class="control">
+                                            <button type="button"
+                                                    class="button is-small ai-suggest-button"
+                                                    data-ai-type="altText"
+                                                    data-ai-target="alt-text-input"
+                                                    data-image-path="${meta.assetPath}"
+                                                    title="${'Suggest Alt Text using AI' @ i18n}">
+                                                <span class="cms-icon cms-icon--ai"></span>
+                                                <span class="ai-button-text">${'AI' @ i18n}</span>
+                                            </button>
+                                        </div>
+                                    </sly>
                                 </div>
                             </div>
                         </div>

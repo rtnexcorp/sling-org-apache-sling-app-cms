@@ -140,3 +140,74 @@ $magenta: #9E2165;
     font-style: normal;
   }
 }
+
+// Asset Metadata Editor AI Suggestions
+// Specific styling for AI suggestion buttons in asset metadata editor
+.ai-suggest-button {
+  flex-shrink: 0;
+  border: 1px solid $magenta;
+  background: transparent;
+  color: $magenta;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  .icon {
+    color: $magenta;
+  }
+
+  &:hover {
+    background-color: lighten($magenta, 50%);
+    border-color: darken($magenta, 5%);
+    color: darken($magenta, 10%);
+
+    .icon {
+      color: darken($magenta, 10%);
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.125em rgba($magenta, 0.25);
+  }
+
+  &.is-loading {
+    opacity: 0.6;
+    cursor: wait;
+
+    &::after {
+      animation: spinAround 500ms infinite linear;
+      border: 2px solid $magenta;
+      border-radius: 50%;
+      border-right-color: transparent;
+      border-top-color: transparent;
+      content: "";
+      display: block;
+      height: 1em;
+      width: 1em;
+      position: absolute;
+      right: 0.5em;
+    }
+  }
+
+  .ai-button-text {
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+}
+
+// Asset metadata editor specific adjustments
+.asset-metadata-editor {
+  .field.has-addons {
+    display: flex;
+    align-items: stretch;
+
+    .control {
+      &.is-expanded {
+        flex: 1;
+      }
+    }
+  }
+}

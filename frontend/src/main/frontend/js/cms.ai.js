@@ -176,3 +176,114 @@ if (typeof rava !== 'undefined') {
     }
   });
 }
+
+/**
+ * AI Image Suggestion functionality for image alt-text, captions, and descriptions
+ * Handles suggestions for images in the asset metadata editor
+ */
+
+async function handleAiImageSuggestClick(event) {
+  const button = event.target.closest('.ai-suggest-button');
+  if (!button) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const aiType = button.dataset.aiType;
+  const targetInputId = button.dataset.aiTarget;
+  const imagePath = button.dataset.imagePath;
+
+  if (!targetInputId || !imagePath) {
+    console.error('AI Image Suggest: Missing target input or image path');
+    return;
+  }
+
+  const targetInput = document.getElementById(targetInputId);
+  if (!targetInput) {
+    console.error('AI Image Suggest: Target input not found:', targetInputId);
+    return;
+  }
+
+  // Disable button and show loading state
+  button.disabled = true;
+  button.classList.add('is-loading');
+  const textSpan = button.querySelector('.ai-button-text');
+  const originalText = textSpan ? textSpan.textContent : 'AI';
+  if (textSpan) {
+    textSpan.textContent = 'Loading...';
+  }
+
+  try {
+    // Call AI image suggestion endpoint
+    const formData = new FormData();
+    formData.append('type', aiType);
+    formData.append('imagePath', imagePath);
+
+    const response = await fetch('/bin/cms/ai/suggest-image.json', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.success && result.suggestion) {
+      // Fill the target input with the suggestion
+      targetInput.value = result.suggestion;
+
+      // Trigger change events
+      targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+      targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+      // Show success notification
+      if (window.Sling && window.Sling.CMS && window.Sling.CMS.ui) {
+        window.Sling.CMS.ui.confirmMessage(
+          'AI Suggestion Applied',
+          `Generated ${aiType} using ${result.provider || 'AI service'}`
+        );
+      }
+    } else {
+      // Handle skipped/disabled AI service
+      if (result.skipped) {
+        throw new Error('AI image service is not enabled or configured. Please configure an AI provider.');
+      }
+      throw new Error(result.error || 'Failed to generate suggestion');
+    }
+  } catch (error) {
+    console.error('AI image suggestion error:', error);
+    if (window.Sling && window.Sling.CMS && window.Sling.CMS.ui) {
+      window.Sling.CMS.ui.confirmMessage(
+        'AI Suggestion Failed',
+        error.message || 'An error occurred while generating the suggestion'
+      );
+    } else {
+      alert('AI Suggestion Failed: ' + (error.message || 'An error occurred'));
+    }
+  } finally {
+    // Re-enable button and restore text
+    button.disabled = false;
+    button.classList.remove('is-loading');
+    if (textSpan) {
+      textSpan.textContent = originalText;
+    }
+  }
+}
+
+// Handle AI image suggestion clicks via document-level event delegation
+document.addEventListener('click', function(event) {
+  if (event.target.closest('.ai-suggest-button')) {
+    handleAiImageSuggestClick(event);
+  }
+});
+
+// Also bind via rava for consistency with other CMS components
+if (typeof rava !== 'undefined') {
+  rava.bind('.ai-suggest-button', {
+    events: {
+      'click': handleAiImageSuggestClick
+    }
+  });
+}

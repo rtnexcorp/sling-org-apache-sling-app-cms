@@ -37,18 +37,16 @@ import org.apache.sling.cms.ai.AiTextService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.Designate;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * OpenAI implementation of AI text services using the OpenAI API.
  * Supports GPT-4, GPT-3.5-turbo and other OpenAI models.
+ * Uses centralized OpenAI configuration for API key and settings.
  */
 @Component(service = AiTextService.class, immediate = true)
-@Designate(ocd = OpenAiTextService.Config.class)
 public class OpenAiTextService implements AiTextService {
 
     private static final Logger log = LoggerFactory.getLogger(OpenAiTextService.class);
@@ -58,53 +56,23 @@ public class OpenAiTextService implements AiTextService {
     private static final int MAX_RETRIES = 3;
     private static final int RETRY_DELAY_MS = 1000;
 
-    @ObjectClassDefinition(
-            name = "Apache Sling CMS - OpenAI Text Service",
-            description = "OpenAI API integration for AI text operations")
-    public @interface Config {
+    @Reference
+    private OpenAiConfiguration openAiConfig;
 
-        @AttributeDefinition(name = "Enabled", description = "Enable the OpenAI text service")
-        boolean enabled() default false;
-
-        @AttributeDefinition(name = "API Key", description = "OpenAI API key (sk-...)")
-        String apiKey() default "";
-
-        @AttributeDefinition(
-                name = "Model",
-                description = "OpenAI model to use (e.g., gpt-4, gpt-3.5-turbo, gpt-4-turbo)")
-        String model() default "gpt-4-turbo";
-
-        @AttributeDefinition(
-                name = "Temperature",
-                description = "Sampling temperature (0.0 = deterministic, 2.0 = very creative)")
-        double temperature() default 0.7;
-
-        @AttributeDefinition(name = "Max Tokens", description = "Maximum tokens in response")
-        int maxTokens() default 1000;
-
-        @AttributeDefinition(name = "Timeout (seconds)", description = "Request timeout in seconds")
-        int timeout() default 30;
-
-        @AttributeDefinition(name = "Organization ID", description = "Optional OpenAI organization ID")
-        String organizationId() default "";
-    }
-
-    private Config config;
     private HttpClient httpClient;
     private ObjectMapper objectMapper;
 
     @Activate
-    protected void activate(Config config) {
-        this.config = config;
+    protected void activate() {
         this.objectMapper = new ObjectMapper();
         this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(config.timeout()))
+                .connectTimeout(Duration.ofSeconds(openAiConfig.getTimeout()))
                 .build();
 
-        if (config.enabled() && StringUtils.isBlank(config.apiKey())) {
+        if (openAiConfig.isEnabled() && StringUtils.isBlank(openAiConfig.getApiKey())) {
             log.warn("OpenAI service is enabled but API key is not configured");
-        } else if (config.enabled()) {
-            log.info("OpenAI text service activated with model: {}", config.model());
+        } else if (openAiConfig.isEnabled()) {
+            log.info("OpenAI text service activated with model: {}", openAiConfig.getTextModel());
         }
     }
 
@@ -125,7 +93,7 @@ public class OpenAiTextService implements AiTextService {
 
     @Override
     public boolean isEnabled() {
-        return config.enabled() && StringUtils.isNotBlank(config.apiKey());
+        return openAiConfig.isEnabled() && StringUtils.isNotBlank(openAiConfig.getApiKey());
     }
 
     @Override
@@ -244,12 +212,9 @@ public class OpenAiTextService implements AiTextService {
      * Execute an API request with retry logic
      */
     private AiResponse executeRequest(AiRequest request, String prompt, String operation) {
-        long startTime = System.currentTimeMillis();
-
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
                 String responseText = callOpenAiApi(prompt);
-                long processingTime = System.currentTimeMillis() - startTime;
 
                 return AiResponse.success(responseText.trim(), getId());
             } catch (IOException e) {
@@ -278,9 +243,9 @@ public class OpenAiTextService implements AiTextService {
      */
     private String callOpenAiApi(String prompt) throws IOException {
         ObjectNode requestBody = objectMapper.createObjectNode();
-        requestBody.put("model", config.model());
-        requestBody.put("temperature", config.temperature());
-        requestBody.put("max_tokens", config.maxTokens());
+        requestBody.put("model", openAiConfig.getTextModel());
+        requestBody.put("temperature", openAiConfig.getTemperature());
+        requestBody.put("max_tokens", openAiConfig.getTextMaxTokens());
 
         ArrayNode messages = requestBody.putArray("messages");
         ObjectNode message = messages.addObject();
@@ -292,13 +257,13 @@ public class OpenAiTextService implements AiTextService {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(API_BASE_URL + CHAT_COMPLETIONS_ENDPOINT))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + config.apiKey())
-                .timeout(Duration.ofSeconds(config.timeout()))
+                .header("Authorization", "Bearer " + openAiConfig.getApiKey())
+                .timeout(Duration.ofSeconds(openAiConfig.getTimeout()))
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson, StandardCharsets.UTF_8));
 
         // Add organization header if configured
-        if (StringUtils.isNotBlank(config.organizationId())) {
-            requestBuilder.header("OpenAI-Organization", config.organizationId());
+        if (StringUtils.isNotBlank(openAiConfig.getOrganizationId())) {
+            requestBuilder.header("OpenAI-Organization", openAiConfig.getOrganizationId());
         }
 
         try {
