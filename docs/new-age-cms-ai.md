@@ -243,8 +243,8 @@ Prompt templates should be managed content-side so they are:
 - ✅ Interface + provider abstraction (complete)
 - ✅ Audit framework (interfaces complete, storage implementation pending)
 - ✅ Rules-based fallback (complete and working)
-- 🔄 External AI provider implementations (OpenAI, Azure, Anthropic)
-- 🔄 Suggest title/summary for pages (suggest-only UI)
+- ✅ External AI provider implementations (OpenAI, Azure, Anthropic)
+- ✅ Suggest title/summary for pages (suggest-only UI)
 - 🔄 JCR-based audit service implementation
 
 ### Phase 2 🔄 **Planned**

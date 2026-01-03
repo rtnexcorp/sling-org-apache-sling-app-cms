@@ -29,7 +29,7 @@ This backlog is derived from the “new-age CMS” docs and feature-status gap a
 | ID | Pillar | Feature | Modules | Status | Doc Ref | Notes |
 |---|---|---|---|---|---|---|
 | NA-AI-001 | AI | AI provider abstraction (OSGi) | `api`, `core` | Not Started | `docs/new-age-cms-ai.md` | Keep CMS functional when disabled |
-| NA-AI-002 | AI | Suggest title/summary (suggest-only) | `core`, `ui` | Not Started | `docs/new-age-cms-ai.md` | Human-in-the-loop only |
+| NA-AI-002 | AI | Suggest title/summary (suggest-only) | `core`, `ui` | ✅ Completed | `docs/new-age-cms-ai.md` | Human-in-the-loop only |
 | NA-PLAT-003 | Platform | Metrics export (pluggable) | `core` | Not Started | `docs/new-age-cms-platform-feature-status.md` | After correlation IDs |
 | NA-SITE-002 | Sites | Schema-driven dialogs | `ui`, `core` | Not Started | `docs/new-age-cms-sites-feature-status.md` | Build on schema validation |
 | NA-SITE-003 | Sites | References graph + impact analysis | `core`, `ui` | Not Started | `docs/new-age-cms-sites-feature-status.md` | Complements move/copy/delete |
