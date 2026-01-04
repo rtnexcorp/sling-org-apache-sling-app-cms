@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: Apache-2.0
+
+# Apache Sling CMS - Workflow Service Users
+
+# Create workflow service user for executing workflows
+create service user sling-cms-workflow with path system/sling/cms
+
+# Grant permissions for workflow execution
+# - Read/write access to /var/workflow for storing process instances
+# - Read access to /content for workflow context
+# - Read access to /conf for process definitions
+set ACL for sling-cms-workflow
+    allow jcr:read on /content
+    allow jcr:read on /conf
+    allow jcr:all on /var/workflow
+end

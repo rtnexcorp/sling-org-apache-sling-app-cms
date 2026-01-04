@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional
+    information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except
+    in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to
+    in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+    the License for the specific language governing permissions and limitations under the License. -->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn"
+             targetNamespace="http://sling.apache.org/cms/workflows"
+             id="content-approval-definitions">
+
+  <process id="contentApproval" name="Content Approval Workflow" isExecutable="true">
+
+    <documentation>
+      Simple content approval workflow for Apache Sling CMS.
+
+      Process variables:
+      - contentPath (String): Path to content being reviewed
+      - authorId (String): User ID of content author
+      - approved (Boolean): Approval decision (set by reviewer)
+      - reviewComment (String): Reviewer's comment
+    </documentation>
+
+    <!-- Start Event -->
+    <startEvent id="startEvent" name="Content Submitted">
+      <documentation>
+        Triggered when author submits content for review
+      </documentation>
+    </startEvent>
+
+    <!-- User Task: Review Content -->
+    <userTask id="reviewTask" name="Review Content">
+      <documentation>
+        Content reviewer evaluates submitted content and decides to approve or reject
+      </documentation>
+      <extensionElements>
+        <flowable:taskListener event="create" class="org.apache.sling.cms.workflow.listener.NotifyReviewersListener"/>
+      </extensionElements>
+      <potentialOwner>
+        <resourceAssignmentExpression>
+          <formalExpression>content-reviewers</formalExpression>
+        </resourceAssignmentExpression>
+      </potentialOwner>
+    </userTask>
+
+    <!-- Exclusive Gateway: Decision Point -->
+    <exclusiveGateway id="approvalDecision" name="Approved?" />
+
+    <!-- Service Task: Publish Content -->
+    <serviceTask id="publishTask" name="Publish Content"
+                 flowable:class="org.apache.sling.cms.workflow.delegate.PublishContentDelegate">
+      <documentation>
+        Automatically publish approved content to renderer instances
+      </documentation>
+    </serviceTask>
+
+    <!-- Service Task: Notify Author (Approved) -->
+    <serviceTask id="notifyApprovedTask" name="Notify Author - Approved"
+                 flowable:class="org.apache.sling.cms.workflow.delegate.NotifyAuthorDelegate">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string>APPROVED</flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+
+    <!-- Service Task: Notify Author (Rejected) -->
+    <serviceTask id="notifyRejectedTask" name="Notify Author - Rejected"
+                 flowable:class="org.apache.sling.cms.workflow.delegate.NotifyAuthorDelegate">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string>REJECTED</flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+
+    <!-- End Event: Success -->
+    <endEvent id="endEventSuccess" name="Published" />
+
+    <!-- End Event: Rejected -->
+    <endEvent id="endEventRejected" name="Rejected" />
+
+    <!-- Sequence Flows -->
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="reviewTask" />
+
+    <sequenceFlow id="flow2" sourceRef="reviewTask" targetRef="approvalDecision" />
+
+    <sequenceFlow id="flow3" name="Approved" sourceRef="approvalDecision" targetRef="publishTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        ${approved == true}
+      </conditionExpression>
+    </sequenceFlow>
+
+    <sequenceFlow id="flow4" name="Rejected" sourceRef="approvalDecision" targetRef="notifyRejectedTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        ${approved == false}
+      </conditionExpression>
+    </sequenceFlow>
+
+    <sequenceFlow id="flow5" sourceRef="publishTask" targetRef="notifyApprovedTask" />
+
+    <sequenceFlow id="flow6" sourceRef="notifyApprovedTask" targetRef="endEventSuccess" />
+
+    <sequenceFlow id="flow7" sourceRef="notifyRejectedTask" targetRef="endEventRejected" />
+
+  </process>
+
+</definitions>
