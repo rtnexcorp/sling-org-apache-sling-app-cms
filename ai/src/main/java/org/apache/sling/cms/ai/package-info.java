@@ -30,7 +30,7 @@
  * <ul>
  *   <li>{@link org.apache.sling.cms.ai.AiService} - Base marker interface for all AI services</li>
  *   <li>{@link org.apache.sling.cms.ai.AiTextService} - Text generation, summarization, translation</li>
- *   <li>{@link org.apache.sling.cms.ai.AiClassificationService} - Taxonomy and categorization</li>
+ *   <li>{@link org.apache.sling.cms.ai.AiTaxonomyService} - Taxonomy suggestions and content classification</li>
  *   <li>{@link org.apache.sling.cms.ai.AiImageService} - Image alt-text and caption generation</li>
  * </ul>
  *

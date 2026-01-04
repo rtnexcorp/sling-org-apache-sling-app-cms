@@ -25,7 +25,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * <p>
  * All AI service implementations should implement this interface along with
  * their specific capability interface (e.g., {@link AiTextService},
- * {@link AiClassificationService}, {@link AiImageService}).
+ * {@link AiTaxonomyService}, {@link AiImageService}).
  * </p>
  * <p>
  * AI services are designed to be:
