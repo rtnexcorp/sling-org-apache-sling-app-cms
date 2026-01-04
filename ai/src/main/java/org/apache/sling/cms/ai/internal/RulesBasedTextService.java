@@ -245,7 +245,7 @@ public class RulesBasedTextService implements AiTextService {
         }
 
         // Simple change detection - just report if content changed
-        if (StringUtils.equals(originalContent, updatedContent)) {
+        if (java.util.Objects.equals(originalContent, updatedContent)) {
             return AiResponse.builder()
                     .status(AiResponse.Status.SUCCESS)
                     .content("No changes detected.")

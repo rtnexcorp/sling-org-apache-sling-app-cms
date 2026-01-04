@@ -36,6 +36,7 @@ import org.apache.sling.cms.ai.AiResponse;
 import org.apache.sling.cms.ai.AiTextService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -46,15 +47,16 @@ import org.slf4j.LoggerFactory;
  * Supports GPT-4, GPT-3.5-turbo and other OpenAI models.
  * Uses centralized OpenAI configuration for API key and settings.
  */
-@Component(service = AiTextService.class, immediate = true)
+@Component(
+        service = AiTextService.class,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        property = {"service.ranking:Integer=100"})
 public class OpenAiTextService implements AiTextService {
 
     private static final Logger log = LoggerFactory.getLogger(OpenAiTextService.class);
 
-    private static final String API_BASE_URL = "https://api.openai.com/v1";
     private static final String CHAT_COMPLETIONS_ENDPOINT = "/chat/completions";
-    private static final int MAX_RETRIES = 3;
-    private static final int RETRY_DELAY_MS = 1000;
 
     @Reference
     private OpenAiConfiguration openAiConfig;
@@ -174,7 +176,8 @@ public class OpenAiTextService implements AiTextService {
             return AiResponse.skipped("OpenAI service is not enabled or configured");
         }
 
-        String languageName = new java.util.Locale(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
+        String languageName =
+                java.util.Locale.forLanguageTag(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
         String prompt = buildPrompt(
                 "Translate the following content to " + languageName + ". Maintain the tone and structure.",
                 request.getContent());
@@ -212,22 +215,25 @@ public class OpenAiTextService implements AiTextService {
      * Execute an API request with retry logic
      */
     private AiResponse executeRequest(AiRequest request, String prompt, String operation) {
-        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        int maxRetries = openAiConfig.getMaxRetries();
+        int retryDelayMs = openAiConfig.getRetryDelayMs();
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try {
                 String responseText = callOpenAiApi(prompt);
 
                 return AiResponse.success(responseText.trim(), getId());
             } catch (IOException e) {
-                log.warn("OpenAI API call failed (attempt {}/{}): {}", attempt, MAX_RETRIES, e.getMessage());
+                log.warn("OpenAI API call failed (attempt {}/{}): {}", attempt, maxRetries, e.getMessage());
 
-                if (attempt == MAX_RETRIES) {
+                if (attempt == maxRetries) {
                     return AiResponse.failure(
-                            "OpenAI API error after " + MAX_RETRIES + " attempts: " + e.getMessage(), getId());
+                            "OpenAI API error after " + maxRetries + " attempts: " + e.getMessage(), getId());
                 }
 
                 // Exponential backoff
                 try {
-                    Thread.sleep(RETRY_DELAY_MS * attempt);
+                    Thread.sleep(retryDelayMs * attempt);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     return AiResponse.failure("Request interrupted", getId());
@@ -255,7 +261,7 @@ public class OpenAiTextService implements AiTextService {
         String requestJson = objectMapper.writeValueAsString(requestBody);
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE_URL + CHAT_COMPLETIONS_ENDPOINT))
+                .uri(URI.create(openAiConfig.getApiBaseUrl() + CHAT_COMPLETIONS_ENDPOINT))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + openAiConfig.getApiKey())
                 .timeout(Duration.ofSeconds(openAiConfig.getTimeout()))

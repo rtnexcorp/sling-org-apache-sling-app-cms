@@ -25,46 +25,48 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 /**
- * Shared OpenAI configuration service that provides centralized settings
- * for all OpenAI-based AI services (text, image, classification).
+ * Shared Anthropic configuration service that provides centralized settings
+ * for all Anthropic Claude-based AI services (text, image analysis, classification).
  * This ensures a single configuration point for API key and common settings.
  */
-@Component(service = OpenAiConfiguration.class, immediate = true)
-@Designate(ocd = OpenAiConfiguration.Config.class)
-public class OpenAiConfiguration {
+@Component(service = AnthropicConfiguration.class, immediate = true)
+@Designate(ocd = AnthropicConfiguration.Config.class)
+public class AnthropicConfiguration {
 
     @ObjectClassDefinition(
-            name = "Apache Sling CMS - OpenAI Configuration",
-            description = "Centralized OpenAI API configuration for all AI services")
+            name = "Apache Sling CMS - Anthropic Configuration",
+            description = "Centralized Anthropic Claude API configuration for all AI services")
     public @interface Config {
 
-        @AttributeDefinition(name = "Enabled", description = "Enable OpenAI services globally")
+        @AttributeDefinition(name = "Enabled", description = "Enable Anthropic services globally")
         boolean enabled() default false;
 
         @AttributeDefinition(
                 name = "API Base URL",
-                description = "OpenAI API base URL (useful for proxies or Azure OpenAI Service)")
-        String apiBaseUrl() default "https://api.openai.com/v1";
+                description = "Anthropic API base URL (useful for proxies or testing)")
+        String apiBaseUrl() default "https://api.anthropic.com/v1";
 
-        @AttributeDefinition(name = "API Key", description = "OpenAI API key (sk-...)")
+        @AttributeDefinition(name = "API Key", description = "Anthropic API key")
         String apiKey() default "";
-
-        @AttributeDefinition(name = "Organization ID", description = "Optional OpenAI organization ID")
-        String organizationId() default "";
 
         @AttributeDefinition(
                 name = "Text Model",
-                description = "OpenAI model for text operations (e.g., gpt-4-turbo, gpt-4, gpt-3.5-turbo)")
-        String textModel() default "gpt-4-turbo";
+                description =
+                        "Claude model for text operations (e.g., claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-haiku-20240307, claude-3-5-sonnet-20241022)")
+        String textModel() default "claude-3-5-sonnet-20241022";
 
         @AttributeDefinition(
                 name = "Vision Model",
-                description = "OpenAI vision model for image operations (e.g., gpt-4o, gpt-4-vision-preview)")
-        String visionModel() default "gpt-4o";
+                description =
+                        "Claude model for vision operations (e.g., claude-3-opus-20240229, claude-3-sonnet-20240229)")
+        String visionModel() default "claude-3-opus-20240229";
+
+        @AttributeDefinition(name = "API Version", description = "Anthropic API version")
+        String apiVersion() default "2023-06-01";
 
         @AttributeDefinition(
                 name = "Temperature",
-                description = "Sampling temperature (0.0 = deterministic, 2.0 = very creative)")
+                description = "Sampling temperature (0.0 = deterministic, 1.0 = very creative)")
         double temperature() default 0.7;
 
         @AttributeDefinition(name = "Max Tokens (Text)", description = "Maximum tokens in text response")
@@ -75,11 +77,6 @@ public class OpenAiConfiguration {
 
         @AttributeDefinition(name = "Timeout (seconds)", description = "Request timeout in seconds")
         int timeout() default 30;
-
-        @AttributeDefinition(
-                name = "Vision Detail Level",
-                description = "Image detail level for vision API: low (faster, cheaper), high (more detailed), or auto")
-        String visionDetail() default "auto";
 
         @AttributeDefinition(
                 name = "Max Retries",
@@ -111,16 +108,16 @@ public class OpenAiConfiguration {
         return config.apiKey();
     }
 
-    public String getOrganizationId() {
-        return config.organizationId();
-    }
-
     public String getTextModel() {
         return config.textModel();
     }
 
     public String getVisionModel() {
         return config.visionModel();
+    }
+
+    public String getApiVersion() {
+        return config.apiVersion();
     }
 
     public double getTemperature() {
@@ -137,10 +134,6 @@ public class OpenAiConfiguration {
 
     public int getTimeout() {
         return config.timeout();
-    }
-
-    public String getVisionDetail() {
-        return config.visionDetail();
     }
 
     public int getMaxRetries() {

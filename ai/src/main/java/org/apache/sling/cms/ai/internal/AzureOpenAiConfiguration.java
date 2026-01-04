@@ -25,42 +25,42 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 /**
- * Shared OpenAI configuration service that provides centralized settings
- * for all OpenAI-based AI services (text, image, classification).
- * This ensures a single configuration point for API key and common settings.
+ * Shared Azure OpenAI configuration service that provides centralized settings
+ * for all Azure OpenAI-based AI services (text, image, classification).
+ * This ensures a single configuration point for Azure OpenAI endpoint, API key, and common settings.
  */
-@Component(service = OpenAiConfiguration.class, immediate = true)
-@Designate(ocd = OpenAiConfiguration.Config.class)
-public class OpenAiConfiguration {
+@Component(service = AzureOpenAiConfiguration.class, immediate = true)
+@Designate(ocd = AzureOpenAiConfiguration.Config.class)
+public class AzureOpenAiConfiguration {
 
     @ObjectClassDefinition(
-            name = "Apache Sling CMS - OpenAI Configuration",
-            description = "Centralized OpenAI API configuration for all AI services")
+            name = "Apache Sling CMS - Azure OpenAI Configuration",
+            description = "Centralized Azure OpenAI configuration for all AI services")
     public @interface Config {
 
-        @AttributeDefinition(name = "Enabled", description = "Enable OpenAI services globally")
+        @AttributeDefinition(name = "Enabled", description = "Enable Azure OpenAI services globally")
         boolean enabled() default false;
 
         @AttributeDefinition(
-                name = "API Base URL",
-                description = "OpenAI API base URL (useful for proxies or Azure OpenAI Service)")
-        String apiBaseUrl() default "https://api.openai.com/v1";
+                name = "Endpoint",
+                description = "Azure OpenAI endpoint (e.g., https://your-resource.openai.azure.com/)")
+        String endpoint() default "";
 
-        @AttributeDefinition(name = "API Key", description = "OpenAI API key (sk-...)")
+        @AttributeDefinition(name = "API Key", description = "Azure OpenAI API key")
         String apiKey() default "";
 
-        @AttributeDefinition(name = "Organization ID", description = "Optional OpenAI organization ID")
-        String organizationId() default "";
+        @AttributeDefinition(
+                name = "Text Deployment Name",
+                description = "Azure OpenAI deployment name for text operations (e.g., gpt-4, gpt-35-turbo)")
+        String textDeploymentName() default "gpt-4";
 
         @AttributeDefinition(
-                name = "Text Model",
-                description = "OpenAI model for text operations (e.g., gpt-4-turbo, gpt-4, gpt-3.5-turbo)")
-        String textModel() default "gpt-4-turbo";
+                name = "Vision Deployment Name",
+                description = "Azure OpenAI deployment name for vision operations (e.g., gpt-4o, gpt-4-vision)")
+        String visionDeploymentName() default "gpt-4o";
 
-        @AttributeDefinition(
-                name = "Vision Model",
-                description = "OpenAI vision model for image operations (e.g., gpt-4o, gpt-4-vision-preview)")
-        String visionModel() default "gpt-4o";
+        @AttributeDefinition(name = "API Version", description = "Azure OpenAI API version")
+        String apiVersion() default "2024-02-15-preview";
 
         @AttributeDefinition(
                 name = "Temperature",
@@ -103,24 +103,24 @@ public class OpenAiConfiguration {
         return config.enabled();
     }
 
-    public String getApiBaseUrl() {
-        return config.apiBaseUrl();
+    public String getEndpoint() {
+        return config.endpoint();
     }
 
     public String getApiKey() {
         return config.apiKey();
     }
 
-    public String getOrganizationId() {
-        return config.organizationId();
+    public String getTextDeploymentName() {
+        return config.textDeploymentName();
     }
 
-    public String getTextModel() {
-        return config.textModel();
+    public String getVisionDeploymentName() {
+        return config.visionDeploymentName();
     }
 
-    public String getVisionModel() {
-        return config.visionModel();
+    public String getApiVersion() {
+        return config.apiVersion();
     }
 
     public double getTemperature() {

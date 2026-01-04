@@ -36,82 +36,47 @@ import org.apache.sling.cms.ai.AiResponse;
 import org.apache.sling.cms.ai.AiTextService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.Designate;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Azure OpenAI implementation of AI text services.
  * Uses Azure's OpenAI Service with enterprise-grade security and compliance.
+ * Uses centralized Azure OpenAI configuration for endpoint, API key, and settings.
  */
-@Component(service = AiTextService.class, immediate = true)
-@Designate(ocd = AzureOpenAiTextService.Config.class)
+@Component(
+        service = AiTextService.class,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        property = {"service.ranking:Integer=100"})
 public class AzureOpenAiTextService implements AiTextService {
 
     private static final Logger log = LoggerFactory.getLogger(AzureOpenAiTextService.class);
 
-    private static final int MAX_RETRIES = 3;
-    private static final int RETRY_DELAY_MS = 1000;
+    @Reference
+    private AzureOpenAiConfiguration azureConfig;
 
-    @ObjectClassDefinition(
-            name = "Apache Sling CMS - Azure OpenAI Text Service",
-            description = "Azure OpenAI Service integration for AI text operations")
-    public @interface Config {
-
-        @AttributeDefinition(name = "Enabled", description = "Enable the Azure OpenAI text service")
-        boolean enabled() default false;
-
-        @AttributeDefinition(
-                name = "Endpoint",
-                description = "Azure OpenAI endpoint (e.g., https://your-resource.openai.azure.com/)")
-        String endpoint() default "";
-
-        @AttributeDefinition(name = "API Key", description = "Azure OpenAI API key")
-        String apiKey() default "";
-
-        @AttributeDefinition(name = "Deployment Name", description = "Azure OpenAI deployment name (model deployment)")
-        String deploymentName() default "";
-
-        @AttributeDefinition(name = "API Version", description = "Azure OpenAI API version")
-        String apiVersion() default "2024-02-15-preview";
-
-        @AttributeDefinition(
-                name = "Temperature",
-                description = "Sampling temperature (0.0 = deterministic, 2.0 = very creative)")
-        double temperature() default 0.7;
-
-        @AttributeDefinition(name = "Max Tokens", description = "Maximum tokens in response")
-        int maxTokens() default 1000;
-
-        @AttributeDefinition(name = "Timeout (seconds)", description = "Request timeout in seconds")
-        int timeout() default 30;
-    }
-
-    private Config config;
     private HttpClient httpClient;
     private ObjectMapper objectMapper;
 
     @Activate
-    protected void activate(Config config) {
-        this.config = config;
+    protected void activate() {
         this.objectMapper = new ObjectMapper();
         this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(config.timeout()))
+                .connectTimeout(Duration.ofSeconds(azureConfig.getTimeout()))
                 .build();
 
-        if (config.enabled()) {
-            if (StringUtils.isBlank(config.endpoint())) {
-                log.warn("Azure OpenAI service is enabled but endpoint is not configured");
-            } else if (StringUtils.isBlank(config.apiKey())) {
-                log.warn("Azure OpenAI service is enabled but API key is not configured");
-            } else if (StringUtils.isBlank(config.deploymentName())) {
-                log.warn("Azure OpenAI service is enabled but deployment name is not configured");
-            } else {
-                log.info("Azure OpenAI text service activated with deployment: {}", config.deploymentName());
-            }
+        if (azureConfig.isEnabled() && StringUtils.isBlank(azureConfig.getEndpoint())) {
+            log.warn("Azure OpenAI service is enabled but endpoint is not configured");
+        } else if (azureConfig.isEnabled() && StringUtils.isBlank(azureConfig.getApiKey())) {
+            log.warn("Azure OpenAI service is enabled but API key is not configured");
+        } else if (azureConfig.isEnabled() && StringUtils.isBlank(azureConfig.getTextDeploymentName())) {
+            log.warn("Azure OpenAI service is enabled but text deployment name is not configured");
+        } else if (azureConfig.isEnabled()) {
+            log.info("Azure OpenAI text service activated with deployment: {}", azureConfig.getTextDeploymentName());
         }
     }
 
@@ -132,10 +97,10 @@ public class AzureOpenAiTextService implements AiTextService {
 
     @Override
     public boolean isEnabled() {
-        return (config.enabled()
-                && StringUtils.isNotBlank(config.endpoint())
-                && StringUtils.isNotBlank(config.apiKey())
-                && StringUtils.isNotBlank(config.deploymentName()));
+        return (azureConfig.isEnabled()
+                && StringUtils.isNotBlank(azureConfig.getEndpoint())
+                && StringUtils.isNotBlank(azureConfig.getApiKey())
+                && StringUtils.isNotBlank(azureConfig.getTextDeploymentName()));
     }
 
     @Override
@@ -215,7 +180,8 @@ public class AzureOpenAiTextService implements AiTextService {
             return AiResponse.skipped("Azure OpenAI service is not enabled or configured");
         }
 
-        String languageName = new java.util.Locale(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
+        String languageName =
+                java.util.Locale.forLanguageTag(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
         String prompt = "Translate the following content to " + languageName
                 + ". Maintain the tone and structure.\n\n"
                 + request.getContent();
@@ -253,24 +219,26 @@ public class AzureOpenAiTextService implements AiTextService {
      */
     private AiResponse executeRequest(AiRequest request, String prompt, String operation) {
         long startTime = System.currentTimeMillis();
+        int maxRetries = azureConfig.getMaxRetries();
+        int retryDelayMs = azureConfig.getRetryDelayMs();
 
-        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try {
                 String responseText = callAzureOpenAiApi(prompt);
                 long processingTime = System.currentTimeMillis() - startTime;
 
                 return AiResponse.success(responseText.trim(), getId());
             } catch (IOException e) {
-                log.warn("Azure OpenAI API call failed (attempt {}/{}): {}", attempt, MAX_RETRIES, e.getMessage());
+                log.warn("Azure OpenAI API call failed (attempt {}/{}): {}", attempt, maxRetries, e.getMessage());
 
-                if (attempt == MAX_RETRIES) {
+                if (attempt == maxRetries) {
                     return AiResponse.failure(
-                            "Azure OpenAI API error after " + MAX_RETRIES + " attempts: " + e.getMessage(), getId());
+                            "Azure OpenAI API error after " + maxRetries + " attempts: " + e.getMessage(), getId());
                 }
 
                 // Exponential backoff
                 try {
-                    Thread.sleep(RETRY_DELAY_MS * attempt);
+                    Thread.sleep(retryDelayMs * attempt);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     return AiResponse.failure("Request interrupted", getId());
@@ -288,11 +256,13 @@ public class AzureOpenAiTextService implements AiTextService {
         // Build Azure OpenAI endpoint URL
         String url = String.format(
                 "%s/openai/deployments/%s/chat/completions?api-version=%s",
-                config.endpoint().replaceAll("/$", ""), config.deploymentName(), config.apiVersion());
+                azureConfig.getEndpoint().replaceAll("/$", ""),
+                azureConfig.getTextDeploymentName(),
+                azureConfig.getApiVersion());
 
         ObjectNode requestBody = objectMapper.createObjectNode();
-        requestBody.put("temperature", config.temperature());
-        requestBody.put("max_tokens", config.maxTokens());
+        requestBody.put("temperature", azureConfig.getTemperature());
+        requestBody.put("max_tokens", azureConfig.getTextMaxTokens());
 
         ArrayNode messages = requestBody.putArray("messages");
         ObjectNode message = messages.addObject();
@@ -304,8 +274,8 @@ public class AzureOpenAiTextService implements AiTextService {
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Content-Type", "application/json")
-                .header("api-key", config.apiKey())
-                .timeout(Duration.ofSeconds(config.timeout()))
+                .header("api-key", azureConfig.getApiKey())
+                .timeout(Duration.ofSeconds(azureConfig.getTimeout()))
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson, StandardCharsets.UTF_8))
                 .build();
 

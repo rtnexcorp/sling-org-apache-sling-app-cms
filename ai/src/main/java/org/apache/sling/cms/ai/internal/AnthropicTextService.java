@@ -36,76 +36,45 @@ import org.apache.sling.cms.ai.AiResponse;
 import org.apache.sling.cms.ai.AiTextService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.Designate;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Anthropic Claude implementation of AI text services.
  * Supports Claude 3 models (Opus, Sonnet, Haiku).
+ * Uses centralized Anthropic configuration for API key and settings.
  */
-@Component(service = AiTextService.class, immediate = true)
-@Designate(ocd = AnthropicTextService.Config.class)
+@Component(
+        service = AiTextService.class,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        property = {"service.ranking:Integer=100"})
 public class AnthropicTextService implements AiTextService {
 
     private static final Logger log = LoggerFactory.getLogger(AnthropicTextService.class);
 
-    private static final String API_BASE_URL = "https://api.anthropic.com/v1";
     private static final String MESSAGES_ENDPOINT = "/messages";
-    private static final int MAX_RETRIES = 3;
-    private static final int RETRY_DELAY_MS = 1000;
 
-    @ObjectClassDefinition(
-            name = "Apache Sling CMS - Anthropic Claude Text Service",
-            description = "Anthropic Claude API integration for AI text operations")
-    public @interface Config {
+    @Reference
+    private AnthropicConfiguration anthropicConfig;
 
-        @AttributeDefinition(name = "Enabled", description = "Enable the Anthropic Claude text service")
-        boolean enabled() default false;
-
-        @AttributeDefinition(name = "API Key", description = "Anthropic API key")
-        String apiKey() default "";
-
-        @AttributeDefinition(
-                name = "Model",
-                description =
-                        "Claude model to use (e.g., claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-haiku-20240307)")
-        String model() default "claude-3-sonnet-20240229";
-
-        @AttributeDefinition(name = "API Version", description = "Anthropic API version")
-        String apiVersion() default "2023-06-01";
-
-        @AttributeDefinition(
-                name = "Temperature",
-                description = "Sampling temperature (0.0 = deterministic, 1.0 = very creative)")
-        double temperature() default 0.7;
-
-        @AttributeDefinition(name = "Max Tokens", description = "Maximum tokens in response")
-        int maxTokens() default 1000;
-
-        @AttributeDefinition(name = "Timeout (seconds)", description = "Request timeout in seconds")
-        int timeout() default 30;
-    }
-
-    private Config config;
     private HttpClient httpClient;
     private ObjectMapper objectMapper;
 
     @Activate
-    protected void activate(Config config) {
-        this.config = config;
+    protected void activate() {
         this.objectMapper = new ObjectMapper();
         this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(config.timeout()))
+                .connectTimeout(Duration.ofSeconds(anthropicConfig.getTimeout()))
                 .build();
 
-        if (config.enabled() && StringUtils.isBlank(config.apiKey())) {
+        if (anthropicConfig.isEnabled() && StringUtils.isBlank(anthropicConfig.getApiKey())) {
             log.warn("Anthropic service is enabled but API key is not configured");
-        } else if (config.enabled()) {
-            log.info("Anthropic text service activated with model: {}", config.model());
+        } else if (anthropicConfig.isEnabled()) {
+            log.info("Anthropic text service activated with model: {}", anthropicConfig.getTextModel());
         }
     }
 
@@ -126,7 +95,7 @@ public class AnthropicTextService implements AiTextService {
 
     @Override
     public boolean isEnabled() {
-        return config.enabled() && StringUtils.isNotBlank(config.apiKey());
+        return anthropicConfig.isEnabled() && StringUtils.isNotBlank(anthropicConfig.getApiKey());
     }
 
     @Override
@@ -205,7 +174,8 @@ public class AnthropicTextService implements AiTextService {
             return AiResponse.skipped("Anthropic service is not enabled or configured");
         }
 
-        String languageName = new java.util.Locale(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
+        String languageName =
+                java.util.Locale.forLanguageTag(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
         String prompt = "Translate the following content to " + languageName
                 + ". Maintain the tone and structure.\n\n"
                 + request.getContent();
@@ -243,24 +213,26 @@ public class AnthropicTextService implements AiTextService {
      */
     private AiResponse executeRequest(AiRequest request, String prompt, String operation) {
         long startTime = System.currentTimeMillis();
+        int maxRetries = anthropicConfig.getMaxRetries();
+        int retryDelayMs = anthropicConfig.getRetryDelayMs();
 
-        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try {
                 String responseText = callAnthropicApi(prompt);
                 long processingTime = System.currentTimeMillis() - startTime;
 
                 return AiResponse.success(responseText.trim(), getId());
             } catch (IOException e) {
-                log.warn("Anthropic API call failed (attempt {}/{}): {}", attempt, MAX_RETRIES, e.getMessage());
+                log.warn("Anthropic API call failed (attempt {}/{}): {}", attempt, maxRetries, e.getMessage());
 
-                if (attempt == MAX_RETRIES) {
+                if (attempt == maxRetries) {
                     return AiResponse.failure(
-                            "Anthropic API error after " + MAX_RETRIES + " attempts: " + e.getMessage(), getId());
+                            "Anthropic API error after " + maxRetries + " attempts: " + e.getMessage(), getId());
                 }
 
                 // Exponential backoff
                 try {
-                    Thread.sleep(RETRY_DELAY_MS * attempt);
+                    Thread.sleep(retryDelayMs * attempt);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     return AiResponse.failure("Request interrupted", getId());
@@ -276,9 +248,9 @@ public class AnthropicTextService implements AiTextService {
      */
     private String callAnthropicApi(String prompt) throws IOException {
         ObjectNode requestBody = objectMapper.createObjectNode();
-        requestBody.put("model", config.model());
-        requestBody.put("max_tokens", config.maxTokens());
-        requestBody.put("temperature", config.temperature());
+        requestBody.put("model", anthropicConfig.getTextModel());
+        requestBody.put("max_tokens", anthropicConfig.getTextMaxTokens());
+        requestBody.put("temperature", anthropicConfig.getTemperature());
 
         ArrayNode messages = requestBody.putArray("messages");
         ObjectNode message = messages.addObject();
@@ -288,11 +260,11 @@ public class AnthropicTextService implements AiTextService {
         String requestJson = objectMapper.writeValueAsString(requestBody);
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE_URL + MESSAGES_ENDPOINT))
+                .uri(URI.create(anthropicConfig.getApiBaseUrl() + MESSAGES_ENDPOINT))
                 .header("Content-Type", "application/json")
-                .header("x-api-key", config.apiKey())
-                .header("anthropic-version", config.apiVersion())
-                .timeout(Duration.ofSeconds(config.timeout()))
+                .header("x-api-key", anthropicConfig.getApiKey())
+                .header("anthropic-version", anthropicConfig.getApiVersion())
+                .timeout(Duration.ofSeconds(anthropicConfig.getTimeout()))
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson, StandardCharsets.UTF_8))
                 .build();
 
