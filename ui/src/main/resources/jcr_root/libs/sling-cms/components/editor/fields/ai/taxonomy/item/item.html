@@ -16,9 +16,9 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<sly data-sly-use.parentProps="${'org.apache.sling.api.resource.Resource' @ path=resource.parent.parent.path}">
+<sly data-sly-use.fieldName="${request.aiTaxonomyFieldName}">
     <a class="tag labelfield__item" title="${resource.path}" data-sly-test="${resource}">
-        <input type="hidden" name="${parentProps.valueMap.name @ context='attribute'}" value="${resource.path @ context='attribute'}" />
+        <input type="hidden" name="${fieldName @ context='attribute'}" value="${resource.path @ context='attribute'}" />
         <span class="labelfield__title">
             ${resource.valueMap['jcr:title'] @ context='html'}
         </span>

@@ -80,8 +80,23 @@
             
             <!-- Container for selected items -->
             <div class="labelfield__container tags are-large">
-                <sly data-sly-resource="${resource @ resourceType='sling-cms/components/editor/fields/ai/taxonomy/values'}"></sly>
+                <!-- Render selected items directly from the model -->
+                <sly data-sly-list.taxItem="${model.selectedItems}">
+                    <a class="tag labelfield__item" title="${taxItem.path}">
+                        <input type="hidden" name="${model.fieldName @ context='attribute'}" value="${taxItem.path @ context='attribute'}" />
+                        <span class="labelfield__title">
+                            ${taxItem.title @ context='html'}
+                        </span>
+                        <button class="delete is-small" type="button">
+                            <span class="is-sr-only">${'Delete' @ i18n}</span>
+                        </button>
+                    </a>
+                </sly>
             </div>
+            
+            <!-- TypeHint to ensure multi-value storage as String[] -->
+            <input type="hidden" name="${model.fieldName}@TypeHint" value="String[]" />
+            <input type="hidden" name="${model.fieldName}@Delete" value="delete" />
             
             <!-- Datalist for autocomplete options -->
             <datalist id="labelfield-${model.fieldId}">

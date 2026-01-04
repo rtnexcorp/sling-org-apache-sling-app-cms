@@ -118,19 +118,39 @@ public class AiTaxonomyField {
         this.selectedItems = new ArrayList<>();
         if (StringUtils.isNotBlank(editPath) && StringUtils.isNotBlank(name)) {
             Resource editedResource = resolver.getResource(editPath);
+            log.info("AiTaxonomyField - editPath: {}", editPath);
+            log.info("AiTaxonomyField - name: {}", name);
+            log.info("AiTaxonomyField - editedResource: {}", editedResource);
+
             if (editedResource != null) {
+                // Debug: log all properties
+                log.info("AiTaxonomyField - editedResource properties: {}", editedResource.getValueMap());
+
                 String[] values = editedResource.getValueMap().get(name, String[].class);
+                log.info("AiTaxonomyField - retrieved values: {}", values != null ? String.join(", ", values) : "null");
+
                 if (values != null) {
                     for (String value : values) {
                         Resource taxonomyRes = resolver.getResource(value);
                         if (taxonomyRes != null) {
                             String title = taxonomyRes.getValueMap().get("jcr:title", value);
                             selectedItems.add(new TaxonomyItem(value, title));
+                            log.info("AiTaxonomyField - added taxonomy item: {} -> {}", value, title);
+                        } else {
+                            log.warn("AiTaxonomyField - taxonomy resource not found: {}", value);
                         }
                     }
+                } else {
+                    log.warn("AiTaxonomyField - No values found for property: {}", name);
                 }
+            } else {
+                log.warn("AiTaxonomyField - editedResource is null for path: {}", editPath);
             }
+        } else {
+            log.warn("AiTaxonomyField - editPath or name is blank. editPath: {}, name: {}", editPath, name);
         }
+
+        log.info("AiTaxonomyField - selectedItems count: {}", selectedItems.size());
 
         // Load available taxonomy options
         this.availableOptions = loadTaxonomyOptions();

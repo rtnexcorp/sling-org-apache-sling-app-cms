@@ -146,12 +146,6 @@
             "contentSource": "content",
             "placeholder": "Select tags or click AI Suggest",
             "help": "AI can automatically suggest relevant tags based on your blog post content"
-        },
-        "tagsTypeHint": {
-            "jcr:primaryType": "nt:unstructured",
-            "name": "tags@TypeHint",
-            "value": "String[]",
-            "sling:resourceType": "sling-cms/components/editor/fields/hidden"
         }
     }
 }

@@ -16,6 +16,18 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<sly data-sly-list.item="${value}">
-    <sly data-sly-test="${item}" data-sly-resource="${item @ resourceType='sling-cms/components/editor/fields/ai/taxonomy/item'}"></sly>
+<sly data-sly-use.parentModel="${'org.apache.sling.cms.core.models.AiTaxonomyField' @ request=request}">
+    <sly data-sly-list.taxItem="${parentModel.selectedItems}">
+        <a class="tag labelfield__item" title="${taxItem.path}">
+            <input type="hidden" name="${parentModel.fieldName @ context='attribute'}" value="${taxItem.path @ context='attribute'}" />
+            <span class="labelfield__title">
+                ${taxItem.title @ context='html'}
+            </span>
+            <button class="delete is-small" type="button">
+                <span class="is-sr-only">
+                    ${'Delete' @ i18n}
+                </span>
+            </button>
+        </a>
+    </sly>
 </sly>
