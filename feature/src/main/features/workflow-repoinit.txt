@@ -1,16 +1,33 @@
 # SPDX-License-Identifier: Apache-2.0
 
-# Apache Sling CMS - Workflow Service Users
+# Apache Sling CMS - Workflow Service User Configuration
 
-# Create workflow service user for executing workflows
+# Create service user for workflow operations
+# This user is used by SimpleBPMNRepositoryService, ProcessInstanceManager, TaskManager
 create service user sling-cms-workflow with path system/sling/cms
 
-# Grant permissions for workflow execution
-# - Read/write access to /var/workflow for storing process instances
-# - Read access to /content for workflow context
-# - Read access to /conf for process definitions
+# Create workflow storage paths in JCR
+create path (sling:Folder) /var/workflow
+create path (sling:Folder) /var/workflow/definitions
+create path (sling:Folder) /var/workflow/instances
+create path (sling:Folder) /var/workflow/tasks
+create path (sling:Folder) /var/workflow/history
+create path (sling:Folder) /var/workflow/history/processes
+create path (sling:Folder) /var/workflow/history/tasks
+
+# Grant permissions for workflow service user
 set ACL for sling-cms-workflow
+    # Read access to content for workflow context (e.g., content paths in process variables)
     allow jcr:read on /content
-    allow jcr:read on /conf
+    
+    # Full access to workflow storage paths
+    # - /var/workflow/definitions: Store process definitions (BPMN XML)
+    # - /var/workflow/instances: Store process instances
+    # - /var/workflow/tasks: Store user tasks
+    # - /var/workflow/history: Store historical data (completed processes and tasks)
     allow jcr:all on /var/workflow
+    allow jcr:all on /var/workflow/definitions
+    allow jcr:all on /var/workflow/instances
+    allow jcr:all on /var/workflow/tasks
+    allow jcr:all on /var/workflow/history
 end

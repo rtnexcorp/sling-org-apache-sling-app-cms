@@ -8,15 +8,36 @@
   "configurations": {
     "org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~sling-cms-workflow": {
       "user.mapping": [
-        "org.apache.sling.cms.workflow:workflow-executor=sling-cms-workflow"
+        "org.apache.sling.cms.workflow:sling-cms-workflow=sling-cms-workflow"
       ]
-    },
-    "org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment~sling-cms-workflow": {
-      "whitelist.bundles": [
-        "org.apache.sling.cms.workflow"
-      ],
-      "whitelist.name": "sling-cms-workflow"
     }
   },
-  "repoinit:TEXT|true": "@file"
+  "repoinit:TEXT|true": [
+    "# Workflow Service User Configuration",
+    "",
+    "# Create service user for workflow operations",
+    "create service user sling-cms-workflow with path system/sling/cms",
+    "",
+    "# Create workflow storage paths",
+    "create path (sling:Folder) /var/workflow",
+    "create path (sling:Folder) /var/workflow/definitions",
+    "create path (sling:Folder) /var/workflow/instances",
+    "create path (sling:Folder) /var/workflow/tasks",
+    "create path (sling:Folder) /var/workflow/history",
+    "create path (sling:Folder) /var/workflow/history/processes",
+    "create path (sling:Folder) /var/workflow/history/tasks",
+    "",
+    "# Grant permissions for workflow service user",
+    "set ACL for sling-cms-workflow",
+    "  # Read access to content for workflow context",
+    "  allow jcr:read on /content",
+    "  ",
+    "  # Full access to workflow storage paths",
+    "  allow jcr:all on /var/workflow",
+    "  allow jcr:all on /var/workflow/definitions",
+    "  allow jcr:all on /var/workflow/instances",
+    "  allow jcr:all on /var/workflow/tasks",
+    "  allow jcr:all on /var/workflow/history",
+    "end"
+  ]
 }
