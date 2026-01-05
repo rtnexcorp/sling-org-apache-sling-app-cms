@@ -219,12 +219,25 @@ public class BPMNParser {
         if (delegateClass != null && !delegateClass.isEmpty()) {
             activity.setDelegateClass(delegateClass);
             log.debug("  Service task delegate class: {}", delegateClass);
+            return; // Found delegate class, no need to check extension elements
         }
 
-        // Parse extension elements for field injection
+        // Parse extension elements for delegate class and field injection
         NodeList extensionElements = element.getElementsByTagNameNS(BPMN_NS, "extensionElements");
         if (extensionElements.getLength() > 0) {
             Element extensions = (Element) extensionElements.item(0);
+
+            // Check for <delegateClass> element (alternative to flowable:class attribute)
+            NodeList delegateElements = extensions.getElementsByTagName("delegateClass");
+            if (delegateElements.getLength() > 0) {
+                String delegateValue = delegateElements.item(0).getTextContent().trim();
+                if (!delegateValue.isEmpty()) {
+                    activity.setDelegateClass(delegateValue);
+                    log.debug("  Service task delegate class (from extensionElements): {}", delegateValue);
+                }
+            }
+
+            // Parse field injections
             parseFieldInjections(extensions, activity);
         }
     }
@@ -265,6 +278,12 @@ public class BPMNParser {
             String sourceRef = flowElement.getAttribute("sourceRef");
             String targetRef = flowElement.getAttribute("targetRef");
             String name = flowElement.getAttribute("name");
+
+            // Auto-generate ID if missing (required for HashMap key)
+            if (id == null || id.trim().isEmpty()) {
+                id = sourceRef + "_to_" + targetRef + "_" + i;
+                log.debug("Auto-generated sequence flow ID: {}", id);
+            }
 
             SequenceFlowImpl flow = new SequenceFlowImpl();
             flow.setId(id);

@@ -21,6 +21,7 @@ package org.apache.sling.cms.workflow;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
@@ -135,4 +136,17 @@ public interface TaskService {
      */
     @NotNull
     TaskQuery createTaskQuery();
+
+    /**
+     * Sets the ResourceResolver context for API calls.
+     * MVP helper method - in production, use different approach.
+     *
+     * @param resolver Resource resolver
+     */
+    void setResolverContext(@NotNull ResourceResolver resolver);
+
+    /**
+     * Clears the ResourceResolver context.
+     */
+    void clearResolverContext();
 }

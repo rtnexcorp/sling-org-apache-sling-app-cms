@@ -44,7 +44,7 @@ public class TaskImpl implements Task {
 
     public TaskImpl(@NotNull Node node) throws RepositoryException {
         this.node = node;
-        this.id = node.getIdentifier();
+        this.id = node.getName(); // Use node name (task UUID), not JCR identifier
         this.name = node.getProperty("name").getString();
         this.processInstanceId = node.getProperty("processInstanceId").getString();
         this.activityId = node.getProperty("activityId").getString();

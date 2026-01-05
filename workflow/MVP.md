@@ -363,6 +363,48 @@ Overall MVP:        ████████████████████
 
 ---
 
+## 🎯 Post-MVP Enhancement Tasks
+
+### Phase 1: Testing & Validation
+1. ✅ **Create a test servlet/component to exercise the workflow API** - ✅ COMPLETE (v2 with ResourceResolver fix)
+   - ✅ Created `WorkflowTestServlet` at `/bin/workflow/test`
+   - ✅ Test workflow deployment with embedded BPMN XML
+   - ✅ Test process instance creation with variables
+   - ✅ Test task management and completion
+   - ✅ Test historical data queries
+   - ✅ Created `TestPublishDelegate` for service task testing
+   - ✅ Fixed ResourceResolver context management (TaskService.setResolverContext/clearResolverContext)
+   - ✅ Added proper cleanup in try-finally block
+   - **Access**: http://localhost:8082/bin/workflow/test
+   - **Actions**: deploy, start, list, complete, history, full (default)
+   - **Status**: Fully functional and deployed
+
+2. ⏸️ **Build a simple UI to manage workflows (using Sling CMS components)**
+   - Workflow definition list view
+   - Process instance monitor
+   - Task inbox component
+   - Workflow start form
+
+3. ⏸️ **Add workflow monitoring dashboard**
+   - Active process instances view
+   - Task statistics
+   - Performance metrics
+   - Error tracking
+
+4. ⏸️ **Create sample workflows for common CMS use cases**
+   - Content approval workflow
+   - Publishing workflow
+   - Asset review workflow
+   - Multi-stage approval
+
+5. ⏸️ **Add REST API endpoints for external integrations**
+   - RESTful API for process management
+   - Task API endpoints
+   - Query endpoints for instances/tasks
+   - Webhook support for external systems
+
+---
+
 **MVP Status**: ✅ Core workflow functionality working  
 **Ready for**: Integration testing, API evaluation, further development  
 **Not ready for**: Production use, complex workflows, historical queries

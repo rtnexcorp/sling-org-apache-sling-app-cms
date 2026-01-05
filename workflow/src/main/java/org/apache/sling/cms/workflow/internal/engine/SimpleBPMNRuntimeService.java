@@ -196,7 +196,13 @@ public class SimpleBPMNRuntimeService implements RuntimeService {
 
             // Iterate through all instances and filter active ones
             for (Resource child : instancesResource.getChildren()) {
-                ProcessInstanceImpl instance = processInstanceManager.getProcessInstance(child.getName(), resolver);
+                // Skip system nodes like rep:policy
+                String childName = child.getName();
+                if (childName.startsWith("rep:") || childName.startsWith("jcr:")) {
+                    continue;
+                }
+
+                ProcessInstanceImpl instance = processInstanceManager.getProcessInstance(childName, resolver);
                 if (instance != null && !instance.isEnded()) {
                     instances.add(instance);
                 }

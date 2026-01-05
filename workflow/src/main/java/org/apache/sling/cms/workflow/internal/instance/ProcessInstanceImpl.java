@@ -45,7 +45,7 @@ public class ProcessInstanceImpl implements ProcessInstance {
 
     public ProcessInstanceImpl(@NotNull Node node) throws RepositoryException {
         this.node = node;
-        this.id = node.getIdentifier();
+        this.id = node.getName(); // Use node name (instance UUID), not JCR identifier
         this.processDefinitionId = node.getProperty("processDefinitionId").getString();
         this.businessKey = node.hasProperty("businessKey")
                 ? node.getProperty("businessKey").getString()
