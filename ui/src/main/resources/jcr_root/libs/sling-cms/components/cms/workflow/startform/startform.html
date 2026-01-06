@@ -1,0 +1,196 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.startForm="org.apache.sling.cms.workflow.models.WorkflowStartFormModel"/>
+
+<div class="cms-workflow-startform">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">${'Start Workflow' @ i18n}</h2>
+        </div>
+
+        <form method="post" action="/bin/workflow/start" class="cms-form" data-component="workflow-start-form">
+            <!--/* Process Selection */-->
+            <div class="cms-form__group">
+                <label for="processKey" class="cms-form__label">${'Workflow Process' @ i18n} *</label>
+                <div class="select">
+                    <select id="processKey" name="processKey" required class="cms-form__control">
+                        <option value="">${'-- Select a workflow --' @ i18n}</option>
+                        <sly data-sly-list.process="${startForm.availableProcesses}">
+                            <option value="${process.key}">${process.name} (${process.key})</option>
+                        </sly>
+                    </select>
+                </div>
+                <p class="cms-form__help">${'Select the workflow process to start' @ i18n}</p>
+            </div>
+
+            <!--/* Business Key */-->
+            <div class="cms-form__group">
+                <label for="businessKey" class="cms-form__label">${'Business Key' @ i18n}</label>
+                <input type="text"
+                       id="businessKey"
+                       name="businessKey"
+                       class="cms-form__control"
+                       placeholder="${'e.g., /content/mysite/page' @ i18n}"/>
+                <p class="cms-form__help">${'Optional unique identifier for this process instance (e.g., content path)' @ i18n}</p>
+            </div>
+
+            <!--/* Process Variables */-->
+            <div class="cms-form__section">
+                <h3 class="cms-form__section-title">${'Process Variables' @ i18n}</h3>
+                <p class="cms-form__help">${'Add variables to pass to the workflow process' @ i18n}</p>
+
+                <div id="workflow-variables-container">
+                    <!--/* Initial variable row */-->
+                    <div class="cms-form__row" data-variable-row>
+                        <div class="cms-form__col">
+                            <input type="text"
+                                   name="variableName[]"
+                                   class="cms-form__control"
+                                   placeholder="${'Variable name' @ i18n}"/>
+                        </div>
+                        <div class="cms-form__col">
+                            <input type="text"
+                                   name="variableValue[]"
+                                   class="cms-form__control"
+                                   placeholder="${'Variable value' @ i18n}"/>
+                        </div>
+                        <div class="cms-form__col-auto">
+                            <button type="button"
+                                    class="cms-button cms-button--secondary cms-button--icon"
+                                    data-action="remove-variable"
+                                    aria-label="${'Remove variable' @ i18n}">
+                                <span class="cms-icon cms-icon--delete"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button"
+                        class="cms-button cms-button--secondary"
+                        data-action="add-variable">
+                    <span class="cms-icon cms-icon--add"></span>
+                    ${'Add Variable' @ i18n}
+                </button>
+            </div>
+
+            <!--/* Common Variables Presets */-->
+            <div class="cms-form__section">
+                <h3 class="cms-form__section-title">${'Quick Presets' @ i18n}</h3>
+                <div class="cms-button-group">
+                    <button type="button"
+                            class="cms-button cms-button--small cms-button--secondary"
+                            data-preset="content-approval">
+                        ${'Content Approval' @ i18n}
+                    </button>
+                    <button type="button"
+                            class="cms-button cms-button--small cms-button--secondary"
+                            data-preset="review-workflow">
+                        ${'Review Workflow' @ i18n}
+                    </button>
+                </div>
+            </div>
+
+            <!--/* Form Actions */-->
+            <div class="cms-form__actions">
+                <button type="submit" class="cms-button cms-button--primary">
+                    <span class="cms-icon cms-icon--play"></span>
+                    ${'Start Workflow' @ i18n}
+                </button>
+                <button type="reset" class="cms-button cms-button--secondary">
+                    ${'Reset' @ i18n}
+                </button>
+                <a href="/bin/workflow/definitions" class="cms-button cms-button--secondary">
+                    ${'Cancel' @ i18n}
+                </a>
+            </div>
+
+            <!--/* Hidden fields */-->
+            <input type="hidden" name=":redirect" value="/bin/workflow/instances"/>
+        </form>
+    </div>
+
+    <!--/* Instructions Panel */-->
+    <div class="cms-panel cms-panel--secondary">
+        <div class="cms-panel__header">
+            <h3 class="cms-panel__title">${'Instructions' @ i18n}</h3>
+        </div>
+        <div class="cms-panel__body">
+            <ul class="cms-list">
+                <li>${'Select a workflow process from the dropdown' @ i18n}</li>
+                <li>${'Provide a business key if you need to reference this instance later' @ i18n}</li>
+                <li>${'Add any required process variables' @ i18n}</li>
+                <li>${'Click "Start Workflow" to begin the process' @ i18n}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script data-sly-unwrap>
+(function() {
+    // Add variable row functionality
+    document.querySelectorAll('[data-action="add-variable"]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var container = document.getElementById('workflow-variables-container');
+            var template = container.querySelector('[data-variable-row]').cloneNode(true);
+            template.querySelectorAll('input').forEach(function(input) { input.value = ''; });
+            container.appendChild(template);
+        });
+    });
+
+    // Remove variable row functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('[data-action="remove-variable"]')) {
+            var container = document.getElementById('workflow-variables-container');
+            if (container.querySelectorAll('[data-variable-row]').length > 1) {
+                e.target.closest('[data-variable-row]').remove();
+            }
+        }
+    });
+
+    // Preset button functionality
+    document.querySelectorAll('[data-preset]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var preset = btn.dataset.preset;
+            var presets = {
+                'content-approval': [
+                    {name: 'author', value: ''},
+                    {name: 'contentPath', value: ''},
+                    {name: 'approver', value: ''}
+                ],
+                'review-workflow': [
+                    {name: 'reviewer', value: ''},
+                    {name: 'dueDate', value: ''},
+                    {name: 'priority', value: '50'}
+                ]
+            };
+
+            if (presets[preset]) {
+                var container = document.getElementById('workflow-variables-container');
+                container.innerHTML = '';
+                presets[preset].forEach(function(variable) {
+                    var row = document.querySelector('[data-variable-row]').cloneNode(true);
+                    row.querySelector('[name="variableName[]"]').value = variable.name;
+                    row.querySelector('[name="variableValue[]"]').value = variable.value;
+                    container.appendChild(row);
+                });
+            }
+        });
+    });
+})();
+</script>

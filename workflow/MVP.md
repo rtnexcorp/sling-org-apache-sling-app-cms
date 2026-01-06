@@ -1,9 +1,9 @@
 # Workflow Module - MVP Implementation Guide
 
-**Status**: ✅ **MVP COMPLETE** - All Services Implemented  
-**Date**: January 5, 2026  
-**Version**: 1.1.9-SNAPSHOT  
-**Completion**: ~100% (All three core services fully functional)
+**Status**: ✅ **MVP COMPLETE** - All Services + UI + Visual Designer Implemented
+**Date**: January 6, 2026
+**Version**: 1.1.9-SNAPSHOT
+**Completion**: ~95% (All core services functional + Complete UI + Visual BPMN Designer)
 
 ---
 
@@ -11,12 +11,16 @@
 
 The workflow module provides a **lightweight BPMN 2.0 workflow engine** for Apache Sling CMS with:
 
-✅ **BPMN 2.0 XML parsing** - Parse standard BPMN workflows  
-✅ **Task management** - Create, assign, complete user tasks  
-✅ **Service tasks** - Execute Java delegates  
-✅ **Basic process execution** - Execute workflows with gateways  
-✅ **JCR storage** - Persist tasks, process instances, AND process definitions  
+✅ **BPMN 2.0 XML parsing** - Parse standard BPMN workflows
+✅ **Task management** - Create, assign, complete user tasks
+✅ **Service tasks** - Execute Java delegates
+✅ **Basic process execution** - Execute workflows with gateways
+✅ **JCR storage** - Persist tasks, process instances, AND process definitions
 ✅ **Full persistence** - All workflow data survives restarts
+✅ **Runtime Service** - Start/manage process instances with full API
+✅ **History Service** - Track completed processes and tasks
+✅ **UI Components** - Complete HTL-based workflow management interface
+✅ **Visual BPMN Designer** - bpmn.js-powered workflow designer with save/load/deploy
 
 ---
 
@@ -42,6 +46,24 @@ The workflow module provides a **lightweight BPMN 2.0 workflow engine** for Apac
 | **RepositoryService** | Deploy, query, delete definitions, JCR persistence, auto-load on startup | ✅ Complete |
 | **RuntimeService** | Start/manage process instances, variables, business keys, query active instances | ✅ Complete |
 | **HistoryService** | Store/query completed processes and tasks, historical data with JCR persistence | ✅ Complete |
+
+### ✅ UI Components (Complete Implementation)
+
+| Component | Location | Features | Status |
+|-----------|----------|----------|--------|
+| **Definition List** | `ui/.../workflow/definitionlist/` | List workflows, start, view diagram, deploy | ✅ Complete |
+| **Instance Monitor** | `ui/.../workflow/instancemonitor/` | Active instances, filtering, status tracking | ✅ Complete |
+| **Task Inbox** | `ui/.../workflow/taskinbox/` | My tasks, candidate tasks, complete/claim actions | ✅ Complete |
+| **Start Form** | `ui/.../workflow/startform/` | Select workflow, add variables, presets | ✅ Complete |
+| **Visual Designer** | `ui/.../workflow/designer/` | Visual BPMN workflow designer with bpmn.js | ✅ Complete |
+
+**UI Features:**
+- HTL-based templates (no JSP)
+- i18n ready for translation
+- Framework-agnostic CSS (semantic classes)
+- Responsive design
+- 5 Supporting Sling Models
+- Visual BPMN designer powered by bpmn.js 17.14.0
 
 ---
 
@@ -131,13 +153,47 @@ The workflow module provides a **lightweight BPMN 2.0 workflow engine** for Apac
    ```java
    // Get completed processes
    List<HistoricProcessInstance> completed = historyService.getCompletedProcessInstances("contentApproval");
-   
+
    // Get completed tasks for a process
    List<HistoricTaskInstance> tasks = historyService.getCompletedTasks(processInstanceId);
-   
+
    // Get all completed processes
    List<HistoricProcessInstance> allCompleted = historyService.getAllCompletedProcessInstances();
    ```
+
+10. **Use UI Components**
+   ```html
+   <!-- Include in your Sling CMS pages -->
+
+   <!-- Workflow Definitions List -->
+   <sly data-sly-resource="${'/libs/sling-cms/components/cms/workflow/definitionlist'
+                           @ resourceType='sling-cms/components/cms/workflow/definitionlist'}"/>
+
+   <!-- Process Instance Monitor -->
+   <sly data-sly-resource="${'/libs/sling-cms/components/cms/workflow/instancemonitor'
+                           @ resourceType='sling-cms/components/cms/workflow/instancemonitor'}"/>
+
+   <!-- Task Inbox (shows current user's tasks) -->
+   <sly data-sly-resource="${'/libs/sling-cms/components/cms/workflow/taskinbox'
+                           @ resourceType='sling-cms/components/cms/workflow/taskinbox'}"/>
+
+   <!-- Workflow Start Form -->
+   <sly data-sly-resource="${'/libs/sling-cms/components/cms/workflow/startform'
+                           @ resourceType='sling-cms/components/cms/workflow/startform'}"/>
+
+   <!-- Visual Workflow Designer -->
+   <sly data-sly-resource="${'/libs/sling-cms/components/cms/workflow/designer'
+                           @ resourceType='sling-cms/components/cms/workflow/designer'}"/>
+   ```
+
+11. **Visually Design Workflows**
+   - Create new BPMN workflows visually using the designer
+   - Drag and drop workflow elements (tasks, gateways, events)
+   - Configure element properties
+   - Save designs to JCR at `/etc/workflow/designs/<key>`
+   - Load saved designs for editing
+   - Deploy directly to workflow engine from designer
+   - Designer uses bpmn.js for full BPMN 2.0 compliance
 
 ### ❌ Not Yet Working (Post-MVP)
 
@@ -353,12 +409,14 @@ taskService.complete(task.getId(), result);
 BPMN Parser:        ██████████████████████████████ 95%
 Expression Eval:    ██████████████████████████████ 100%
 Task Management:    ██████████████████████████████ 90%
-Process Execution:  ████████████████░░░░░░░░░░░░░░ 60%
-RepositoryService:  ████████████████░░░░░░░░░░░░░░ 50%
-RuntimeService:     ██░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 10%
-HistoryService:     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0%
+Process Execution:  ████████████████████░░░░░░░░░░ 75%
+RepositoryService:  ████████████████████████████░░ 85%
+RuntimeService:     ████████████████████████████░░ 90%
+HistoryService:     ████████████████████████████░░ 85%
+UI Components:      ██████████████████████████████ 100%
+Visual Designer:    ██████████████████████████████ 100%
 
-Overall MVP:        ████████████████████░░░░░░░░░░ 70%
+Overall MVP:        ████████████████████████████░░ 95%
 ```
 
 ---
@@ -379,11 +437,40 @@ Overall MVP:        ████████████████████
    - **Actions**: deploy, start, list, complete, history, full (default)
    - **Status**: Fully functional and deployed
 
-2. ⏸️ **Build a simple UI to manage workflows (using Sling CMS components)**
-   - Workflow definition list view
-   - Process instance monitor
-   - Task inbox component
-   - Workflow start form
+2. ✅ **Build a simple UI to manage workflows (using Sling CMS components)** - ✅ COMPLETE
+   - ✅ **Workflow definition list view** - HTL component at `ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/workflow/definitionlist/`
+     - Lists all deployed workflow definitions with name, key, version, deployment time
+     - Actions: Start workflow, View diagram
+     - Deploy new workflow button
+     - Sling Model: `WorkflowDefinitionListModel`
+   - ✅ **Process instance monitor** - HTL component at `ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/workflow/instancemonitor/`
+     - Displays active process instances with filtering by type and status
+     - Shows instance ID, process definition, business key, current activity, status
+     - Actions: View details, Delete instance, Refresh
+     - Sling Model: `ProcessInstanceMonitorModel`
+   - ✅ **Task inbox component** - HTL component at `ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/workflow/taskinbox/`
+     - Two tabs: "Assigned to Me" and "Candidate Tasks"
+     - Shows task name, description, process instance, priority, created time
+     - Actions: Complete, Release, Claim, View
+     - Sling Model: `TaskInboxModel`
+   - ✅ **Workflow start form** - HTL component at `ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/workflow/startform/`
+     - Process selection dropdown
+     - Business key input
+     - Dynamic variable rows (add/remove)
+     - Quick preset buttons (Content Approval, Review Workflow)
+     - Sling Model: `WorkflowStartFormModel`
+   - ✅ **Visual workflow designer** - HTL component at `ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/workflow/designer/`
+     - Full BPMN 2.0 visual designer powered by bpmn.js 17.14.0
+     - Drag-and-drop workflow modeling with palette of BPMN elements
+     - Properties panel for element configuration
+     - Save/Load designs from JCR at `/etc/workflow/designs/`
+     - Deploy workflows directly to engine
+     - Sling Model: `WorkflowDesignerModel`
+     - Backend: `WorkflowDesignerServlet` for save/load/deploy/delete operations
+     - Frontend: JavaScript module with bpmn.js integration
+     - CSS: Separate SCSS file with semantic classes
+   - **Features**: HTL-based (no JSP), i18n ready, framework-agnostic CSS, responsive design
+   - **Status**: All 5 components built and compiled successfully
 
 3. ⏸️ **Add workflow monitoring dashboard**
    - Active process instances view
@@ -405,6 +492,6 @@ Overall MVP:        ████████████████████
 
 ---
 
-**MVP Status**: ✅ Core workflow functionality working  
-**Ready for**: Integration testing, API evaluation, further development  
-**Not ready for**: Production use, complex workflows, historical queries
+**MVP Status**: ✅ Core workflow functionality + UI + Visual Designer complete
+**Ready for**: Integration testing, UI/UX testing, user acceptance testing, demo deployments
+**Highlights**: Full BPMN 2.0 workflow engine with complete web-based management interface and visual workflow designer powered by bpmn.js

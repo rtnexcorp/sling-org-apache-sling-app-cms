@@ -1,0 +1,352 @@
+// SPDX-License-Identifier: Apache-2.0
+
+// Workflow Designer Component
+// Visual BPMN workflow designer using bpmn.js
+
+// Panel Component - shared between designer and definition list
+.cms-panel {
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);
+  color: #4a4a4a;
+  display: block;
+  padding: 1.25rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #dbdbdb;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: #363636;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+// Workflow definitions list
+.cms-workflow-definitions {
+  width: 100%;
+
+  .cms-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+
+    thead {
+      background-color: #f5f5f5;
+      border-bottom: 2px solid #dbdbdb;
+    }
+
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #363636;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #ededed;
+      vertical-align: middle;
+
+      code {
+        background-color: #f5f5f5;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        font-size: 0.875rem;
+        color: #e91e63;
+        font-family: 'Courier New', monospace;
+      }
+    }
+
+    tbody tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+    }
+
+    &__actions {
+      text-align: right;
+      white-space: nowrap;
+
+      .cms-button {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+}
+
+.cms-workflow-designer {
+  width: 100%;
+  height: calc(100vh - 200px);
+  min-height: 600px;
+
+  > .cms-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+
+    .cms-panel__header {
+      flex-shrink: 0;
+      margin-bottom: 0;
+      padding: 1.25rem;
+    }
+  }
+
+  &__toolbar {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #dbdbdb;
+    flex-shrink: 0;
+
+    .cms-form-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+    }
+
+    .cms-form-label {
+      margin: 0;
+      font-weight: 600;
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+
+    .cms-form-input {
+      min-width: 200px;
+      padding: 0.5rem;
+      border: 1px solid #dbdbdb;
+      border-radius: 4px;
+      font-size: 0.875rem;
+
+      &:focus {
+        outline: none;
+        border-color: #3273dc;
+        box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+      }
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  &__canvas {
+    flex: 1;
+    height: 100%;
+    border-right: 1px solid #dbdbdb;
+    background-color: #fff;
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+
+    // Set explicit dimensions on the canvas container
+    &#bpmn-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    // bpmn.js canvas styles
+    .djs-container {
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+    }
+
+    // Ensure SVG fills the canvas
+    svg {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &__properties {
+    width: 300px;
+    background-color: #fafafa;
+    overflow-y: auto;
+    padding: 1rem;
+
+    .cms-panel__subtitle {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #dbdbdb;
+    }
+  }
+
+  &__properties-content {
+    .cms-properties-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .cms-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin: 0;
+    }
+
+    .cms-form-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4a4a4a;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .cms-form-value {
+      font-size: 0.875rem;
+      color: #363636;
+      padding: 0.5rem;
+      background-color: #fff;
+      border: 1px solid #dbdbdb;
+      border-radius: 4px;
+      word-break: break-word;
+    }
+  }
+
+  &__status {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid #dbdbdb;
+    background-color: #f5f5f5;
+    min-height: 50px;
+    flex-shrink: 0;
+  }
+}
+
+// Modal for load workflow dialog
+.cms-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__content {
+    position: relative;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+  }
+
+  &__header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #dbdbdb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #4a4a4a;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: #363636;
+    }
+  }
+
+  &__body {
+    padding: 1.25rem;
+    overflow-y: auto;
+    flex: 1;
+  }
+}
+
+// Message styles
+.cms-message {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+
+  &--info {
+    background-color: #e8f4fd;
+    color: #1d72aa;
+    border: 1px solid #bee5eb;
+  }
+
+  &--success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  &--error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// Import bpmn.js styles
+@import 'bpmn-js/dist/assets/diagram-js.css';
+@import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';

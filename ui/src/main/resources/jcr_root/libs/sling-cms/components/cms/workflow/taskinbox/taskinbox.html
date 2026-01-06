@@ -1,0 +1,151 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.inbox="org.apache.sling.cms.workflow.models.TaskInboxModel"/>
+
+<div class="cms-workflow-taskinbox">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">${'My Tasks' @ i18n}</h2>
+            <div class="cms-panel__actions">
+                <span class="cms-badge cms-badge--primary">
+                    ${inbox.taskCount} ${'tasks' @ i18n}
+                </span>
+            </div>
+        </div>
+
+        <div class="cms-tabs">
+            <ul class="cms-tabs__list">
+                <li class="cms-tabs__item cms-tabs__item--active">
+                    <a href="#assigned-to-me">${'Assigned to Me' @ i18n} (${inbox.assignedCount})</a>
+                </li>
+                <li class="cms-tabs__item">
+                    <a href="#candidate-tasks">${'Candidate Tasks' @ i18n} (${inbox.candidateCount})</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="cms-tabs__content">
+            <!--/* Assigned Tasks */-->
+            <div id="assigned-to-me" class="cms-tabs__panel cms-tabs__panel--active">
+                <sly data-sly-test="${inbox.hasAssignedTasks}">
+                    <table class="cms-table">
+                        <thead>
+                            <tr>
+                                <th>${'Task Name' @ i18n}</th>
+                                <th>${'Process Instance' @ i18n}</th>
+                                <th>${'Created' @ i18n}</th>
+                                <th>${'Priority' @ i18n}</th>
+                                <th class="cms-table__actions">${'Actions' @ i18n}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <sly data-sly-list.task="${inbox.assignedTasks}">
+                                <tr data-task-id="${task.id}">
+                                    <td>
+                                        <strong>${task.name}</strong>
+                                        <sly data-sly-test="${task.description}">
+                                            <br><small class="cms-text--muted">${task.description}</small>
+                                        </sly>
+                                    </td>
+                                    <td><code>${task.processInstanceId}</code></td>
+                                    <td>${task.createTime @ format='dd MMM yyyy HH:mm'}</td>
+                                    <td>
+                                        <span class="cms-badge ${task.priority > 50 ? 'cms-badge--danger' : task.priority > 30 ? 'cms-badge--warning' : 'cms-badge--info'}">
+                                            ${task.priority}
+                                        </span>
+                                    </td>
+                                    <td class="cms-table__actions">
+                                        <a href="/bin/workflow/task?taskId=${task.id}"
+                                           class="cms-button cms-button--small cms-button--primary">
+                                            ${'Complete' @ i18n}
+                                        </a>
+                                        <button class="cms-button cms-button--small cms-button--secondary"
+                                                data-action="unclaim-task"
+                                                data-task-id="${task.id}">
+                                            ${'Release' @ i18n}
+                                        </button>
+                                    </td>
+                                </tr>
+                            </sly>
+                        </tbody>
+                    </table>
+                </sly>
+
+                <sly data-sly-test="${!inbox.hasAssignedTasks}">
+                    <div class="cms-message cms-message--info">
+                        <p>${'You have no tasks assigned to you.' @ i18n}</p>
+                    </div>
+                </sly>
+            </div>
+
+            <!--/* Candidate Tasks */-->
+            <div id="candidate-tasks" class="cms-tabs__panel">
+                <sly data-sly-test="${inbox.hasCandidateTasks}">
+                    <table class="cms-table">
+                        <thead>
+                            <tr>
+                                <th>${'Task Name' @ i18n}</th>
+                                <th>${'Process Instance' @ i18n}</th>
+                                <th>${'Candidate Group' @ i18n}</th>
+                                <th>${'Created' @ i18n}</th>
+                                <th class="cms-table__actions">${'Actions' @ i18n}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <sly data-sly-list.task="${inbox.candidateTasks}">
+                                <tr data-task-id="${task.id}">
+                                    <td>
+                                        <strong>${task.name}</strong>
+                                        <sly data-sly-test="${task.description}">
+                                            <br><small class="cms-text--muted">${task.description}</small>
+                                        </sly>
+                                    </td>
+                                    <td><code>${task.processInstanceId}</code></td>
+                                    <td>
+                                        <sly data-sly-list.group="${task.candidateGroups}">
+                                            <span class="cms-badge">${group}</span>
+                                        </sly>
+                                    </td>
+                                    <td>${task.createTime @ format='dd MMM yyyy HH:mm'}</td>
+                                    <td class="cms-table__actions">
+                                        <button class="cms-button cms-button--small cms-button--primary"
+                                                data-action="claim-task"
+                                                data-task-id="${task.id}">
+                                            ${'Claim' @ i18n}
+                                        </button>
+                                        <a href="/bin/workflow/task?taskId=${task.id}"
+                                           class="cms-button cms-button--small cms-button--secondary">
+                                            ${'View' @ i18n}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </sly>
+                        </tbody>
+                    </table>
+                </sly>
+
+                <sly data-sly-test="${!inbox.hasCandidateTasks}">
+                    <div class="cms-message cms-message--info">
+                        <p>${'No candidate tasks available for your groups.' @ i18n}</p>
+                    </div>
+                </sly>
+            </div>
+        </div>
+    </div>
+</div>

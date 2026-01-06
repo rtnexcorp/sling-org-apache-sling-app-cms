@@ -1,0 +1,113 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.monitor="org.apache.sling.cms.workflow.models.ProcessInstanceMonitorModel"/>
+
+<div class="cms-workflow-instances">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">${'Active Process Instances' @ i18n}</h2>
+            <div class="cms-panel__actions">
+                <button class="cms-button cms-button--secondary" data-action="refresh">
+                    <span class="cms-icon cms-icon--refresh"></span>
+                    ${'Refresh' @ i18n}
+                </button>
+            </div>
+        </div>
+
+        <div class="cms-workflow-filter">
+            <div class="select is-small">
+                <select data-filter="process-type" aria-label="${'Filter by process' @ i18n}">
+                    <option value="">${'All Processes' @ i18n}</option>
+                    <sly data-sly-list.type="${monitor.processTypes}">
+                        <option value="${type}">${type}</option>
+                    </sly>
+                </select>
+            </div>
+
+            <div class="select is-small">
+                <select data-filter="status" aria-label="${'Filter by status' @ i18n}">
+                    <option value="">${'All Status' @ i18n}</option>
+                    <option value="active">${'Active' @ i18n}</option>
+                    <option value="suspended">${'Suspended' @ i18n}</option>
+                </select>
+            </div>
+        </div>
+
+        <sly data-sly-test="${monitor.hasInstances}">
+            <table class="cms-table">
+                <thead>
+                    <tr>
+                        <th>${'Instance ID' @ i18n}</th>
+                        <th>${'Process Definition' @ i18n}</th>
+                        <th>${'Business Key' @ i18n}</th>
+                        <th>${'Started' @ i18n}</th>
+                        <th>${'Current Activity' @ i18n}</th>
+                        <th>${'Status' @ i18n}</th>
+                        <th class="cms-table__actions">${'Actions' @ i18n}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <sly data-sly-list.instance="${monitor.instances}">
+                        <tr data-instance-id="${instance.id}"
+                            data-status="${instance.suspended ? 'suspended' : 'active'}">
+                            <td><code>${instance.id}</code></td>
+                            <td>${instance.processDefinitionKey}</td>
+                            <td>${instance.businessKey || '-'}</td>
+                            <td>${instance.startTime @ format='dd MMM yyyy HH:mm'}</td>
+                            <td>
+                                <sly data-sly-test="${instance.currentActivityId}">
+                                    <span class="cms-badge">${instance.currentActivityId}</span>
+                                </sly>
+                                <sly data-sly-test="${!instance.currentActivityId}">-</sly>
+                            </td>
+                            <td>
+                                <span class="cms-badge ${instance.suspended ? 'cms-badge--warning' : 'cms-badge--success'}">
+                                    ${instance.suspended ? 'Suspended' : 'Active' @ i18n}
+                                </span>
+                            </td>
+                            <td class="cms-table__actions">
+                                <a href="/bin/workflow/instance?instanceId=${instance.id}"
+                                   class="cms-button cms-button--small">
+                                    ${'View' @ i18n}
+                                </a>
+                                <button class="cms-button cms-button--small cms-button--danger"
+                                        data-action="delete-instance"
+                                        data-instance-id="${instance.id}">
+                                    ${'Delete' @ i18n}
+                                </button>
+                            </td>
+                        </tr>
+                    </sly>
+                </tbody>
+            </table>
+
+            <div class="cms-pagination">
+                <p class="cms-pagination__info">
+                    ${'Showing' @ i18n} ${monitor.instanceCount} ${'instances' @ i18n}
+                </p>
+            </div>
+        </sly>
+
+        <sly data-sly-test="${!monitor.hasInstances}">
+            <div class="cms-message cms-message--info">
+                <p>${'No active process instances found.' @ i18n}</p>
+            </div>
+        </sly>
+    </div>
+</div>
