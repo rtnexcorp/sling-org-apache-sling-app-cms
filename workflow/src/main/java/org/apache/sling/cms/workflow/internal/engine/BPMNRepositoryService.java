@@ -60,7 +60,8 @@ import org.slf4j.LoggerFactory;
 public class BPMNRepositoryService implements RepositoryService {
 
     private static final Logger log = LoggerFactory.getLogger(BPMNRepositoryService.class);
-    private static final String DEFINITIONS_PATH = "/var/workflow/definitions";
+    // Store workflow definitions in /etc (persistent configuration, backed up)
+    private static final String DEFINITIONS_PATH = "/etc/workflow/definitions";
     private static final String SERVICE_USER = "sling-cms-workflow";
 
     @Reference

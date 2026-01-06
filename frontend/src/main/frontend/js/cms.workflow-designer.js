@@ -29,7 +29,16 @@ class WorkflowDesigner {
 
         this.modeler = null;
         this.currentWorkflowKey = null;
-        this.config = window.WORKFLOW_DESIGNER_CONFIG || {};
+        
+        // Set default config if not provided
+        this.config = window.WORKFLOW_DESIGNER_CONFIG || {
+            baseUrl: '/bin/workflow/designer',
+            saveUrl: '/bin/workflow/designer?operation=save',
+            loadUrl: '/bin/workflow/designer?operation=load',
+            deleteUrl: '/bin/workflow/designer?operation=delete',
+            deployUrl: '/bin/workflow/designer?operation=deploy',
+            listUrl: '/bin/workflow/designer?operation=list'
+        };
 
         this.init();
     }
@@ -176,12 +185,13 @@ class WorkflowDesigner {
                 })
             });
 
-            if (response.ok) {
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
                 this.currentWorkflowKey = workflowKey;
-                this.showStatus('Workflow saved successfully', 'success');
+                this.showStatus(data.message || 'Workflow saved successfully to /etc/workflow/designs', 'success');
             } else {
-                const errorText = await response.text();
-                this.showStatus('Failed to save workflow: ' + errorText, 'error');
+                this.showStatus(data.message || 'Failed to save workflow', 'error');
             }
         } catch (err) {
             this.showStatus('Error saving workflow: ' + err.message, 'error');
@@ -191,11 +201,10 @@ class WorkflowDesigner {
 
     async loadWorkflow(workflowKey) {
         try {
-            const response = await fetch(`${this.config.loadUrl}?key=${encodeURIComponent(workflowKey)}`);
+            const response = await fetch(`${this.config.loadUrl}&key=${encodeURIComponent(workflowKey)}`);
+            const data = await response.json();
 
-            if (response.ok) {
-                const data = await response.json();
-
+            if (response.ok && data.success) {
                 // Set workflow metadata
                 document.getElementById('workflow-name').value = data.name || '';
                 document.getElementById('workflow-key').value = data.key || '';
@@ -207,10 +216,9 @@ class WorkflowDesigner {
                 canvas.zoom('fit-viewport');
 
                 this.hideLoadDialog();
-                this.showStatus('Workflow loaded successfully', 'success');
+                this.showStatus(data.message || 'Workflow loaded successfully from /etc/workflow/designs', 'success');
             } else {
-                const errorText = await response.text();
-                this.showStatus('Failed to load workflow: ' + errorText, 'error');
+                this.showStatus(data.message || 'Failed to load workflow', 'error');
             }
         } catch (err) {
             this.showStatus('Error loading workflow: ' + err.message, 'error');
@@ -230,13 +238,14 @@ class WorkflowDesigner {
                 })
             });
 
-            if (response.ok) {
-                this.showStatus('Workflow deleted successfully', 'success');
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                this.showStatus(data.message || 'Workflow deleted successfully from /etc/workflow/designs', 'success');
                 // Refresh the load dialog
                 window.location.reload();
             } else {
-                const errorText = await response.text();
-                this.showStatus('Failed to delete workflow: ' + errorText, 'error');
+                this.showStatus(data.message || 'Failed to delete workflow', 'error');
             }
         } catch (err) {
             this.showStatus('Error deleting workflow: ' + err.message, 'error');
@@ -268,11 +277,12 @@ class WorkflowDesigner {
                 })
             });
 
-            if (response.ok) {
-                this.showStatus('Workflow deployed successfully to workflow engine', 'success');
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                this.showStatus(data.message || 'Workflow deployed successfully to /etc/workflow/definitions', 'success');
             } else {
-                const errorText = await response.text();
-                this.showStatus('Failed to deploy workflow: ' + errorText, 'error');
+                this.showStatus(data.message || 'Failed to deploy workflow', 'error');
             }
         } catch (err) {
             this.showStatus('Error deploying workflow: ' + err.message, 'error');

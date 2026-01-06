@@ -44,16 +44,21 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Servlet for workflow designer operations: save, load, deploy, and delete workflow designs.
+ *
+ * <p>Security:</p>
+ * <ul>
+ *   <li>Authentication: Requires authenticated user (configured in SlingAuthenticator)</li>
+ *   <li>Authorization: Uses JCR permissions on /etc/workflow paths</li>
+ *   <li>CSRF Protection: Validates Referer header for POST requests</li>
+ * </ul>
  */
 @Component(
         service = Servlet.class,
         property = {
             "sling.servlet.methods=GET",
             "sling.servlet.methods=POST",
-            "sling.servlet.paths=/bin/workflow/designer/save",
-            "sling.servlet.paths=/bin/workflow/designer/load",
-            "sling.servlet.paths=/bin/workflow/designer/deploy",
-            "sling.servlet.paths=/bin/workflow/designer/delete"
+            "sling.servlet.paths=/bin/workflow/designer",
+            "sling.servlet.extensions=json"
         })
 public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
 
@@ -69,16 +74,25 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
     protected void doPost(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response)
             throws ServletException, IOException {
 
-        String path = request.getPathInfo();
+        // Basic CSRF protection - validate Referer header
+        if (!isValidReferer(request)) {
+            log.warn("Rejected request with invalid referer from: {}", request.getRemoteAddr());
+            response.sendError(
+                    SlingHttpServletResponse.SC_FORBIDDEN,
+                    "Invalid referer. This request appears to be a CSRF attack.");
+            return;
+        }
 
-        if (path.endsWith("/save")) {
+        String operation = request.getParameter("operation");
+
+        if ("save".equals(operation)) {
             saveWorkflow(request, response);
-        } else if (path.endsWith("/deploy")) {
+        } else if ("deploy".equals(operation)) {
             deployWorkflow(request, response);
-        } else if (path.endsWith("/delete")) {
+        } else if ("delete".equals(operation)) {
             deleteWorkflow(request, response);
         } else {
-            response.sendError(SlingHttpServletResponse.SC_NOT_FOUND, "Unknown operation");
+            response.sendError(SlingHttpServletResponse.SC_BAD_REQUEST, "Unknown operation: " + operation);
         }
     }
 
@@ -86,13 +100,40 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
     protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response)
             throws ServletException, IOException {
 
-        String path = request.getPathInfo();
+        String operation = request.getParameter("operation");
 
-        if (path.endsWith("/load")) {
+        if ("load".equals(operation)) {
             loadWorkflow(request, response);
+        } else if ("list".equals(operation)) {
+            listWorkflows(request, response);
         } else {
-            response.sendError(SlingHttpServletResponse.SC_NOT_FOUND, "Unknown operation");
+            response.sendError(SlingHttpServletResponse.SC_BAD_REQUEST, "Unknown operation: " + operation);
         }
+    }
+
+    /**
+     * Basic CSRF protection by validating the Referer header.
+     * Checks that the request comes from the same origin.
+     */
+    private boolean isValidReferer(SlingHttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        if (referer == null || referer.isEmpty()) {
+            // Allow requests without referer for now (can be made stricter in production)
+            log.debug("Request without Referer header");
+            return true;
+        }
+
+        // Check if referer starts with the request's scheme and host
+        String expectedOrigin = request.getScheme() + "://" + request.getServerName();
+        if (request.getServerPort() != 80 && request.getServerPort() != 443) {
+            expectedOrigin += ":" + request.getServerPort();
+        }
+
+        boolean valid = referer.startsWith(expectedOrigin);
+        if (!valid) {
+            log.warn("Invalid referer: {} (expected: {})", referer, expectedOrigin);
+        }
+        return valid;
     }
 
     private void saveWorkflow(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
@@ -123,6 +164,7 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
                 Node workflow =
                         etc.hasNode("workflow") ? etc.getNode("workflow") : etc.addNode("workflow", "nt:folder");
                 workflow.addNode("designs", "nt:folder");
+                session.save();
             }
 
             Node designsNode = session.getNode(DESIGNS_PATH);
@@ -148,10 +190,20 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
 
             log.info("Saved workflow design: {} ({})", name, key);
 
+        } catch (javax.jcr.AccessDeniedException e) {
+            log.warn("Access denied saving workflow design for user: {}", resolver.getUserID(), e);
+            response.setStatus(SlingHttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write(
+                            "{\"success\": false, \"message\": \"Access denied. You don't have permission to save workflow designs.\"}");
         } catch (RepositoryException e) {
             log.error("Error saving workflow design", e);
             response.setStatus(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Error saving workflow: " + e.getMessage());
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write("{\"success\": false, \"message\": \"Error saving workflow: " + escapeJson(e.getMessage())
+                            + "\"}");
         }
     }
 
@@ -178,7 +230,9 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
 
             if (!session.nodeExists(nodePath)) {
                 response.setStatus(SlingHttpServletResponse.SC_NOT_FOUND);
-                response.getWriter().write("Workflow not found: " + key);
+                response.setContentType("application/json");
+                response.getWriter()
+                        .write("{\"success\": false, \"message\": \"Workflow not found: " + escapeJson(key) + "\"}");
                 return;
             }
 
@@ -190,6 +244,7 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
             // Build JSON response manually
             StringBuilder json = new StringBuilder();
             json.append("{");
+            json.append("\"success\": true,");
             json.append("\"name\":\"").append(escapeJson(name)).append("\",");
             json.append("\"key\":\"").append(escapeJson(key)).append("\",");
             json.append("\"bpmn\":\"").append(escapeJson(bpmn)).append("\"");
@@ -202,10 +257,20 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
 
             log.info("Loaded workflow design: {} ({})", name, key);
 
+        } catch (javax.jcr.AccessDeniedException e) {
+            log.warn("Access denied loading workflow design for user: {}", resolver.getUserID(), e);
+            response.setStatus(SlingHttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write(
+                            "{\"success\": false, \"message\": \"Access denied. You don't have permission to load workflow designs.\"}");
         } catch (RepositoryException e) {
             log.error("Error loading workflow design", e);
             response.setStatus(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Error loading workflow: " + e.getMessage());
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write("{\"success\": false, \"message\": \"Error loading workflow: " + escapeJson(e.getMessage())
+                            + "\"}");
         }
     }
 
@@ -261,7 +326,9 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
 
             if (!session.nodeExists(nodePath)) {
                 response.setStatus(SlingHttpServletResponse.SC_NOT_FOUND);
-                response.getWriter().write("Workflow not found: " + key);
+                response.setContentType("application/json");
+                response.getWriter()
+                        .write("{\"success\": false, \"message\": \"Workflow not found: " + escapeJson(key) + "\"}");
                 return;
             }
 
@@ -275,10 +342,20 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
 
             log.info("Deleted workflow design: {}", key);
 
+        } catch (javax.jcr.AccessDeniedException e) {
+            log.warn("Access denied deleting workflow design for user: {}", resolver.getUserID(), e);
+            response.setStatus(SlingHttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write(
+                            "{\"success\": false, \"message\": \"Access denied. You don't have permission to delete workflow designs.\"}");
         } catch (RepositoryException e) {
             log.error("Error deleting workflow design", e);
             response.setStatus(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Error deleting workflow: " + e.getMessage());
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write("{\"success\": false, \"message\": \"Error deleting workflow: " + escapeJson(e.getMessage())
+                            + "\"}");
         }
     }
 
@@ -294,5 +371,83 @@ public class WorkflowDesignerServlet extends SlingAllMethodsServlet {
                 .replace("\n", "\\n")
                 .replace("\r", "\\r")
                 .replace("\t", "\\t");
+    }
+
+    /**
+     * List all workflow designs.
+     */
+    private void listWorkflows(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        ResourceResolver resolver = request.getResourceResolver();
+        Session session = resolver.adaptTo(Session.class);
+
+        if (session == null) {
+            response.setStatus(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"success\": false, \"message\": \"Unable to get JCR session\"}");
+            return;
+        }
+
+        try {
+            if (!session.nodeExists(DESIGNS_PATH)) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"workflows\": []}");
+                return;
+            }
+
+            Node designsNode = session.getNode(DESIGNS_PATH);
+            javax.jcr.NodeIterator nodes = designsNode.getNodes();
+
+            StringBuilder json = new StringBuilder();
+            json.append("{\"workflows\": [");
+
+            boolean first = true;
+            while (nodes.hasNext()) {
+                Node node = nodes.nextNode();
+                if (node.hasProperty("name") && node.hasProperty("key")) {
+                    if (!first) {
+                        json.append(",");
+                    }
+                    json.append("{");
+                    json.append("\"key\":\"")
+                            .append(escapeJson(node.getProperty("key").getString()))
+                            .append("\",");
+                    json.append("\"name\":\"")
+                            .append(escapeJson(node.getProperty("name").getString()))
+                            .append("\"");
+                    if (node.hasProperty("lastModified")) {
+                        json.append(",\"lastModified\":\"")
+                                .append(escapeJson(
+                                        node.getProperty("lastModified").getString()))
+                                .append("\"");
+                    }
+                    json.append("}");
+                    first = false;
+                }
+            }
+
+            json.append("]}");
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json.toString());
+
+            log.debug("Listed workflow designs");
+
+        } catch (javax.jcr.AccessDeniedException e) {
+            log.warn("Access denied listing workflow designs for user: {}", resolver.getUserID(), e);
+            response.setStatus(SlingHttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write(
+                            "{\"success\": false, \"message\": \"Access denied. You don't have permission to list workflow designs.\"}");
+        } catch (RepositoryException e) {
+            log.error("Error listing workflow designs", e);
+            response.setStatus(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json");
+            response.getWriter()
+                    .write("{\"success\": false, \"message\": \"Error listing workflows: " + escapeJson(e.getMessage())
+                            + "\"}");
+        }
     }
 }

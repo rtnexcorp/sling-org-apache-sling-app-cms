@@ -122,9 +122,11 @@
 
 <script data-sly-unwrap>
     window.WORKFLOW_DESIGNER_CONFIG = {
-        saveUrl: '/bin/workflow/designer/save',
-        loadUrl: '/bin/workflow/designer/load',
-        deployUrl: '/bin/workflow/designer/deploy',
-        deleteUrl: '/bin/workflow/designer/delete'
+        baseUrl: '/bin/workflow/designer',
+        saveUrl: '/bin/workflow/designer?operation=save',
+        loadUrl: '/bin/workflow/designer?operation=load',
+        deployUrl: '/bin/workflow/designer?operation=deploy',
+        deleteUrl: '/bin/workflow/designer?operation=delete',
+        listUrl: '/bin/workflow/designer?operation=list'
     };
 </script>
