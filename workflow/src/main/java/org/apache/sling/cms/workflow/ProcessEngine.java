@@ -67,7 +67,7 @@ public interface ProcessEngine {
     /**
      * Get the engine name.
      *
-     * @return Engine name (e.g., "SimpleBPMN", "Flowable")
+     * @return Engine name (e.g., "BPMN", "Flowable")
      */
     @NotNull
     String getName();

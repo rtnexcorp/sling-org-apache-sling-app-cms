@@ -47,13 +47,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of HistoryService for SimpleBPMN engine.
+ * BPMN implementation of HistoryService.
  * Provides JCR-based persistence for completed process instances and tasks.
  */
 @Component(service = HistoryService.class)
-public class SimpleBPMNHistoryService implements HistoryService {
+public class BPMNHistoryService implements HistoryService {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleBPMNHistoryService.class);
+    private static final Logger log = LoggerFactory.getLogger(BPMNHistoryService.class);
     private static final String SERVICE_USER = "sling-cms-workflow";
     private static final String HISTORY_BASE_PATH = "/var/workflow/history";
     private static final String PROCESSES_PATH = HISTORY_BASE_PATH + "/processes";

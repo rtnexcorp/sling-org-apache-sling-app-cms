@@ -40,10 +40,10 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Implementation of TaskService for SimpleBPMN engine.
+ * BPMN implementation of TaskService.
  */
 @Component(service = TaskService.class)
-public class SimpleBPMNTaskService implements TaskService {
+public class BPMNTaskService implements TaskService {
 
     @Reference
     private TaskManager taskManager;
@@ -52,7 +52,7 @@ public class SimpleBPMNTaskService implements TaskService {
     private ProcessInstanceManager processInstanceManager;
 
     @Reference
-    private SimpleBPMNRepositoryService repositoryService;
+    private BPMNRepositoryService repositoryService;
 
     @Reference
     private ProcessExecutor processExecutor;

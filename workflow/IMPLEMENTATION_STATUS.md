@@ -47,18 +47,18 @@
 
 ## 🚧 TODO (Phase 2: Implementation)
 
-### 1. SimpleBPMN Engine Implementation
+### 1. BPMN Engine Implementation
 
 Create native Sling BPMN engine implementation:
 
 **Location:** `src/main/java/org/apache/sling/cms/workflow/internal/`
 
 **Classes to implement:**
-- [ ] `SimpleBPMNProcessEngine.java` - ProcessEngine implementation
-- [ ] `SimpleBPMNRuntimeService.java` - RuntimeService implementation
-- [ ] `SimpleBPMNTaskService.java` - TaskService implementation
-- [ ] `SimpleBPMNRepositoryService.java` - RepositoryService implementation
-- [ ] `SimpleBPMNHistoryService.java` - HistoryService implementation
+- [ ] `BPMNProcessEngine.java` - ProcessEngine implementation
+- [ ] `BPMNRuntimeService.java` - RuntimeService implementation
+- [ ] `BPMNTaskService.java` - TaskService implementation
+- [ ] `BPMNRepositoryService.java` - RepositoryService implementation
+- [ ] `BPMNHistoryService.java` - HistoryService implementation
 
 **Reference:** See [workflow-bpmn-compliant-implementation.md](/docs/workflow-bpmn-compliant-implementation.md) for complete implementation examples.
 
@@ -269,9 +269,9 @@ mvn clean install -P autoInstallBundle
 
 ## 📚 Next Steps
 
-1. **Start with SimpleBPMN implementation**:
+1. **Start with BPMN implementation**:
    - Implement `BPMNParser` to parse content-approval.bpmn20.xml
-   - Implement `SimpleBPMNProcessEngine` and services
+   - Implement `BPMNProcessEngine` and services
    - Store process state in JCR under `/var/workflow/`
 
 2. **Create JavaDelegate examples**:

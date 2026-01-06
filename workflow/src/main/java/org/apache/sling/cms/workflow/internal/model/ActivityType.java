@@ -19,7 +19,7 @@
 package org.apache.sling.cms.workflow.internal.model;
 
 /**
- * BPMN activity types supported by SimpleBPMN engine.
+ * BPMN activity types supported by the workflow engine.
  */
 public enum ActivityType {
     /** Start event - workflow entry point */

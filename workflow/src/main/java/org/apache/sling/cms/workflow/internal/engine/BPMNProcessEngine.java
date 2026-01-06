@@ -31,14 +31,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * SimpleBPMN Process Engine implementation.
+ * BPMN Process Engine implementation.
  * Main entry point for the BPMN 2.0 workflow engine.
  */
 @Component(service = ProcessEngine.class, immediate = true)
-public class SimpleBPMNProcessEngine implements ProcessEngine {
+public class BPMNProcessEngine implements ProcessEngine {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleBPMNProcessEngine.class);
-    private static final String ENGINE_NAME = "SimpleBPMN";
+    private static final Logger log = LoggerFactory.getLogger(BPMNProcessEngine.class);
+    private static final String ENGINE_NAME = "BPMN";
 
     @Reference
     private RuntimeService runtimeService;
@@ -54,7 +54,7 @@ public class SimpleBPMNProcessEngine implements ProcessEngine {
 
     @Activate
     protected void activate() {
-        log.info("SimpleBPMN Process Engine activated");
+        log.info("BPMN Process Engine activated");
     }
 
     @Override

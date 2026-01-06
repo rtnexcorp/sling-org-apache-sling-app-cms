@@ -45,8 +45,9 @@ public class SimpleExpressionEvaluator {
     private static final Logger log = LoggerFactory.getLogger(SimpleExpressionEvaluator.class);
 
     // Pattern to match ${variable == value} or ${variable != value}
+    // NOTE: Order matters! Two-character operators (==, !=, >=, <=) must come before single-character ones (>, <)
     private static final Pattern COMPARISON_PATTERN =
-            Pattern.compile("\\$\\{\\s*(\\w+)\\s*(==|!=|>|<|>=|<=)\\s*(.+?)\\s*\\}");
+            Pattern.compile("\\$\\{\\s*(\\w+)\\s*(==|!=|>=|<=|>|<)\\s*(.+?)\\s*\\}");
 
     // Pattern to match just ${variable}
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{\\s*(\\w+)\\s*\\}");
@@ -82,6 +83,10 @@ public class SimpleExpressionEvaluator {
             if (variableMatcher.matches()) {
                 String varName = variableMatcher.group(1);
                 Object value = variables.get(varName);
+                // Handle string "true"/"false" values
+                if (value instanceof String) {
+                    return Boolean.parseBoolean((String) value);
+                }
                 return Boolean.TRUE.equals(value);
             }
 
@@ -100,6 +105,11 @@ public class SimpleExpressionEvaluator {
     private boolean evaluateComparison(
             String varName, String operator, String expectedValue, Map<String, Object> variables) {
         Object actualValue = variables.get(varName);
+
+        // Parse actual value if it's a string (common case when variables come from map)
+        if (actualValue instanceof String) {
+            actualValue = parseValue((String) actualValue);
+        }
 
         log.debug("Evaluating: {} {} {} (actual value: {})", varName, operator, expectedValue, actualValue);
 

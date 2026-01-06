@@ -42,12 +42,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of RuntimeService for SimpleBPMN engine.
+ * BPMN implementation of RuntimeService.
  */
 @Component(service = RuntimeService.class)
-public class SimpleBPMNRuntimeService implements RuntimeService {
+public class BPMNRuntimeService implements RuntimeService {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleBPMNRuntimeService.class);
+    private static final Logger log = LoggerFactory.getLogger(BPMNRuntimeService.class);
     private static final String SERVICE_USER = "sling-cms-workflow";
 
     @Reference
@@ -57,7 +57,7 @@ public class SimpleBPMNRuntimeService implements RuntimeService {
     private ProcessExecutor processExecutor;
 
     @Reference
-    private SimpleBPMNRepositoryService repositoryService;
+    private BPMNRepositoryService repositoryService;
 
     @Reference
     private ResourceResolverFactory resolverFactory;

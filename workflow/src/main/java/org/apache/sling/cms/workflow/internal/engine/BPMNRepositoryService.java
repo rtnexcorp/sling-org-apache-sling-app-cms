@@ -54,12 +54,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of RepositoryService for SimpleBPMN engine.
+ * BPMN implementation of RepositoryService.
  */
-@Component(service = {RepositoryService.class, SimpleBPMNRepositoryService.class})
-public class SimpleBPMNRepositoryService implements RepositoryService {
+@Component(service = {RepositoryService.class, BPMNRepositoryService.class})
+public class BPMNRepositoryService implements RepositoryService {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleBPMNRepositoryService.class);
+    private static final Logger log = LoggerFactory.getLogger(BPMNRepositoryService.class);
     private static final String DEFINITIONS_PATH = "/var/workflow/definitions";
     private static final String SERVICE_USER = "sling-cms-workflow";
 
