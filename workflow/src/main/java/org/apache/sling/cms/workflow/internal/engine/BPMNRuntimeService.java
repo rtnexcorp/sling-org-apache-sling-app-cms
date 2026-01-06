@@ -306,4 +306,16 @@ public class BPMNRuntimeService implements RuntimeService {
             throw new WorkflowException("Failed to get service resource resolver", e);
         }
     }
+
+    @Override
+    public void setResolverContext(@NotNull ResourceResolver resolver) {
+        // Not used by this implementation - uses service resource resolver internally
+        log.debug("setResolverContext called but not used by BPMNRuntimeService");
+    }
+
+    @Override
+    public void clearResolverContext() {
+        // Not used by this implementation - uses service resource resolver internally
+        log.debug("clearResolverContext called but not used by BPMNRuntimeService");
+    }
 }

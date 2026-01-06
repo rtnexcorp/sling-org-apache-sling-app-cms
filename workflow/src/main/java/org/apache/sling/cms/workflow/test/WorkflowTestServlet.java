@@ -83,8 +83,9 @@ public class WorkflowTestServlet extends SlingAllMethodsServlet {
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        // Set ResourceResolver context for TaskService operations
+        // Set ResourceResolver context for TaskService and RuntimeService operations
         taskService.setResolverContext(request.getResourceResolver());
+        runtimeService.setResolverContext(request.getResourceResolver());
 
         try {
             String action = request.getParameter("action");
@@ -154,6 +155,7 @@ public class WorkflowTestServlet extends SlingAllMethodsServlet {
         } finally {
             // Clear ResourceResolver context to prevent memory leaks
             taskService.clearResolverContext();
+            runtimeService.clearResolverContext();
         }
 
         out.println("</body></html>");
