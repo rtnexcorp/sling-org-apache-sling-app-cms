@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  
+  Sample BPMN Workflow Design - Document Review
+  Location: /etc/workflow/designs/documentReview
+  Purpose: Design file for reviewing documents before publication
+  
+  This is an EDITABLE design that can be loaded in the Workflow Designer UI
+-->
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                   xmlns:sling="http://sling.apache.org/bpmn"
+                   id="Definitions_documentReview"
+                   targetNamespace="http://sling.apache.org/workflow"
+                   exporter="Sling CMS Workflow Designer"
+                   exporterVersion="1.0">
+  
+  <bpmn2:process id="documentReview" name="Document Review Workflow" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn2:startEvent id="StartEvent_1" name="Document Submitted">
+      <bpmn2:outgoing>Flow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    
+    <!-- User Task: Initial Review -->
+    <bpmn2:userTask id="Task_InitialReview" name="Initial Review">
+      <bpmn2:extensionElements>
+        <sling:candidateGroup>reviewers</sling:candidateGroup>
+        <sling:formKey>review-form</sling:formKey>
+        <sling:priority>50</sling:priority>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <!-- Exclusive Gateway: Review Decision -->
+    <bpmn2:exclusiveGateway id="Gateway_ReviewDecision" name="Approved?">
+      <bpmn2:incoming>Flow_2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Approved</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_Rejected</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_NeedsChanges</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    
+    <!-- Service Task: Notify Author of Rejection -->
+    <bpmn2:serviceTask id="Task_NotifyRejection" name="Notify Author - Rejected">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.SendEmailDelegate</sling:delegateClass>
+        <sling:field name="template" value="/etc/workflow/email-templates/rejection"/>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Rejected</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_3</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- User Task: Request Changes -->
+    <bpmn2:userTask id="Task_RequestChanges" name="Request Changes">
+      <bpmn2:extensionElements>
+        <sling:candidateGroup>authors</sling:candidateGroup>
+        <sling:formKey>revision-form</sling:formKey>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_NeedsChanges</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_4</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <!-- Service Task: Publish Document -->
+    <bpmn2:serviceTask id="Task_PublishDocument" name="Publish Document">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.PublishDelegate</sling:delegateClass>
+        <sling:field name="targetPath" value="/content/published"/>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Approved</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_5</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- End Event: Rejected -->
+    <bpmn2:endEvent id="EndEvent_Rejected" name="Document Rejected">
+      <bpmn2:incoming>Flow_3</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <!-- End Event: Published -->
+    <bpmn2:endEvent id="EndEvent_Published" name="Document Published">
+      <bpmn2:incoming>Flow_5</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_InitialReview"/>
+    <bpmn2:sequenceFlow id="Flow_2" sourceRef="Task_InitialReview" targetRef="Gateway_ReviewDecision"/>
+    <bpmn2:sequenceFlow id="Flow_Approved" name="Approved" sourceRef="Gateway_ReviewDecision" targetRef="Task_PublishDocument">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${approved == true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_Rejected" name="Rejected" sourceRef="Gateway_ReviewDecision" targetRef="Task_NotifyRejection">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${approved == false}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_NeedsChanges" name="Needs Changes" sourceRef="Gateway_ReviewDecision" targetRef="Task_RequestChanges">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${needsRevision == true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_3" sourceRef="Task_NotifyRejection" targetRef="EndEvent_Rejected"/>
+    <bpmn2:sequenceFlow id="Flow_4" sourceRef="Task_RequestChanges" targetRef="Task_InitialReview"/>
+    <bpmn2:sequenceFlow id="Flow_5" sourceRef="Task_PublishDocument" targetRef="EndEvent_Published"/>
+    
+  </bpmn2:process>
+  
+  <!-- BPMN Diagram (Visual Layout) -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="documentReview">
+      
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="135" y="145" width="70" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_InitialReview_di" bpmnElement="Task_InitialReview">
+        <dc:Bounds x="240" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Gateway_ReviewDecision_di" bpmnElement="Gateway_ReviewDecision" isMarkerVisible="true">
+        <dc:Bounds x="395" y="95" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="395" y="65" width="50" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_PublishDocument_di" bpmnElement="Task_PublishDocument">
+        <dc:Bounds x="500" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_NotifyRejection_di" bpmnElement="Task_NotifyRejection">
+        <dc:Bounds x="370" y="200" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_RequestChanges_di" bpmnElement="Task_RequestChanges">
+        <dc:Bounds x="240" y="200" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_Published_di" bpmnElement="EndEvent_Published">
+        <dc:Bounds x="652" y="102" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="635" y="145" width="70" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_Rejected_di" bpmnElement="EndEvent_Rejected">
+        <dc:Bounds x="522" y="222" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="505" y="265" width="70" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Sequence Flow Edges -->
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="188" y="120"/>
+        <di:waypoint x="240" y="120"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="340" y="120"/>
+        <di:waypoint x="395" y="120"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_Approved_di" bpmnElement="Flow_Approved">
+        <di:waypoint x="445" y="120"/>
+        <di:waypoint x="500" y="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="453" y="102" width="49" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_Rejected_di" bpmnElement="Flow_Rejected">
+        <di:waypoint x="420" y="145"/>
+        <di:waypoint x="420" y="200"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="163" width="45" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_NeedsChanges_di" bpmnElement="Flow_NeedsChanges">
+        <di:waypoint x="395" y="120"/>
+        <di:waypoint x="290" y="120"/>
+        <di:waypoint x="290" y="200"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="310" y="163" width="80" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="470" y="240"/>
+        <di:waypoint x="522" y="240"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="290" y="200"/>
+        <di:waypoint x="290" y="160"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="600" y="120"/>
+        <di:waypoint x="652" y="120"/>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn2:definitions>

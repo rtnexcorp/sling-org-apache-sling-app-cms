@@ -25,6 +25,7 @@ import javax.jcr.Session;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -128,6 +129,10 @@ public class WorkflowDesignerModel {
 
         public Calendar getLastModified() {
             return lastModified;
+        }
+
+        public Date getLastModifiedDate() {
+            return lastModified != null ? lastModified.getTime() : null;
         }
     }
 }

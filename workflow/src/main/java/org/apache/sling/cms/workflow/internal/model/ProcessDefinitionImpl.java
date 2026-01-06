@@ -18,6 +18,7 @@
  */
 package org.apache.sling.cms.workflow.internal.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ public class ProcessDefinitionImpl implements ProcessDefinition {
     private String deploymentId;
     private String resourceName;
     private String description;
+    private Date deploymentTime;
     private ActivityImpl startActivity;
     private Map<String, ActivityImpl> activities = new HashMap<>();
     private Map<String, SequenceFlowImpl> sequenceFlows = new HashMap<>();
@@ -101,6 +103,15 @@ public class ProcessDefinitionImpl implements ProcessDefinition {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public Date getDeploymentTime() {
+        return deploymentTime;
+    }
+
+    public void setDeploymentTime(Date deploymentTime) {
+        this.deploymentTime = deploymentTime;
     }
 
     public ActivityImpl getStartActivity() {

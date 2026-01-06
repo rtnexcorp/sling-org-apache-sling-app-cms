@@ -18,6 +18,8 @@
  */
 package org.apache.sling.cms.workflow;
 
+import java.util.Date;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
@@ -82,4 +84,12 @@ public interface ProcessDefinition {
      */
     @Nullable
     String getDescription();
+
+    /**
+     * Deployment time of this process definition.
+     *
+     * @return Deployment time or null
+     */
+    @Nullable
+    Date getDeploymentTime();
 }

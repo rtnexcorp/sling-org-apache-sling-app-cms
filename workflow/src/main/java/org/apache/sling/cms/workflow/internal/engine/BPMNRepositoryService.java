@@ -110,6 +110,13 @@ public class BPMNRepositoryService implements RepositoryService {
                         ProcessDefinitionImpl processDefinition = bpmnParser.parse(
                                 key, new ByteArrayInputStream(bpmnContent.getBytes(StandardCharsets.UTF_8)));
 
+                        // Set deployment time from JCR
+                        if (defNode.hasProperty("deploymentDate")) {
+                            Calendar deploymentDate =
+                                    defNode.getProperty("deploymentDate").getDate();
+                            processDefinition.setDeploymentTime(deploymentDate.getTime());
+                        }
+
                         definitionCache.put(processDefinition.getKey(), processDefinition);
                         definitionCache.put(processDefinition.getId(), processDefinition);
 
@@ -172,9 +179,13 @@ public class BPMNRepositoryService implements RepositoryService {
             defNode.setProperty("name", processDefinition.getName());
             defNode.setProperty("version", processDefinition.getVersion());
             defNode.setProperty("bpmn", bpmnContent);
-            defNode.setProperty("deploymentDate", Calendar.getInstance());
+            Calendar deploymentDate = Calendar.getInstance();
+            defNode.setProperty("deploymentDate", deploymentDate);
 
             session.save();
+
+            // Set deployment time on the definition
+            processDefinition.setDeploymentTime(deploymentDate.getTime());
 
             // Cache definition
             definitionCache.put(processDefinition.getKey(), processDefinition);
@@ -205,8 +216,9 @@ public class BPMNRepositoryService implements RepositoryService {
     @Override
     @NotNull
     public List<ProcessDefinition> getProcessDefinitions() {
-        // Return all cached definitions
-        return new ArrayList<>(definitionCache.values());
+        // Return unique definitions - use a Set to deduplicate since same definition
+        // is stored under both key and id in the cache
+        return new ArrayList<>(new java.util.HashSet<>(definitionCache.values()));
     }
 
     @Override
@@ -331,6 +343,12 @@ public class BPMNRepositoryService implements RepositoryService {
             String bpmnContent = node.getProperty("bpmn").getString();
             ProcessDefinitionImpl processDefinition =
                     bpmnParser.parse(keyOrId, new ByteArrayInputStream(bpmnContent.getBytes(StandardCharsets.UTF_8)));
+
+            // Set deployment time from JCR
+            if (node.hasProperty("deploymentDate")) {
+                Calendar deploymentDate = node.getProperty("deploymentDate").getDate();
+                processDefinition.setDeploymentTime(deploymentDate.getTime());
+            }
 
             // Cache it
             definitionCache.put(processDefinition.getKey(), processDefinition);

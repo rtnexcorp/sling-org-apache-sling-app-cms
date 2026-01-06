@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  
+  Sample BPMN Workflow Definition - Publishing Workflow
+  Location: /etc/workflow/definitions/publishingWorkflow
+  Purpose: DEPLOYED workflow for multi-stage content publishing
+  
+  This is a DEPLOYED definition that the workflow engine uses for execution
+-->
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                   xmlns:sling="http://sling.apache.org/bpmn"
+                   id="Definitions_publishingWorkflow"
+                   targetNamespace="http://sling.apache.org/workflow"
+                   exporter="Sling CMS Workflow Engine"
+                   exporterVersion="1.0">
+  
+  <bpmn2:process id="publishingWorkflow" name="Publishing Workflow" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn2:startEvent id="StartEvent_1" name="Publish Request">
+      <bpmn2:outgoing>Flow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    
+    <!-- Service Task: Validate Content -->
+    <bpmn2:serviceTask id="Task_ValidateContent" name="Validate Content">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.ValidateContentDelegate</sling:delegateClass>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_2</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- Exclusive Gateway: Is Valid? -->
+    <bpmn2:exclusiveGateway id="Gateway_IsValid" name="Is Valid?">
+      <bpmn2:incoming>Flow_2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Valid</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_Invalid</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    
+    <!-- User Task: Editor Approval -->
+    <bpmn2:userTask id="Task_EditorApproval" name="Editor Approval">
+      <bpmn2:extensionElements>
+        <sling:candidateGroup>editors</sling:candidateGroup>
+        <sling:formKey>editor-approval-form</sling:formKey>
+        <sling:priority>80</sling:priority>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Valid</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_3</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <!-- Exclusive Gateway: Editor Decision -->
+    <bpmn2:exclusiveGateway id="Gateway_EditorDecision" name="Approved?">
+      <bpmn2:incoming>Flow_3</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_EditorApproved</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_EditorRejected</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    
+    <!-- Parallel Gateway: Start Parallel Tasks -->
+    <bpmn2:parallelGateway id="Gateway_ParallelStart">
+      <bpmn2:incoming>Flow_EditorApproved</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_ToStaging</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_ToNotify</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_ToIndex</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    
+    <!-- Service Task: Publish to Staging -->
+    <bpmn2:serviceTask id="Task_PublishStaging" name="Publish to Staging">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.PublishDelegate</sling:delegateClass>
+        <sling:field name="targetPath" value="/content/staging"/>
+        <sling:field name="replicationAction" value="activate"/>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_ToStaging</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_StagingDone</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- Service Task: Update Search Index -->
+    <bpmn2:serviceTask id="Task_UpdateIndex" name="Update Search Index">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.IndexDelegate</sling:delegateClass>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_ToIndex</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_IndexDone</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- Service Task: Notify Subscribers -->
+    <bpmn2:serviceTask id="Task_NotifySubscribers" name="Notify Subscribers">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.SendEmailDelegate</sling:delegateClass>
+        <sling:field name="template" value="/etc/workflow/email-templates/publication"/>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_ToNotify</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_NotifyDone</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- Parallel Gateway: Wait for All Tasks -->
+    <bpmn2:parallelGateway id="Gateway_ParallelEnd">
+      <bpmn2:incoming>Flow_StagingDone</bpmn2:incoming>
+      <bpmn2:incoming>Flow_IndexDone</bpmn2:incoming>
+      <bpmn2:incoming>Flow_NotifyDone</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_4</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    
+    <!-- User Task: Final Production Approval -->
+    <bpmn2:userTask id="Task_ProductionApproval" name="Production Approval">
+      <bpmn2:extensionElements>
+        <sling:candidateGroup>administrators</sling:candidateGroup>
+        <sling:formKey>production-approval-form</sling:formKey>
+        <sling:priority>100</sling:priority>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_4</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_5</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <!-- Service Task: Publish to Production -->
+    <bpmn2:serviceTask id="Task_PublishProduction" name="Publish to Production">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.PublishDelegate</sling:delegateClass>
+        <sling:field name="targetPath" value="/content/production"/>
+        <sling:field name="replicationAction" value="activate"/>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_5</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_6</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- Service Task: Notify Rejection (Invalid) -->
+    <bpmn2:serviceTask id="Task_NotifyInvalid" name="Notify - Invalid Content">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.SendEmailDelegate</sling:delegateClass>
+        <sling:field name="template" value="/etc/workflow/email-templates/invalid"/>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Invalid</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_7</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- Service Task: Notify Rejection (Editor) -->
+    <bpmn2:serviceTask id="Task_NotifyRejected" name="Notify - Rejected">
+      <bpmn2:extensionElements>
+        <sling:delegateClass>org.apache.sling.cms.workflow.delegates.SendEmailDelegate</sling:delegateClass>
+        <sling:field name="template" value="/etc/workflow/email-templates/rejection"/>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_EditorRejected</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_8</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <!-- End Event: Published -->
+    <bpmn2:endEvent id="EndEvent_Published" name="Content Published">
+      <bpmn2:incoming>Flow_6</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <!-- End Event: Validation Failed -->
+    <bpmn2:endEvent id="EndEvent_Invalid" name="Validation Failed">
+      <bpmn2:incoming>Flow_7</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <!-- End Event: Rejected -->
+    <bpmn2:endEvent id="EndEvent_Rejected" name="Rejected">
+      <bpmn2:incoming>Flow_8</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_ValidateContent"/>
+    <bpmn2:sequenceFlow id="Flow_2" sourceRef="Task_ValidateContent" targetRef="Gateway_IsValid"/>
+    <bpmn2:sequenceFlow id="Flow_Valid" name="Valid" sourceRef="Gateway_IsValid" targetRef="Task_EditorApproval">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${isValid == true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_Invalid" name="Invalid" sourceRef="Gateway_IsValid" targetRef="Task_NotifyInvalid">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${isValid == false}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_3" sourceRef="Task_EditorApproval" targetRef="Gateway_EditorDecision"/>
+    <bpmn2:sequenceFlow id="Flow_EditorApproved" name="Yes" sourceRef="Gateway_EditorDecision" targetRef="Gateway_ParallelStart">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${approved == true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_EditorRejected" name="No" sourceRef="Gateway_EditorDecision" targetRef="Task_NotifyRejected">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${approved == false}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_ToStaging" sourceRef="Gateway_ParallelStart" targetRef="Task_PublishStaging"/>
+    <bpmn2:sequenceFlow id="Flow_ToNotify" sourceRef="Gateway_ParallelStart" targetRef="Task_NotifySubscribers"/>
+    <bpmn2:sequenceFlow id="Flow_ToIndex" sourceRef="Gateway_ParallelStart" targetRef="Task_UpdateIndex"/>
+    <bpmn2:sequenceFlow id="Flow_StagingDone" sourceRef="Task_PublishStaging" targetRef="Gateway_ParallelEnd"/>
+    <bpmn2:sequenceFlow id="Flow_IndexDone" sourceRef="Task_UpdateIndex" targetRef="Gateway_ParallelEnd"/>
+    <bpmn2:sequenceFlow id="Flow_NotifyDone" sourceRef="Task_NotifySubscribers" targetRef="Gateway_ParallelEnd"/>
+    <bpmn2:sequenceFlow id="Flow_4" sourceRef="Gateway_ParallelEnd" targetRef="Task_ProductionApproval"/>
+    <bpmn2:sequenceFlow id="Flow_5" sourceRef="Task_ProductionApproval" targetRef="Task_PublishProduction"/>
+    <bpmn2:sequenceFlow id="Flow_6" sourceRef="Task_PublishProduction" targetRef="EndEvent_Published"/>
+    <bpmn2:sequenceFlow id="Flow_7" sourceRef="Task_NotifyInvalid" targetRef="EndEvent_Invalid"/>
+    <bpmn2:sequenceFlow id="Flow_8" sourceRef="Task_NotifyRejected" targetRef="EndEvent_Rejected"/>
+    
+  </bpmn2:process>
+  
+  <!-- BPMN Diagram (Visual Layout) -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="publishingWorkflow">
+      
+      <!-- Start Event -->
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Validate -->
+      <bpmndi:BPMNShape id="Task_ValidateContent_di" bpmnElement="Task_ValidateContent">
+        <dc:Bounds x="240" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Is Valid Gateway -->
+      <bpmndi:BPMNShape id="Gateway_IsValid_di" bpmnElement="Gateway_IsValid" isMarkerVisible="true">
+        <dc:Bounds x="395" y="95" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Editor Approval -->
+      <bpmndi:BPMNShape id="Task_EditorApproval_di" bpmnElement="Task_EditorApproval">
+        <dc:Bounds x="500" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Editor Decision Gateway -->
+      <bpmndi:BPMNShape id="Gateway_EditorDecision_di" bpmnElement="Gateway_EditorDecision" isMarkerVisible="true">
+        <dc:Bounds x="655" y="95" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Parallel Gateway Start -->
+      <bpmndi:BPMNShape id="Gateway_ParallelStart_di" bpmnElement="Gateway_ParallelStart">
+        <dc:Bounds x="760" y="95" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Parallel Tasks -->
+      <bpmndi:BPMNShape id="Task_PublishStaging_di" bpmnElement="Task_PublishStaging">
+        <dc:Bounds x="870" y="20" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_UpdateIndex_di" bpmnElement="Task_UpdateIndex">
+        <dc:Bounds x="870" y="120" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_NotifySubscribers_di" bpmnElement="Task_NotifySubscribers">
+        <dc:Bounds x="870" y="220" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Parallel Gateway End -->
+      <bpmndi:BPMNShape id="Gateway_ParallelEnd_di" bpmnElement="Gateway_ParallelEnd">
+        <dc:Bounds x="1025" y="95" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Production Approval -->
+      <bpmndi:BPMNShape id="Task_ProductionApproval_di" bpmnElement="Task_ProductionApproval">
+        <dc:Bounds x="1130" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Publish to Production -->
+      <bpmndi:BPMNShape id="Task_PublishProduction_di" bpmnElement="Task_PublishProduction">
+        <dc:Bounds x="1290" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Notification Tasks -->
+      <bpmndi:BPMNShape id="Task_NotifyInvalid_di" bpmnElement="Task_NotifyInvalid">
+        <dc:Bounds x="370" y="200" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_NotifyRejected_di" bpmnElement="Task_NotifyRejected">
+        <dc:Bounds x="630" y="200" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- End Events -->
+      <bpmndi:BPMNShape id="EndEvent_Published_di" bpmnElement="EndEvent_Published">
+        <dc:Bounds x="1452" y="102" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_Invalid_di" bpmnElement="EndEvent_Invalid">
+        <dc:Bounds x="522" y="222" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_Rejected_di" bpmnElement="EndEvent_Rejected">
+        <dc:Bounds x="782" y="222" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      
+      <!-- Flows (simplified for brevity - all connections defined above) -->
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn2:definitions>

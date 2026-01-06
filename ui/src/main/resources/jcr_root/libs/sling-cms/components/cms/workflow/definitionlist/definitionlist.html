@@ -49,11 +49,11 @@
                             <td>${definition.version}</td>
                             <td>${definition.deploymentTime @ format='dd MMM yyyy HH:mm'}</td>
                             <td class="cms-table__actions">
-                                <a href="/bin/workflow/start?processKey=${definition.key}"
+                                <a href="/cms/workflow/start.html?processKey=${definition.key}"
                                    class="cms-button cms-button--small">
                                     ${' Start' @ i18n}
                                 </a>
-                                <a href="/bin/workflow/diagram?processKey=${definition.key}"
+                                <a href="/cms/workflow/diagram.html?processKey=${definition.key}"
                                    class="cms-button cms-button--small cms-button--secondary"
                                    target="_blank">
                                     ${'View Diagram' @ i18n}

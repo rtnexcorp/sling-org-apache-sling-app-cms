@@ -1,0 +1,145 @@
+{
+    "jcr:primaryType": "sling:Folder",
+    "jcr:content": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "Workflow"
+    },
+    "definitions": {
+        "jcr:primaryType": "sling:Page",
+        "jcr:content": {
+            "sling:resourceType": "sling-cms/components/pages/base",
+            "jcr:title": "Workflow Definitions",
+            "jcr:primaryType": "nt:unstructured",
+            "container": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/container",
+                "title": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/textelement",
+                    "i18n": true,
+                    "level": "h3",
+                    "text": "Workflow Definitions"
+                },
+                "description": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/textelement",
+                    "i18n": true,
+                    "level": "p",
+                    "text": "View and manage deployed workflow definitions."
+                },
+                "definitionlist": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/definitionlist"
+                }
+            }
+        }
+    },
+    "start": {
+        "jcr:primaryType": "sling:Page",
+        "jcr:content": {
+            "sling:resourceType": "sling-cms/components/pages/base",
+            "jcr:title": "Start Workflow",
+            "jcr:primaryType": "nt:unstructured",
+            "container": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/container",
+                "startform": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/startform"
+                }
+            }
+        }
+    },
+    "instances": {
+        "jcr:primaryType": "sling:Page",
+        "jcr:content": {
+            "sling:resourceType": "sling-cms/components/pages/base",
+            "jcr:title": "Workflow Instances",
+            "jcr:primaryType": "nt:unstructured",
+            "container": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/container",
+                "title": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/textelement",
+                    "i18n": true,
+                    "level": "h3",
+                    "text": "Running Workflow Instances"
+                },
+                "description": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/textelement",
+                    "i18n": true,
+                    "level": "p",
+                    "text": "Monitor active workflow process instances."
+                },
+                "instancemonitor": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/instancemonitor"
+                }
+            }
+        }
+    },
+    "tasks": {
+        "jcr:primaryType": "sling:Page",
+        "jcr:content": {
+            "sling:resourceType": "sling-cms/components/pages/base",
+            "jcr:title": "My Tasks",
+            "jcr:primaryType": "nt:unstructured",
+            "container": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/container",
+                "title": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/textelement",
+                    "i18n": true,
+                    "level": "h3",
+                    "text": "My Workflow Tasks"
+                },
+                "description": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/textelement",
+                    "i18n": true,
+                    "level": "p",
+                    "text": "View and complete tasks assigned to you or your groups."
+                },
+                "taskinbox": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/taskinbox"
+                }
+            }
+        }
+    },
+    "designer": {
+        "jcr:primaryType": "sling:Page",
+        "jcr:content": {
+            "sling:resourceType": "sling-cms/components/pages/base",
+            "jcr:title": "Workflow Designer",
+            "jcr:primaryType": "nt:unstructured",
+            "container": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/container",
+                "designer": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/designer"
+                }
+            }
+        }
+    },
+    "diagram": {
+        "jcr:primaryType": "sling:Page",
+        "jcr:content": {
+            "sling:resourceType": "sling-cms/components/pages/base",
+            "jcr:title": "Workflow Diagram",
+            "jcr:primaryType": "nt:unstructured",
+            "container": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/container",
+                "diagramviewer": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/diagramviewer"
+                }
+            }
+        }
+    }
+}
