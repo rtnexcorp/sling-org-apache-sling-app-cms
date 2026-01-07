@@ -20,6 +20,8 @@
 // Workflow Start Form Component
 // Provides styling for the workflow initiation form with variable management
 
+@use "variables" as *;
+
 .cms-workflow-startform {
   max-width: 100%;
   display: grid;
@@ -36,22 +38,22 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: $scrollbar-track;
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: $scrollbar-thumb;
     border-radius: 4px;
 
     &:hover {
-      background: #a8a8a8;
+      background: $scrollbar-thumb-hover;
     }
   }
 
   // Firefox scrollbar
   scrollbar-width: thin;
-  scrollbar-color: #c1c1c1 #f1f1f1;
+  scrollbar-color: $scrollbar-thumb $scrollbar-track;
 
   @media screen and (max-width: 1024px) {
     grid-template-columns: 1fr;
@@ -83,7 +85,7 @@
           content: "→";
           position: absolute;
           left: 0;
-          color: #3273dc;
+          color: $link;
           font-weight: bold;
         }
       }
@@ -101,7 +103,7 @@
     display: block;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #363636;
+    color: $grey-dark;
     margin-bottom: 0.5rem;
   }
 
@@ -110,26 +112,26 @@
     padding: 0.625rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
-    color: #363636;
-    background-color: #fff;
-    border: 1px solid #dbdbdb;
+    color: $grey-dark;
+    background-color: $white;
+    border: 1px solid $grey-lighter;
     border-radius: 4px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
     &:focus {
       outline: none;
-      border-color: #3273dc;
+      border-color: $link;
       box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
     }
 
     &::placeholder {
-      color: #b5b5b5;
+      color: $grey-light;
     }
   }
 
   &__help {
     font-size: 0.75rem;
-    color: #7a7a7a;
+    color: $grey;
     margin-top: 0.25rem;
     margin-bottom: 0;
   }
@@ -137,7 +139,7 @@
   &__section {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #ededed;
+    border-bottom: 1px solid $white-bis;
 
     &:last-of-type {
       border-bottom: none;
@@ -147,7 +149,7 @@
   &__section-title {
     font-size: 1.125rem;
     font-weight: 600;
-    color: #363636;
+    color: $grey-dark;
     margin-bottom: 1rem;
     margin-top: 0;
   }
@@ -182,7 +184,7 @@
     align-items: center;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 2px solid #dbdbdb;
+    border-top: 2px solid $grey-lighter;
   }
 }
 
@@ -222,35 +224,35 @@
 
   // Primary button
   &--primary {
-    color: #fff;
-    background-color: #3273dc;
-    border-color: #3273dc;
+    color: $white;
+    background-color: $link;
+    border-color: $link;
 
     &:hover {
-      background-color: #2366d1;
-      border-color: #2366d1;
+      background-color: $link-hover;
+      border-color: $link-hover;
     }
 
     &:active {
-      background-color: #1d5ec5;
-      border-color: #1d5ec5;
+      background-color: $link-active;
+      border-color: $link-active;
     }
   }
 
   // Secondary button
   &--secondary {
-    color: #363636;
-    background-color: #fff;
-    border-color: #dbdbdb;
+    color: $grey-dark;
+    background-color: $white;
+    border-color: $grey-lighter;
 
     &:hover {
-      background-color: #f5f5f5;
-      border-color: #b5b5b5;
+      background-color: $white-ter;
+      border-color: $grey-light;
     }
 
     &:active {
-      background-color: #ededed;
-      border-color: #b5b5b5;
+      background-color: $white-bis;
+      border-color: $grey-light;
     }
   }
 
@@ -289,25 +291,25 @@
     padding: 0.625rem 2.5rem 0.625rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
-    color: #363636;
-    background-color: #fff;
+    color: $grey-dark;
+    background-color: $white;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23363636' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     background-size: 1.25em;
-    border: 1px solid #dbdbdb;
+    border: 1px solid $grey-lighter;
     border-radius: 4px;
     cursor: pointer;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
     &:focus {
       outline: none;
-      border-color: #3273dc;
+      border-color: $link;
       box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
     }
 
     &:disabled {
-      background-color: #f5f5f5;
+      background-color: $white-ter;
       cursor: not-allowed;
       opacity: 0.65;
     }

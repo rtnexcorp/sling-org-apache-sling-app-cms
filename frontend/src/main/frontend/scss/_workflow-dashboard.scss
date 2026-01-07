@@ -20,6 +20,9 @@
 // Workflow Dashboard Stats Component
 // Provides stat cards for the workflow dashboard
 
+@use "sass:color";
+@use "variables" as *;
+
 .cms-workflow-dashboard-stats {
     margin-bottom: 1.5rem;
 }
@@ -27,11 +30,11 @@
 .cms-stat-card {
     display: flex;
     align-items: center;
-    background: white;
+    background: $white;
     border-radius: 6px;
     padding: 1.25rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e8e8e8;
+    border: 1px solid $grey-lighter;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
@@ -48,7 +51,7 @@
         justify-content: center;
         margin-right: 1rem;
         font-size: 1.5rem;
-        color: white;
+        color: $white;
     }
 
     &__content {
@@ -59,49 +62,49 @@
         font-size: 1.75rem;
         font-weight: 700;
         line-height: 1.2;
-        color: #363636;
+        color: $grey-darker;
     }
 
     &__label {
         font-size: 0.875rem;
-        color: #7a7a7a;
+        color: $grey;
         margin-top: 0.25rem;
     }
 
     // Card variants with different colors
     &--definitions {
         .cms-stat-card__icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, $stat-color-1 0%, $stat-color-1-dark 100%);
         }
         .cms-stat-card__value {
-            color: #667eea;
+            color: $stat-color-1;
         }
     }
 
     &--instances {
         .cms-stat-card__icon {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: linear-gradient(135deg, $stat-color-2 0%, $stat-color-2-light 100%);
         }
         .cms-stat-card__value {
-            color: #11998e;
+            color: $stat-color-2;
         }
     }
 
     &--tasks {
         .cms-stat-card__icon {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, $stat-color-3-light 0%, $stat-color-3 100%);
         }
         .cms-stat-card__value {
-            color: #f5576c;
+            color: $stat-color-3;
         }
     }
 
     &--mytasks {
         .cms-stat-card__icon {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, $stat-color-4 0%, $stat-color-4-light 100%);
         }
         .cms-stat-card__value {
-            color: #4facfe;
+            color: $stat-color-4;
         }
     }
 }
@@ -118,13 +121,13 @@
         flex-shrink: 0; // Don't allow tabs to shrink
         
         ul {
-            border-bottom-color: #dbdbdb;
+            border-bottom-color: $grey-lighter;
         }
 
         li {
             a {
-                border-bottom-color: #dbdbdb;
-                color: #4a4a4a;
+                border-bottom-color: $grey-lighter;
+                color: $grey-darker;
                 
                 .icon {
                     margin-right: 0.5rem;
@@ -132,15 +135,15 @@
             }
 
             &.is-active a {
-                border-bottom-color: #485fc7;
-                color: #485fc7;
+                border-bottom-color: $primary;
+                color: $primary;
             }
         }
     }
 
     &__content {
-        background: white;
-        border: 1px solid #dbdbdb;
+        background: $white;
+        border: 1px solid $grey-lighter;
         border-top: none;
         border-radius: 0 0 4px 4px;
         padding: 1.5rem;
@@ -157,16 +160,16 @@
         }
         
         &::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: $scrollbar-track;
             border-radius: 0 0 4px 0;
         }
         
         &::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
+            background: $scrollbar-thumb;
             border-radius: 4px;
             
             &:hover {
-                background: #a8a8a8;
+                background: $scrollbar-thumb-hover;
             }
         }
     }

@@ -23,10 +23,65 @@ $primary: #9E2165;
 $gray: #6D6E71;
 $gray-light: color.scale($gray, $lightness: 50%);
 $grey-darker: hsl(0, 0%, 21%);
+$grey-dark: hsl(0, 0%, 29%);
 $grey-lighter: hsl(0, 0%, 86%);
 $grey-light: hsl(0, 0%, 71%);
 $grey: hsl(0, 0%, 48%);
 $white: hsl(0, 0%, 100%);
+$white-ter: hsl(0, 0%, 96%);
+$white-bis: hsl(0, 0%, 98%);
 $selected: #9E2165;
 $tablet: 769px;
 $mobile-max: 768px;
+
+// Bulma semantic colors
+$link: #3273dc;
+$link-hover: #2366d1;
+$link-active: #1d5ec5;
+$success: #48c774;
+$warning: #ffdd57;
+$danger: #f14668;
+
+// Light variants for message backgrounds
+$info-light: #eff5fb;
+$success-light: #effaf3;
+$warning-light: #fffbeb;
+$danger-light: #feecf0;
+$suspended-bg: #fff4e6;
+
+// Message text colors
+$info-text: #1d72aa;
+$success-text: #257942;
+$warning-text: #947600;
+$danger-text: #cc0f35;
+
+// Color Palette - Stat Cards & Data Visualization
+// These colors provide visual distinction for metrics, stats, and data categories
+$stat-color-1: #667eea;
+$stat-color-1-dark: #764ba2;
+
+$stat-color-2: #11998e;
+$stat-color-2-light: #38ef7d;
+
+$stat-color-3: #f5576c;
+$stat-color-3-light: #f093fb;
+
+$stat-color-4: #4facfe;
+$stat-color-4-light: #00f2fe;
+
+// UI Component Colors
+$scrollbar-track: #f1f1f1;
+$scrollbar-thumb: #c1c1c1;
+$scrollbar-thumb-hover: #a8a8a8;
+
+// Priority badge colors
+$priority-high-bg: #ffe5e5;
+$priority-high-text: #cc0000;
+$priority-normal-bg: #e8f4fd;
+$priority-normal-text: $link;
+$priority-low-bg: #e8f8e8;
+$priority-low-text: #23d160;
+
+// Code syntax colors
+$code-color: #da1e28;
+$code-color-alt: #e91e63;
