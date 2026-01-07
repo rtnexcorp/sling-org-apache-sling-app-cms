@@ -38,12 +38,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * BPMN implementation of TaskService.
  */
 @Component(service = TaskService.class)
 public class BPMNTaskService implements TaskService {
+
+    private static final Logger log = LoggerFactory.getLogger(BPMNTaskService.class);
 
     @Reference
     private TaskManager taskManager;
@@ -120,12 +124,14 @@ public class BPMNTaskService implements TaskService {
         try {
             ResourceResolver resolver = resolverContext.get();
             if (resolver == null) {
+                log.warn("Cannot get tasks for process instance {}: resolver is null", processInstanceId);
                 return List.of();
             }
-            return taskManager.findTasksByProcessInstance(processInstanceId, resolver).stream()
-                    .map(task -> (Task) task)
-                    .collect(Collectors.toList());
+            List<TaskImpl> tasks = taskManager.findTasksByProcessInstance(processInstanceId, resolver);
+            log.debug("Found {} tasks for process instance {}", tasks.size(), processInstanceId);
+            return tasks.stream().map(task -> (Task) task).collect(Collectors.toList());
         } catch (WorkflowException e) {
+            log.error("Failed to get tasks for process instance: {}", processInstanceId, e);
             return List.of();
         }
     }

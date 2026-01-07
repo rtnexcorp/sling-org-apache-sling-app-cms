@@ -30,6 +30,7 @@ import org.apache.sling.cms.workflow.internal.model.ActivityImpl;
 import org.apache.sling.cms.workflow.internal.model.ActivityType;
 import org.apache.sling.cms.workflow.internal.model.ProcessDefinitionImpl;
 import org.apache.sling.cms.workflow.internal.model.SequenceFlowImpl;
+import org.apache.sling.cms.workflow.internal.task.TaskImpl;
 import org.apache.sling.cms.workflow.internal.task.TaskManager;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
@@ -196,8 +197,15 @@ public class ProcessExecutor {
             throws WorkflowException {
         // Create a task and wait for user completion
         String candidateGroup = activity.getCandidateGroup();
-        taskManager.createTask(activity.getName(), processInstance.getId(), activity.getId(), candidateGroup, resolver);
-        log.info("Created user task for activity: {}", activity.getId());
+        log.info(
+                "Creating user task for activity: {} (name: {}, candidateGroup: {}, processInstance: {})",
+                activity.getId(),
+                activity.getName(),
+                candidateGroup,
+                processInstance.getId());
+        TaskImpl task = taskManager.createTask(
+                activity.getName(), processInstance.getId(), activity.getId(), candidateGroup, resolver);
+        log.info("Successfully created user task: {} for activity: {}", task.getId(), activity.getId());
         // Execution stops here until task is completed
     }
 

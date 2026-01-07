@@ -304,21 +304,30 @@ public class TaskManager {
 
         try {
             Resource tasksResource = resolver.getResource(TASKS_PATH);
-            if (tasksResource != null) {
-                Node tasksNode = tasksResource.adaptTo(Node.class);
-                if (tasksNode != null) {
-                    NodeIterator iterator = tasksNode.getNodes();
-                    while (iterator.hasNext()) {
-                        Node taskNode = iterator.nextNode();
-                        if (taskNode.hasProperty("processInstanceId")
-                                && processInstanceId.equals(taskNode.getProperty("processInstanceId")
-                                        .getString())) {
+            if (tasksResource == null) {
+                log.debug("Tasks path {} does not exist", TASKS_PATH);
+                return tasks;
+            }
+
+            Node tasksNode = tasksResource.adaptTo(Node.class);
+            if (tasksNode != null) {
+                NodeIterator iterator = tasksNode.getNodes();
+                log.debug("Searching for tasks in {} for process instance {}", TASKS_PATH, processInstanceId);
+                while (iterator.hasNext()) {
+                    Node taskNode = iterator.nextNode();
+                    if (taskNode.hasProperty("processInstanceId")) {
+                        String taskProcId =
+                                taskNode.getProperty("processInstanceId").getString();
+                        log.trace("Checking task {} with processInstanceId {}", taskNode.getName(), taskProcId);
+                        if (processInstanceId.equals(taskProcId)) {
                             tasks.add(new TaskImpl(taskNode));
+                            log.debug("Found matching task: {}", taskNode.getName());
                         }
                     }
                 }
             }
 
+            log.debug("Found {} tasks for process instance {}", tasks.size(), processInstanceId);
             return tasks;
 
         } catch (RepositoryException e) {

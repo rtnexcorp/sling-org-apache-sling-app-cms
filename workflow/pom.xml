@@ -105,6 +105,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Annotations -->
         <dependency>
             <groupId>org.jetbrains</groupId>

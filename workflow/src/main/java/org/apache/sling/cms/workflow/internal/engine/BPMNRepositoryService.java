@@ -58,6 +58,8 @@ import org.slf4j.LoggerFactory;
 /**
  * BPMN implementation of RepositoryService.
  * Monitors workflow definitions in JCR and automatically reloads them when they change.
+ * Only reads from /etc/workflow/definitions (deployed definitions).
+ * /etc/workflow/designs is for work-in-progress designs and is not loaded by the engine.
  */
 @Component(
         service = {RepositoryService.class, BPMNRepositoryService.class, ResourceChangeListener.class},
@@ -90,6 +92,7 @@ public class BPMNRepositoryService implements RepositoryService, ResourceChangeL
 
     /**
      * Load all process definitions from JCR into cache on startup.
+     * Only loads from /etc/workflow/definitions (deployed definitions).
      */
     private void loadDefinitionsFromJCR() {
         Map<String, Object> serviceParams = new HashMap<>();
