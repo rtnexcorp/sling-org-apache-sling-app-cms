@@ -80,6 +80,28 @@
 
   &__content {
     padding-top: 1rem;
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    // Custom scrollbar styling (WebKit browsers)
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
   }
 
   &__panel {
@@ -330,7 +352,7 @@
   &:focus {
     outline: none;
     border-color: #3273dc;
-    box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2);
+    box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
   }
 
   &::placeholder {

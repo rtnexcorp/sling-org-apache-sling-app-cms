@@ -1,4 +1,21 @@
-// SPDX-License-Identifier: Apache-2.0
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 // Workflow Start Form Component
 // Provides styling for the workflow initiation form with variable management
@@ -13,7 +30,7 @@
   overflow-y: auto;
   padding-right: 0.5rem;
 
-  // Custom scrollbar styling for webkit browsers
+  // Custom scrollbar styling (WebKit browsers)
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -24,17 +41,17 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #c1c1c1;
     border-radius: 4px;
 
     &:hover {
-      background: #555;
+      background: #a8a8a8;
     }
   }
 
   // Firefox scrollbar
   scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
+  scrollbar-color: #c1c1c1 #f1f1f1;
 
   @media screen and (max-width: 1024px) {
     grid-template-columns: 1fr;
