@@ -18,7 +18,13 @@
  */-->
 <sly data-sly-use.designer="org.apache.sling.cms.workflow.models.WorkflowDesignerModel"/>
 
-<div class="cms-workflow-designer">
+<div class="cms-workflow-designer" 
+     data-base-url="${designer.baseUrl}"
+     data-save-url="${designer.saveUrl}"
+     data-load-url="${designer.loadUrl}"
+     data-deploy-url="${designer.deployUrl}"
+     data-delete-url="${designer.deleteUrl}"
+     data-list-url="${designer.listUrl}">
     <div class="cms-panel">
         <div class="cms-panel__header">
             <h2 class="cms-panel__title">${'Workflow Designer' @ i18n}</h2>
@@ -119,14 +125,3 @@
         </div>
     </div>
 </div>
-
-<script data-sly-unwrap>
-    window.WORKFLOW_DESIGNER_CONFIG = {
-        baseUrl: '/bin/workflow/designer',
-        saveUrl: '/bin/workflow/designer?operation=save',
-        loadUrl: '/bin/workflow/designer?operation=load',
-        deployUrl: '/bin/workflow/designer?operation=deploy',
-        deleteUrl: '/bin/workflow/designer?operation=delete',
-        listUrl: '/bin/workflow/designer?operation=list'
-    };
-</script>

@@ -30,17 +30,34 @@ class WorkflowDesigner {
         this.modeler = null;
         this.currentWorkflowKey = null;
         
-        // Set default config if not provided
-        this.config = window.WORKFLOW_DESIGNER_CONFIG || {
-            baseUrl: '/bin/workflow/designer',
-            saveUrl: '/bin/workflow/designer?operation=save',
-            loadUrl: '/bin/workflow/designer?operation=load',
-            deleteUrl: '/bin/workflow/designer?operation=delete',
-            deployUrl: '/bin/workflow/designer?operation=deploy',
-            listUrl: '/bin/workflow/designer?operation=list'
-        };
+        // Read config from data attributes (provided by Sling Model)
+        this.config = this.getConfigFromDataAttributes();
+        
+        if (!this.config) {
+            console.error('Workflow designer configuration not found. Ensure data attributes are set on the container.');
+            return;
+        }
+
+        // Make config available globally for backward compatibility
+        window.WORKFLOW_DESIGNER_CONFIG = this.config;
 
         this.init();
+    }
+
+    getConfigFromDataAttributes() {
+        // All URLs should be provided by the Sling Model via data attributes
+        if (!this.container.dataset.baseUrl) {
+            return null;
+        }
+
+        return {
+            baseUrl: this.container.dataset.baseUrl,
+            saveUrl: this.container.dataset.saveUrl,
+            loadUrl: this.container.dataset.loadUrl,
+            deleteUrl: this.container.dataset.deleteUrl,
+            deployUrl: this.container.dataset.deployUrl,
+            listUrl: this.container.dataset.listUrl
+        };
     }
 
     init() {

@@ -48,6 +48,62 @@ public class WorkflowDesignerModel {
     @SlingObject
     private ResourceResolver resourceResolver;
 
+    private static final String BASE_URL = "/bin/workflow/designer";
+
+    /**
+     * Get the base URL for workflow designer operations.
+     *
+     * @return Base URL
+     */
+    public String getBaseUrl() {
+        return BASE_URL;
+    }
+
+    /**
+     * Get the save URL for workflow designer.
+     *
+     * @return Save URL
+     */
+    public String getSaveUrl() {
+        return BASE_URL + "?operation=save";
+    }
+
+    /**
+     * Get the load URL for workflow designer.
+     *
+     * @return Load URL
+     */
+    public String getLoadUrl() {
+        return BASE_URL + "?operation=load";
+    }
+
+    /**
+     * Get the deploy URL for workflow designer.
+     *
+     * @return Deploy URL
+     */
+    public String getDeployUrl() {
+        return BASE_URL + "?operation=deploy";
+    }
+
+    /**
+     * Get the delete URL for workflow designer.
+     *
+     * @return Delete URL
+     */
+    public String getDeleteUrl() {
+        return BASE_URL + "?operation=delete";
+    }
+
+    /**
+     * Get the list URL for workflow designer.
+     *
+     * @return List URL
+     */
+    public String getListUrl() {
+        return BASE_URL + "?operation=list";
+    }
+
     /**
      * Get all saved workflow designs.
      *
