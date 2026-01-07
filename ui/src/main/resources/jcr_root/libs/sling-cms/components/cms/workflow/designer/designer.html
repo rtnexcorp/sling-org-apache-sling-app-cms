@@ -1,0 +1,127 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.designer="org.apache.sling.cms.workflow.models.WorkflowDesignerModel"/>
+
+<div class="cms-workflow-designer" 
+     data-base-url="${designer.baseUrl}"
+     data-save-url="${designer.saveUrl}"
+     data-load-url="${designer.loadUrl}"
+     data-deploy-url="${designer.deployUrl}"
+     data-delete-url="${designer.deleteUrl}"
+     data-list-url="${designer.listUrl}">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">${'Workflow Designer' @ i18n}</h2>
+            <div class="cms-panel__actions">
+                <button id="new-workflow-btn" class="cms-button cms-button--secondary">
+                    <i class="jam jam-plus"></i>
+                    ${'New' @ i18n}
+                </button>
+                <button id="load-workflow-btn" class="cms-button cms-button--secondary">
+                    <i class="jam jam-folder-open"></i>
+                    ${'Load' @ i18n}
+                </button>
+                <button id="save-workflow-btn" class="cms-button cms-button--primary">
+                    <i class="jam jam-floppy-disk"></i>
+                    ${'Save' @ i18n}
+                </button>
+                <button id="deploy-workflow-btn" class="cms-button cms-button--success">
+                    <i class="jam jam-upload"></i>
+                    ${'Deploy' @ i18n}
+                </button>
+            </div>
+        </div>
+
+        <div class="cms-workflow-designer__toolbar">
+            <div class="cms-form-group">
+                <label for="workflow-name" class="cms-form-label">${'Workflow Name' @ i18n}:</label>
+                <input type="text" id="workflow-name" class="cms-form-input" placeholder="${'Enter workflow name' @ i18n}" />
+            </div>
+            <div class="cms-form-group">
+                <label for="workflow-key" class="cms-form-label">${'Process Key' @ i18n}:</label>
+                <input type="text" id="workflow-key" class="cms-form-input" placeholder="${'e.g., contentApproval' @ i18n}" />
+            </div>
+        </div>
+
+        <div class="cms-workflow-designer__container">
+            <div id="bpmn-canvas" class="cms-workflow-designer__canvas"></div>
+            <div id="properties-panel" class="cms-workflow-designer__properties">
+                <h3 class="cms-panel__subtitle">${'Properties' @ i18n}</h3>
+                <div id="properties-content" class="cms-workflow-designer__properties-content">
+                    <p class="cms-message cms-message--info">${'Select an element to view its properties' @ i18n}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cms-workflow-designer__status">
+            <div id="status-message" class="cms-message" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Load Workflow Dialog -->
+<div id="load-workflow-dialog" class="cms-modal" style="display: none;">
+    <div class="cms-modal__overlay"></div>
+    <div class="cms-modal__content">
+        <div class="cms-modal__header">
+            <h3 class="cms-modal__title">${'Load Workflow' @ i18n}</h3>
+            <button class="cms-modal__close">&times;</button>
+        </div>
+        <div class="cms-modal__body">
+            <sly data-sly-test="${designer.hasSavedWorkflows}">
+                <table class="cms-table">
+                    <thead>
+                        <tr>
+                            <th>${'Name' @ i18n}</th>
+                            <th>${'Key' @ i18n}</th>
+                            <th>${'Last Modified' @ i18n}</th>
+                            <th class="cms-table__actions">${'Actions' @ i18n}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <sly data-sly-list.workflow="${designer.savedWorkflows}">
+                            <tr>
+                                <td>${workflow.name}</td>
+                                <td><code>${workflow.key}</code></td>
+                                <td>${workflow.lastModifiedDate @ format='dd MMM yyyy HH:mm'}</td>
+                                <td class="cms-table__actions">
+                                    <button class="cms-button cms-button--small load-workflow-action"
+                                            data-workflow-key="${workflow.key}">
+                                        <i class="jam jam-check"></i>
+                                        ${'Load' @ i18n}
+                                    </button>
+                                    <button class="cms-button cms-button--small cms-button--danger delete-workflow-action"
+                                            data-workflow-key="${workflow.key}">
+                                        <i class="jam jam-trash"></i>
+                                        ${'Delete' @ i18n}
+                                    </button>
+                                </td>
+                            </tr>
+                        </sly>
+                    </tbody>
+                </table>
+            </sly>
+            <sly data-sly-test="${!designer.hasSavedWorkflows}">
+                <div class="cms-message cms-message--info">
+                    <p>${'No saved workflow designs found.' @ i18n}</p>
+                </div>
+            </sly>
+        </div>
+    </div>
+</div>

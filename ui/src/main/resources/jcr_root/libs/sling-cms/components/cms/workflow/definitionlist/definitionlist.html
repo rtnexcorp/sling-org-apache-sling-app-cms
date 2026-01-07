@@ -1,0 +1,74 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.definitions="org.apache.sling.cms.workflow.models.WorkflowDefinitionListModel"/>
+
+<div class="cms-workflow-definitions">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">${'Workflow Definitions' @ i18n}</h2>
+            <div class="cms-panel__actions">
+                <a href="/cms/config/workflow-designer.html" class="cms-button cms-button--primary">
+                    <i class="jam jam-plus"></i>
+                    ${'Create New Workflow' @ i18n}
+                </a>
+            </div>
+        </div>
+
+        <sly data-sly-test="${definitions.hasDefinitions}">
+            <table class="cms-table">
+                <thead>
+                    <tr>
+                        <th>${'Name' @ i18n}</th>
+                        <th>${'Key' @ i18n}</th>
+                        <th>${'Version' @ i18n}</th>
+                        <th>${'Deployment Time' @ i18n}</th>
+                        <th class="cms-table__actions">${'Actions' @ i18n}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <sly data-sly-list.definition="${definitions.definitions}">
+                        <tr>
+                            <td>${definition.name}</td>
+                            <td><code>${definition.key}</code></td>
+                            <td>${definition.version}</td>
+                            <td>${definition.deploymentTime @ format='dd MMM yyyy HH:mm'}</td>
+                            <td class="cms-table__actions">
+                                <a href="/cms/workflow/start.html?processKey=${definition.key}"
+                                   class="cms-button cms-button--small">
+                                    ${' Start' @ i18n}
+                                </a>
+                                <a href="/cms/workflow/diagram.html?processKey=${definition.key}"
+                                   class="cms-button cms-button--small cms-button--secondary"
+                                   target="_blank">
+                                    ${'View Diagram' @ i18n}
+                                </a>
+                            </td>
+                        </tr>
+                    </sly>
+                </tbody>
+            </table>
+        </sly>
+
+        <sly data-sly-test="${!definitions.hasDefinitions}">
+            <div class="cms-message cms-message--info">
+                <p>${'No workflow definitions deployed. Deploy a BPMN workflow to get started.' @ i18n}</p>
+            </div>
+        </sly>
+    </div>
+</div>

@@ -1,0 +1,154 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.startForm="org.apache.sling.cms.workflow.models.WorkflowStartFormModel"/>
+
+<div class="cms-workflow-startform">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">${'Start Workflow' @ i18n}</h2>
+        </div>
+
+        <form method="post" action="/bin/workflow/start" class="cms-form" data-component="workflow-start-form">
+            <!--/* Process Selection */-->
+            <div class="cms-form__group">
+                <label for="processKey" class="cms-form__label">${'Workflow Process' @ i18n} *</label>
+                <div class="select">
+                    <select id="processKey" name="processKey" required class="cms-form__control">
+                        <option value="">${'-- Select a workflow --' @ i18n}</option>
+                        <sly data-sly-list.process="${startForm.availableProcesses}">
+                            <option value="${process.key}">${process.name} (${process.key})</option>
+                        </sly>
+                    </select>
+                </div>
+                <p class="cms-form__help">${'Select the workflow process to start' @ i18n}</p>
+            </div>
+
+            <!--/* Content Path - primary variable for content-based workflows */-->
+            <div class="cms-form__group">
+                <label for="contentPath" class="cms-form__label">${'Content Path' @ i18n} *</label>
+                <input type="text"
+                       id="contentPath"
+                       name="contentPath"
+                       class="cms-form__control"
+                       required
+                       placeholder="${'e.g., /content/mysite/page' @ i18n}"/>
+                <p class="cms-form__help">${'Path to the content this workflow will process' @ i18n}</p>
+            </div>
+
+            <!--/* Business Key (optional) */-->
+            <div class="cms-form__group">
+                <label for="businessKey" class="cms-form__label">${'Business Key' @ i18n}</label>
+                <input type="text"
+                       id="businessKey"
+                       name="businessKey"
+                       class="cms-form__control"
+                       placeholder="${'Optional custom identifier' @ i18n}"/>
+                <p class="cms-form__help">${'Optional custom identifier (defaults to content path if not provided)' @ i18n}</p>
+            </div>
+
+            <!--/* Process Variables */-->
+            <div class="cms-form__section">
+                <h3 class="cms-form__section-title">${'Process Variables' @ i18n}</h3>
+                <p class="cms-form__help">${'Add variables to pass to the workflow process' @ i18n}</p>
+
+                <div id="workflow-variables-container">
+                    <!--/* Initial variable row */-->
+                    <div class="cms-form__row" data-variable-row>
+                        <div class="cms-form__col">
+                            <input type="text"
+                                   name="variableName[]"
+                                   class="cms-form__control"
+                                   placeholder="${'Variable name' @ i18n}"/>
+                        </div>
+                        <div class="cms-form__col">
+                            <input type="text"
+                                   name="variableValue[]"
+                                   class="cms-form__control"
+                                   placeholder="${'Variable value' @ i18n}"/>
+                        </div>
+                        <div class="cms-form__col-auto">
+                            <button type="button"
+                                    class="cms-button cms-button--secondary cms-button--icon"
+                                    data-action="remove-variable"
+                                    aria-label="${'Remove variable' @ i18n}">
+                                <span class="jam jam-minus"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button"
+                        class="cms-button cms-button--secondary"
+                        data-action="add-variable">
+                    <span class="jam jam-plus"></span>
+                    ${'Add Variable' @ i18n}
+                </button>
+            </div>
+
+            <!--/* Common Variables Presets */-->
+            <div class="cms-form__section">
+                <h3 class="cms-form__section-title">${'Quick Presets' @ i18n}</h3>
+                <div class="cms-button-group">
+                    <button type="button"
+                            class="cms-button cms-button--small cms-button--secondary"
+                            data-preset="content-approval">
+                        ${'Content Approval' @ i18n}
+                    </button>
+                    <button type="button"
+                            class="cms-button cms-button--small cms-button--secondary"
+                            data-preset="review-workflow">
+                        ${'Review Workflow' @ i18n}
+                    </button>
+                </div>
+            </div>
+
+            <!--/* Form Actions */-->
+            <div class="cms-form__actions">
+                <button type="submit" class="cms-button cms-button--primary">
+                    <span class="jam jam-play"></span>
+                    ${'Start Workflow' @ i18n}
+                </button>
+                <button type="reset" class="cms-button cms-button--secondary">
+                    ${'Reset' @ i18n}
+                </button>
+                <a href="/bin/workflow/definitions" class="cms-button cms-button--secondary">
+                    ${'Cancel' @ i18n}
+                </a>
+            </div>
+
+            <!--/* Hidden fields */-->
+            <input type="hidden" name=":redirect" value="/bin/workflow/instances"/>
+        </form>
+    </div>
+
+    <!--/* Instructions Panel */-->
+    <div class="cms-panel cms-panel--secondary">
+        <div class="cms-panel__header">
+            <h3 class="cms-panel__title">${'Instructions' @ i18n}</h3>
+        </div>
+        <div class="cms-panel__body">
+            <ul class="cms-list">
+                <li>${'Select a workflow process from the dropdown' @ i18n}</li>
+                <li>${'Provide a business key if you need to reference this instance later' @ i18n}</li>
+                <li>${'Add any required process variables' @ i18n}</li>
+                <li>${'Click "Start Workflow" to begin the process' @ i18n}</li>
+            </ul>
+        </div>
+    </div>
+</div>

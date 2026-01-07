@@ -1,0 +1,561 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// ============================================
+// Workflow Task Inbox Component
+// ============================================
+
+@use "variables" as *;
+
+.cms-workflow-taskinbox {
+  // Remove fixed padding to allow full use of parent container when in tabs
+  // Padding handled by dashboard tabs content
+
+  // Header with title and refresh
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: $grey-dark;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+// ============================================
+// Tabs Component
+// ============================================
+
+.cms-tabs {
+  &__list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid $grey-lighter;
+  }
+
+  &__item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: $grey-darker;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $link;
+      border-bottom-color: $grey-lighter;
+    }
+
+    &--active {
+      color: $link;
+      border-bottom-color: $link;
+    }
+  }
+
+  &__content {
+    padding-top: 1rem;
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    // Custom scrollbar styling (WebKit browsers)
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $scrollbar-track;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $scrollbar-thumb;
+      border-radius: 4px;
+
+      &:hover {
+        background: $scrollbar-thumb-hover;
+      }
+    }
+  }
+
+  &__panel {
+    display: none;
+
+    &--active {
+      display: block;
+    }
+  }
+}
+
+// ============================================
+// Task List
+// ============================================
+
+.cms-task-list {
+  &--empty {
+    padding: 2rem;
+    text-align: center;
+    color: $grey;
+    background: $white-ter;
+    border-radius: 4px;
+
+    .jam {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.cms-task-card {
+  background: $white;
+  border: 1px solid $grey-lighter;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: $grey-dark;
+    margin: 0;
+  }
+
+  &__priority {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+
+    &--high {
+      background: $priority-high-bg;
+      color: $priority-high-text;
+    }
+
+    &--normal {
+      background: $priority-normal-bg;
+      color: $priority-normal-text;
+    }
+
+    &--low {
+      background: $priority-low-bg;
+      color: $priority-low-text;
+    }
+  }
+
+  &__description {
+    color: $grey;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8125rem;
+    color: $grey;
+  }
+
+  &__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    .jam {
+      font-size: 0.875rem;
+    }
+
+    strong {
+      color: $grey-darker;
+      font-weight: 500;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding-top: 0.75rem;
+    border-top: 1px solid $white-ter;
+  }
+}
+
+// ============================================
+// Modal Component
+// ============================================
+
+.cms-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+
+  &--open {
+    display: flex;
+  }
+
+  &__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 10, 0.5);
+    cursor: pointer;
+  }
+
+  &__dialog {
+    position: relative;
+    background: $white;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.2s ease;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid $grey-lighter;
+    background: $white-ter;
+    border-radius: 6px 6px 0 0;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    color: $grey-dark;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: $grey;
+    line-height: 1;
+
+    &:hover {
+      color: $grey-dark;
+    }
+  }
+
+  &__body {
+    padding: 1.25rem;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid $grey-lighter;
+    background: $white-ter;
+    border-radius: 0 0 6px 6px;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// Form Elements
+// ============================================
+
+.cms-form-group {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cms-form-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.375rem;
+  color: $grey-dark;
+  font-size: 0.875rem;
+}
+
+.cms-form-input,
+.cms-form-select,
+.cms-form-textarea {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  border: 1px solid $grey-lighter;
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $link;
+    box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+  }
+
+  &::placeholder {
+    color: $grey-light;
+  }
+}
+
+.cms-form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.cms-form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 12px;
+  padding-right: 2.5rem;
+}
+
+.cms-form-radio-group {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.cms-form-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  cursor: pointer;
+
+  input[type="radio"] {
+    margin: 0;
+  }
+}
+
+.cms-form-help {
+  font-size: 0.8125rem;
+  color: $grey;
+  margin-top: 0.25rem;
+}
+
+// ============================================
+// Task Details
+// ============================================
+
+.cms-task-details {
+  .cms-detail-row {
+    display: flex;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid $white-ter;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    label {
+      width: 140px;
+      flex-shrink: 0;
+      font-weight: 500;
+      color: $grey;
+    }
+
+    span,
+    code {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    code {
+      font-family: monospace;
+      background: $white-ter;
+      padding: 0.125rem 0.375rem;
+      border-radius: 3px;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// ============================================
+// Notification Component
+// ============================================
+
+.cms-notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.75rem 1rem;
+  background: $grey-dark;
+  color: $white;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 2000;
+  animation: notificationSlideIn 0.3s ease;
+  max-width: 400px;
+
+  &--success {
+    background: $success;
+  }
+
+  &--error {
+    background: $danger;
+  }
+
+  &--warning {
+    background: $warning;
+    color: $grey-dark;
+  }
+
+  &--info {
+    background: $link;
+  }
+
+  &__message {
+    flex: 1;
+    font-size: 0.9375rem;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    line-height: 1;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes notificationSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ============================================
+// Loading State
+// ============================================
+
+.cms-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: $grey;
+
+  .jam-spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================
+// Message Component
+// ============================================
+
+.cms-message {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9375rem;
+
+  &--error {
+    background: $danger-light;
+    color: $danger-text;
+  }
+
+  &--success {
+    background: $success-light;
+    color: $success-text;
+  }
+
+  &--info {
+    background: $info-light;
+    color: $info-text;
+  }
+
+  &--warning {
+    background: $warning-light;
+    color: $warning-text;
+  }
+}

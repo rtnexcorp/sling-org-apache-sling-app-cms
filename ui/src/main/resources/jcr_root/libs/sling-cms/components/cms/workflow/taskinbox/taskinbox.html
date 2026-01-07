@@ -1,0 +1,393 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.inbox="org.apache.sling.cms.workflow.models.TaskInboxModel"/>
+
+<div class="cms-workflow-taskinbox">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">
+                <span class="icon"><em class="jam jam-inbox"></em></span>
+                ${'My Tasks' @ i18n}
+            </h2>
+            <div class="cms-panel__actions">
+                <span class="cms-badge cms-badge--primary cms-badge--large">
+                    ${inbox.taskCount} ${'tasks' @ i18n}
+                </span>
+                <button class="cms-button cms-button--small" data-action="refresh-inbox">
+                    <span class="icon"><em class="jam jam-refresh"></em></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="cms-tabs cms-tabs--inbox">
+            <ul class="cms-tabs__list" role="tablist">
+                <li class="cms-tabs__item cms-tabs__item--active" role="tab" data-tab="assigned">
+                    <a href="#assigned-to-me">
+                        <span class="icon"><em class="jam jam-user"></em></span>
+                        ${'Assigned to Me' @ i18n}
+                        <span class="cms-badge cms-badge--small">${inbox.assignedCount}</span>
+                    </a>
+                </li>
+                <li class="cms-tabs__item" role="tab" data-tab="candidate">
+                    <a href="#candidate-tasks">
+                        <span class="icon"><em class="jam jam-users"></em></span>
+                        ${'Candidate Tasks' @ i18n}
+                        <span class="cms-badge cms-badge--small">${inbox.candidateCount}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="cms-tabs__content">
+            <!--/* Assigned Tasks */-->
+            <div id="assigned-to-me" class="cms-tabs__panel cms-tabs__panel--active" data-panel="assigned">
+                <sly data-sly-test="${inbox.hasAssignedTasks}">
+                    <table class="cms-table cms-table--hover">
+                        <thead>
+                            <tr>
+                                <th>${'Task' @ i18n}</th>
+                                <th>${'Workflow' @ i18n}</th>
+                                <th>${'Created' @ i18n}</th>
+                                <th>${'Priority' @ i18n}</th>
+                                <th class="cms-table__actions">${'Actions' @ i18n}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <sly data-sly-list.task="${inbox.assignedTasks}">
+                                <tr class="cms-task-row" data-task-id="${task.id}" data-task-name="${task.name}">
+                                    <td>
+                                        <div class="cms-task-info">
+                                            <strong class="cms-task-name">${task.name}</strong>
+                                            <sly data-sly-test="${task.description}">
+                                                <span class="cms-task-description">${task.description}</span>
+                                            </sly>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <code class="cms-task-instance">${task.processInstanceId}</code>
+                                    </td>
+                                    <td>
+                                        <span class="cms-task-date">${task.createTime @ format='dd MMM yyyy HH:mm'}</span>
+                                    </td>
+                                    <td>
+                                        <sly data-sly-test="${task.priority > 50}">
+                                            <span class="cms-badge cms-badge--danger">
+                                                <em class="jam jam-alert"></em> ${task.priority}
+                                            </span>
+                                        </sly>
+                                        <sly data-sly-test="${task.priority > 30 && task.priority <= 50}">
+                                            <span class="cms-badge cms-badge--warning">${task.priority}</span>
+                                        </sly>
+                                        <sly data-sly-test="${task.priority <= 30}">
+                                            <span class="cms-badge cms-badge--info">${task.priority}</span>
+                                        </sly>
+                                    </td>
+                                    <td class="cms-table__actions">
+                                        <div class="cms-button-group">
+                                            <button class="cms-button cms-button--small cms-button--success"
+                                                    data-action="approve-task"
+                                                    data-task-id="${task.id}"
+                                                    data-task-name="${task.name}"
+                                                    title="${'Approve' @ i18n}">
+                                                <span class="icon"><em class="jam jam-check"></em></span>
+                                                ${'Approve' @ i18n}
+                                            </button>
+                                            <button class="cms-button cms-button--small cms-button--danger"
+                                                    data-action="reject-task"
+                                                    data-task-id="${task.id}"
+                                                    data-task-name="${task.name}"
+                                                    title="${'Reject' @ i18n}">
+                                                <span class="icon"><em class="jam jam-close"></em></span>
+                                                ${'Reject' @ i18n}
+                                            </button>
+                                            <button class="cms-button cms-button--small cms-button--secondary"
+                                                    data-action="delegate-task"
+                                                    data-task-id="${task.id}"
+                                                    data-task-name="${task.name}"
+                                                    title="${'Delegate' @ i18n}">
+                                                <span class="icon"><em class="jam jam-share-alt"></em></span>
+                                                ${'Delegate' @ i18n}
+                                            </button>
+                                            <button class="cms-button cms-button--small"
+                                                    data-action="unclaim-task"
+                                                    data-task-id="${task.id}"
+                                                    title="${'Release' @ i18n}">
+                                                <span class="icon"><em class="jam jam-log-out"></em></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </sly>
+                        </tbody>
+                    </table>
+                </sly>
+
+                <sly data-sly-test="${!inbox.hasAssignedTasks}">
+                    <div class="cms-empty-state">
+                        <div class="cms-empty-state__icon">
+                            <em class="jam jam-inbox"></em>
+                        </div>
+                        <h3 class="cms-empty-state__title">${'No tasks assigned' @ i18n}</h3>
+                        <p class="cms-empty-state__message">${'You have no tasks assigned to you.' @ i18n}</p>
+                    </div>
+                </sly>
+            </div>
+
+            <!--/* Candidate Tasks */-->
+            <div id="candidate-tasks" class="cms-tabs__panel" data-panel="candidate">
+                <sly data-sly-test="${inbox.hasCandidateTasks}">
+                    <table class="cms-table cms-table--hover">
+                        <thead>
+                            <tr>
+                                <th>${'Task' @ i18n}</th>
+                                <th>${'Workflow' @ i18n}</th>
+                                <th>${'Candidate Group' @ i18n}</th>
+                                <th>${'Created' @ i18n}</th>
+                                <th class="cms-table__actions">${'Actions' @ i18n}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <sly data-sly-list.task="${inbox.candidateTasks}">
+                                <tr class="cms-task-row" data-task-id="${task.id}" data-task-name="${task.name}">
+                                    <td>
+                                        <div class="cms-task-info">
+                                            <strong class="cms-task-name">${task.name}</strong>
+                                            <sly data-sly-test="${task.description}">
+                                                <span class="cms-task-description">${task.description}</span>
+                                            </sly>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <code class="cms-task-instance">${task.processInstanceId}</code>
+                                    </td>
+                                    <td>
+                                        <div class="cms-task-groups">
+                                            <sly data-sly-test="${task.candidateGroups}">
+                                                <sly data-sly-list.group="${task.candidateGroups}">
+                                                    <span class="cms-badge cms-badge--secondary">${group}</span>
+                                                </sly>
+                                            </sly>
+                                            <sly data-sly-test="${!task.candidateGroups}">
+                                                <span class="cms-text--muted">-</span>
+                                            </sly>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="cms-task-date">${task.createTime @ format='dd MMM yyyy HH:mm'}</span>
+                                    </td>
+                                    <td class="cms-table__actions">
+                                        <div class="cms-button-group">
+                                            <button class="cms-button cms-button--small cms-button--primary"
+                                                    data-action="claim-task"
+                                                    data-task-id="${task.id}"
+                                                    title="${'Claim this task' @ i18n}">
+                                                <span class="icon"><em class="jam jam-log-in"></em></span>
+                                                ${'Claim' @ i18n}
+                                            </button>
+                                            <button class="cms-button cms-button--small cms-button--secondary"
+                                                    data-action="view-task"
+                                                    data-task-id="${task.id}"
+                                                    title="${'View details' @ i18n}">
+                                                <span class="icon"><em class="jam jam-eye"></em></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </sly>
+                        </tbody>
+                    </table>
+                </sly>
+
+                <sly data-sly-test="${!inbox.hasCandidateTasks}">
+                    <div class="cms-empty-state">
+                        <div class="cms-empty-state__icon">
+                            <em class="jam jam-users"></em>
+                        </div>
+                        <h3 class="cms-empty-state__title">${'No candidate tasks' @ i18n}</h3>
+                        <p class="cms-empty-state__message">${'No candidate tasks available for your groups.' @ i18n}</p>
+                    </div>
+                </sly>
+            </div>
+        </div>
+    </div>
+
+    <!--/* Approve Task Modal */-->
+    <div class="cms-modal" id="approve-task-modal">
+        <div class="cms-modal__backdrop" data-action="close-modal"></div>
+        <div class="cms-modal__content">
+            <div class="cms-modal__header">
+                <h3 class="cms-modal__title">
+                    <span class="icon cms-icon--success"><em class="jam jam-check-circle"></em></span>
+                    ${'Approve Task' @ i18n}
+                </h3>
+                <button class="cms-modal__close" data-action="close-modal">
+                    <em class="jam jam-close"></em>
+                </button>
+            </div>
+            <form class="cms-modal__body" data-form="approve-task">
+                <input type="hidden" name="taskId" value="">
+                <input type="hidden" name="action" value="approve">
+                <div class="cms-form-group">
+                    <label class="cms-form-label">${'Task' @ i18n}</label>
+                    <p class="cms-form-static" data-field="taskName"></p>
+                </div>
+                <div class="cms-form-group">
+                    <label class="cms-form-label" for="approve-comment">${'Comment (optional)' @ i18n}</label>
+                    <textarea class="cms-form-control" id="approve-comment" name="comment" rows="3"
+                              placeholder="${'Add an approval comment...' @ i18n}"></textarea>
+                </div>
+            </form>
+            <div class="cms-modal__footer">
+                <button class="cms-button cms-button--secondary" data-action="close-modal">
+                    ${'Cancel' @ i18n}
+                </button>
+                <button class="cms-button cms-button--success" data-action="submit-approve">
+                    <span class="icon"><em class="jam jam-check"></em></span>
+                    ${'Approve' @ i18n}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--/* Reject Task Modal */-->
+    <div class="cms-modal" id="reject-task-modal">
+        <div class="cms-modal__backdrop" data-action="close-modal"></div>
+        <div class="cms-modal__content">
+            <div class="cms-modal__header">
+                <h3 class="cms-modal__title">
+                    <span class="icon cms-icon--danger"><em class="jam jam-close-circle"></em></span>
+                    ${'Reject Task' @ i18n}
+                </h3>
+                <button class="cms-modal__close" data-action="close-modal">
+                    <em class="jam jam-close"></em>
+                </button>
+            </div>
+            <form class="cms-modal__body" data-form="reject-task">
+                <input type="hidden" name="taskId" value="">
+                <input type="hidden" name="action" value="reject">
+                <div class="cms-form-group">
+                    <label class="cms-form-label">${'Task' @ i18n}</label>
+                    <p class="cms-form-static" data-field="taskName"></p>
+                </div>
+                <div class="cms-form-group">
+                    <label class="cms-form-label" for="reject-comment">${'Reason for rejection' @ i18n} *</label>
+                    <textarea class="cms-form-control" id="reject-comment" name="comment" rows="3" required
+                              placeholder="${'Please provide a reason for rejection...' @ i18n}"></textarea>
+                </div>
+            </form>
+            <div class="cms-modal__footer">
+                <button class="cms-button cms-button--secondary" data-action="close-modal">
+                    ${'Cancel' @ i18n}
+                </button>
+                <button class="cms-button cms-button--danger" data-action="submit-reject">
+                    <span class="icon"><em class="jam jam-close"></em></span>
+                    ${'Reject' @ i18n}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--/* Delegate Task Modal */-->
+    <div class="cms-modal" id="delegate-task-modal">
+        <div class="cms-modal__backdrop" data-action="close-modal"></div>
+        <div class="cms-modal__content">
+            <div class="cms-modal__header">
+                <h3 class="cms-modal__title">
+                    <span class="icon"><em class="jam jam-share-alt"></em></span>
+                    ${'Delegate Task' @ i18n}
+                </h3>
+                <button class="cms-modal__close" data-action="close-modal">
+                    <em class="jam jam-close"></em>
+                </button>
+            </div>
+            <form class="cms-modal__body" data-form="delegate-task">
+                <input type="hidden" name="taskId" value="">
+                <input type="hidden" name="action" value="delegate">
+                <div class="cms-form-group">
+                    <label class="cms-form-label">${'Task' @ i18n}</label>
+                    <p class="cms-form-static" data-field="taskName"></p>
+                </div>
+                <div class="cms-form-group">
+                    <label class="cms-form-label">${'Delegate to' @ i18n}</label>
+                    <div class="cms-radio-group">
+                        <label class="cms-radio">
+                            <input type="radio" name="delegateType" value="user" checked>
+                            <span class="cms-radio__label">${'User' @ i18n}</span>
+                        </label>
+                        <label class="cms-radio">
+                            <input type="radio" name="delegateType" value="group">
+                            <span class="cms-radio__label">${'Group' @ i18n}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="cms-form-group" data-delegate-field="user">
+                    <label class="cms-form-label" for="delegate-user">${'Select User' @ i18n}</label>
+                    <input type="text" class="cms-form-control" id="delegate-user" name="delegateUser"
+                           placeholder="${'Enter username...' @ i18n}">
+                </div>
+                <div class="cms-form-group" data-delegate-field="group" style="display: none;">
+                    <label class="cms-form-label" for="delegate-group">${'Select Group' @ i18n}</label>
+                    <select class="cms-form-control" id="delegate-group" name="delegateGroup">
+                        <option value="">-- ${'Select a group' @ i18n} --</option>
+                        <option value="administrators">Administrators</option>
+                        <option value="editors">Editors</option>
+                        <option value="authors">Authors</option>
+                        <option value="reviewers">Reviewers</option>
+                    </select>
+                </div>
+            </form>
+            <div class="cms-modal__footer">
+                <button class="cms-button cms-button--secondary" data-action="close-modal">
+                    ${'Cancel' @ i18n}
+                </button>
+                <button class="cms-button cms-button--primary" data-action="submit-delegate">
+                    <span class="icon"><em class="jam jam-share-alt"></em></span>
+                    ${'Delegate' @ i18n}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--/* Task Details Modal */-->
+    <div class="cms-modal" id="view-task-modal">
+        <div class="cms-modal__backdrop" data-action="close-modal"></div>
+        <div class="cms-modal__content cms-modal__content--large">
+            <div class="cms-modal__header">
+                <h3 class="cms-modal__title">
+                    <span class="icon"><em class="jam jam-document"></em></span>
+                    ${'Task Details' @ i18n}
+                </h3>
+                <button class="cms-modal__close" data-action="close-modal">
+                    <em class="jam jam-close"></em>
+                </button>
+            </div>
+            <div class="cms-modal__body" data-content="task-details">
+                <div class="cms-loading">
+                    <em class="jam jam-refresh jam-spin"></em>
+                    ${'Loading...' @ i18n}
+                </div>
+            </div>
+            <div class="cms-modal__footer">
+                <button class="cms-button cms-button--secondary" data-action="close-modal">
+                    ${'Close' @ i18n}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

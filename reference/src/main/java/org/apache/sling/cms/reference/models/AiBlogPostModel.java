@@ -24,8 +24,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Default;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 /**
@@ -37,14 +39,27 @@ import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
  * &lt;sly data-sly-use.blog="org.apache.sling.cms.reference.models.AiBlogPostModel"&gt;
  *     &lt;h2&gt;${blog.title}&lt;/h2&gt;
  *     &lt;p&gt;${blog.summary}&lt;/p&gt;
+ *
+ *     &lt;!-- Display tag titles --&gt;
  *     &lt;sly data-sly-list.tag="${blog.tagList}"&gt;
- *         &lt;span&gt;${tag}&lt;/span&gt;
+ *         &lt;span class="tag"&gt;${tag}&lt;/span&gt;
+ *     &lt;/sly&gt;
+ *
+ *     &lt;!-- Or if you need the paths --&gt;
+ *     &lt;sly data-sly-list.tagPath="${blog.tagPaths}"&gt;
+ *         &lt;sly data-sly-resource="${tagPath}" /&gt;
  *     &lt;/sly&gt;
  * &lt;/sly&gt;
  * </pre>
+ *
+ * <p>Note: Tags are stored as an array of taxonomy resource paths (e.g., "/etc/taxonomy/reference/technology/java/spring-boot").
+ * Use {@link #getTagList()} to get resolved tag titles (e.g., "Spring Boot"), or {@link #getTagPaths()} for raw paths.</p>
  */
 @Model(adaptables = Resource.class)
 public class AiBlogPostModel {
+
+    @SlingObject
+    private ResourceResolver resourceResolver;
 
     @ValueMapValue
     @Default(values = "")
@@ -71,8 +86,8 @@ public class AiBlogPostModel {
     private String metaDescription;
 
     @ValueMapValue
-    @Default(values = "")
-    private String tags;
+    @Default(values = {})
+    private String[] tags;
 
     /**
      * Gets the blog post title.
@@ -129,34 +144,59 @@ public class AiBlogPostModel {
     }
 
     /**
-     * Gets the raw tags string (comma-separated).
+     * Gets the raw tags array (taxonomy paths).
      *
-     * @return the tags string, or empty string if not set
+     * @return the tags array, or empty array if not set
      */
-    public String getTags() {
-        return tags;
+    public String[] getTags() {
+        return tags != null ? tags : new String[0];
     }
 
     /**
-     * Gets the tags as a list of individual tag strings.
-     * Splits on comma and trims whitespace.
+     * Gets the tags as a list of tag paths.
+     * This returns the taxonomy resource paths that can be resolved to get tag details.
      *
-     * @return list of tags, or empty list if no tags
+     * @return list of taxonomy paths, or empty list if no tags
      */
-    public List<String> getTagList() {
-        if (StringUtils.isBlank(tags)) {
+    public List<String> getTagPaths() {
+        if (tags == null || tags.length == 0) {
             return Collections.emptyList();
         }
 
         List<String> tagList = new ArrayList<>();
-        String[] tagArray = tags.split(",");
-        for (String tag : tagArray) {
-            String trimmedTag = tag.trim();
-            if (StringUtils.isNotBlank(trimmedTag)) {
-                tagList.add(trimmedTag);
+        for (String tag : tags) {
+            if (StringUtils.isNotBlank(tag)) {
+                tagList.add(tag);
             }
         }
         return tagList;
+    }
+
+    /**
+     * Gets the tags as a list of tag titles (display names).
+     * Resolves each taxonomy path to get the jcr:title property.
+     *
+     * @return list of tag titles, or empty list if no tags
+     */
+    public List<String> getTagList() {
+        if (tags == null || tags.length == 0) {
+            return Collections.emptyList();
+        }
+
+        List<String> tagTitles = new ArrayList<>();
+        for (String tagPath : tags) {
+            if (StringUtils.isNotBlank(tagPath)) {
+                Resource tagResource = resourceResolver.getResource(tagPath);
+                if (tagResource != null) {
+                    String title = tagResource.getValueMap().get("jcr:title", tagResource.getName());
+                    tagTitles.add(title);
+                } else {
+                    // Fallback: use the path if resource not found
+                    tagTitles.add(tagPath);
+                }
+            }
+        }
+        return tagTitles;
     }
 
     /**
@@ -171,10 +211,10 @@ public class AiBlogPostModel {
     /**
      * Checks if the blog post has tags.
      *
-     * @return true if tags are not blank
+     * @return true if tags array is not empty
      */
     public boolean hasTags() {
-        return StringUtils.isNotBlank(tags);
+        return tags != null && tags.length > 0;
     }
 
     /**

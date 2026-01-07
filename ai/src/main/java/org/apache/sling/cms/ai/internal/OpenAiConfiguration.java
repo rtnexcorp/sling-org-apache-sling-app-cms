@@ -41,6 +41,11 @@ public class OpenAiConfiguration {
         @AttributeDefinition(name = "Enabled", description = "Enable OpenAI services globally")
         boolean enabled() default false;
 
+        @AttributeDefinition(
+                name = "API Base URL",
+                description = "OpenAI API base URL (useful for proxies or Azure OpenAI Service)")
+        String apiBaseUrl() default "https://api.openai.com/v1";
+
         @AttributeDefinition(name = "API Key", description = "OpenAI API key (sk-...)")
         String apiKey() default "";
 
@@ -75,6 +80,16 @@ public class OpenAiConfiguration {
                 name = "Vision Detail Level",
                 description = "Image detail level for vision API: low (faster, cheaper), high (more detailed), or auto")
         String visionDetail() default "auto";
+
+        @AttributeDefinition(
+                name = "Max Retries",
+                description = "Maximum number of retry attempts for failed API calls")
+        int maxRetries() default 3;
+
+        @AttributeDefinition(
+                name = "Retry Delay (ms)",
+                description = "Base delay in milliseconds between retry attempts (uses exponential backoff)")
+        int retryDelayMs() default 1000;
     }
 
     private Config config;
@@ -86,6 +101,10 @@ public class OpenAiConfiguration {
 
     public boolean isEnabled() {
         return config.enabled();
+    }
+
+    public String getApiBaseUrl() {
+        return config.apiBaseUrl();
     }
 
     public String getApiKey() {
@@ -122,5 +141,13 @@ public class OpenAiConfiguration {
 
     public String getVisionDetail() {
         return config.visionDetail();
+    }
+
+    public int getMaxRetries() {
+        return config.maxRetries();
+    }
+
+    public int getRetryDelayMs() {
+        return config.retryDelayMs();
     }
 }

@@ -22,11 +22,11 @@ This module provides AI capabilities for the Sling CMS, designed with the follow
 - Translation assistance
 - Change summaries for workflows
 
-### Classification Services (`AiClassificationService`)
+### Taxonomy Services (`AiTaxonomyService`)
 - Tag suggestions mapped to existing taxonomy
 - Category suggestions
-- Content classification
-- Keyword extraction
+- Content classification with confidence scores
+- Integration with CMS taxonomy structure
 
 ### Image Services (`AiImageService`)
 - Alt-text generation for accessibility

@@ -43,6 +43,7 @@ import org.apache.sling.cms.ai.AiImageService;
 import org.apache.sling.cms.ai.AiResponse;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -53,15 +54,16 @@ import org.slf4j.LoggerFactory;
  * Supports image analysis, alt-text generation, and caption generation.
  * Uses centralized OpenAI configuration for API key and settings.
  */
-@Component(service = AiImageService.class, immediate = true)
+@Component(
+        service = AiImageService.class,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        property = {"service.ranking:Integer=100"})
 public class OpenAiImageService implements AiImageService {
 
     private static final Logger log = LoggerFactory.getLogger(OpenAiImageService.class);
 
-    private static final String API_BASE_URL = "https://api.openai.com/v1";
     private static final String CHAT_COMPLETIONS_ENDPOINT = "/chat/completions";
-    private static final int MAX_RETRIES = 3;
-    private static final int RETRY_DELAY_MS = 1000;
     private static final int MAX_IMAGE_SIZE_BYTES = 20 * 1024 * 1024; // 20MB
     private static final String SERVICE_USER = "sling-cms-ai";
 
@@ -331,23 +333,26 @@ public class OpenAiImageService implements AiImageService {
      * Execute a vision API request with retry logic
      */
     private AiResponse executeVisionRequest(String base64Image, String mimeType, String prompt, String operation) {
-        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        int maxRetries = openAiConfig.getMaxRetries();
+        int retryDelayMs = openAiConfig.getRetryDelayMs();
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try {
                 String responseText = callOpenAiVisionApi(base64Image, mimeType, prompt);
 
                 return AiResponse.success(responseText.trim(), getId());
 
             } catch (IOException e) {
-                log.warn("OpenAI Vision API call failed (attempt {}/{}): {}", attempt, MAX_RETRIES, e.getMessage());
+                log.warn("OpenAI Vision API call failed (attempt {}/{}): {}", attempt, maxRetries, e.getMessage());
 
-                if (attempt == MAX_RETRIES) {
+                if (attempt == maxRetries) {
                     return AiResponse.failure(
-                            "OpenAI Vision API error after " + MAX_RETRIES + " attempts: " + e.getMessage(), getId());
+                            "OpenAI Vision API error after " + maxRetries + " attempts: " + e.getMessage(), getId());
                 }
 
                 // Exponential backoff
                 try {
-                    Thread.sleep(RETRY_DELAY_MS * attempt);
+                    Thread.sleep(retryDelayMs * attempt);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     return AiResponse.failure("Request interrupted", getId());
@@ -388,7 +393,7 @@ public class OpenAiImageService implements AiImageService {
         String requestJson = objectMapper.writeValueAsString(requestBody);
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE_URL + CHAT_COMPLETIONS_ENDPOINT))
+                .uri(URI.create(openAiConfig.getApiBaseUrl() + CHAT_COMPLETIONS_ENDPOINT))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + openAiConfig.getApiKey())
                 .timeout(Duration.ofSeconds(openAiConfig.getTimeout()))

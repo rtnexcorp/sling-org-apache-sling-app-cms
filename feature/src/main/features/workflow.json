@@ -1,0 +1,74 @@
+{
+  "bundles": [
+    {
+      "id": "org.apache.sling:org.apache.sling.cms.workflow:${cms-version}",
+      "start-order": "20"
+    }
+  ],
+  "configurations": {
+    "org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~sling-cms-workflow": {
+      "user.mapping": [
+        "org.apache.sling.cms.workflow:sling-cms-workflow=sling-cms-workflow"
+      ]
+    }
+  },
+  "repoinit:TEXT|true": [
+    "# Workflow Service User Configuration",
+    "",
+    "# Create service user for workflow operations",
+    "create service user sling-cms-workflow with path system/sling/cms",
+    "",
+    "# Create workflow definition paths in /etc (persistent configuration)",
+    "create path (sling:Folder) /etc/workflow",
+    "create path (sling:Folder) /etc/workflow/definitions",
+    "create path (sling:Folder) /etc/workflow/designs",
+    "",
+    "# Create workflow runtime/temporary paths in /var (can be cleaned)",
+    "create path (sling:Folder) /var/workflow",
+    "create path (sling:Folder) /var/workflow/instances",
+    "create path (sling:Folder) /var/workflow/tasks",
+    "create path (sling:Folder) /var/workflow/history",
+    "create path (sling:Folder) /var/workflow/history/processes",
+    "create path (sling:Folder) /var/workflow/history/tasks",
+    "",
+    "# Grant permissions for workflow service user",
+    "set ACL for sling-cms-workflow",
+    "  # Read access to root node for navigation",
+    "  allow jcr:read on /",
+    "  ",
+    "  # Read access to /var for path creation",
+    "  allow jcr:read,rep:write on /var",
+    "  ",
+    "  # Read access to content for workflow context",
+    "  allow jcr:read on /content",
+    "  ",
+    "  # Full access to workflow definitions in /etc (persistent)",
+    "  allow jcr:all on /etc/workflow",
+    "  allow jcr:all on /etc/workflow/definitions",
+    "  allow jcr:all on /etc/workflow/designs",
+    "  ",
+    "  # Full access to workflow runtime data in /var (temporary)",
+    "  allow jcr:all on /var/workflow",
+    "  allow jcr:all on /var/workflow/instances",
+    "  allow jcr:all on /var/workflow/tasks",
+    "  allow jcr:all on /var/workflow/history",
+    "end",
+    "",
+    "# Grant permissions to authors group for workflow designs and definitions",
+    "set ACL for authors",
+    "  allow jcr:read,jcr:write,jcr:nodeTypeManagement,jcr:versionManagement on /etc/workflow",
+    "  allow jcr:read on /var/workflow",
+    "end",
+    "",
+    "# Grant permissions to administrators group for workflow",
+    "set ACL for administrators",
+    "  allow jcr:all on /etc/workflow",
+    "  allow jcr:all on /var/workflow",
+    "end",
+    "",
+    "# Allow everyone to read workflow definitions (for execution)",
+    "set ACL for everyone",
+    "  allow jcr:read on /etc/workflow/definitions",
+    "end"
+  ]
+}

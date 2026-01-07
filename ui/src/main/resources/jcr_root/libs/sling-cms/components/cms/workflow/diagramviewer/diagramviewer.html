@@ -1,0 +1,60 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.viewer="org.apache.sling.cms.workflow.models.WorkflowDiagramViewerModel"/>
+
+<div class="cms-workflow-diagram-viewer">
+    <div class="cms-panel">
+        <div class="cms-panel__header">
+            <h2 class="cms-panel__title">${'Workflow Diagram' @ i18n}: ${viewer.processName}</h2>
+            <div class="cms-panel__actions">
+                <a href="/cms/workflow/definitions.html" class="cms-button cms-button--secondary">
+                    <i class="jam jam-arrow-left"></i>
+                    ${'Back to Definitions' @ i18n}
+                </a>
+            </div>
+        </div>
+
+        <sly data-sly-test="${viewer.hasProcess}">
+            <div class="cms-workflow-diagram-viewer__info">
+                <dl class="cms-detail-list">
+                    <dt>${'Process Key' @ i18n}:</dt>
+                    <dd><code>${viewer.processKey}</code></dd>
+                    <dt>${'Version' @ i18n}:</dt>
+                    <dd>${viewer.processVersion}</dd>
+                </dl>
+            </div>
+
+            <div class="cms-workflow-diagram-viewer__container">
+                <div id="bpmn-viewer-canvas" class="cms-workflow-diagram-viewer__canvas"></div>
+            </div>
+
+            <!-- Store BPMN XML in a hidden element for JavaScript -->
+            <script id="bpmn-xml-data" type="application/xml">${viewer.bpmnXml}</script>
+        </sly>
+
+        <sly data-sly-test="${!viewer.hasProcess}">
+            <div class="cms-message cms-message--warning">
+                <p>${'No workflow process specified. Please select a workflow from the definitions list.' @ i18n}</p>
+                <a href="/cms/workflow/definitions.html" class="cms-button cms-button--primary">
+                    ${'View Definitions' @ i18n}
+                </a>
+            </div>
+        </sly>
+    </div>
+</div>

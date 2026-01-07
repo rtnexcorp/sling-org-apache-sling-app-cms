@@ -1,0 +1,22 @@
+Bundle-Name: Apache Sling CMS - Workflow
+Bundle-Description: BPMN 2.0 compliant workflow engine for Apache Sling CMS
+Bundle-Category: sling,cms
+
+# Export workflow API packages for other bundles
+Export-Package: \
+    org.apache.sling.cms.workflow;version="${project.version}",\
+    org.apache.sling.cms.workflow.delegate;version="${project.version}",\
+    org.apache.sling.cms.workflow.model;version="${project.version}",\
+    org.apache.sling.cms.workflow.models;version="${project.version}",\
+    org.apache.sling.cms.workflow.test;version="${project.version}"
+
+# Let bnd auto-detect runtime imports
+# Annotation packages are compile-time only
+-noextraheaders: true
+-removeheaders: Private-Package
+
+# Sling Models registration
+Sling-Model-Packages: org.apache.sling.cms.workflow.models
+
+# Service user for workflow execution
+Sling-Nodetypes: SLING-INF/nodetypes.cnd

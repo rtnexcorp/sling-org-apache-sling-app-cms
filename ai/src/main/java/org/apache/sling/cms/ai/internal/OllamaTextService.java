@@ -35,10 +35,9 @@ import org.apache.sling.cms.ai.AiResponse;
 import org.apache.sling.cms.ai.AiTextService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.Designate;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,63 +45,37 @@ import org.slf4j.LoggerFactory;
  * Ollama local LLM implementation of AI text services.
  * Runs models locally without external API calls, ideal for privacy-sensitive deployments.
  * Requires Ollama to be installed and running locally (https://ollama.ai).
+ * Uses centralized Ollama configuration for server URL and settings.
  */
-@Component(service = AiTextService.class, immediate = true)
-@Designate(ocd = OllamaTextService.Config.class)
+@Component(
+        service = AiTextService.class,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        property = {"service.ranking:Integer=100"})
 public class OllamaTextService implements AiTextService {
 
     private static final Logger log = LoggerFactory.getLogger(OllamaTextService.class);
 
     private static final String GENERATE_ENDPOINT = "/api/generate";
-    private static final int MAX_RETRIES = 2;
-    private static final int RETRY_DELAY_MS = 500;
 
-    @ObjectClassDefinition(
-            name = "Apache Sling CMS - Ollama Text Service",
-            description = "Ollama local LLM integration for AI text operations (privacy-friendly, no external API)")
-    public @interface Config {
+    @Reference
+    private OllamaConfiguration ollamaConfig;
 
-        @AttributeDefinition(name = "Enabled", description = "Enable the Ollama text service")
-        boolean enabled() default false;
-
-        @AttributeDefinition(name = "Ollama URL", description = "Ollama server URL (default: http://localhost:11434)")
-        String ollamaUrl() default "http://localhost:11434";
-
-        @AttributeDefinition(
-                name = "Model",
-                description = "Ollama model to use (e.g., llama2, mistral, codellama, llama3)")
-        String model() default "llama2";
-
-        @AttributeDefinition(
-                name = "Temperature",
-                description = "Sampling temperature (0.0 = deterministic, 1.0 = very creative)")
-        double temperature() default 0.7;
-
-        @AttributeDefinition(
-                name = "Timeout (seconds)",
-                description = "Request timeout in seconds (local models may need longer)")
-        int timeout() default 60;
-
-        @AttributeDefinition(
-                name = "Stream",
-                description = "Use streaming responses (false = wait for complete response)")
-        boolean stream() default false;
-    }
-
-    private Config config;
     private HttpClient httpClient;
     private ObjectMapper objectMapper;
 
     @Activate
-    protected void activate(Config config) {
-        this.config = config;
+    protected void activate() {
         this.objectMapper = new ObjectMapper();
         this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(config.timeout()))
+                .connectTimeout(Duration.ofSeconds(ollamaConfig.getTimeout()))
                 .build();
 
-        if (config.enabled()) {
-            log.info("Ollama text service activated with model: {} at {}", config.model(), config.ollamaUrl());
+        if (ollamaConfig.isEnabled()) {
+            log.info(
+                    "Ollama text service activated with model: {} at {}",
+                    ollamaConfig.getTextModel(),
+                    ollamaConfig.getOllamaUrl());
 
             // Test connectivity
             testConnection();
@@ -126,7 +99,7 @@ public class OllamaTextService implements AiTextService {
 
     @Override
     public boolean isEnabled() {
-        return config.enabled() && StringUtils.isNotBlank(config.ollamaUrl());
+        return ollamaConfig.isEnabled() && StringUtils.isNotBlank(ollamaConfig.getOllamaUrl());
     }
 
     @Override
@@ -205,7 +178,8 @@ public class OllamaTextService implements AiTextService {
             return AiResponse.skipped("Ollama service is not enabled or configured");
         }
 
-        String languageName = new java.util.Locale(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
+        String languageName =
+                java.util.Locale.forLanguageTag(targetLocale).getDisplayLanguage(java.util.Locale.ENGLISH);
         String prompt = "Translate the following content to " + languageName
                 + ". Maintain the tone and structure.\n\n"
                 + request.getContent();
@@ -243,19 +217,21 @@ public class OllamaTextService implements AiTextService {
      */
     private AiResponse executeRequest(AiRequest request, String prompt, String operation) {
         long startTime = System.currentTimeMillis();
+        int maxRetries = ollamaConfig.getMaxRetries();
+        int retryDelayMs = ollamaConfig.getRetryDelayMs();
 
-        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try {
                 String responseText = callOllamaApi(prompt);
                 long processingTime = System.currentTimeMillis() - startTime;
 
                 return AiResponse.success(responseText.trim(), getId());
             } catch (IOException e) {
-                log.warn("Ollama API call failed (attempt {}/{}): {}", attempt, MAX_RETRIES, e.getMessage());
+                log.warn("Ollama API call failed (attempt {}/{}): {}", attempt, maxRetries, e.getMessage());
 
-                if (attempt == MAX_RETRIES) {
+                if (attempt == maxRetries) {
                     return AiResponse.failure(
-                            "Ollama API error after " + MAX_RETRIES
+                            "Ollama API error after " + maxRetries
                                     + " attempts: "
                                     + e.getMessage()
                                     + ". Is Ollama running?",
@@ -264,7 +240,7 @@ public class OllamaTextService implements AiTextService {
 
                 // Short retry delay for local service
                 try {
-                    Thread.sleep(RETRY_DELAY_MS);
+                    Thread.sleep(retryDelayMs);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     return AiResponse.failure("Request interrupted", getId());
@@ -279,22 +255,22 @@ public class OllamaTextService implements AiTextService {
      * Call the Ollama API with the given prompt
      */
     private String callOllamaApi(String prompt) throws IOException {
-        String url = config.ollamaUrl().replaceAll("/$", "") + GENERATE_ENDPOINT;
+        String url = ollamaConfig.getOllamaUrl().replaceAll("/$", "") + GENERATE_ENDPOINT;
 
         ObjectNode requestBody = objectMapper.createObjectNode();
-        requestBody.put("model", config.model());
+        requestBody.put("model", ollamaConfig.getTextModel());
         requestBody.put("prompt", prompt);
-        requestBody.put("stream", config.stream());
+        requestBody.put("stream", ollamaConfig.isStream());
 
         ObjectNode options = requestBody.putObject("options");
-        options.put("temperature", config.temperature());
+        options.put("temperature", ollamaConfig.getTemperature());
 
         String requestJson = objectMapper.writeValueAsString(requestBody);
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Content-Type", "application/json")
-                .timeout(Duration.ofSeconds(config.timeout()))
+                .timeout(Duration.ofSeconds(ollamaConfig.getTimeout()))
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson, StandardCharsets.UTF_8))
                 .build();
 
@@ -332,7 +308,7 @@ public class OllamaTextService implements AiTextService {
      */
     private void testConnection() {
         try {
-            String url = config.ollamaUrl().replaceAll("/$", "") + "/api/tags";
+            String url = ollamaConfig.getOllamaUrl().replaceAll("/$", "") + "/api/tags";
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .timeout(Duration.ofSeconds(5))
@@ -342,14 +318,14 @@ public class OllamaTextService implements AiTextService {
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
-                log.info("Successfully connected to Ollama at {}", config.ollamaUrl());
+                log.info("Successfully connected to Ollama at {}", ollamaConfig.getOllamaUrl());
             } else {
                 log.warn("Ollama connectivity test returned status {}: {}", response.statusCode(), response.body());
             }
         } catch (Exception e) {
             log.warn(
                     "Failed to connect to Ollama at {}: {}. Make sure Ollama is running.",
-                    config.ollamaUrl(),
+                    ollamaConfig.getOllamaUrl(),
                     e.getMessage());
         }
     }

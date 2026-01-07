@@ -78,6 +78,9 @@ public class ContentBreadcrumb {
         if ((parents == null || parents.isEmpty()) && StringUtils.isNotBlank(rootTitle)) {
             return rootTitle;
         }
+        if (resource == null) {
+            return rootTitle != null ? rootTitle : "";
+        }
         return getTitle(resource);
     }
 
@@ -93,6 +96,11 @@ public class ContentBreadcrumb {
 
     public List<Pair<String, String>> getParents() {
         List<Resource> ps = new ArrayList<>();
+
+        if (resource == null) {
+            log.debug("No suffix resource available for breadcrumb");
+            return Collections.emptyList();
+        }
 
         Resource current = resource;
         while (true) {

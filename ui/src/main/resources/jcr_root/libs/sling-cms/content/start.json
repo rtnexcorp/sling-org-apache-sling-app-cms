@@ -128,6 +128,11 @@
         "title": "CMS Configuration",
         "links": {
           "jcr:primaryType": "nt:unstructured",
+          "workflows": {
+            "jcr:primaryType": "nt:unstructured",
+            "link": "/cms/config/workflows.html",
+            "text": "Workflows"
+          },
           "pageeditbar": {
             "jcr:primaryType": "nt:unstructured",
             "alternatives": ["/cms/config/actions/pageeditbar"],

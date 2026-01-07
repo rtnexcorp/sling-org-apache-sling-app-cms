@@ -10,6 +10,68 @@
             "user.mapping": [
                 "org.apache.sling.cms.ai:sling-cms-ai=sling-cms-ai"
             ]
+        },
+        "org.apache.sling.cms.ai.internal.OpenAiConfiguration": {
+            "enabled": false,
+            "apiKey": "",
+            "organizationId": "",
+            "apiBaseUrl": "https://api.openai.com/v1",
+            "textModel": "gpt-4-turbo",
+            "visionModel": "gpt-4o",
+            "temperature": 0.7,
+            "textMaxTokens": 1000,
+            "visionMaxTokens": 500,
+            "timeout": 30,
+            "visionDetail": "auto",
+            "maxRetries": 3,
+            "retryDelayMs": 1000
+        },
+        "org.apache.sling.cms.ai.internal.AzureOpenAiConfiguration": {
+            "enabled": false,
+            "endpoint": "",
+            "apiKey": "",
+            "textDeploymentName": "gpt-4",
+            "visionDeploymentName": "gpt-4o",
+            "apiVersion": "2024-02-15-preview",
+            "temperature": 0.7,
+            "textMaxTokens": 1000,
+            "visionMaxTokens": 500,
+            "timeout": 30,
+            "visionDetail": "auto",
+            "maxRetries": 3,
+            "retryDelayMs": 1000
+        },
+        "org.apache.sling.cms.ai.internal.AnthropicConfiguration": {
+            "enabled": false,
+            "apiKey": "",
+            "apiBaseUrl": "https://api.anthropic.com/v1",
+            "textModel": "claude-3-5-sonnet-20241022",
+            "visionModel": "claude-3-opus-20240229",
+            "apiVersion": "2023-06-01",
+            "temperature": 0.7,
+            "textMaxTokens": 1000,
+            "visionMaxTokens": 500,
+            "timeout": 30,
+            "maxRetries": 3,
+            "retryDelayMs": 1000
+        },
+        "org.apache.sling.cms.ai.internal.OllamaConfiguration": {
+            "enabled": false,
+            "ollamaUrl": "http://localhost:11434",
+            "textModel": "llama3",
+            "visionModel": "llava",
+            "temperature": 0.7,
+            "timeout": 60,
+            "stream": false,
+            "contextWindow": 2048,
+            "maxRetries": 2,
+            "retryDelayMs": 500
+        },
+        "org.apache.sling.cms.ai.internal.RulesBasedTextService": {
+            "enabled": true,
+            "summarySentenceCount": 3,
+            "titleMaxLength": 60,
+            "metaDescriptionMaxLength": 160
         }
     },
     "repoinit:TEXT|true": "@file"

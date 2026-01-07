@@ -1,0 +1,317 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Workflow Start Form Component
+// Provides styling for the workflow initiation form with variable management
+
+@use "variables" as *;
+
+.cms-workflow-startform {
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+
+  // Custom scrollbar styling (WebKit browsers)
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $scrollbar-track;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb;
+    border-radius: 4px;
+
+    &:hover {
+      background: $scrollbar-thumb-hover;
+    }
+  }
+
+  // Firefox scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-thumb $scrollbar-track;
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+
+  // Panel styling
+  .cms-panel {
+    height: fit-content;
+    max-height: none;
+  }
+
+  // Secondary panel styling
+  .cms-panel--secondary {
+    .cms-panel__body {
+      padding: 1rem;
+    }
+
+    .cms-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+
+      li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+
+        &:before {
+          content: "→";
+          position: absolute;
+          left: 0;
+          color: $link;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+// Form styling
+.cms-form {
+  &__group {
+    margin-bottom: 1.5rem;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $grey-dark;
+    margin-bottom: 0.5rem;
+  }
+
+  &__control {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: $grey-dark;
+    background-color: $white;
+    border: 1px solid $grey-lighter;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      outline: none;
+      border-color: $link;
+      box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+    }
+
+    &::placeholder {
+      color: $grey-light;
+    }
+  }
+
+  &__help {
+    font-size: 0.75rem;
+    color: $grey;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+  }
+
+  &__section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid $white-bis;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  &__section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $grey-dark;
+    margin-bottom: 1rem;
+    margin-top: 0;
+  }
+
+  // Variable rows
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: start;
+    margin-bottom: 0.75rem;
+
+    &:last-child {
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__col-auto {
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid $grey-lighter;
+  }
+}
+
+// Button styling
+.cms-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  // Primary button
+  &--primary {
+    color: $white;
+    background-color: $link;
+    border-color: $link;
+
+    &:hover {
+      background-color: $link-hover;
+      border-color: $link-hover;
+    }
+
+    &:active {
+      background-color: $link-active;
+      border-color: $link-active;
+    }
+  }
+
+  // Secondary button
+  &--secondary {
+    color: $grey-dark;
+    background-color: $white;
+    border-color: $grey-lighter;
+
+    &:hover {
+      background-color: $white-ter;
+      border-color: $grey-light;
+    }
+
+    &:active {
+      background-color: $white-bis;
+      border-color: $grey-light;
+    }
+  }
+
+  // Small button
+  &--small {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  // Icon-only button
+  &--icon {
+    padding: 0.625rem;
+    min-width: 2.5rem;
+  }
+}
+
+// Button group
+.cms-button-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+// Icon styling - Uses Jam Icons (already included globally)
+// Icons are applied via <span class="jam jam-{icon-name}"> in HTL templates
+
+// Select dropdown styling
+.select {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  select {
+    appearance: none;
+    width: 100%;
+    padding: 0.625rem 2.5rem 0.625rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: $grey-dark;
+    background-color: $white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23363636' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25em;
+    border: 1px solid $grey-lighter;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      outline: none;
+      border-color: $link;
+      box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+    }
+
+    &:disabled {
+      background-color: $white-ter;
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+  }
+}

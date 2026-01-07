@@ -1,0 +1,43 @@
+{
+    "jcr:primaryType": "sling:Page",
+    "jcr:content": {
+        "sling:resourceType": "sling-cms/components/pages/base",
+        "jcr:title": "Workflows",
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/container",
+            
+            "pageheader": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/general/container",
+                "header": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/general/heading",
+                    "level": 2,
+                    "text": "Workflow Dashboard"
+                }
+            },
+            "dashboardstats": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/workflow/dashboardstats"
+            },
+            "tabs": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/workflow/dashboardtabs",
+                "definitionstab": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/definitionlist"
+                },
+                "instancestab": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/instancemonitor"
+                },
+                "taskinboxtab": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/taskinbox"
+                }
+            }
+        }
+    }
+}

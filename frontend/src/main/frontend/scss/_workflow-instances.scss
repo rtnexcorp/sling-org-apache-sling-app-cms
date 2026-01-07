@@ -1,0 +1,357 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+// Workflow Instance Monitor Component
+// Provides monitoring UI for active workflow instances
+
+@use "variables" as *;
+
+.cms-workflow-instances {
+  // Remove fixed padding to allow full use of parent container
+  // Padding is now handled by the dashboard tabs content
+  
+  .cms-panel {
+    box-shadow: none; // Remove shadow when inside tabs
+    border-radius: 0; // Flatten borders when inside tabs
+  }
+}
+
+.cms-workflow-filter {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: $white-ter;
+  border-radius: 4px;
+  // Keep filter section compact
+  flex-shrink: 0;
+
+  &__controls {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+}
+
+.cms-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 200px;
+}
+
+.cms-form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $grey-dark;
+}
+
+.cms-select {
+  position: relative;
+
+  &__input {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    border: 1px solid $grey-lighter;
+    border-radius: 4px;
+    background-color: $white;
+    font-size: 1rem;
+    color: $grey-dark;
+    cursor: pointer;
+    appearance: none;
+    
+    &:hover {
+      border-color: $grey-light;
+    }
+    
+    &:focus {
+      border-color: $link;
+      outline: none;
+      box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+    }
+  }
+
+  &--small {
+    .cms-select__input {
+      font-size: 0.875rem;
+      padding: 0.375rem 2rem 0.375rem 0.625rem;
+    }
+  }
+
+  // Arrow icon
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid $grey-dark;
+    pointer-events: none;
+  }
+}
+
+.cms-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $white;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+
+  thead {
+    background-color: $white-ter;
+  }
+
+  th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: $grey-dark;
+    border-bottom: 2px solid $grey-lighter;
+  }
+
+  td {
+    padding: 0.75rem;
+    border-bottom: 1px solid $white-ter;
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $white-ter;
+    }
+
+    &[data-status="suspended"] {
+      background-color: $suspended-bg;
+    }
+  }
+
+  code {
+    background-color: $white-ter;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: $code-color;
+  }
+
+  &__actions {
+    white-space: nowrap;
+    text-align: right;
+    width: 1%;
+
+    .cms-button {
+      margin-left: 0.5rem;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.cms-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &--success {
+    background-color: $success;
+    color: $white;
+  }
+
+  &--warning {
+    background-color: $warning;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  &--danger {
+    background-color: $danger;
+    color: $white;
+  }
+
+  &--info {
+    background-color: $link;
+    color: $white;
+  }
+}
+
+.cms-pagination {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: $white-ter;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__info {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $grey-darker;
+  }
+}
+
+.cms-message {
+  padding: 1.25rem 1.5rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+
+  &--info {
+    background-color: $info-light;
+    border-left: 4px solid $link;
+    color: $grey-dark;
+  }
+
+  &--success {
+    background-color: $success-light;
+    border-left: 4px solid $success;
+    color: $grey-dark;
+  }
+
+  &--warning {
+    background-color: $warning-light;
+    border-left: 4px solid $warning;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  &--danger {
+    background-color: $danger-light;
+    border-left: 4px solid $danger;
+    color: $grey-dark;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// Modal for viewing instance details
+.cms-workflow-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__content {
+    position: relative;
+    background: $white;
+    border-radius: 8px;
+    max-width: 800px;
+    max-height: 90vh;
+    width: 90%;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid $grey-lighter;
+    background-color: $white-ter;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $grey-dark;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: $grey-darker;
+    cursor: pointer;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: $grey-lighter;
+      color: $grey-dark;
+    }
+  }
+
+  &__body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+  }
+}
+
+// Instance details table styling
+.cms-workflow-instance-details {
+  .cms-table {
+    box-shadow: none;
+    border: 1px solid $grey-lighter;
+
+    th {
+      width: 200px;
+      font-weight: 600;
+      background-color: $white-ter;
+    }
+
+    td {
+      word-break: break-word;
+    }
+
+    pre {
+      font-size: 0.875rem;
+      margin: 0;
+    }
+  }
+}
