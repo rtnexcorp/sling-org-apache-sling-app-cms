@@ -75,7 +75,7 @@
                                     class="cms-button cms-button--secondary cms-button--icon"
                                     data-action="remove-variable"
                                     aria-label="${'Remove variable' @ i18n}">
-                                <span class="cms-icon cms-icon--delete"></span>
+                                <span class="jam jam-minus"></span>
                             </button>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                 <button type="button"
                         class="cms-button cms-button--secondary"
                         data-action="add-variable">
-                    <span class="cms-icon cms-icon--add"></span>
+                    <span class="jam jam-plus"></span>
                     ${'Add Variable' @ i18n}
                 </button>
             </div>
@@ -109,7 +109,7 @@
             <!--/* Form Actions */-->
             <div class="cms-form__actions">
                 <button type="submit" class="cms-button cms-button--primary">
-                    <span class="cms-icon cms-icon--play"></span>
+                    <span class="jam jam-play"></span>
                     ${'Start Workflow' @ i18n}
                 </button>
                 <button type="reset" class="cms-button cms-button--secondary">
@@ -140,57 +140,3 @@
         </div>
     </div>
 </div>
-
-<script data-sly-unwrap>
-(function() {
-    // Add variable row functionality
-    document.querySelectorAll('[data-action="add-variable"]').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var container = document.getElementById('workflow-variables-container');
-            var template = container.querySelector('[data-variable-row]').cloneNode(true);
-            template.querySelectorAll('input').forEach(function(input) { input.value = ''; });
-            container.appendChild(template);
-        });
-    });
-
-    // Remove variable row functionality
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('[data-action="remove-variable"]')) {
-            var container = document.getElementById('workflow-variables-container');
-            if (container.querySelectorAll('[data-variable-row]').length > 1) {
-                e.target.closest('[data-variable-row]').remove();
-            }
-        }
-    });
-
-    // Preset button functionality
-    document.querySelectorAll('[data-preset]').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var preset = btn.dataset.preset;
-            var presets = {
-                'content-approval': [
-                    {name: 'author', value: ''},
-                    {name: 'contentPath', value: ''},
-                    {name: 'approver', value: ''}
-                ],
-                'review-workflow': [
-                    {name: 'reviewer', value: ''},
-                    {name: 'dueDate', value: ''},
-                    {name: 'priority', value: '50'}
-                ]
-            };
-
-            if (presets[preset]) {
-                var container = document.getElementById('workflow-variables-container');
-                container.innerHTML = '';
-                presets[preset].forEach(function(variable) {
-                    var row = document.querySelector('[data-variable-row]').cloneNode(true);
-                    row.querySelector('[name="variableName[]"]').value = variable.name;
-                    row.querySelector('[name="variableValue[]"]').value = variable.value;
-                    container.appendChild(row);
-                });
-            }
-        });
-    });
-})();
-</script>

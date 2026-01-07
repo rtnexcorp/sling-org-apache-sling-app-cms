@@ -21,6 +21,7 @@ package org.apache.sling.cms.workflow.internal.executor;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.cms.workflow.delegate.DelegateExecution;
 import org.apache.sling.cms.workflow.internal.instance.ProcessInstanceImpl;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,7 @@ public class DelegateExecutionImpl implements DelegateExecution {
     private final ProcessInstanceImpl processInstance;
     private final String currentActivityId;
     private final Map<String, Object> fieldInjections;
+    private ResourceResolver resourceResolver;
 
     public DelegateExecutionImpl(@NotNull ProcessInstanceImpl processInstance, @NotNull String currentActivityId) {
         this.processInstance = processInstance;
@@ -137,5 +139,20 @@ public class DelegateExecutionImpl implements DelegateExecution {
     @Nullable
     public Object getFieldInjection(@NotNull String name) {
         return fieldInjections.get(name);
+    }
+
+    @Override
+    @Nullable
+    public ResourceResolver getResourceResolver() {
+        return resourceResolver;
+    }
+
+    /**
+     * Sets the ResourceResolver for this execution context.
+     *
+     * @param resourceResolver ResourceResolver instance
+     */
+    public void setResourceResolver(@Nullable ResourceResolver resourceResolver) {
+        this.resourceResolver = resourceResolver;
     }
 }

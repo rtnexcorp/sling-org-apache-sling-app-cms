@@ -132,4 +132,14 @@ public interface DelegateExecution {
      * @param variableName Variable name
      */
     void removeVariable(@NotNull String variableName);
+
+    /**
+     * Get the ResourceResolver for this execution context.
+     *
+     * <p>Delegates can use this to access and manipulate content in the repository.</p>
+     *
+     * @return ResourceResolver instance
+     */
+    @Nullable
+    org.apache.sling.api.resource.ResourceResolver getResourceResolver();
 }

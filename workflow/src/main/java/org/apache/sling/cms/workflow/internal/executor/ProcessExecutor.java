@@ -221,6 +221,9 @@ public class ProcessExecutor {
         // Create execution context
         DelegateExecutionImpl execution = new DelegateExecutionImpl(processInstance, activity.getId());
 
+        // Set ResourceResolver for delegates to access content
+        execution.setResourceResolver(resolver);
+
         // Apply field injections
         Map<String, String> fields = activity.getFieldValues();
         for (Map.Entry<String, String> entry : fields.entrySet()) {

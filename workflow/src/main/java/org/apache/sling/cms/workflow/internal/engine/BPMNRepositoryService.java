@@ -39,6 +39,8 @@ import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.api.resource.observation.ResourceChange;
+import org.apache.sling.api.resource.observation.ResourceChangeListener;
 import org.apache.sling.cms.workflow.Deployment;
 import org.apache.sling.cms.workflow.ProcessDefinition;
 import org.apache.sling.cms.workflow.RepositoryService;
@@ -55,9 +57,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * BPMN implementation of RepositoryService.
+ * Monitors workflow definitions in JCR and automatically reloads them when they change.
  */
-@Component(service = {RepositoryService.class, BPMNRepositoryService.class})
-public class BPMNRepositoryService implements RepositoryService {
+@Component(
+        service = {RepositoryService.class, BPMNRepositoryService.class, ResourceChangeListener.class},
+        property = {
+            ResourceChangeListener.PATHS + "=/etc/workflow/definitions",
+            ResourceChangeListener.CHANGES + "=ADDED",
+            ResourceChangeListener.CHANGES + "=CHANGED",
+            ResourceChangeListener.CHANGES + "=REMOVED"
+        })
+public class BPMNRepositoryService implements RepositoryService, ResourceChangeListener {
 
     private static final Logger log = LoggerFactory.getLogger(BPMNRepositoryService.class);
     // Store workflow definitions in /etc (persistent configuration, backed up)
@@ -389,6 +399,99 @@ public class BPMNRepositoryService implements RepositoryService {
         }
 
         return current;
+    }
+
+    /**
+     * Implements ResourceChangeListener to automatically reload workflow definitions
+     * when they are added, changed, or removed in JCR.
+     */
+    @Override
+    public void onChange(@NotNull List<ResourceChange> changes) {
+        log.debug("Detected {} resource changes in workflow definitions", changes.size());
+
+        for (ResourceChange change : changes) {
+            String path = change.getPath();
+            log.debug("Processing change: {} at {}", change.getType(), path);
+
+            // Extract workflow definition key from path (e.g., /etc/workflow/definitions/publishingWorkflow)
+            String definitionKey = path.substring(DEFINITIONS_PATH.length() + 1);
+            if (definitionKey.contains("/")) {
+                // Skip child node changes (we only care about definition nodes themselves)
+                continue;
+            }
+
+            switch (change.getType()) {
+                case ADDED:
+                case CHANGED:
+                    reloadDefinition(definitionKey);
+                    break;
+                case REMOVED:
+                    removeDefinition(definitionKey);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Reload a single workflow definition from JCR.
+     */
+    private void reloadDefinition(String definitionKey) {
+        Map<String, Object> serviceParams = new HashMap<>();
+        serviceParams.put(ResourceResolverFactory.SUBSERVICE, SERVICE_USER);
+
+        try (ResourceResolver resolver = resolverFactory.getServiceResourceResolver(serviceParams)) {
+            String path = DEFINITIONS_PATH + "/" + definitionKey;
+            Resource resource = resolver.getResource(path);
+
+            if (resource == null) {
+                log.warn("Cannot reload workflow definition, resource not found: {}", path);
+                return;
+            }
+
+            Node defNode = resource.adaptTo(Node.class);
+            if (defNode == null || !defNode.hasProperty("bpmn")) {
+                log.warn("Cannot reload workflow definition, invalid node: {}", path);
+                return;
+            }
+
+            String bpmnContent = defNode.getProperty("bpmn").getString();
+            String key = defNode.getProperty("processDefinitionKey").getString();
+
+            ProcessDefinitionImpl processDefinition =
+                    bpmnParser.parse(key, new ByteArrayInputStream(bpmnContent.getBytes(StandardCharsets.UTF_8)));
+
+            // Set deployment time from JCR
+            if (defNode.hasProperty("deploymentDate")) {
+                Calendar deploymentDate = defNode.getProperty("deploymentDate").getDate();
+                processDefinition.setDeploymentTime(deploymentDate.getTime());
+            }
+
+            // Update cache
+            definitionCache.put(processDefinition.getKey(), processDefinition);
+            definitionCache.put(processDefinition.getId(), processDefinition);
+
+            log.info(
+                    "Reloaded workflow definition: {} (version {}) from JCR",
+                    processDefinition.getKey(),
+                    processDefinition.getVersion());
+
+        } catch (Exception e) {
+            log.error("Failed to reload workflow definition: {}", definitionKey, e);
+        }
+    }
+
+    /**
+     * Remove a workflow definition from cache.
+     */
+    private void removeDefinition(String definitionKey) {
+        ProcessDefinitionImpl def = definitionCache.get(definitionKey);
+        if (def != null) {
+            definitionCache.remove(def.getKey());
+            definitionCache.remove(def.getId());
+            log.info("Removed workflow definition from cache: {}", definitionKey);
+        }
     }
 
     private static class DeploymentImpl implements Deployment {
