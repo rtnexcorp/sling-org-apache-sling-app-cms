@@ -66,9 +66,15 @@
                                     <td><code>${task.processInstanceId}</code></td>
                                     <td>${task.createTime @ format='dd MMM yyyy HH:mm'}</td>
                                     <td>
-                                        <span class="cms-badge ${task.priority > 50 ? 'cms-badge--danger' : task.priority > 30 ? 'cms-badge--warning' : 'cms-badge--info'}">
-                                            ${task.priority}
-                                        </span>
+                                        <sly data-sly-test="${task.priority > 50}">
+                                            <span class="cms-badge cms-badge--danger">${task.priority}</span>
+                                        </sly>
+                                        <sly data-sly-test="${task.priority > 30 && task.priority <= 50}">
+                                            <span class="cms-badge cms-badge--warning">${task.priority}</span>
+                                        </sly>
+                                        <sly data-sly-test="${task.priority <= 30}">
+                                            <span class="cms-badge cms-badge--info">${task.priority}</span>
+                                        </sly>
                                     </td>
                                     <td class="cms-table__actions">
                                         <a href="/bin/workflow/task?taskId=${task.id}"

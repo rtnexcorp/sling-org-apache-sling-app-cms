@@ -7,12 +7,7 @@
         "container": {
             "jcr:primaryType": "nt:unstructured",
             "sling:resourceType": "sling-cms/components/general/container",
-            "contentbreadcrumb": {
-                "jcr:primaryType": "nt:unstructured",
-                "sling:resourceType": "sling-cms/components/cms/contentbreadcrumb",
-                "depth": 1,
-                "rootTitle": "Workflows"
-            },
+            
             "pageheader": {
                 "jcr:primaryType": "nt:unstructured",
                 "sling:resourceType": "sling-cms/components/general/container",
@@ -20,19 +15,28 @@
                     "jcr:primaryType": "nt:unstructured",
                     "sling:resourceType": "sling-cms/components/general/heading",
                     "level": 2,
-                    "text": "Workflow Management"
-                },
-                "createbutton": {
-                    "jcr:primaryType": "nt:unstructured",
-                    "sling:resourceType": "sling-cms/components/general/link",
-                    "text": "Create New Workflow",
-                    "class": "cms-button cms-button--primary",
-                    "link": "/cms/config/workflow-designer.html"
+                    "text": "Workflow Dashboard"
                 }
             },
-            "workflowlist": {
+            "dashboardstats": {
                 "jcr:primaryType": "nt:unstructured",
-                "sling:resourceType": "sling-cms/components/cms/workflow/definitionlist"
+                "sling:resourceType": "sling-cms/components/cms/workflow/dashboardstats"
+            },
+            "tabs": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/workflow/dashboardtabs",
+                "definitionstab": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/definitionlist"
+                },
+                "instancestab": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/instancemonitor"
+                },
+                "taskinboxtab": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "sling:resourceType": "sling-cms/components/cms/workflow/taskinbox"
+                }
             }
         }
     }

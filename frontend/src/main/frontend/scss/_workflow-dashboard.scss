@@ -1,0 +1,150 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Workflow Dashboard Stats Component
+// Provides stat cards for the workflow dashboard
+
+.cms-workflow-dashboard-stats {
+    margin-bottom: 1.5rem;
+}
+
+.cms-stat-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 6px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e8e8e8;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &__icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    &__content {
+        flex: 1;
+    }
+
+    &__value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #363636;
+    }
+
+    &__label {
+        font-size: 0.875rem;
+        color: #7a7a7a;
+        margin-top: 0.25rem;
+    }
+
+    // Card variants with different colors
+    &--definitions {
+        .cms-stat-card__icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .cms-stat-card__value {
+            color: #667eea;
+        }
+    }
+
+    &--instances {
+        .cms-stat-card__icon {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        .cms-stat-card__value {
+            color: #11998e;
+        }
+    }
+
+    &--tasks {
+        .cms-stat-card__icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .cms-stat-card__value {
+            color: #f5576c;
+        }
+    }
+
+    &--mytasks {
+        .cms-stat-card__icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .cms-stat-card__value {
+            color: #4facfe;
+        }
+    }
+}
+
+// Workflow Dashboard Tabs
+.cms-workflow-dashboard-tabs {
+    .tabs {
+        margin-bottom: 0;
+        
+        ul {
+            border-bottom-color: #dbdbdb;
+        }
+
+        li {
+            a {
+                border-bottom-color: #dbdbdb;
+                color: #4a4a4a;
+                
+                .icon {
+                    margin-right: 0.5rem;
+                }
+            }
+
+            &.is-active a {
+                border-bottom-color: #485fc7;
+                color: #485fc7;
+            }
+        }
+    }
+
+    &__content {
+        background: white;
+        border: 1px solid #dbdbdb;
+        border-top: none;
+        border-radius: 0 0 4px 4px;
+        padding: 1.5rem;
+    }
+
+    &__panel {
+        display: none;
+
+        &.is-active {
+            display: block;
+        }
+    }
+}
