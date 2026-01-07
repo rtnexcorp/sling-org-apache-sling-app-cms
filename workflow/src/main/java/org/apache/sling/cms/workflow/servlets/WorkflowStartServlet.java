@@ -53,6 +53,7 @@ public class WorkflowStartServlet extends SlingAllMethodsServlet {
 
     private static final String PARAM_PROCESS_KEY = "processKey";
     private static final String PARAM_BUSINESS_KEY = "businessKey";
+    private static final String PARAM_CONTENT_PATH = "contentPath";
     private static final String PARAM_VAR_PREFIX = "var_";
 
     @Reference
@@ -79,6 +80,12 @@ public class WorkflowStartServlet extends SlingAllMethodsServlet {
 
         String processKey = request.getParameter(PARAM_PROCESS_KEY);
         String businessKey = request.getParameter(PARAM_BUSINESS_KEY);
+        String contentPath = request.getParameter(PARAM_CONTENT_PATH);
+
+        // Use contentPath as businessKey if businessKey is not provided
+        if ((businessKey == null || businessKey.isEmpty()) && contentPath != null && !contentPath.isEmpty()) {
+            businessKey = contentPath;
+        }
 
         if (processKey == null || processKey.isEmpty()) {
             sendError(response, SlingHttpServletResponse.SC_BAD_REQUEST, "Missing processKey parameter");
@@ -138,9 +145,16 @@ public class WorkflowStartServlet extends SlingAllMethodsServlet {
     /**
      * Collect process variables from request parameters.
      * Parameters prefixed with "var_" are treated as process variables.
+     * Additionally, "contentPath" is always included as a variable if provided.
      */
     private Map<String, Object> collectVariables(SlingHttpServletRequest request) {
         Map<String, Object> variables = new HashMap<>();
+
+        // Always include contentPath if provided
+        String contentPath = request.getParameter(PARAM_CONTENT_PATH);
+        if (contentPath != null && !contentPath.isEmpty()) {
+            variables.put("contentPath", contentPath);
+        }
 
         Enumeration<String> paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()) {

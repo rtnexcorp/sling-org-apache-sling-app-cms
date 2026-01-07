@@ -114,8 +114,19 @@ public class BPMNTaskService implements TaskService {
     @Override
     @NotNull
     public List<Task> getTasksByCandidateUser(@NotNull String userId) {
-        // MVP: Same as assigned to
-        return getTasksAssignedTo(userId);
+        // Return unassigned tasks (available for claiming)
+        try {
+            ResourceResolver resolver = resolverContext.get();
+            if (resolver == null) {
+                return List.of();
+            }
+            return taskManager.findUnassignedTasks(resolver).stream()
+                    .map(task -> (Task) task)
+                    .collect(Collectors.toList());
+        } catch (WorkflowException e) {
+            log.error("Failed to get candidate tasks for user: {}", userId, e);
+            return List.of();
+        }
     }
 
     @Override

@@ -39,15 +39,27 @@
                 <p class="cms-form__help">${'Select the workflow process to start' @ i18n}</p>
             </div>
 
-            <!--/* Business Key */-->
+            <!--/* Content Path - primary variable for content-based workflows */-->
+            <div class="cms-form__group">
+                <label for="contentPath" class="cms-form__label">${'Content Path' @ i18n} *</label>
+                <input type="text"
+                       id="contentPath"
+                       name="contentPath"
+                       class="cms-form__control"
+                       required
+                       placeholder="${'e.g., /content/mysite/page' @ i18n}"/>
+                <p class="cms-form__help">${'Path to the content this workflow will process' @ i18n}</p>
+            </div>
+
+            <!--/* Business Key (optional) */-->
             <div class="cms-form__group">
                 <label for="businessKey" class="cms-form__label">${'Business Key' @ i18n}</label>
                 <input type="text"
                        id="businessKey"
                        name="businessKey"
                        class="cms-form__control"
-                       placeholder="${'e.g., /content/mysite/page' @ i18n}"/>
-                <p class="cms-form__help">${'Optional unique identifier for this process instance (e.g., content path)' @ i18n}</p>
+                       placeholder="${'Optional custom identifier' @ i18n}"/>
+                <p class="cms-form__help">${'Optional custom identifier (defaults to content path if not provided)' @ i18n}</p>
             </div>
 
             <!--/* Process Variables */-->

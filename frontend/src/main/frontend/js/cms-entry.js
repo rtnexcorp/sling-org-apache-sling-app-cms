@@ -69,6 +69,7 @@ import './cms.workflow-designer.js';
 import './cms.workflow-startform.js';
 import './cms.workflow-instances.js';
 import './cms.workflow-dashboard-tabs.js';
+import './cms.workflow-taskinbox.js';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {

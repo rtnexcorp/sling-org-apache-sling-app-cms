@@ -26,11 +26,15 @@ import org.apache.sling.cms.workflow.Task;
 import org.apache.sling.cms.workflow.TaskQuery;
 import org.apache.sling.cms.workflow.WorkflowException;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of TaskQuery.
  */
 public class TaskQueryImpl implements TaskQuery {
+
+    private static final Logger log = LoggerFactory.getLogger(TaskQueryImpl.class);
 
     private final TaskManager taskManager;
     private final ResourceResolver resolver;
@@ -99,6 +103,12 @@ public class TaskQueryImpl implements TaskQuery {
         try {
             List<TaskImpl> tasks;
 
+            log.debug(
+                    "TaskQuery.list() called with: processInstanceId={}, assignee={}, candidateGroup={}",
+                    processInstanceId,
+                    assignee,
+                    candidateGroup);
+
             if (processInstanceId != null) {
                 tasks = taskManager.findTasksByProcessInstance(processInstanceId, resolver);
             } else if (assignee != null) {
@@ -106,11 +116,15 @@ public class TaskQueryImpl implements TaskQuery {
             } else if (candidateGroup != null) {
                 tasks = taskManager.findTasksByCandidateGroup(candidateGroup, resolver);
             } else {
-                throw new WorkflowException("At least one query parameter must be specified");
+                // No filter specified - return all active tasks
+                log.debug("No filter specified, calling findAllTasks");
+                tasks = taskManager.findAllTasks(resolver);
             }
 
+            log.debug("TaskQuery.list() returning {} tasks", tasks.size());
             return tasks.stream().map(task -> (Task) task).collect(Collectors.toList());
         } catch (WorkflowException e) {
+            log.error("Error in TaskQuery.list()", e);
             // MVP: Return empty list on error
             return List.of();
         }

@@ -51,6 +51,7 @@ public class BPMNParser {
 
     private static final String BPMN_NS = "http://www.omg.org/spec/BPMN/20100524/MODEL";
     private static final String FLOWABLE_NS = "http://flowable.org/bpmn";
+    private static final String SLING_NS = "http://sling.apache.org/bpmn";
 
     /**
      * Parse BPMN 2.0 XML into internal process definition.
@@ -218,7 +219,7 @@ public class BPMNParser {
         String delegateClass = element.getAttributeNS(FLOWABLE_NS, "class");
         if (delegateClass != null && !delegateClass.isEmpty()) {
             activity.setDelegateClass(delegateClass);
-            log.debug("  Service task delegate class: {}", delegateClass);
+            log.debug("  Service task delegate class (flowable:class): {}", delegateClass);
             return; // Found delegate class, no need to check extension elements
         }
 
@@ -227,13 +228,27 @@ public class BPMNParser {
         if (extensionElements.getLength() > 0) {
             Element extensions = (Element) extensionElements.item(0);
 
-            // Check for <delegateClass> element (alternative to flowable:class attribute)
-            NodeList delegateElements = extensions.getElementsByTagName("delegateClass");
-            if (delegateElements.getLength() > 0) {
-                String delegateValue = delegateElements.item(0).getTextContent().trim();
+            // Check for <sling:delegateClass> element (Sling CMS convention)
+            NodeList slingDelegateElements = extensions.getElementsByTagNameNS(SLING_NS, "delegateClass");
+            if (slingDelegateElements.getLength() > 0) {
+                String delegateValue =
+                        slingDelegateElements.item(0).getTextContent().trim();
                 if (!delegateValue.isEmpty()) {
                     activity.setDelegateClass(delegateValue);
-                    log.debug("  Service task delegate class (from extensionElements): {}", delegateValue);
+                    log.debug("  Service task delegate class (sling:delegateClass): {}", delegateValue);
+                }
+            }
+
+            // Also check for <delegateClass> element without namespace (fallback)
+            if (activity.getDelegateClass() == null) {
+                NodeList delegateElements = extensions.getElementsByTagName("delegateClass");
+                if (delegateElements.getLength() > 0) {
+                    String delegateValue =
+                            delegateElements.item(0).getTextContent().trim();
+                    if (!delegateValue.isEmpty()) {
+                        activity.setDelegateClass(delegateValue);
+                        log.debug("  Service task delegate class (delegateClass): {}", delegateValue);
+                    }
                 }
             }
 

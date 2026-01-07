@@ -335,6 +335,115 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Queries all active (non-completed) tasks.
+     *
+     * @param resolver Resource resolver
+     * @return List of all active tasks
+     * @throws WorkflowException if query fails
+     */
+    @NotNull
+    public List<TaskImpl> findAllTasks(@NotNull ResourceResolver resolver) throws WorkflowException {
+        List<TaskImpl> tasks = new ArrayList<>();
+
+        try {
+            Resource tasksResource = resolver.getResource(TASKS_PATH);
+            if (tasksResource == null) {
+                log.debug("Tasks path {} does not exist", TASKS_PATH);
+                return tasks;
+            }
+
+            log.debug("Found tasks resource at {}, resourceType: {}", TASKS_PATH, tasksResource.getResourceType());
+
+            Node tasksNode = tasksResource.adaptTo(Node.class);
+            if (tasksNode != null) {
+                log.debug(
+                        "Tasks node primary type: {}",
+                        tasksNode.getPrimaryNodeType().getName());
+                NodeIterator iterator = tasksNode.getNodes();
+                log.debug("Searching for all active tasks in {}, hasNext: {}", TASKS_PATH, iterator.hasNext());
+                while (iterator.hasNext()) {
+                    Node taskNode = iterator.nextNode();
+                    log.debug(
+                            "Checking task node: {}, primaryType: {}",
+                            taskNode.getName(),
+                            taskNode.getPrimaryNodeType().getName());
+                    // Skip special nodes like rep:policy
+                    if (taskNode.getName().startsWith("rep:")
+                            || taskNode.getName().startsWith("jcr:")) {
+                        log.debug("Skipping special node: {}", taskNode.getName());
+                        continue;
+                    }
+                    // Only return non-completed tasks
+                    if (!taskNode.hasProperty("completed")
+                            || !taskNode.getProperty("completed").getBoolean()) {
+                        tasks.add(new TaskImpl(taskNode));
+                        log.debug("Found active task: {}", taskNode.getName());
+                    }
+                }
+            } else {
+                log.warn("Could not adapt tasks resource to Node");
+            }
+
+            log.debug("Found {} active tasks", tasks.size());
+            return tasks;
+
+        } catch (RepositoryException e) {
+            throw new WorkflowException("Failed to query all tasks", e);
+        }
+    }
+
+    /**
+     * Queries all unassigned active (non-completed) tasks.
+     * These are tasks that don't have an assignee set yet.
+     *
+     * @param resolver Resource resolver
+     * @return List of unassigned active tasks
+     * @throws WorkflowException if query fails
+     */
+    @NotNull
+    public List<TaskImpl> findUnassignedTasks(@NotNull ResourceResolver resolver) throws WorkflowException {
+        List<TaskImpl> tasks = new ArrayList<>();
+
+        try {
+            Resource tasksResource = resolver.getResource(TASKS_PATH);
+            if (tasksResource == null) {
+                log.debug("Tasks path {} does not exist", TASKS_PATH);
+                return tasks;
+            }
+
+            Node tasksNode = tasksResource.adaptTo(Node.class);
+            if (tasksNode != null) {
+                NodeIterator iterator = tasksNode.getNodes();
+                while (iterator.hasNext()) {
+                    Node taskNode = iterator.nextNode();
+                    // Skip special nodes like rep:policy
+                    if (taskNode.getName().startsWith("rep:")
+                            || taskNode.getName().startsWith("jcr:")) {
+                        continue;
+                    }
+                    // Only return non-completed tasks that have no assignee
+                    boolean isCompleted = taskNode.hasProperty("completed")
+                            && taskNode.getProperty("completed").getBoolean();
+                    boolean hasAssignee = taskNode.hasProperty("assignee")
+                            && taskNode.getProperty("assignee").getString() != null
+                            && !taskNode.getProperty("assignee").getString().isEmpty();
+
+                    if (!isCompleted && !hasAssignee) {
+                        tasks.add(new TaskImpl(taskNode));
+                        log.debug("Found unassigned task: {}", taskNode.getName());
+                    }
+                }
+            }
+
+            log.debug("Found {} unassigned tasks", tasks.size());
+            return tasks;
+
+        } catch (RepositoryException e) {
+            throw new WorkflowException("Failed to query unassigned tasks", e);
+        }
+    }
+
     private Node ensureNodePath(Session session, String path) throws RepositoryException {
         String[] parts = path.substring(1).split("/");
         Node current = session.getRootNode();
