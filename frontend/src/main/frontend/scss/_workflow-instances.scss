@@ -20,7 +20,13 @@
 // Provides monitoring UI for active workflow instances
 
 .cms-workflow-instances {
-  padding: 1rem;
+  // Remove fixed padding to allow full use of parent container
+  // Padding is now handled by the dashboard tabs content
+  
+  .cms-panel {
+    box-shadow: none; // Remove shadow when inside tabs
+    border-radius: 0; // Flatten borders when inside tabs
+  }
 }
 
 .cms-workflow-filter {
@@ -28,6 +34,8 @@
   padding: 1rem;
   background-color: #f5f5f5;
   border-radius: 4px;
+  // Keep filter section compact
+  flex-shrink: 0;
 
   &__controls {
     display: flex;

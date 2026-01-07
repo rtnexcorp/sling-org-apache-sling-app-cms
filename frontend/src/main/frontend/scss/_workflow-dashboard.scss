@@ -108,8 +108,14 @@
 
 // Workflow Dashboard Tabs
 .cms-workflow-dashboard-tabs {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 200px); // Account for page header and margins
+    min-height: 500px; // Minimum height for usability
+    
     .tabs {
         margin-bottom: 0;
+        flex-shrink: 0; // Don't allow tabs to shrink
         
         ul {
             border-bottom-color: #dbdbdb;
@@ -138,6 +144,31 @@
         border-top: none;
         border-radius: 0 0 4px 4px;
         padding: 1.5rem;
+        flex: 1; // Take remaining space
+        overflow-y: auto; // Enable vertical scrolling
+        overflow-x: hidden; // Prevent horizontal scrolling
+        
+        // Smooth scrolling
+        scroll-behavior: smooth;
+        
+        // Custom scrollbar styling (WebKit browsers)
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 0 0 4px 0;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+            
+            &:hover {
+                background: #a8a8a8;
+            }
+        }
     }
 
     &__panel {

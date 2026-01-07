@@ -22,7 +22,8 @@
 // ============================================
 
 .cms-workflow-taskinbox {
-  padding: 1rem;
+  // Remove fixed padding to allow full use of parent container when in tabs
+  // Padding handled by dashboard tabs content
 
   // Header with title and refresh
   &__header {
