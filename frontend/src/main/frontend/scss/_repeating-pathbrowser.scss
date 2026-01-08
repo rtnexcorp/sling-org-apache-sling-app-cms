@@ -3,6 +3,8 @@
 // Repeating Path Browser Component
 // Allows multiple path selections with visual browser for each item
 
+@use "variables" as *;
+
 .repeating-pathbrowser {
   &__template {
     display: none;
@@ -20,7 +22,7 @@
     }
 
     .pathbrowser-selected {
-      border: 1px solid #dbdbdb;
+      border: 1px solid $grey-lighter;
       border-radius: 4px;
 
       &__display {
@@ -38,20 +40,20 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: 0.875rem;
-        color: #363636;
+        color: $grey-darker;
       }
     }
 
     .pathbrowser-toggle {
-      border-left: 1px solid #dbdbdb;
+      border-left: 1px solid $grey-lighter;
       border-radius: 0 4px 4px 0;
     }
 
     .pathbrowser-panel {
       position: absolute;
       z-index: 100;
-      background: white;
-      border: 1px solid #dbdbdb;
+      background: $white;
+      border: 1px solid $grey-lighter;
       border-radius: 4px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       margin-top: 0.25rem;
@@ -73,7 +75,7 @@
 .pathbrowser-selected--inline {
   display: flex;
   align-items: stretch;
-  background: white;
+  background: $white;
 
   .pathbrowser-selected__display {
     flex: 1;

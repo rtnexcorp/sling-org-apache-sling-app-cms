@@ -3,6 +3,9 @@
 // Move/Copy Component Styles
 // Provides styling for move/copy operations and drag-and-drop functionality
 
+@use "sass:color";
+@use "variables" as *;
+
 // Draggable item state
 .is-dragging {
   opacity: 0.5;
@@ -11,8 +14,8 @@
 
 // Drop target states
 .is-drop-target {
-  background-color: rgba(72, 95, 199, 0.1);
-  border: 2px dashed #485fc7;
+  background-color: color.scale($link, $alpha: -90%);
+  border: 2px dashed $link;
 
   &::after {
     content: 'Drop here';
@@ -21,8 +24,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 0.5rem 1rem;
-    background: rgba(72, 95, 199, 0.9);
-    color: white;
+    background: color.scale($link, $alpha: -10%);
+    color: $white;
     border-radius: 4px;
     font-size: 0.875rem;
     pointer-events: none;
@@ -45,7 +48,7 @@
     position: relative;
 
     &.is-drop-target {
-      background-color: rgba(72, 95, 199, 0.1);
+      background-color: color.scale($link, $alpha: -90%);
     }
   }
 }
@@ -65,8 +68,8 @@
     position: relative;
 
     &.is-drop-target {
-      border: 2px dashed #485fc7;
-      background-color: rgba(72, 95, 199, 0.1);
+      border: 2px dashed $link;
+      background-color: color.scale($link, $alpha: -90%);
     }
   }
 }
@@ -76,7 +79,7 @@
   .destination-preview {
     margin-top: 0.5rem;
     padding: 0.5rem;
-    background-color: #f5f5f5;
+    background-color: $white-ter;
     border-radius: 4px;
     font-family: monospace;
     font-size: 0.875rem;
@@ -91,8 +94,8 @@
   .operation-info {
     margin-top: 1rem;
     padding: 1rem;
-    border-left: 4px solid #485fc7;
-    background-color: #f5f5f5;
+    border-left: 4px solid $link;
+    background-color: $white-ter;
 
     &.operation-move::before {
       content: 'Move: ';
@@ -112,9 +115,9 @@
   pointer-events: none;
   z-index: 1000;
   opacity: 0.8;
-  background: white;
+  background: $white;
   padding: 0.5rem 1rem;
-  border: 1px solid #dbdbdb;
+  border: 1px solid $grey-lighter;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }

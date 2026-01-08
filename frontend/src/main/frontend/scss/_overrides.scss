@@ -18,6 +18,7 @@
 @charset "utf-8";
 
 @use "sass:color";
+@use "variables" as *;
 
 // Brand Colors
 $indigo: #282661;
@@ -45,4 +46,4 @@ $rainbow-gradient: linear-gradient(
 // Bulma 1.0 CSS variable overrides
 // These will be applied after Bulma loads
 $selected: $violet;
-$menu-item-hover-background-color: hsl(0, 0%, 86%);
+$menu-item-hover-background-color: $grey-lighter;

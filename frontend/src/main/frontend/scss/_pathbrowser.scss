@@ -3,6 +3,9 @@
 // Path Browser Component Styles
 // macOS Finder-like visual folder browser for path selection
 
+@use "sass:color";
+@use "variables" as *;
+
 .pathbrowser-container {
   position: relative;
 }
@@ -13,14 +16,14 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
-  border: 1px solid #dbdbdb;
+  border: 1px solid $grey-lighter;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: $white;
   cursor: pointer;
   transition: border-color 0.2s ease;
 
   &:hover {
-    border-color: #b5b5b5;
+    border-color: $grey-light;
   }
 
   &__display {
@@ -41,7 +44,7 @@
   }
 
   .jam-folder {
-    color: #485fc7;
+    color: $link;
   }
 }
 
@@ -60,8 +63,8 @@
   left: 0;
   right: 0;
   margin-top: 0.25rem;
-  background: white;
-  border: 1px solid #dbdbdb;
+  background: $white;
+  border: 1px solid $grey-lighter;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 100;
@@ -77,8 +80,8 @@
 // Breadcrumb navigation
 .pathbrowser-breadcrumb {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #f5f5f5;
-  background-color: #fafafa;
+  border-bottom: 1px solid $white-ter;
+  background-color: $white-ter;
   flex-shrink: 0;
 
   &__list {
@@ -89,17 +92,17 @@
       font-size: 0.875rem;
 
       a {
-        color: #485fc7;
+        color: $link;
         padding: 0.25rem 0.5rem;
         border-radius: 3px;
 
         &:hover {
-          background-color: rgba(72, 95, 199, 0.1);
+          background-color: color.scale($link, $alpha: -90%);
         }
       }
 
       &.is-active a {
-        color: #363636;
+        color: $grey-darker;
         font-weight: 600;
       }
     }
@@ -145,31 +148,31 @@
   border-left: 3px solid transparent;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: $white-ter;
   }
 
   &.is-selected {
-    background-color: #e8f4fd;
-    border-left-color: #485fc7;
+    background-color: $info-light;
+    border-left-color: $link;
 
     .pathbrowser-item__name {
       font-weight: 600;
-      color: #485fc7;
+      color: $link;
     }
   }
 
   &.is-container {
     .jam {
-      color: #485fc7;
+      color: $link;
     }
   }
 
   .jam-folder {
-    color: #485fc7;
+    color: $link;
   }
 
   .jam-document {
-    color: #7a7a7a;
+    color: $grey;
   }
 
   &__name {
@@ -182,8 +185,8 @@
 
   &__type {
     font-size: 0.75rem;
-    color: #7a7a7a;
-    background-color: #f5f5f5;
+    color: $grey;
+    background-color: $white-ter;
     padding: 0.125rem 0.5rem;
     border-radius: 3px;
   }
@@ -195,8 +198,8 @@
   justify-content: flex-end;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  border-top: 1px solid #f5f5f5;
-  background-color: #fafafa;
+  border-top: 1px solid $white-ter;
+  background-color: $white-ter;
   flex-shrink: 0;
 }
 

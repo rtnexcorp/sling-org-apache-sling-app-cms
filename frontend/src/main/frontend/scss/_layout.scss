@@ -4,6 +4,8 @@
 // Provides layout-related styles for the CMS interface including containers,
 // sections, and overall page structure
 
+@use "variables" as *;
+
 // Bulma breakpoints (for compatibility)
 $tablet: 769px;
 $mobile-max: 768px;
@@ -61,7 +63,7 @@ body.cms {
 
 .sidebar {
   @media screen and (min-width: $tablet) {
-    border-right: 0.5px solid hsl(0, 0%, 86%);
+    border-right: 0.5px solid $grey-lighter;
   }
 }
 

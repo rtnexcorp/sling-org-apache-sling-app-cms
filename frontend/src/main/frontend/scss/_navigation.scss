@@ -20,7 +20,7 @@
   letter-spacing: normal;
   display: block;
   padding: 0.25em 0;
-  color: #363636;
+  color: $grey-darker;
 }
 
 .menu-label:not(:last-child) {
@@ -29,12 +29,12 @@
 
 .menu .is-selected,
 .table tr.is-selected {
-  background-color: #b3b4b5;
-  color: hsl(0, 0%, 21%);
+  background-color: $grey-light;
+  color: $grey-darker;
 }
 
 .navbar {
-  border-bottom: 0.5px solid hsl(0, 0%, 86%);
+  border-bottom: 0.5px solid $grey-lighter;
 }
 
 nav .level-left,

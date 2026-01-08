@@ -3,6 +3,8 @@
 // Tiles Component Styles
 // Provides styling for tile cards used in dashboards (Publication, etc.)
 
+@use "variables" as *;
+
 .scroll-container.contentnav {
   overflow-y: auto;
   overflow-x: hidden;
@@ -33,7 +35,7 @@
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    border-color: #9E2165;
+    border-color: $primary;
   }
 
   .card-image {
@@ -41,7 +43,7 @@
     overflow: hidden;
 
     .image {
-      background-color: #f5f5f5;
+      background-color: $white-ter;
 
       img {
         transition: transform 0.3s ease;
@@ -60,13 +62,13 @@
     .card-footer-item {
       font-size: 0.95rem;
       font-weight: 600;
-      color: #363636;
+      color: $grey-darker;
       padding: 0.75rem 1rem;
       transition: color 0.3s ease;
 
       &:hover {
-        color: #9E2165;
-        background-color: #f9f9f9;
+        color: $primary;
+        background-color: $white-ter;
       }
     }
   }
