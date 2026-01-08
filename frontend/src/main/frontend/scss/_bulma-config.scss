@@ -20,23 +20,16 @@
 
 @charset "utf-8";
 
-// Brand Colors
-$indigo: #282661;
-$violet: #662F8F;
-$magenta: #9E2165;
-$crimson: #CB2138;
-$orange: #B74500;
-$goldenrod: #F79A25;
-$gray: #6D6E71;
-$red: #D22128;
+// Import shared variables
+@use "variables" as vars;
 
 // Bulma variable customization (Bulma 1.0 style)
 @use "../node_modules/bulma/sass" with (
   $family-sans-serif: ("Open Sans", sans-serif),
-  $link: $indigo,
-  $primary: $magenta,
-  $warning: $orange,
-  $danger: $crimson,
+  $link: vars.$link,
+  $primary: vars.$primary,
+  $warning: vars.$warning,
+  $danger: vars.$danger,
   $navbar-height: 5rem,
   $navbar-item-img-max-height: 4rem,
   $modal-z: 2000

@@ -18,28 +18,54 @@
  */-->
 <sly data-sly-use.filter="org.apache.sling.cms.core.models.ContentFilter"/>
 
-<div class="content-filter" data-component="content-filter">
-    <div class="content-filter__controls">
-        <!--/* Type Filter */-->
-        <div class="select is-small">
-            <select data-content-type-filter aria-label="${'Filter by type' @ i18n}">
-                <option value="">${'All Types' @ i18n}</option>
-                <option value="image/">${'Images' @ i18n}</option>
-                <option value="video/">${'Videos' @ i18n}</option>
-                <option value="application/pdf,application/msword,application/vnd">${'Documents' @ i18n}</option>
-                <option value="folder">${'Folders' @ i18n}</option>
-            </select>
-        </div>
+<div class="content-filter ${filter.workflowMode ? 'cms-workflow-filter' : ''}" data-component="content-filter">
+    <div class="${filter.workflowMode ? 'cms-workflow-filter__controls' : 'content-filter__controls'}">
+        <!--/* Render configured filters */-->
+        <sly data-sly-list.config="${filter.filterConfigs}">
+            <div class="cms-form-group">
+                <label class="cms-form-label" for="${config.id}">
+                    <span class="cms-icon cms-icon--${config.icon}"></span>
+                    ${config.label @ i18n}
+                </label>
+                <div class="cms-select">
+                    <select id="${config.id}" 
+                            data-sly-attribute.data-filter="${config.dataAttribute}"
+                            data-sly-attribute.data-content-type-filter="${config.id == 'content-type-filter'}"
+                            data-sly-attribute.data-content-tag-filter="${config.id == 'content-tag-filter'}"
+                            class="cms-select__input"
+                            aria-label="${config.label @ i18n}">
+                        <!--/* Render static options */-->
+                        <sly data-sly-list.option="${config.options}">
+                            <option value="${option.value}">${option.label @ i18n}</option>
+                        </sly>
+                        
+                        <!--/* For workflow process type filter - dynamic options loaded via JS */-->
+                        <sly data-sly-test="${config.dynamicOptions && filter.workflowMode}">
+                            <!--/* Dynamic options loaded by JavaScript from monitor model */-->
+                        </sly>
+                    </select>
+                </div>
+            </div>
+        </sly>
         
-        <!--/* Taxonomy Filter */-->
-        <sly data-sly-test="${filter.hasTaxonomyOptions}">
-            <div class="select is-small">
-                <select data-content-tag-filter aria-label="${'Filter by tag' @ i18n}">
-                    <option value="">${'All Tags' @ i18n}</option>
-                    <sly data-sly-list.option="${filter.taxonomyOptions}">
-                        <option value="${option.path}">${option.title}</option>
-                    </sly>
-                </select>
+        <!--/* Taxonomy Filter (Content Mode Only) */-->
+        <sly data-sly-test="${filter.contentMode && filter.hasTaxonomyOptions}">
+            <div class="cms-form-group">
+                <label class="cms-form-label" for="content-tag-filter">
+                    <span class="cms-icon cms-icon--folder"></span>
+                    ${'Filter by Tag' @ i18n}
+                </label>
+                <div class="cms-select">
+                    <select id="content-tag-filter"
+                            data-content-tag-filter 
+                            class="cms-select__input"
+                            aria-label="${'Filter by tag' @ i18n}">
+                        <option value="">${'All Tags' @ i18n}</option>
+                        <sly data-sly-list.option="${filter.taxonomyOptions}">
+                            <option value="${option.path}">${option.title}</option>
+                        </sly>
+                    </select>
+                </div>
             </div>
         </sly>
     </div>

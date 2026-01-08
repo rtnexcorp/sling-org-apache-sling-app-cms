@@ -30,6 +30,11 @@
                 "depth": 1,
                 "rootTitle": "Static Content"
             },
+           
+            "contentfilter": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/cms/contentfilter"
+            },
             "contenttable": {
                 "jcr:primaryType": "nt:unstructured",
                 "sling:resourceType": "sling-cms/components/cms/contentlayout",

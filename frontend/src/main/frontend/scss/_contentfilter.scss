@@ -26,15 +26,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 1rem;
-  padding: 0.5rem 0;
+  padding: 0.75rem;
+  background-color: $white-ter;
+  border-radius: 6px;
+  border: 1px solid $grey-lighter;
 
   &__controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
+    gap: 1rem;
+    align-items: flex-start;
+    width: 100%;
   }
 
   &__label {
@@ -43,11 +47,34 @@
     margin-right: 0.25rem;
   }
 
+  .cms-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 200px;
+    flex: 1;
+  }
+
+  .cms-form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $grey-darker;
+    margin-bottom: 0.25rem;
+
+    .cms-icon {
+      color: $primary;
+      font-size: 1rem;
+    }
+  }
+
   // Compact select styling
-  .select {
-    &.is-small select {
-      font-size: 0.75rem;
-      padding-right: 2rem;
+  .cms-select--small {
+    .cms-select__input {
+      font-size: 0.875rem;
+      padding: 0.375rem 2rem 0.375rem 0.625rem;
     }
   }
 }

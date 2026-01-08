@@ -17,43 +17,48 @@
  * under the License.
  */
 
-// Main CMS stylesheet - imports all component styles
+// Content Search Component
+// Provides search input UI for content navigation (typically in sidebar)
 
-// Core dependencies
-@use "bulma-config";
-@use "fonts";
-@use "overrides";
+@use "sass:color";
 @use "variables" as *;
 
-// Framework abstraction layer
-@use "grid-abstraction";
+.cms-content-search {
+  margin-bottom: 1rem;
 
-// Feature-specific styles (alphabetically ordered)
-@use "ai-suggest";
-@use "ai-taxonomy";
-@use "assets";
-@use "cards";
-@use "contentfilter";
-@use "contentsearch";
-@use "forms";
-@use "fragment";
-@use "layout";
-@use "modals";
-@use "movecopy";
-@use "navigation";
-@use "pathbrowser";
-@use "repeating-pathbrowser";
-@use "preview";
-@use "publication";
-@use "search";
-@use "tables";
-@use "tiles";
-@use "tiptap";
-@use "toggle";
-@use "typography";
-@use "utilities";
-@use "workflow-dashboard";
-@use "workflow-designer";
-@use "workflow-instances";
-@use "workflow-startform";
-@use "workflow-taskinbox";
+  .cms-control {
+    position: relative;
+  }
+
+  .cms-form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $grey-darker;
+    margin-bottom: 0.5rem;
+
+    .cms-icon {
+      color: $primary;
+      font-size: 1rem;
+    }
+  }
+
+  .cms-input {
+    padding-left: 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  .cms-control--has-icons-left {
+    .cms-icon {
+      position: absolute;
+      top: 50%;
+      left: 0.75rem;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: $grey-light;
+      margin-top: 1.25rem; // Offset for label
+    }
+  }
+}
