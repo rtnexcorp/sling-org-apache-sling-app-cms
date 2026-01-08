@@ -112,9 +112,27 @@ public class TaskActionServlet extends SlingAllMethodsServlet {
 
                 // Include publishing-related variables for task details visibility
                 Map<String, Object> publishInfo = new HashMap<>();
+
+                // Get content path for building author URL
+                String contentPath = null;
+                if (variables.containsKey("contentPath")) {
+                    contentPath = (String) variables.get("contentPath");
+                    publishInfo.put("contentPath", contentPath);
+                }
+
+                // Get published URL (renderer URL from port 8083)
                 if (variables.containsKey("publishedUrl")) {
                     publishInfo.put("publishedUrl", variables.get("publishedUrl"));
                 }
+
+                // Build author URL for the content path accessible from author instance
+                if (contentPath != null && !contentPath.isEmpty()) {
+                    // Remove /jcr:content suffix if present
+                    String cleanPath = contentPath.replaceAll("/jcr:content.*$", "");
+                    String authorUrl = cleanPath + ".html";
+                    publishInfo.put("authorUrl", authorUrl);
+                }
+
                 if (variables.containsKey("publishedPath")) {
                     publishInfo.put("publishedPath", variables.get("publishedPath"));
                 }
@@ -132,9 +150,6 @@ public class TaskActionServlet extends SlingAllMethodsServlet {
                 }
                 if (variables.containsKey("publishedTo")) {
                     publishInfo.put("publishedTo", variables.get("publishedTo"));
-                }
-                if (variables.containsKey("contentPath")) {
-                    publishInfo.put("contentPath", variables.get("contentPath"));
                 }
 
                 if (!publishInfo.isEmpty()) {

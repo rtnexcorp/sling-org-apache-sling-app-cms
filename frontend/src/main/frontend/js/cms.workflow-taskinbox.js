@@ -348,9 +348,18 @@
                 <code>${info.contentPath}</code>
               </div>
             ` : ''}
+            ${info.authorUrl ? `
+              <div class="cms-detail-row">
+                <label>View on Author:</label>
+                <a href="${info.authorUrl}" target="_blank" class="cms-link cms-link--primary">
+                  <span class="icon"><em class="jam jam-external-link"></em></span>
+                  ${info.authorUrl}
+                </a>
+              </div>
+            ` : ''}
             ${info.publishedUrl ? `
               <div class="cms-detail-row">
-                <label>Published URL:</label>
+                <label>Published URL (Renderer):</label>
                 <a href="${info.publishedUrl}" target="_blank" class="cms-link">${info.publishedUrl}</a>
               </div>
             ` : ''}

@@ -117,12 +117,17 @@
                                                 ${'Reject' @ i18n}
                                             </button>
                                             <button class="cms-button cms-button--small cms-button--secondary"
+                                                    data-action="view-task"
+                                                    data-task-id="${task.id}"
+                                                    title="${'View details' @ i18n}">
+                                                <span class="icon"><em class="jam jam-eye"></em></span>
+                                            </button>
+                                            <button class="cms-button cms-button--small cms-button--secondary"
                                                     data-action="delegate-task"
                                                     data-task-id="${task.id}"
                                                     data-task-name="${task.name}"
                                                     title="${'Delegate' @ i18n}">
                                                 <span class="icon"><em class="jam jam-share-alt"></em></span>
-                                                ${'Delegate' @ i18n}
                                             </button>
                                             <button class="cms-button cms-button--small"
                                                     data-action="unclaim-task"
@@ -178,12 +183,10 @@
                                     </td>
                                     <td>
                                         <div class="cms-task-groups">
-                                            <sly data-sly-test="${task.candidateGroups}">
-                                                <sly data-sly-list.group="${task.candidateGroups}">
-                                                    <span class="cms-badge cms-badge--secondary">${group}</span>
-                                                </sly>
+                                            <sly data-sly-test="${task.candidateGroup}">
+                                                <span class="cms-badge cms-badge--secondary">${task.candidateGroup}</span>
                                             </sly>
-                                            <sly data-sly-test="${!task.candidateGroups}">
+                                            <sly data-sly-test="${!task.candidateGroup}">
                                                 <span class="cms-text--muted">-</span>
                                             </sly>
                                         </div>
