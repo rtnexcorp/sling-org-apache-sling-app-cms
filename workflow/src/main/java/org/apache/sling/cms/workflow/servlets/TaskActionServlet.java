@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.cms.workflow.RuntimeService;
 import org.apache.sling.cms.workflow.Task;
 import org.apache.sling.cms.workflow.TaskService;
 import org.osgi.service.component.annotations.Component;
@@ -67,6 +68,9 @@ public class TaskActionServlet extends SlingAllMethodsServlet {
     @Reference
     private TaskService taskService;
 
+    @Reference
+    private RuntimeService runtimeService;
+
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
             throws ServletException, IOException {
@@ -100,6 +104,48 @@ public class TaskActionServlet extends SlingAllMethodsServlet {
                     task.getCreateTime() != null ? task.getCreateTime().getTime() : null);
             result.put("priority", task.getPriority());
             result.put("candidateGroup", task.getCandidateGroup());
+
+            // Fetch workflow variables to provide context about published content
+            try {
+                runtimeService.setResolverContext(request.getResourceResolver());
+                Map<String, Object> variables = runtimeService.getVariables(task.getProcessInstanceId());
+
+                // Include publishing-related variables for task details visibility
+                Map<String, Object> publishInfo = new HashMap<>();
+                if (variables.containsKey("publishedUrl")) {
+                    publishInfo.put("publishedUrl", variables.get("publishedUrl"));
+                }
+                if (variables.containsKey("publishedPath")) {
+                    publishInfo.put("publishedPath", variables.get("publishedPath"));
+                }
+                if (variables.containsKey("publishCount")) {
+                    publishInfo.put("publishCount", variables.get("publishCount"));
+                }
+                if (variables.containsKey("failureCount")) {
+                    publishInfo.put("failureCount", variables.get("failureCount"));
+                }
+                if (variables.containsKey("deepPublish")) {
+                    publishInfo.put("deepPublish", variables.get("deepPublish"));
+                }
+                if (variables.containsKey("publishStatus")) {
+                    publishInfo.put("publishStatus", variables.get("publishStatus"));
+                }
+                if (variables.containsKey("publishedTo")) {
+                    publishInfo.put("publishedTo", variables.get("publishedTo"));
+                }
+                if (variables.containsKey("contentPath")) {
+                    publishInfo.put("contentPath", variables.get("contentPath"));
+                }
+
+                if (!publishInfo.isEmpty()) {
+                    result.put("publishInfo", publishInfo);
+                }
+
+                runtimeService.clearResolverContext();
+            } catch (Exception e) {
+                LOG.warn("Could not fetch workflow variables for task {}", taskId, e);
+                // Continue without variables - not critical
+            }
 
             out.println(GSON.toJson(result));
 
