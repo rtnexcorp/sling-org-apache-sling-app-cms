@@ -33,9 +33,11 @@
 
 .cms-workflow-filter {
   margin-bottom: 1.5rem;
-  padding: 1rem;
+  padding: 1.25rem;
   background-color: $white-ter;
-  border-radius: 4px;
+  border-radius: 6px;
+  border: 1px solid $grey-lighter;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   // Keep filter section compact
   flex-shrink: 0;
 
@@ -43,7 +45,14 @@
     display: flex;
     gap: 1.5rem;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: flex-start;
+
+    // Responsive: stack vertically on mobile
+    @media screen and (max-width: $mobile-max) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
   }
 }
 
@@ -51,7 +60,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 200px;
+  min-width: 220px;
+  flex: 1;
+
+  // Mobile: full width
+  @media screen and (max-width: $mobile-max) {
+    min-width: 100%;
+  }
 }
 
 .cms-form-label {
@@ -60,7 +75,13 @@
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: $grey-dark;
+  color: $grey-darker;
+  margin-bottom: 0.25rem;
+
+  .cms-icon {
+    color: $primary;
+    font-size: 1rem;
+  }
 }
 
 .cms-select {

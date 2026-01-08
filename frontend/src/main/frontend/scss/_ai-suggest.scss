@@ -18,8 +18,8 @@
 // AI Suggestion Field Component
 // Provides AI-powered suggestions for text, textarea, richtext, and select fields
 
-// Brand color from _bulma-config.scss
-$magenta: #9E2165;
+@use "sass:color";
+@use "variables" as *;
 
 .cms-ai-suggest-field {
   position: relative;
@@ -38,9 +38,9 @@ $magenta: #9E2165;
 
   .cms-ai-suggest-btn {
     flex-shrink: 0;
-    border: 1px solid $magenta;
+    border: 1px solid $primary;
     background: transparent;
-    color: $magenta;
+    color: $primary;
     padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
     cursor: pointer;
@@ -51,12 +51,12 @@ $magenta: #9E2165;
     white-space: nowrap;
 
     &:hover {
-      background-color: lighten($magenta, 45%);
-      color: darken($magenta, 10%);
+      background-color: color.scale($primary, $lightness: 45%);
+      color: color.scale($primary, $lightness: -10%);
     }
 
     &:focus {
-      outline: 2px solid $magenta;
+      outline: 2px solid $primary;
       outline-offset: 2px;
     }
 
@@ -111,8 +111,8 @@ $magenta: #9E2165;
       border: 1px solid transparent;
 
       &:hover {
-        background-color: lighten($magenta, 45%);
-        border-color: lighten($magenta, 30%);
+        background-color: color.scale($primary, $lightness: 45%);
+        border-color: color.scale($primary, $lightness: 30%);
       }
     }
 
@@ -145,9 +145,9 @@ $magenta: #9E2165;
 // Specific styling for AI suggestion buttons in asset metadata editor
 .ai-suggest-button {
   flex-shrink: 0;
-  border: 1px solid $magenta;
+  border: 1px solid $primary;
   background: transparent;
-  color: $magenta;
+  color: $primary;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -156,21 +156,21 @@ $magenta: #9E2165;
   transition: all 0.2s ease;
 
   .icon {
-    color: $magenta;
+    color: $primary;
   }
 
   &:hover {
-    background-color: lighten($magenta, 50%);
-    border-color: darken($magenta, 5%);
-    color: darken($magenta, 10%);
+    background-color: color.scale($primary, $lightness: 50%);
+    border-color: color.scale($primary, $lightness: -5%);
+    color: color.scale($primary, $lightness: -10%);
 
     .icon {
-      color: darken($magenta, 10%);
+      color: color.scale($primary, $lightness: -10%);
     }
   }
 
   &:focus {
-    box-shadow: 0 0 0 0.125em rgba($magenta, 0.25);
+    box-shadow: 0 0 0 0.125em rgba($primary, 0.25);
   }
 
   &.is-loading {
@@ -179,7 +179,7 @@ $magenta: #9E2165;
 
     &::after {
       animation: spinAround 500ms infinite linear;
-      border: 2px solid $magenta;
+      border: 2px solid $primary;
       border-radius: 50%;
       border-right-color: transparent;
       border-top-color: transparent;

@@ -19,6 +19,9 @@
 
 /* Content Filter Component - Provides type and taxonomy filtering UI for content navigation */
 
+@use "sass:color";
+@use "variables" as *;
+
 .content-filter {
   display: flex;
   flex-wrap: wrap;
@@ -36,7 +39,7 @@
 
   &__label {
     font-size: 0.875rem;
-    color: #666;
+    color: $grey;
     margin-right: 0.25rem;
   }
 
@@ -50,7 +53,7 @@
 }
 
 // Responsive adjustments
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $mobile-max) {
   .content-filter {
     &__controls {
       flex-basis: 100%;

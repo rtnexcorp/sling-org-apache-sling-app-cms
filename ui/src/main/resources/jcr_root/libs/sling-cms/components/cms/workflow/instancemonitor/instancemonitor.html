@@ -37,7 +37,7 @@
                         <span class="cms-icon cms-icon--filter"></span>
                         ${'Filter by Process' @ i18n}
                     </label>
-                    <div class="cms-select cms-select--small">
+                    <div class="cms-select">
                         <select id="filter-process-type" data-filter="process-type" class="cms-select__input">
                             <option value="">${'All Processes' @ i18n}</option>
                             <sly data-sly-list.type="${monitor.processTypes}">
@@ -52,7 +52,7 @@
                         <span class="cms-icon cms-icon--check"></span>
                         ${'Filter by Status' @ i18n}
                     </label>
-                    <div class="cms-select cms-select--small">
+                    <div class="cms-select">
                         <select id="filter-status" data-filter="status" class="cms-select__input">
                             <option value="">${'All Status' @ i18n}</option>
                             <option value="active">${'Active' @ i18n}</option>
