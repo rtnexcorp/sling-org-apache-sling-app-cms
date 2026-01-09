@@ -16,17 +16,14 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   */-->
-<div class="cms-content-search">
+<div class="contentnav-search">
     <div class="cms-control cms-control--has-icons-left">
-        <label class="cms-form-label" for="search-term">
-            <span class="cms-icon cms-icon--search"></span>
-            ${'Search' @ i18n}
-        </label>
-        <input class="cms-input" 
+        <input class="cms-input cms-input--small" 
                type="text" 
                name="search" 
                id="search-term"
-               placeholder="${'Search content...' @ i18n}" />
-        <span class="cms-icon cms-icon--search"></span>
+               placeholder="${'Search content...' @ i18n}" 
+               aria-label="${'Search' @ i18n}" />
+        <span class="cms-icon cms-icon--small cms-icon--search"></span>
     </div>
 </div>

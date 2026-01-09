@@ -36,8 +36,23 @@
             </div>
         </div>
     </div>
-    <sly data-sly-test="${properties.includeSwitcher}">
-        <div class="level-right">
+    <div class="level-right">
+        <!--/* Content Search */-->
+        <sly data-sly-test="${properties.includeSearch}">
+            <div class="level-item">
+                <sly data-sly-resource="${'contentsearch' @ resourceType='sling-cms/components/cms/contentsearch'}"></sly>
+            </div>
+        </sly>
+        
+        <!--/* Content Filter */-->
+        <sly data-sly-test="${properties.includeFilter}">
+            <div class="level-item">
+                <sly data-sly-resource="${'contentfilter' @ resourceType='sling-cms/components/cms/contentfilter'}"></sly>
+            </div>
+        </sly>
+        
+        <!--/* Layout Switcher */-->
+        <sly data-sly-test="${properties.includeSwitcher}">
             <div class="level-item">
                 <div class="field">
                     <div class="control has-icons-left">
@@ -61,7 +76,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </sly>
+        </sly>
+    </div>
 </nav>
 </sly>

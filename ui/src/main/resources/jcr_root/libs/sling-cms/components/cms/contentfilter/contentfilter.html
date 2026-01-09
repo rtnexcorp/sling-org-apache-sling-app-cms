@@ -18,15 +18,17 @@
  */-->
 <sly data-sly-use.filter="org.apache.sling.cms.core.models.ContentFilter"/>
 
-<div class="content-filter ${filter.workflowMode ? 'cms-workflow-filter' : ''}" data-component="content-filter">
+<div class="${filter.workflowMode ? 'cms-workflow-filter' : ''}" data-component="content-filter">
     <div class="${filter.workflowMode ? 'cms-workflow-filter__controls' : 'content-filter__controls'}">
         <!--/* Render configured filters */-->
         <sly data-sly-list.config="${filter.filterConfigs}">
-            <div class="cms-form-group">
+            <div>
+              <!--
                 <label class="cms-form-label" for="${config.id}">
                     <span class="cms-icon cms-icon--${config.icon}"></span>
                     ${config.label @ i18n}
                 </label>
+                -->
                 <div class="cms-select">
                     <select id="${config.id}" 
                             data-sly-attribute.data-filter="${config.dataAttribute}"
@@ -50,11 +52,12 @@
         
         <!--/* Taxonomy Filter (Content Mode Only) */-->
         <sly data-sly-test="${filter.contentMode && filter.hasTaxonomyOptions}">
-            <div class="cms-form-group">
-                <label class="cms-form-label" for="content-tag-filter">
+            <div>
+             <!--  <label class="cms-form-label" for="content-tag-filter">
                     <span class="cms-icon cms-icon--folder"></span>
                     ${'Filter by Tag' @ i18n}
                 </label>
+                --> 
                 <div class="cms-select">
                     <select id="content-tag-filter"
                             data-content-tag-filter 

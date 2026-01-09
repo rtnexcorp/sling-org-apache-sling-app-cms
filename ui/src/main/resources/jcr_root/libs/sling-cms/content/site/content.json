@@ -11,6 +11,8 @@
                 "jcr:primaryType": "nt:unstructured",
                 "sling:resourceType": "sling-cms/components/cms/contentactions",
                 "includeSwitcher": true,
+                "includeSearch": true,
+                "includeFilter": true,
                 "actions": {
                     "page": {
                         "jcr:primaryType": "nt:unstructured",
@@ -36,10 +38,6 @@
                 "rootTitle": "Sites"
             },
            
-            "contentfilter": {
-                "jcr:primaryType": "nt:unstructured",
-                "sling:resourceType": "sling-cms/components/cms/contentfilter"
-            },
             "contenttable": {
                 "jcr:primaryType": "nt:unstructured",
                 "sling:resourceType": "sling-cms/components/cms/contentlayout",
