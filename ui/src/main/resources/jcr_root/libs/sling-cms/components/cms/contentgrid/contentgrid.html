@@ -35,33 +35,7 @@
                                  alt="${item.name @ context='attribute'}">
                         </figure>
                         <div class="is-vhidden cell-actions">
-                            <sly data-sly-list.action="${item.actions}">
-                                <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/modal'}">
-                                    <a class="button Fetch-Modal" 
-                                       data-title="${action.title @ context='attribute'}" 
-                                       data-path="${(action.ajaxPath || '.Main-Content form') @ context='attribute'}" 
-                                       href="${action.prefix @ context='attribute'}${action.itemPath @ context='attribute'}${action.suffix @ context='attribute'}" 
-                                       title="${action.title @ context='attribute'}">
-                                        <span class="jam jam-${action.icon @ context='attribute'}">
-                                            <span class="is-sr-only">
-                                                ${action.title @ context='html'}
-                                            </span>
-                                        </span>
-                                    </a>
-                                </sly>
-                                <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/basic'}">
-                                    <a class="button" 
-                                       target="${action.openInNew ? '_blank' : '_self'}"
-                                       href="${action.prefix @ context='attribute'}${action.itemPath @ context='attribute'}${action.suffix @ context='attribute'}" 
-                                       title="${action.title @ context='attribute'}">
-                                        <span class="jam jam-${action.icon @ context='attribute'}">
-                                            <span class="is-sr-only">
-                                                ${action.title @ context='html'}
-                                            </span>
-                                        </span>
-                                    </a>
-                                </sly>
-                            </sly>
+                            <sly data-sly-resource="${item.path @ resourceType='sling-cms/components/cms/columns/actions', requestAttributes=item.actionsRequestAttributes}"></sly>
                         </div>
                     </div>
                     <footer class="card-footer">

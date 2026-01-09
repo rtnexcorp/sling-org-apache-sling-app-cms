@@ -110,6 +110,8 @@ nav.pagination + nav.level,
 
 // Ensure action cells in tables are properly hidden until row selection
 .contentnav__item {
+  position: relative; // Add position context for absolute children
+  
   .is-vhidden {
     position: absolute !important;
     top: -9999px !important;
@@ -120,5 +122,27 @@ nav.pagination + nav.level,
     position: static !important;
     top: auto !important;
     left: auto !important;
+  }
+  
+  // For grid view cards - show actions as overlay without changing card size
+  &.is-selected .card-image .cell-actions {
+    position: absolute !important;
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+    left: auto !important;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0.25rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+    
+    .button {
+      margin: 0;
+      padding: 0.5rem;
+      min-width: auto;
+    }
   }
 }

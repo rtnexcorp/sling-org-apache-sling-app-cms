@@ -284,6 +284,21 @@ public class ContentGridModel {
             PublicationManager pm = resolver.adaptTo(PublicationManager.class);
             return pm != null && "CONTENT_DISTRIBUTION".equals(pm.getPublicationMode());
         }
+
+        /**
+         * Get request attributes for the actions column component
+         * This includes the colConfigPath needed by ActionsColumnModel
+         * @return ValueMap with colConfigPath attribute for this item's type
+         */
+        public ValueMap getActionsRequestAttributes() {
+            java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+            String primaryType = getPrimaryType();
+            Resource actionsConfig = configResource.getChild("types/" + primaryType + "/columns/actions");
+            if (actionsConfig != null) {
+                attrs.put("colConfigPath", actionsConfig.getPath());
+            }
+            return new org.apache.sling.api.wrappers.ValueMapDecorator(attrs);
+        }
     }
 
     /**
