@@ -161,11 +161,7 @@ rava.bind('.contentnav .contentnav__item', {
         tr.classList.remove('is-selected');
       });
       this.classList.add('is-selected');
-      if (document.querySelector('.actions-target') && this.querySelector('.cell-actions')){
-        const actionsTarget = document.querySelector('.actions-target');
-        const cellActions = this.querySelector('.cell-actions');
-        window.SlingCMS.safeSetInnerHTML(actionsTarget, cellActions.innerHTML);
-      }
+      // Actions copying disabled - no longer populating actions-target on click
     },
     dblclick() {
       if (this.querySelector('.item-link')) {
