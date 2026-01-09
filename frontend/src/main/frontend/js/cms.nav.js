@@ -161,7 +161,47 @@ rava.bind('.contentnav .contentnav__item', {
         tr.classList.remove('is-selected');
       });
       this.classList.add('is-selected');
-      // Actions copying disabled - no longer populating actions-target on click
+      
+      // Add "more" button if there are more than 3 action buttons
+      // Works for both grid view (.cell-actions) and table view (td.is-vhidden)
+      const cellActions = this.querySelector('.cell-actions') || this.querySelector('td.is-vhidden') || this.querySelector('td.cms-table__cell--visible-on-hover');
+      
+      if (cellActions) {
+        const buttons = cellActions.querySelectorAll('.button:not(.cell-actions-more)');
+        const existingMoreButton = cellActions.querySelector('.cell-actions-more');
+        
+        // Remove existing more button if present
+        if (existingMoreButton) {
+          existingMoreButton.remove();
+        }
+        
+        // Add more button if there are more than 3 buttons
+        if (buttons.length > 3) {
+          const moreButton = document.createElement('button');
+          moreButton.className = 'button cell-actions-more';
+          moreButton.title = 'Show all actions';
+          moreButton.setAttribute('type', 'button');
+          moreButton.innerHTML = '<span class="jam jam-menu"><span class="is-sr-only">More actions</span></span>';
+          
+          moreButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            cellActions.classList.toggle('is-expanded');
+            const icon = moreButton.querySelector('.jam');
+            if (cellActions.classList.contains('is-expanded')) {
+              icon.classList.remove('jam-menu');
+              icon.classList.add('jam-close');
+              moreButton.title = 'Show less';
+            } else {
+              icon.classList.remove('jam-close');
+              icon.classList.add('jam-menu');
+              moreButton.title = 'Show all actions';
+            }
+          });
+          
+          cellActions.appendChild(moreButton);
+        }
+      }
     },
     dblclick() {
       if (this.querySelector('.item-link')) {

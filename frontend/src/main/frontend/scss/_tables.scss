@@ -118,10 +118,50 @@ nav.pagination + nav.level,
     left: -9999px !important;
   }
 
-  &.is-selected .is-vhidden {
-    position: static !important;
-    top: auto !important;
+  // For table rows - show actions as overlay on the right side
+  &.is-selected td.is-vhidden,
+  &.is-selected td.cms-table__cell--visible-on-hover {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
     left: auto !important;
+    bottom: 0 !important;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0.5rem;
+    border-radius: 4px;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: auto !important;
+    flex-wrap: nowrap;
+    
+    .button {
+      margin: 0;
+      padding: 0.5rem;
+      min-width: auto;
+      flex-shrink: 0;
+      
+      // Hide buttons after the 3rd one (but not the "more" button)
+      &:nth-child(n+4):not(.cell-actions-more) {
+        display: none;
+      }
+    }
+    
+    // Always show the "more" button
+    .button.cell-actions-more {
+      display: inline-flex !important;
+    }
+    
+    // Show all buttons when expanded
+    &.is-expanded .button {
+      display: inline-flex !important;
+    }
+    
+    &.is-expanded {
+      flex-wrap: wrap; // Allow wrapping when expanded
+    }
   }
   
   // For grid view cards - show actions as overlay without changing card size
@@ -138,11 +178,54 @@ nav.pagination + nav.level,
     display: flex;
     flex-direction: row;
     gap: 0.25rem;
+    max-width: calc(100% - 1rem); // Keep within card boundaries
+    flex-wrap: nowrap; // Don't wrap to new lines
     
     .button {
       margin: 0;
       padding: 0.5rem;
       min-width: auto;
+      flex-shrink: 0; // Prevent buttons from shrinking
+      
+      // Hide buttons after the 3rd one (but not the "more" button)
+      &:nth-child(n+4):not(.cell-actions-more) {
+        display: none;
+      }
     }
+    
+    // Always show the "more" button
+    .button.cell-actions-more {
+      display: inline-flex !important;
+    }
+    
+    // Show all buttons when expanded
+    &.is-expanded .button {
+      display: inline-flex !important;
+    }
+    
+    &.is-expanded {
+      flex-wrap: wrap; // Allow wrapping when expanded
+      max-width: calc(100% - 1rem);
+    }
+  }
+  
+  // More button for additional actions
+  .cell-actions-more {
+    margin: 0 !important;
+    padding: 0.5rem !important;
+    min-width: auto !important;
+    flex-shrink: 0 !important;
+    cursor: pointer;
+    order: 999; // Ensure it appears last
+  }
+  
+  // Ensure the card has position context and overflow control
+  &.is-selected .card {
+    overflow: visible; // Allow overlay to show
+  }
+  
+  &.is-selected .card-image {
+    position: relative;
+    overflow: hidden; // Keep overlay within card image area
   }
 }
