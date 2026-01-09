@@ -42,18 +42,10 @@
     font-family: monospace;
     font-size: 0.875rem;
   }
-
-  .jam-folder {
-    color: $link;
-  }
 }
 
 .pathbrowser-toggle {
   flex-shrink: 0;
-
-  .jam {
-    transition: transform 0.2s ease;
-  }
 }
 
 // Browser panel (dropdown-style)
@@ -159,20 +151,6 @@
       font-weight: 600;
       color: $link;
     }
-  }
-
-  &.is-container {
-    .jam {
-      color: $link;
-    }
-  }
-
-  .jam-folder {
-    color: $link;
-  }
-
-  .jam-document {
-    color: $grey;
   }
 
   &__name {

@@ -27,6 +27,7 @@
 
 // Framework abstraction layer
 @use "grid-abstraction";
+@use "icons";
 
 // Feature-specific styles (alphabetically ordered)
 @use "ai-suggest";
@@ -35,6 +36,7 @@
 @use "cards";
 @use "contentfilter";
 @use "contentsearch";
+@use "fieldsets";
 @use "forms";
 @use "fragment";
 @use "layout";

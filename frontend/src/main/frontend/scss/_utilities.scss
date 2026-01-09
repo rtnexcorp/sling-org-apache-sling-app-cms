@@ -71,24 +71,3 @@
 #query-debug h2 {
   color: $grey-darker;
 }
-
-// Table sorting icons
-table thead .sorting:after,
-table thead .sorting_asc:after,
-table thead .sorting_asc_disabled:after,
-table thead .sorting_desc:after,
-table thead .sorting_desc_disabled:after {
-  font-family: "jam-icons";
-}
-
-table thead .sorting:after {
-  content: "\e943";
-}
-
-table thead .sorting_asc:after {
-  content: "\e93f";
-}
-
-table thead .sorting_desc:after {
-  content: "\e92a";
-}
