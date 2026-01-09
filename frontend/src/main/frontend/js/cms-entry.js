@@ -65,6 +65,7 @@ import './cms.i18n.js';
 import './cms.preview.js';
 import './cms.ai.js';
 import './cms.ai-taxonomy.js';
+import './cms.tabs.js';
 import './cms.workflow-designer.js';
 import './cms.workflow-startform.js';
 import './cms.workflow-instances.js';

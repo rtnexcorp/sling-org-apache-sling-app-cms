@@ -1,0 +1,110 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Generic Tabs Component
+// Reusable tab interface for organizing content into panels
+
+@use "variables" as *;
+
+.cms-tabs {
+    display: flex;
+    flex-direction: column;
+    
+    .tabs {
+        margin-bottom: 0;
+        flex-shrink: 0;
+        
+        ul {
+            border-bottom-color: $grey-lighter;
+        }
+
+        li {
+            cursor: pointer;
+            
+            a {
+                border-bottom-color: $grey-lighter;
+                color: $grey-darker;
+                
+                .icon {
+                    margin-right: 0.5rem;
+                }
+            }
+
+            &.is-active a {
+                border-bottom-color: $primary;
+                color: $primary;
+            }
+        }
+    }
+
+    &__content {
+        background: $white;
+        border: 1px solid $grey-lighter;
+        border-top: none;
+        border-radius: 0 0 4px 4px;
+        padding: 1.5rem;
+        flex: 1;
+    }
+
+    &__panel {
+        display: none;
+
+        &.is-active {
+            display: block;
+        }
+    }
+    
+    // Modifier: Full height tabs (for dashboard-style layouts)
+    &--full-height {
+        height: calc(100vh - 200px);
+        min-height: 500px;
+        
+        .cms-tabs__content {
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            
+            // Custom scrollbar styling (WebKit browsers)
+            &::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            &::-webkit-scrollbar-track {
+                background: $scrollbar-track;
+                border-radius: 0 0 4px 0;
+            }
+            
+            &::-webkit-scrollbar-thumb {
+                background: $scrollbar-thumb;
+                border-radius: 4px;
+                
+                &:hover {
+                    background: $scrollbar-thumb-hover;
+                }
+            }
+        }
+    }
+    
+    // Modifier: Compact tabs (less padding)
+    &--compact {
+        .cms-tabs__content {
+            padding: 1rem;
+        }
+    }
+}
