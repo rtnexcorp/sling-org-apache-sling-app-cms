@@ -98,13 +98,15 @@
                             </td>
                             <td class="cms-table__actions">
                                 <a href="/bin/workflow/instance?instanceId=${instance.id}"
-                                   class="cms-button cms-button--small">
-                                    ${'View' @ i18n}
+                                   class="cms-button cms-button--small cms-button--icon"
+                                   title="${'View' @ i18n}">
+                                    <span class="cms-icon cms-icon--eye"></span>
                                 </a>
-                                <button class="cms-button cms-button--small cms-button--danger"
+                                <button class="cms-button cms-button--small cms-button--icon cms-button--danger"
                                         data-action="delete-instance"
-                                        data-instance-id="${instance.id}">
-                                    ${'Delete' @ i18n}
+                                        data-instance-id="${instance.id}"
+                                        title="${'Delete' @ i18n}">
+                                    <span class="cms-icon cms-icon--trash"></span>
                                 </button>
                             </td>
                         </tr>

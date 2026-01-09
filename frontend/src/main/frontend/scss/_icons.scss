@@ -41,33 +41,33 @@
     width: 3rem;
   }
 
-  // Icon mappings (currently using Jam Icons via font-family)
-  // When changing icon library, only update these content codes
-  // Note: These use the jam-icons font via font-family inheritance from .jam class in HTML
+  // Icon mappings (currently using Jam Icons)
+  // When changing icon library, only update these font-family and content codes
   
-  &--search,
+  &--check,
+  &--chevron-down,
+  &--close,
+  &--code,
+  &--cog,
+  &--download,
+  &--edit,
+  &--external-link,
+  &--eye,
+  &--files,
+  &--filter,
+  &--folder,
+  &--folder-open,
   &--grid,
   &--list,
-  &--folder,
-  &--video,
-  &--refresh,
-  &--filter,
-  &--check,
-  &--plus,
-  &--trash,
-  &--close,
-  &--edit,
-  &--upload,
-  &--download,
-  &--folder-open,
-  &--external-link,
-  &--files,
-  &--code,
   &--pencil,
+  &--plus,
+  &--refresh,
   &--screen,
-  &--cog,
+  &--search,
+  &--trash,
+  &--upload,
   &--users,
-  &--chevron-down {
+  &--video {
     font-family: "jam-icons";
     font-style: normal;
     font-weight: normal;
@@ -81,8 +81,56 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  &--search::before {
-    content: "\e986";
+  &--check::before {
+    content: "\e90f";
+  }
+
+  &--chevron-down::before {
+    content: "\e910";
+  }
+
+  &--close::before {
+    content: "\e914";
+  }
+
+  &--code::before {
+    content: "\e916";
+  }
+
+  &--cog::before {
+    content: "\e917";
+  }
+
+  &--download::before {
+    content: "\e924";
+  }
+
+  &--edit::before {
+    content: "\e9ba";
+  }
+
+  &--external-link::before {
+    content: "\e92c";
+  }
+
+  &--eye::before {
+    content: "\ea5d";
+  }
+
+  &--files::before {
+    content: "\e934";
+  }
+
+  &--filter::before {
+    content: "\e935";
+  }
+
+  &--folder::before {
+    content: "\e93d";
+  }
+
+  &--folder-open::before {
+    content: "\e93d";
   }
 
   &--grid::before {
@@ -93,88 +141,99 @@
     content: "\e9a5";
   }
 
-  &--folder::before {
-    content: "\e93d";
-  }
-
-  &--video::before {
-    content: "\e9b2";
-  }
-
-  &--refresh::before {
-    content: "\e97d";
-  }
-
-  &--filter::before {
-    content: "\e935";
-  }
-
-  &--check::before {
-    content: "\e90f";
+  &--pencil::before {
+    content: "\e967";
   }
 
   &--plus::before {
     content: "\e96f";
   }
 
-  &--trash::before {
-    content: "\e9a0";
-  }
-
-  &--close::before {
-    content: "\e914";
-  }
-
-  &--edit::before {
-    content: "\e9ba";
-  }
-
-  &--upload::before {
-    content: "\e9a8";
-  }
-
-  &--download::before {
-    content: "\e924";
-  }
-
-  &--folder-open::before {
-    content: "\e93d";
-  }
-
-  &--external-link::before {
-    content: "\e92c";
-  }
-
-  &--files::before {
-    content: "\e934";
-  }
-
-  &--code::before {
-    content: "\e916";
-  }
-
-  &--pencil::before {
-    content: "\e967";
+  &--refresh::before {
+    content: "\e97d";
   }
 
   &--screen::before {
     content: "\e981";
   }
 
-  &--cog::before {
-    content: "\e917";
+  &--search::before {
+    content: "\e986";
+  }
+
+  &--trash::before {
+    content: "\ec1f";
+  }
+
+  &--upload::before {
+    content: "\e9a8";
   }
 
   &--users::before {
     content: "\e9ab";
   }
 
-  &--chevron-down::before {
-    content: "\e910";
+  &--video::before {
+    content: "\e9b2";
   }
 }
 
-// Control with icons
+// =============================================================================
+// LEGACY JAM ICONS USAGE - TO BE REFACTORED
+// =============================================================================
+// The following selectors use direct Jam Icons classes (.jam, .jam-*)
+// TODO: Refactor to use cms-icon abstraction pattern for framework independence
+// =============================================================================
+
+// RTE Toolbar Icon Sizing
+// TODO: Refactor RTE toolbar to use .cms-icon classes
+.rte-toolbar .jam:before {
+  font-size: x-large;
+}
+
+// Path Browser Icon Colors
+// TODO: Refactor path browser to use .cms-icon--folder and .cms-icon--document
+.pathbrowser-field,
+.pathbrowser-item {
+  .jam-folder {
+    color: $link;
+  }
+
+  .jam-document {
+    color: $grey;
+  }
+}
+
+.pathbrowser-toggle .jam {
+  transition: transform 0.2s ease;
+}
+
+// Table Sorting Icons
+// TODO: Refactor table sorting to use .cms-icon--* classes
+table thead .sorting:after,
+table thead .sorting_asc:after,
+table thead .sorting_asc_disabled:after,
+table thead .sorting_desc:after,
+table thead .sorting_desc_disabled:after {
+  font-family: "jam-icons";
+}
+
+table thead .sorting:after {
+  content: "\e943";
+}
+
+table thead .sorting_asc:after {
+  content: "\e93f";
+}
+
+table thead .sorting_desc:after {
+  content: "\e92a";
+}
+
+// =============================================================================
+// CONTROL WITH ICONS
+// =============================================================================
+
 .cms-control {
   box-sizing: border-box;
   clear: both;
@@ -209,46 +268,4 @@
       width: 2.5em;
     }
   }
-}
-
-// RTE Toolbar Icon Sizing
-.rte-toolbar .jam:before {
-  font-size: x-large;
-}
-
-// Path Browser Icon Colors
-.pathbrowser-field,
-.pathbrowser-item {
-  .jam-folder {
-    color: $link;
-  }
-
-  .jam-document {
-    color: $grey;
-  }
-}
-
-.pathbrowser-toggle .jam {
-  transition: transform 0.2s ease;
-}
-
-// Table Sorting Icons
-table thead .sorting:after,
-table thead .sorting_asc:after,
-table thead .sorting_asc_disabled:after,
-table thead .sorting_desc:after,
-table thead .sorting_desc_disabled:after {
-  font-family: "jam-icons";
-}
-
-table thead .sorting:after {
-  content: "\e943";
-}
-
-table thead .sorting_asc:after {
-  content: "\e93f";
-}
-
-table thead .sorting_desc:after {
-  content: "\e92a";
 }
