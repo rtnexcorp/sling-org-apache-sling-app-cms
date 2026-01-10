@@ -163,6 +163,13 @@ $asset-badge-bg: rgba(0, 0, 0, 0.7);
       color: $grey-lighter;
     }
   }
+
+  // Filter support - hide filtered items
+  .asset-item {
+    &.cms-filtered-out {
+      display: none !important;
+    }
+  }
 }
 
 /* Asset Card */

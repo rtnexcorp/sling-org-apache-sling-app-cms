@@ -226,7 +226,7 @@ Sling.CMS.ContentFilter = {
    * 
    * Expects items to have data attributes matching filter names:
    * - sitefilter: data-page-status, data-template, data-modified-date
-   * - assetfilter: data-mime-type, data-modified-date, data-file-size
+   * - assetfilter: data-asset-type, data-asset-size, data-modified-date
    * - workflowfilter: data-status, data-process-type, data-initiator
    * 
    * @param {HTMLElement} item - The item to filter
@@ -234,6 +234,14 @@ Sling.CMS.ContentFilter = {
    */
   filterItem: function(item, filters) {
     let visible = true;
+
+    // Folders are always visible (they don't have mime types, sizes, etc.)
+    const isFolder = item.getAttribute('data-is-folder') === 'true';
+    if (isFolder) {
+      item.style.display = '';
+      item.classList.remove('cms-filtered-out');
+      return;
+    }
 
     // Check each filter
     Object.entries(filters).forEach(([attr, value]) => {
@@ -318,5 +326,10 @@ if (document.readyState === 'loading') {
 
 // Re-initialize when new content is loaded dynamically
 document.addEventListener('cms:content-loaded', function() {
+  Sling.CMS.ContentFilter.init();
+});
+
+// Re-initialize when Sling CMS reloads content (AJAX navigation)
+document.addEventListener('slingcms:reload', function() {
   Sling.CMS.ContentFilter.init();
 });
