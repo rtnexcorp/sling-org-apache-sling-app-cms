@@ -45,7 +45,22 @@
         </sly>
         
         <!--/* Content Filter */-->
-        <sly data-sly-test="${properties.includeFilter}">
+        <sly data-sly-test="${properties.filterMode == 'workflow'}">
+            <div class="level-item">
+                <sly data-sly-resource="${'workflowfilter' @ resourceType='sling-cms/components/cms/workflowfilter'}"></sly>
+            </div>
+        </sly>
+        <sly data-sly-test="${properties.filterMode == 'assets'}">
+            <div class="level-item">
+                <sly data-sly-resource="${'assetfilter' @ resourceType='sling-cms/components/cms/assetfilter'}"></sly>
+            </div>
+        </sly>
+        <sly data-sly-test="${properties.filterMode == 'sites'}">
+            <div class="level-item">
+                <sly data-sly-resource="${'sitefilter' @ resourceType='sling-cms/components/cms/sitefilter'}"></sly>
+            </div>
+        </sly>
+        <sly data-sly-test="${properties.filterMode == 'content'}">
             <div class="level-item">
                 <sly data-sly-resource="${'contentfilter' @ resourceType='sling-cms/components/cms/contentfilter'}"></sly>
             </div>

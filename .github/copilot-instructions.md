@@ -191,14 +191,14 @@ public class PageManagerImpl implements PageManager { ... }
 
 **New Component File Structure**:
 When creating a new component, always create:
-1. `.content.xml` - Component definition
-2. `<componentname>.html` - HTL template (NOT `.jsp`)
-3. Sling Model in appropriate module for business logic
+1. `<componentname>.html` - HTL template (NOT `.jsp`)
+2. Sling Model in appropriate module for business logic
+
+❌ **IMPORTANT: Do NOT create `.content.xml` files** - This project does not use `.content.xml` files for component definitions. Component metadata and configuration is handled through other mechanisms in the Sling CMS architecture.
 
 **Example - Creating a new component**:
 ```
 ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/mycomponent/
-├── .content.xml          # Component definition
 └── mycomponent.html      # HTL template (REQUIRED - not JSP!)
 ```
 

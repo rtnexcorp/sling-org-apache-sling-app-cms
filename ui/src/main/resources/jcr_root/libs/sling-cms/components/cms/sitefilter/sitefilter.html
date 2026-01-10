@@ -1,0 +1,65 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<div  data-component="content-filter">
+    <div class="content-filter__controls">
+        <!--/* Page Status Filter */-->
+        <div>
+            <div class="cms-select">
+                <select id="filter-page-status"
+                        data-filter="page-status"
+                        class="cms-select__input"
+                        aria-label="${'Page Status' @ i18n}">
+                    <option value="">${'All Pages' @ i18n}</option>
+                    <option value="published">${'Published' @ i18n}</option>
+                    <option value="draft">${'Draft' @ i18n}</option>
+                    <option value="scheduled">${'Scheduled' @ i18n}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--/* Template Filter */-->
+        <div>
+            <div class="cms-select">
+                <select id="filter-template"
+                        data-filter="template"
+                        data-dynamic-options="true"
+                        class="cms-select__input"
+                        aria-label="${'Filter by Template' @ i18n}">
+                    <option value="">${'All Templates' @ i18n}</option>
+                </select>
+            </div>
+        </div>
+
+        <!--/* Modified Date Filter */-->
+        <div>
+            <div class="cms-select">
+                <select id="filter-modified"
+                        data-filter="modified-date"
+                        class="cms-select__input"
+                        aria-label="${'Modified Date' @ i18n}">
+                    <option value="">${'Any Time' @ i18n}</option>
+                    <option value="today">${'Today' @ i18n}</option>
+                    <option value="week">${'This Week' @ i18n}</option>
+                    <option value="month">${'This Month' @ i18n}</option>
+                    <option value="year">${'This Year' @ i18n}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
