@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.cms.core.beans.ActionItem;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -98,41 +99,5 @@ public class PageEditBarActionsModel {
         }
         String suffix = request.getRequestPathInfo().getSuffix();
         return suffix != null ? suffix : "";
-    }
-
-    /**
-     * Wrapper for action configuration that provides data for HTL rendering.
-     */
-    public static class ActionItem {
-        private final Resource config;
-        private final SlingHttpServletRequest request;
-
-        public ActionItem(Resource config, SlingHttpServletRequest request) {
-            this.config = config;
-            this.request = request;
-        }
-
-        public String getResourceType() {
-            return config.getResourceType();
-        }
-
-        public Resource getConfig() {
-            return config;
-        }
-
-        /**
-         * Sets the actionConfig request attribute and returns the suffix path.
-         * This is used by HTL to set the request attribute before including the action component.
-         *
-         * @return suffix path for the resource include
-         */
-        public String getSuffixPathWithConfig() {
-            request.setAttribute("actionConfig", config);
-            if (request.getRequestPathInfo() == null) {
-                return "";
-            }
-            String suffix = request.getRequestPathInfo().getSuffix();
-            return suffix != null ? suffix : "";
-        }
     }
 }

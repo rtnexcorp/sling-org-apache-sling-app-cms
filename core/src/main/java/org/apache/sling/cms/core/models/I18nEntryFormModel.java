@@ -20,12 +20,12 @@ package org.apache.sling.cms.core.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.cms.core.beans.LanguageInfo;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -66,56 +66,5 @@ public class I18nEntryFormModel {
     public String getDictionaryPath() {
         Resource suffixResource = request.getRequestPathInfo().getSuffixResource();
         return suffixResource != null ? suffixResource.getPath() : "";
-    }
-
-    /**
-     * Information about a language folder
-     */
-    public static class LanguageInfo {
-        private final Resource resource;
-        private final String languageCode;
-
-        public LanguageInfo(Resource resource) {
-            this.resource = resource;
-            this.languageCode = resource.getValueMap().get("jcr:language", String.class);
-        }
-
-        public String getName() {
-            return resource.getName();
-        }
-
-        public String getPath() {
-            return resource.getPath();
-        }
-
-        public String getLanguageCode() {
-            return languageCode;
-        }
-
-        public String getDisplayLanguage() {
-            try {
-                Locale locale = Locale.forLanguageTag(languageCode);
-                return locale.getDisplayLanguage();
-            } catch (Exception e) {
-                return languageCode;
-            }
-        }
-
-        public String getDisplayCountry() {
-            try {
-                Locale locale = Locale.forLanguageTag(languageCode);
-                return locale.getDisplayCountry();
-            } catch (Exception e) {
-                return "";
-            }
-        }
-
-        public String getDisplayName() {
-            String country = getDisplayCountry();
-            if (country != null && !country.isEmpty()) {
-                return getDisplayLanguage() + " " + country;
-            }
-            return getDisplayLanguage();
-        }
     }
 }

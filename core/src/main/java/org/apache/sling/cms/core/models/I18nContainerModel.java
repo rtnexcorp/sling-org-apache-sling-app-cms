@@ -20,13 +20,13 @@ package org.apache.sling.cms.core.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.cms.core.beans.KeyRow;
+import org.apache.sling.cms.core.beans.LanguageFolder;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -115,152 +115,5 @@ public class I18nContainerModel {
     public String getSuffixPath() {
         Resource suffixResource = request.getRequestPathInfo().getSuffixResource();
         return suffixResource != null ? suffixResource.getPath() : "";
-    }
-
-    /**
-     * Represents a row in the translation table with a key and its translations
-     */
-    public static class KeyRow {
-        private final String key;
-        private final List<LanguageEntry> languageEntries;
-
-        public KeyRow(String key, List<LanguageFolder> languages) {
-            this.key = key;
-            this.languageEntries = new ArrayList<>();
-            for (LanguageFolder language : languages) {
-                languageEntries.add(new LanguageEntry(language, key));
-            }
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public List<LanguageEntry> getLanguageEntries() {
-            return languageEntries;
-        }
-    }
-
-    /**
-     * Represents a translation entry for a specific language and key
-     */
-    public static class LanguageEntry {
-        private final LanguageFolder language;
-        private final String key;
-        private final TranslationEntry entry;
-
-        public LanguageEntry(LanguageFolder language, String key) {
-            this.language = language;
-            this.key = key;
-            this.entry = language.getEntryForKey(key);
-        }
-
-        public String getLanguageCode() {
-            return language.getLanguageCode();
-        }
-
-        public String getLanguageName() {
-            return language.getName();
-        }
-
-        public boolean hasEntry() {
-            return entry != null;
-        }
-
-        public String getEntryName() {
-            return entry != null ? entry.getName() : key;
-        }
-
-        public String getMessage() {
-            return entry != null ? entry.getMessage() : "";
-        }
-
-        public String getKey() {
-            return key;
-        }
-    }
-
-    public static class LanguageFolder {
-        private final Resource resource;
-        private final ValueMap properties;
-        private final String languageCode;
-
-        public LanguageFolder(Resource resource) {
-            this.resource = resource;
-            this.properties = resource.getValueMap();
-            this.languageCode = properties.get("jcr:language", String.class);
-        }
-
-        public Resource getResource() {
-            return resource;
-        }
-
-        public String getName() {
-            return resource.getName();
-        }
-
-        public String getLanguageCode() {
-            return languageCode;
-        }
-
-        public String getDisplayLanguage() {
-            try {
-                Locale locale = Locale.forLanguageTag(languageCode);
-                return locale.getDisplayLanguage();
-            } catch (Exception e) {
-                return languageCode;
-            }
-        }
-
-        public String getDisplayCountry() {
-            try {
-                Locale locale = Locale.forLanguageTag(languageCode);
-                return locale.getDisplayCountry();
-            } catch (Exception e) {
-                return "";
-            }
-        }
-
-        public List<TranslationEntry> getEntries() {
-            return StreamSupport.stream(resource.getChildren().spliterator(), false)
-                    .map(TranslationEntry::new)
-                    .collect(Collectors.toList());
-        }
-
-        public TranslationEntry getEntryForKey(String key) {
-            for (Resource entry : resource.getChildren()) {
-                String entryKey = entry.getValueMap().get("sling:key", String.class);
-                if (key.equals(entryKey)) {
-                    return new TranslationEntry(entry);
-                }
-            }
-            return null;
-        }
-
-        public boolean hasEntryForKey(String key) {
-            return getEntryForKey(key) != null;
-        }
-    }
-
-    public static class TranslationEntry {
-        private final Resource resource;
-        private final ValueMap properties;
-
-        public TranslationEntry(Resource resource) {
-            this.resource = resource;
-            this.properties = resource.getValueMap();
-        }
-
-        public String getName() {
-            return resource.getName();
-        }
-
-        public String getKey() {
-            return properties.get("sling:key", "");
-        }
-
-        public String getMessage() {
-            return properties.get("sling:message", "");
-        }
     }
 }

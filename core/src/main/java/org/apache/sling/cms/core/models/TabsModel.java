@@ -28,6 +28,7 @@ import java.util.UUID;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.cms.core.beans.Tab;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
@@ -71,44 +72,5 @@ public class TabsModel {
 
     public List<Tab> getTabs() {
         return Collections.unmodifiableList(tabs);
-    }
-
-    /**
-     * Inner class representing a single tab
-     */
-    public static class Tab {
-        private final String id;
-        private final String title;
-        private final String icon;
-        private final String resourceName;
-        private final String resourceType;
-
-        public Tab(String id, String title, String icon, String resourceName, String resourceType) {
-            this.id = id;
-            this.title = title;
-            this.icon = icon;
-            this.resourceName = resourceName;
-            this.resourceType = resourceType;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public String getResourceName() {
-            return resourceName;
-        }
-
-        public String getResourceType() {
-            return resourceType;
-        }
     }
 }
