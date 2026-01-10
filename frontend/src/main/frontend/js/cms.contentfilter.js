@@ -19,7 +19,13 @@
 
 /**
  * Content Filter Module
- * Handles dynamic option loading and filter change events for ContentFilter component
+ * Generic filtering system used by multiple filter components:
+ * - sitefilter: Filters pages by status, template, modified date
+ * - assetfilter: Filters assets by MIME type, modified date, file size
+ * - workflowfilter: Filters workflow instances by status, process type
+ * - contentfilter: Generic content filtering
+ * 
+ * All components use data-component="content-filter" attribute
  */
 const Sling = window.Sling || {};
 
@@ -29,6 +35,7 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Initialize all content filters on the page
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
    */
   init: function() {
     document.querySelectorAll('[data-component="content-filter"]').forEach(filter => {
@@ -38,6 +45,7 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Initialize a single content filter
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
    * @param {HTMLElement} filterElement - The filter container element
    */
   initFilter: function(filterElement) {
@@ -50,6 +58,11 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Load dynamic options for filters that have data-dynamic-options attribute
+   * Used by:
+   * - sitefilter: Loads template options dynamically
+   * - workflowfilter: Loads process-type options dynamically
+   * - assetfilter: Not used (static options only)
+   * - contentfilter: May load dynamic options based on configuration
    * @param {HTMLElement} filterElement - The filter container element
    */
   loadDynamicOptions: function(filterElement) {
@@ -66,6 +79,9 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Fetch options from server and populate select element
+   * Used by:
+   * - sitefilter: Fetches template options from /bin/cms/filter-options.json?type=template
+   * - workflowfilter: Fetches process-type options from /bin/cms/filter-options.json?type=process-type
    * @param {HTMLSelectElement} selectElement - The select element to populate
    * @param {string} filterType - The filter type (e.g., 'process-type', 'template')
    */
@@ -104,6 +120,7 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Attach change event listeners to all filter selects
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
    * @param {HTMLElement} filterElement - The filter container element
    */
   attachChangeListeners: function(filterElement) {
@@ -118,6 +135,8 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Handle filter change event
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
+   * Dispatches 'cms:filter-change' custom event that can be listened to by other components
    * @param {HTMLElement} filterElement - The filter container element
    * @param {HTMLSelectElement} changedSelect - The select that changed
    */
@@ -146,6 +165,7 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Get all current filter values
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
    * @param {HTMLElement} filterElement - The filter container element
    * @returns {Object} Object with filter attributes as keys and values as values
    */
@@ -167,6 +187,14 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Apply filters to filterable items on the page
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
+   * 
+   * Filter behavior by component:
+   * - sitefilter: Filters table rows with data-page-status, data-template, data-modified-date
+   * - assetfilter: Filters asset items with data-mime-type, data-modified-date, data-file-size
+   * - workflowfilter: Filters workflow instances with data-status, data-process-type, data-initiator
+   * - contentfilter: Filters generic content items based on configured attributes
+   * 
    * @param {Object} filters - Object with filter attributes and values
    */
   applyFilters: function(filters) {
@@ -194,6 +222,13 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Filter a single item based on filter criteria
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
+   * 
+   * Expects items to have data attributes matching filter names:
+   * - sitefilter: data-page-status, data-template, data-modified-date
+   * - assetfilter: data-mime-type, data-modified-date, data-file-size
+   * - workflowfilter: data-status, data-process-type, data-initiator
+   * 
    * @param {HTMLElement} item - The item to filter
    * @param {Object} filters - Object with filter attributes and values
    */
@@ -223,6 +258,13 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Check if an item value matches a filter value
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
+   * 
+   * Matching strategies:
+   * - Comma-separated values: Used by assetfilter for multiple MIME types (e.g., "image/,video/")
+   * - Prefix matching: Used by assetfilter for MIME type categories (e.g., "image/" matches "image/png")
+   * - Exact matching: Used by sitefilter (status, template), workflowfilter (status, process-type), assetfilter (size)
+   * 
    * @param {string} itemValue - The item's attribute value
    * @param {string} filterValue - The filter value to match
    * @returns {boolean} True if matches
@@ -247,6 +289,10 @@ Sling.CMS.ContentFilter = {
 
   /**
    * Update visible item count displays
+   * Called by: sitefilter, assetfilter, workflowfilter, contentfilter
+   * 
+   * Updates elements with [data-filter-count] attribute to show number of visible items
+   * Used by assetfilter to show "X items" count in the asset browser
    */
   updateFilterCount: function() {
     const countDisplays = document.querySelectorAll('[data-filter-count]');

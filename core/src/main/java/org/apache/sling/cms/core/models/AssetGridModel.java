@@ -159,6 +159,10 @@ public class AssetGridModel {
         return paginationPage + 1;
     }
 
+    public int getTotalPages() {
+        return (int) Math.ceil((double) totalItems / PAGE_SIZE);
+    }
+
     public String getDataPath() {
         return dataPath;
     }

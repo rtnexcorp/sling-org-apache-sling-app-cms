@@ -1,0 +1,193 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.AssetGridModel">
+    <div class="asset-table-wrapper">
+
+        <!--/* Filter Bar */-->
+        <sly data-sly-resource="${'.' @ resourceType='sling-cms/components/cms/assetfilter'}"></sly>
+
+        <!--/* Asset Table Container */-->
+        <div class="asset-table reload-container scroll-container contentnav" 
+             data-view="table" 
+             data-filterable-container>
+            <table class="table is-fullwidth is-striped is-hoverable cms-table">
+                <thead>
+                    <tr>
+                        <th scope="col">${'Preview' @ i18n}</th>
+                        <th scope="col">${'Name' @ i18n}</th>
+                        <th scope="col">${'Type' @ i18n}</th>
+                        <th scope="col">${'Size' @ i18n}</th>
+                        <th scope="col">${'Modified' @ i18n}</th>
+                        <th scope="col">${'Status' @ i18n}</th>
+                        <th scope="col" class="cms-table__header--hidden">${'Actions' @ i18n}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <sly data-sly-list.item="${model.items}">
+                        <tr class="contentnav__item asset-item"
+                            data-filterable-item
+                            data-asset-item
+                            data-name="${item.nameLowercase}"
+                            data-mime-type="${item.mimeType}"
+                            data-asset-type="${item.mimeType @ context='attribute'}"
+                            data-asset-size="${item.assetSize @ context='attribute'}"
+                            data-modified-date="${item.modifiedDate @ context='attribute'}"
+                            data-is-folder="${item.folder}"
+                            data-taxonomy="${item.taxonomyStr}"
+                            data-value="${item.path}">
+                            
+                            <!--/* Preview Thumbnail */-->
+                            <td class="asset-table__thumbnail">
+                                <figure class="image is-48x48">
+                                    <img src="${item.thumbnailPath}" loading="lazy" alt="${item.name}">
+                                </figure>
+                            </td>
+                            
+                            <!--/* Name */-->
+                            <td class="asset-table__name">
+                                <a href="${item.path}.html" class="has-text-weight-semibold">
+                                    ${item.title}
+                                </a>
+                                <sly data-sly-test="${item.folder}">
+                                    <span class="icon">
+                                        <i class="jam jam-folder"></i>
+                                    </span>
+                                </sly>
+                            </td>
+                            
+                            <!--/* Type */-->
+                            <td class="asset-table__type">
+                                <sly data-sly-test="${item.file}">
+                                    <sly data-sly-test="${item.fileExtension}">
+                                        <span class="tag is-light">${item.fileExtension}</span>
+                                    </sly>
+                                    <sly data-sly-test="${item.video}">
+                                        <span class="icon">
+                                            <i class="jam jam-video-camera"></i>
+                                        </span>
+                                    </sly>
+                                    <sly data-sly-test="${item.pdf}">
+                                        <span class="tag is-danger is-light">PDF</span>
+                                    </sly>
+                                </sly>
+                                <sly data-sly-test="${item.folder}">
+                                    <span class="tag is-info is-light">${'Folder' @ i18n}</span>
+                                </sly>
+                            </td>
+                            
+                            <!--/* Size */-->
+                            <td class="asset-table__size">
+                                <sly data-sly-test="${item.file && item.fileSize}">
+                                    ${item.fileSize}
+                                </sly>
+                                <sly data-sly-test="${!item.file}">
+                                    —
+                                </sly>
+                            </td>
+                            
+                            <!--/* Modified Date */-->
+                            <td class="asset-table__date">
+                                <sly data-sly-test="${item.lastModified}">
+                                    <small>${item.lastModified}</small>
+                                </sly>
+                            </td>
+                            
+                            <!--/* Status */-->
+                            <td class="asset-table__status">
+                                <span class="tag ${item.published ? 'is-success' : 'is-warning'} is-light">
+                                    <sly data-sly-test="${item.published}">${'Published' @ i18n}</sly>
+                                    <sly data-sly-test="${!item.published}">${'Draft' @ i18n}</sly>
+                                </span>
+                            </td>
+                            
+                            <!--/* Actions */-->
+                            <td class="asset-table__actions">
+                                <div class="buttons are-small">
+                                    <sly data-sly-list.action="${item.actions}">
+                                        <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/modal'}">
+                                            <a class="button is-small Fetch-Modal"
+                                               data-title="${action.title}"
+                                               data-path="${action.ajaxPath || '.Main-Content form'}"
+                                               href="${action.prefix}${action.itemPath}${action.suffix}"
+                                               title="${action.title}">
+                                                <span class="icon is-small">
+                                                    <i class="jam jam-${action.icon}"></i>
+                                                </span>
+                                            </a>
+                                        </sly>
+                                        <sly data-sly-test="${action.resourceType == 'sling-cms/components/cms/actions/basic'}">
+                                            <a class="button is-small"
+                                               target="${action.openInNew ? '_blank' : '_self'}"
+                                               href="${action.prefix}${action.itemPath}${action.suffix}"
+                                               title="${action.title}">
+                                                <span class="icon is-small">
+                                                    <i class="jam jam-${action.icon}"></i>
+                                                </span>
+                                            </a>
+                                        </sly>
+                                    </sly>
+                                </div>
+                            </td>
+                        </tr>
+                    </sly>
+                </tbody>
+            </table>
+
+            <!--/* Empty State */-->
+            <sly data-sly-test="${model.itemCount == 0}">
+                <div class="asset-table__empty">
+                    <div class="notification is-info has-text-centered">
+                        <span class="icon is-large">
+                            <i class="jam jam-folder-open" style="font-size: 3rem;"></i>
+                        </span>
+                        <p class="mt-4">${'No assets found' @ i18n}</p>
+                    </div>
+                </div>
+            </sly>
+
+            <!--/* Pagination */-->
+            <sly data-sly-test="${model.totalItems > model.pageSize}">
+                <nav class="pagination is-centered mt-4" role="navigation" aria-label="pagination">
+                    <sly data-sly-test="${model.hasPreviousPage}">
+                        <a class="pagination-previous" href="?page=${model.previousPage}">
+                            ${'Previous' @ i18n}
+                        </a>
+                    </sly>
+                    <sly data-sly-test="${model.hasNextPage}">
+                        <a class="pagination-next" href="?page=${model.nextPage}">
+                            ${'Next' @ i18n}
+                        </a>
+                    </sly>
+                    <ul class="pagination-list">
+                        <li>
+                            <span class="pagination-link is-current">
+                                ${model.paginationPage} / ${model.totalPages}
+                            </span>
+                        </li>
+                    </ul>
+                </nav>
+            </sly>
+        </div>
+
+        <!--/* Hidden count for JS */-->
+        <script type="application/json" data-asset-metadata>
+            {"count": ${model.itemCount}}
+        </script>
+    </div>
+</sly>

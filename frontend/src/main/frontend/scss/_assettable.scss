@@ -1,0 +1,164 @@
+// Asset Table Component
+// Table view for browsing and managing digital assets
+
+.asset-table {
+  background: white;
+  border-radius: 4px;
+  overflow-x: auto;
+
+  &__thumbnail {
+    width: 60px;
+    padding: 0.5rem !important;
+
+    .image {
+      display: block;
+      margin: 0;
+
+      img {
+        object-fit: cover;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  &__name {
+    min-width: 200px;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        color: $cms-primary-color;
+        text-decoration: underline;
+      }
+    }
+
+    .icon {
+      margin-left: 0.25rem;
+      vertical-align: middle;
+    }
+  }
+
+  &__type {
+    min-width: 100px;
+
+    .tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .icon {
+      margin-left: 0.25rem;
+    }
+  }
+
+  &__size {
+    min-width: 100px;
+    white-space: nowrap;
+  }
+
+  &__date {
+    min-width: 120px;
+    color: #666;
+    font-size: 0.875rem;
+  }
+
+  &__status {
+    min-width: 100px;
+
+    .tag {
+      font-size: 0.75rem;
+    }
+  }
+
+  &__actions {
+    min-width: 120px;
+    white-space: nowrap;
+
+    .buttons {
+      margin: 0;
+      gap: 0.25rem;
+    }
+
+    .button {
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  &__empty {
+    padding: 2rem;
+
+    .notification {
+      margin: 0;
+    }
+
+    .icon {
+      color: #999;
+    }
+  }
+
+  // Table styling
+  table {
+    thead {
+      th {
+        vertical-align: middle;
+        border-bottom: 2px solid #dbdbdb;
+        color: #363636;
+        font-weight: 600;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &.cms-filtered-out {
+          display: none;
+        }
+
+        td {
+          vertical-align: middle;
+          padding: 0.75rem;
+        }
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media screen and (max-width: 768px) {
+    &__type,
+    &__size,
+    &__date {
+      display: none;
+    }
+
+    &__actions {
+      .button span.is-sr-only {
+        position: static;
+        clip: auto;
+        width: auto;
+        height: auto;
+      }
+    }
+  }
+}
+
+// Asset browser integration
+.asset-browser {
+  [data-view="table"] {
+    .asset-table {
+      display: block;
+    }
+  }
+
+  [data-view="grid"] {
+    .asset-table {
+      display: none;
+    }
+  }
+}
