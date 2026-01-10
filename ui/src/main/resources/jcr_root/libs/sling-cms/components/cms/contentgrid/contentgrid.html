@@ -22,9 +22,15 @@
     <div class="cms-grid cms-grid--multiline">
         <sly data-sly-list.item="${model.items}">
             <div class="cms-grid__item cms-grid__item--half-tablet cms-grid__item--third-widescreen cms-grid__item--quarter-fullhd contentnav__item"
+                 data-filterable-item
+                 data-resource="${item.path @ context='attribute'}"
+                 data-type="${item.typePath @ context='attribute'}"
                  data-mime-type="${item.mimeType @ context='attribute'}"
                  data-is-folder="${item.folder}"
-                 data-taxonomy="${item.taxonomyString @ context='attribute'}">
+                 data-taxonomy="${item.taxonomyString @ context='attribute'}"
+                 data-page-status="${item.pageStatus @ context='attribute'}"
+                 data-template="${item.template @ context='attribute'}"
+                 data-modified-date="${item.modifiedDate @ context='attribute'}">
                 <div class="card is-linked" 
                      title="${item.name @ context='attribute'}" 
                      data-value="${item.path @ context='attribute'}">

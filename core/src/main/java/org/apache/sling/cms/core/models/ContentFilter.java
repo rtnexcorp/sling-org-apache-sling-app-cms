@@ -114,13 +114,19 @@ public class ContentFilter {
     }
 
     private void initContentFilters() {
-        filterConfigs.add(new FilterConfig("content-type-filter", "Filter by Type", "filter", new FilterOption[] {
-            new FilterOption("", "All Types"),
-            new FilterOption("image/", "Images"),
-            new FilterOption("video/", "Videos"),
-            new FilterOption("application/pdf,application/msword,application/vnd", "Documents"),
-            new FilterOption("folder", "Folders")
-        }));
+        filterConfigs.add(new FilterConfig(
+                "content-type-filter",
+                "Filter by Type",
+                "filter",
+                "mime-type",
+                new FilterOption[] {
+                    new FilterOption("", "All Types"),
+                    new FilterOption("image/", "Images"),
+                    new FilterOption("video/", "Videos"),
+                    new FilterOption("application/pdf,application/msword,application/vnd", "Documents"),
+                    new FilterOption("folder", "Folders")
+                },
+                false));
     }
 
     private void initWorkflowFilters() {

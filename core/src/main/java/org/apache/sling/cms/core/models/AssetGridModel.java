@@ -351,6 +351,55 @@ public class AssetGridModel {
             return primaryType;
         }
 
+        /**
+         * Get asset size category for filtering.
+         * @return size category string (e.g., "0-100", "100-1024")
+         */
+        public String getAssetSize() {
+            Long fileSizeBytes = properties.get("jcr:content/jcr:data", Long.class);
+            if (fileSizeBytes == null || fileSizeBytes == 0) {
+                return "";
+            }
+
+            long sizeKB = fileSizeBytes / 1024;
+
+            if (sizeKB < 100) {
+                return "0-100";
+            } else if (sizeKB < 1024) {
+                return "100-1024";
+            } else if (sizeKB < 10240) {
+                return "1024-10240";
+            } else {
+                return "10240-";
+            }
+        }
+
+        /**
+         * Get modified date category for filtering (today, week, month, year).
+         * @return date category or empty string
+         */
+        public String getModifiedDate() {
+            Calendar modified = properties.get("jcr:content/jcr:lastModified", Calendar.class);
+            if (modified == null) {
+                return "";
+            }
+
+            Calendar now = Calendar.getInstance();
+            long diffMillis = now.getTimeInMillis() - modified.getTimeInMillis();
+            long diffDays = diffMillis / (1000 * 60 * 60 * 24);
+
+            if (diffDays < 1) {
+                return "today";
+            } else if (diffDays < 7) {
+                return "week";
+            } else if (diffDays < 30) {
+                return "month";
+            } else if (diffDays < 365) {
+                return "year";
+            }
+            return "older";
+        }
+
         public List<Action> getActions() {
             Resource actionsConfig = configResource.getChild("types/" + primaryType + "/columns/actions");
             if (actionsConfig != null) {

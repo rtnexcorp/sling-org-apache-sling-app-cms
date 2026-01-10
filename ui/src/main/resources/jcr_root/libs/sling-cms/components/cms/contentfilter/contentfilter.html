@@ -16,37 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */-->
-<sly data-sly-use.taxonomy="org.apache.sling.cms.core.models.TaxonomyModel"/>
+<sly data-sly-use.model="org.apache.sling.cms.core.models.ContentFilter"/>
 
-<div  data-component="content-filter">
+<div data-component="content-filter">
     <div class="content-filter__controls">
-        <!--/* Content Type Filter */-->
-        <div>
-            <div class="cms-select">
-                <select id="content-type-filter"
-                        data-content-type-filter
-                        class="cms-select__input"
-                        aria-label="${'Filter by Type' @ i18n}">
-                    <option value="">${'All Types' @ i18n}</option>
-                    <option value="image/">${'Images' @ i18n}</option>
-                    <option value="video/">${'Videos' @ i18n}</option>
-                    <option value="application/pdf,application/msword,application/vnd">${'Documents' @ i18n}</option>
-                    <option value="folder">${'Folders' @ i18n}</option>
-                </select>
-            </div>
-        </div>
-
-        <!--/* Taxonomy Filter */-->
-        <sly data-sly-test="${taxonomy.hasTaxonomyOptions}">
+        <sly data-sly-list.filter="${model.filterConfigs}">
             <div>
                 <div class="cms-select">
-                    <select id="content-tag-filter"
-                            data-content-tag-filter
+                    <select id="${filter.id}"
+                            data-filter="${filter.dataAttribute}"
                             class="cms-select__input"
-                            aria-label="${'Filter by Tag' @ i18n}">
-                        <option value="">${'All Tags' @ i18n}</option>
-                        <sly data-sly-list.option="${taxonomy.taxonomyOptions}">
-                            <option value="${option.path}">${option.title}</option>
+                            data-dynamic-options="${filter.dynamicOptions}"
+                            aria-label="${filter.label @ i18n}">
+                        <sly data-sly-list.option="${filter.options}">
+                            <option value="${option.value}">${option.label @ i18n}</option>
                         </sly>
                     </select>
                 </div>

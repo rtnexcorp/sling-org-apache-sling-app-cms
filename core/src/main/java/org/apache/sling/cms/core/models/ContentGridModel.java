@@ -204,6 +204,80 @@ public class ContentGridModel {
             return "";
         }
 
+        public String getTypePath() {
+            String primaryType = getPrimaryType();
+            if (StringUtils.isNotBlank(primaryType)) {
+                Resource typeConfig = configResource.getChild("types/" + primaryType);
+                if (typeConfig != null) {
+                    return typeConfig.getPath();
+                }
+            }
+            return "";
+        }
+
+        /**
+         * Get page status for filtering (published, draft, scheduled).
+         * @return page status or empty string
+         */
+        public String getPageStatus() {
+            Resource contentResource = resource.getChild("jcr:content");
+            if (contentResource == null) {
+                return "";
+            }
+            // Check if published property exists
+            boolean published = contentResource.getValueMap().get("published", false);
+            return published ? "published" : "draft";
+        }
+
+        /**
+         * Get template name for filtering.
+         * @return template name or empty string
+         */
+        public String getTemplate() {
+            Resource contentResource = resource.getChild("jcr:content");
+            if (contentResource == null) {
+                return "";
+            }
+            String resourceType = contentResource.getValueMap().get("sling:resourceType", "");
+            // Extract template name from resource type path
+            if (resourceType.contains("/")) {
+                String[] parts = resourceType.split("/");
+                return parts[parts.length - 1];
+            }
+            return resourceType;
+        }
+
+        /**
+         * Get modified date category for filtering (today, week, month, year).
+         * @return date category or empty string
+         */
+        public String getModifiedDate() {
+            Resource contentResource = resource.getChild("jcr:content");
+            if (contentResource == null) {
+                return "";
+            }
+
+            Calendar modified = contentResource.getValueMap().get("jcr:lastModified", Calendar.class);
+            if (modified == null) {
+                return "";
+            }
+
+            Calendar now = Calendar.getInstance();
+            long diffMillis = now.getTimeInMillis() - modified.getTimeInMillis();
+            long diffDays = diffMillis / (1000 * 60 * 60 * 24);
+
+            if (diffDays < 1) {
+                return "today";
+            } else if (diffDays < 7) {
+                return "week";
+            } else if (diffDays < 30) {
+                return "month";
+            } else if (diffDays < 365) {
+                return "year";
+            }
+            return "older";
+        }
+
         public String getNameConfigPrefix() {
             Resource nameConfig = configResource.getChild("types/" + getPrimaryType() + "/columns/name");
             if (nameConfig != null) {
