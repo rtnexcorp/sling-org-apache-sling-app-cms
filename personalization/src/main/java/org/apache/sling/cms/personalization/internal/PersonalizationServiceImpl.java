@@ -236,4 +236,73 @@ public class PersonalizationServiceImpl implements PersonalizationService {
                 .findFirst()
                 .orElse(null);
     }
+
+    @Override
+    @NotNull
+    public List<String> evaluateSegments(@NotNull SlingHttpServletRequest request) {
+        // Get the context resource from request
+        Resource contextResource = request.getResource();
+        List<Segment> segments = resolveSegments(request, contextResource);
+
+        List<String> segmentIds = new ArrayList<>();
+        for (Segment segment : segments) {
+            segmentIds.add(segment.getId());
+        }
+        return segmentIds;
+    }
+
+    @Override
+    public Resource selectVariant(@NotNull Resource contentResource, @NotNull SlingHttpServletRequest request) {
+        List<String> matchedSegments = evaluateSegments(request);
+        Resource variantsResource = contentResource.getChild("variants");
+
+        if (variantsResource == null) {
+            return null;
+        }
+
+        // Find variants and sort by priority
+        List<Resource> variants = new ArrayList<>();
+        variantsResource.listChildren().forEachRemaining(variants::add);
+
+        // Sort by priority (highest first)
+        variants.sort((v1, v2) -> {
+            int p1 = v1.getValueMap().get("priority", 0);
+            int p2 = v2.getValueMap().get("priority", 0);
+            return Integer.compare(p2, p1);
+        });
+
+        // Find first variant that matches a segment
+        for (Resource variant : variants) {
+            String[] variantSegments = variant.getValueMap().get("segments", String[].class);
+            if (variantSegments != null) {
+                for (String segmentId : variantSegments) {
+                    if (matchedSegments.contains(segmentId)) {
+                        return variant;
+                    }
+                }
+            }
+        }
+
+        // Return default variant if no match
+        for (Resource variant : variants) {
+            if (variant.getValueMap().get("isDefault", false)) {
+                return variant;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    @NotNull
+    public List<Resource> getVariants(@NotNull Resource contentResource) {
+        Resource variantsResource = contentResource.getChild("variants");
+        if (variantsResource == null) {
+            return Collections.emptyList();
+        }
+
+        List<Resource> variants = new ArrayList<>();
+        variantsResource.listChildren().forEachRemaining(variants::add);
+        return variants;
+    }
 }

@@ -1,0 +1,4 @@
+{
+  "sling:resourceType": "personalization/servlet",
+  "jcr:primaryType": "nt:unstructured"
+}

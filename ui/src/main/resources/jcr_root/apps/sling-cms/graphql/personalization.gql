@@ -1,0 +1,143 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Personalization GraphQL Schema
+# 
+# This schema provides GraphQL access to Sling CMS personalization features
+# including segments, variants, and evaluators.
+#
+# Usage:
+#   POST /etc/personalization.graphql.json
+#   Body: {"query": "{ segments { id name } }"}
+
+type Query {
+  """
+  Get all personalization segments
+  """
+  segments(
+    """Filter by active status"""
+    active: Boolean
+    
+    """Filter by evaluator type"""
+    evaluatorType: String
+    
+    """Limit number of results"""
+    limit: Int
+  ): [Segment]
+  
+  """
+  Get a specific segment by ID
+  """
+  segment(
+    """Segment ID"""
+    id: ID!
+  ): Segment
+  
+  """
+  Get all available segment evaluators
+  """
+  evaluators: [Evaluator]
+  
+  """
+  Evaluate personalization for a content resource
+  Returns the best matching variant based on current request context
+  """
+  evaluate(
+    """Content path to evaluate"""
+    path: String!
+  ): EvaluationResult
+}
+
+"""
+A personalization segment defines a group of users based on certain criteria
+"""
+type Segment {
+  """Unique segment identifier"""
+  id: ID!
+  
+  """Human-readable segment name"""
+  name: String!
+  
+  """Segment description"""
+  description: String
+  
+  """Whether this segment is active"""
+  active: Boolean!
+  
+  """Priority for variant selection (higher = more important)"""
+  priority: Int!
+  
+  """Type of evaluator used (userGroup, path, device, cookie)"""
+  evaluatorType: String!
+  
+  """Segment configuration as JSON"""
+  conditions: JSON
+  
+  """Resource path in JCR"""
+  path: String!
+}
+
+"""
+A segment evaluator determines if a user matches a segment
+"""
+type Evaluator {
+  """Evaluator type (userGroup, path, device, cookie)"""
+  type: String!
+  
+  """Human-readable description"""
+  description: String
+  
+  """Configuration schema as JSON"""
+  configSchema: JSON
+}
+
+"""
+Result of evaluating personalization for content
+"""
+type EvaluationResult {
+  """Content resource path"""
+  contentPath: String!
+  
+  """Matching segments for current request"""
+  matchingSegments: [String]
+  
+  """Selected variant (null if default content)"""
+  selectedVariant: Variant
+  
+  """All available variants"""
+  availableVariants: [Variant]
+}
+
+"""
+A content variant for personalized content
+"""
+type Variant {
+  """Variant name"""
+  name: String!
+  
+  """Target segment IDs"""
+  segments: [String]
+  
+  """Priority (higher = more important)"""
+  priority: Int!
+  
+  """Variant resource path"""
+  path: String!
+}
+
+"""
+JSON scalar type for dynamic data
+"""
+scalar JSON

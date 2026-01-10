@@ -119,4 +119,44 @@ public interface PersonalizationService {
      * @return true if personalization is enabled, false otherwise
      */
     boolean isEnabled();
+
+    /**
+     * Evaluates which segments match the current request and returns their IDs.
+     * <p>
+     * This is a convenience method that returns just the segment IDs rather than
+     * full Segment objects. Useful for REST APIs and lightweight checks.
+     * </p>
+     *
+     * @param request the current HTTP request to evaluate
+     * @return list of matching segment IDs, never null (may be empty)
+     */
+    @NotNull
+    List<String> evaluateSegments(@NotNull SlingHttpServletRequest request);
+
+    /**
+     * Selects the best matching variant for a content resource based on request segments.
+     * <p>
+     * This method evaluates the request to determine which segments match, then
+     * selects the highest-priority variant that matches one of those segments.
+     * If no variant matches, returns the default variant or null if no default exists.
+     * </p>
+     *
+     * @param contentResource the content resource to get variants for
+     * @param request the current HTTP request
+     * @return the selected variant resource, or null if no variant matches
+     */
+    Resource selectVariant(@NotNull Resource contentResource, @NotNull SlingHttpServletRequest request);
+
+    /**
+     * Gets all available variants for a content resource.
+     * <p>
+     * Returns all configured variants regardless of whether they match the current request.
+     * Useful for authoring UI and preview modes.
+     * </p>
+     *
+     * @param contentResource the content resource to get variants for
+     * @return list of variant resources, never null (may be empty)
+     */
+    @NotNull
+    List<Resource> getVariants(@NotNull Resource contentResource);
 }
