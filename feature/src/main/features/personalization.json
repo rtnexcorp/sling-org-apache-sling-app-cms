@@ -1,0 +1,27 @@
+{
+  "bundles": [
+    {
+      "id": "org.apache.sling:org.apache.sling.cms.personalization:${cms-version}",
+      "start-order": "20"
+    }
+  ],
+  "configurations": {},
+  "repoinit:TEXT|true": [
+    "# Personalization Service User Configuration",
+    "",
+    "# Note: No service user required - PersonalizationService does not need repository access",
+    "# All segment evaluation is done in-memory based on request context",
+    "",
+    "# Create personalization configuration paths in /etc (persistent configuration)",
+    "create path (sling:Folder) /etc/personalization",
+    "create path (sling:Folder) /etc/personalization/segments",
+    "",
+    "# Create personalization variants in /content (content-managed)",
+    "# Variants are stored as child nodes of components with sling:resourceType='sling:PersonalizationVariant'",
+    "",
+    "# Grant read access for anonymous users to segments (for client-side evaluation if needed)",
+    "set ACL for anonymous",
+    "  allow jcr:read on /etc/personalization",
+    "end"
+  ]
+}

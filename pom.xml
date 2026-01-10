@@ -27,6 +27,7 @@
         <module>reference</module>
         <module>distribution</module>
         <module>workflow</module>
+        <module>personalization</module>
         <module>feature</module>
         <module>archetype</module>
         <module>thumbnails</module>
