@@ -26,6 +26,12 @@ type Query {
 
   # Server information query (provided by ServerInfoDataFetcher)
   serverInfo: ServerInfo @fetcher(name: "slingcms/serverInfo")
+
+  # Demo queries
+  ping: String @fetcher(name: "slingcms/ping")
+
+  # Returns server time in ISO-8601 format
+  now: String @fetcher(name: "slingcms/now")
 }
 
 type ServerInfo {
