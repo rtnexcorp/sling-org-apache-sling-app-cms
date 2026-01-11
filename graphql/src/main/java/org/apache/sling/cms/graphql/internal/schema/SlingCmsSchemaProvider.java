@@ -19,6 +19,8 @@
 package org.apache.sling.cms.graphql.internal.schema;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.apache.sling.api.resource.Resource;
@@ -39,17 +41,15 @@ public class SlingCmsSchemaProvider implements SchemaProvider {
 
     private static final Logger log = LoggerFactory.getLogger(SlingCmsSchemaProvider.class);
 
-    private static final String SCHEMA = "type Query {\n"
-            + "  hello: String @fetcher(name: \"slingcms/hello\")\n"
-            + "  serverInfo: ServerInfo @fetcher(name: \"slingcms/serverInfo\")\n"
-            + "}\n"
-            + "\n"
-            + "type ServerInfo {\n"
-            + "  version: String\n"
-            + "  timestamp: String\n"
-            + "  environment: String\n"
-            + "  graphqlVersion: String\n"
-            + "}\n";
+    /**
+     * Load the schema from a bundled resource to keep SDL readable while still returning a String.
+     */
+    private static final String SCHEMA_RESOURCE_PATH = "/apps/sling-cms/servlet/GQLschema.gql";
+
+    /**
+     * Fallback location for unit tests (schema file is in this module's resources, not as /apps/... on the test classpath).
+     */
+    private static final String SCHEMA_TEST_RESOURCE_PATH = "/jcr_root/apps/sling-cms/servlet/GQLschema.gql";
 
     @Override
     public String getSchema(@NotNull Resource schemaResource, String[] selectors) throws IOException {
@@ -57,7 +57,20 @@ public class SlingCmsSchemaProvider implements SchemaProvider {
             // selectors can be null depending on invocation
             String selectorLog = selectors == null ? "[]" : Arrays.toString(selectors);
             log.debug("Providing schema for resource: {} with selectors: {}", schemaResource.getPath(), selectorLog);
-            return SCHEMA;
+
+            InputStream in = SlingCmsSchemaProvider.class.getResourceAsStream(SCHEMA_RESOURCE_PATH);
+            if (in == null) {
+                in = SlingCmsSchemaProvider.class.getResourceAsStream(SCHEMA_TEST_RESOURCE_PATH);
+            }
+
+            try (InputStream schemaStream = in) {
+                if (schemaStream == null) {
+                    throw new IOException("Unable to locate schema resource on classpath: " + SCHEMA_RESOURCE_PATH
+                            + " (also tried " + SCHEMA_TEST_RESOURCE_PATH + ")");
+                }
+                // Keep it a plain string so Sling GraphQL Core parses it normally (no script execution)
+                return new String(schemaStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
         } catch (RuntimeException e) {
             log.error("Failed to provide GraphQL schema for resource: {}", schemaResource.getPath(), e);
             throw new IOException("Unable to load GraphQL schema");
