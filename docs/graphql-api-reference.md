@@ -450,6 +450,77 @@ To restrict API access to specific groups:
 }
 ```
 
+### Query Complexity Limiting
+
+The GraphQL API includes query complexity analysis to prevent denial-of-service attacks through deeply nested or overly complex queries.
+
+#### Query Complexity Analyzer Configuration
+
+**Service PID:** `org.apache.sling.cms.graphql.internal.security.QueryComplexityAnalyzer`
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `enabled` | `true` | Enable query complexity analysis |
+| `maxComplexity` | `100` | Maximum allowed complexity score (0 = unlimited) |
+| `maxDepth` | `10` | Maximum allowed query nesting depth (0 = unlimited) |
+| `depthMultiplier` | `1.5` | Multiplier applied per nesting level |
+| `fieldBaseCost` | `1` | Base cost per field |
+| `listFieldMultiplier` | `10` | Multiplier for list-returning fields |
+
+#### How Complexity is Calculated
+
+1. **Field Count**: Each field in the query adds to the base complexity
+2. **Depth Factor**: Nested queries multiply complexity by `depthMultiplier^(depth-1)`
+3. **List Fields**: Fields returning lists (e.g., `items`, `edges`, `nodes`) multiply by `listFieldMultiplier`
+
+**Example:**
+```graphql
+# Simple query - Low complexity (~2)
+{ hello }
+
+# Nested query - Higher complexity
+{
+  serverInfo {      # depth 1
+    version         # depth 2
+    timestamp
+    environment
+  }
+}
+```
+
+#### Complexity Error Response
+
+When a query exceeds limits, a 400 Bad Request is returned:
+
+```json
+{
+  "errors": [
+    {
+      "message": "Query complexity 150 exceeds maximum allowed complexity of 100"
+    }
+  ]
+}
+```
+
+#### Example Configuration
+
+To allow more complex queries:
+```json
+{
+  "enabled": true,
+  "maxComplexity": 200,
+  "maxDepth": 15,
+  "depthMultiplier": 1.2
+}
+```
+
+To disable complexity limiting:
+```json
+{
+  "enabled": false
+}
+```
+
 ## GraphiQL Interface
 
 ### Access

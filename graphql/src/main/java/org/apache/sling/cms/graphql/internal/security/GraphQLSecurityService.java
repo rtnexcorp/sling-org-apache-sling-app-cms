@@ -34,6 +34,9 @@ import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
@@ -68,6 +71,9 @@ public class GraphQLSecurityService {
                 description = "User groups that have access to GraphQL API (empty = all authenticated users)")
         String[] requiredGroups() default {};
     }
+
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+    private volatile QueryComplexityAnalyzer complexityAnalyzer;
 
     private volatile Config config;
 
@@ -147,6 +153,54 @@ public class GraphQLSecurityService {
         }
 
         log.debug("User '{}' authorized for query: {}", resolver.getUserID(), queryName);
+    }
+
+    /**
+     * Validates that a GraphQL query is within complexity limits.
+     *
+     * @param query the GraphQL query string
+     * @throws QueryComplexityException if query exceeds complexity limits
+     */
+    public void validateQueryComplexity(String query) throws QueryComplexityException {
+        if (complexityAnalyzer == null) {
+            log.debug("Query complexity analyzer not available, skipping complexity check");
+            return;
+        }
+
+        complexityAnalyzer.validate(query);
+    }
+
+    /**
+     * Performs full security validation including authentication, authorization, and complexity.
+     *
+     * @param resolver the ResourceResolver for the current user
+     * @param queryName the name of the query being executed
+     * @param query the full GraphQL query string
+     * @throws UnauthorizedException if user is not authenticated
+     * @throws ForbiddenException if user lacks required permissions
+     * @throws QueryComplexityException if query exceeds complexity limits
+     */
+    public void validateRequest(ResourceResolver resolver, String queryName, String query)
+            throws UnauthorizedException, ForbiddenException, QueryComplexityException {
+
+        // First check query complexity (before authentication to prevent DoS)
+        validateQueryComplexity(query);
+
+        // Then check authentication and authorization
+        validateAccess(resolver, queryName);
+    }
+
+    /**
+     * Analyzes query complexity without throwing exceptions.
+     *
+     * @param query the GraphQL query string
+     * @return complexity analysis result, or null if analyzer not available
+     */
+    public QueryComplexityAnalyzer.ComplexityResult analyzeQueryComplexity(String query) {
+        if (complexityAnalyzer == null) {
+            return null;
+        }
+        return complexityAnalyzer.analyze(query);
     }
 
     /**
