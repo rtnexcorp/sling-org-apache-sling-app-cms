@@ -25,6 +25,21 @@ import org.osgi.service.component.annotations.Component;
 /**
  * Data fetcher for the hello GraphQL query.
  * Returns a welcome message for the Sling CMS GraphQL API.
+ * This query allows anonymous access (no authentication required).
+ *
+ * <p>Example GraphQL query:
+ * <pre>
+ * {
+ *   hello
+ * }
+ * </pre>
+ *
+ * <p>Example curl command (no authentication needed):
+ * <pre>
+ * curl -X POST http://localhost:8082/graphql.json \
+ *   -H "Content-Type: application/json" \
+ *   -d '{"query": "{ hello }"}'
+ * </pre>
  */
 @Component(
         service = SlingDataFetcher.class,

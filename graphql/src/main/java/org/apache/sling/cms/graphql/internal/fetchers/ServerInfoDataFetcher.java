@@ -23,30 +23,57 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.cms.graphql.internal.security.GraphQLSecurityService;
 import org.apache.sling.graphql.api.SlingDataFetcher;
 import org.apache.sling.graphql.api.SlingDataFetcherEnvironment;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * Data fetcher that returns server information.
  * Demonstrates a more complex GraphQL query with nested fields.
+ * This query requires authentication.
  *
- * Example query:
+ * <p>Example GraphQL query:
+ * <pre>
  * {
  *   serverInfo {
  *     version
  *     timestamp
  *     environment
+ *     graphqlVersion
  *   }
  * }
+ * </pre>
+ *
+ * <p>Example curl commands:
+ * <pre>
+ * # Authenticated request with basic auth
+ * curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+ *   -H "Content-Type: application/json" \
+ *   -d '{"query": "{ serverInfo { version timestamp environment graphqlVersion } }"}'
+ *
+ * # Unauthenticated request (will return 401 Unauthorized)
+ * curl -X POST http://localhost:8082/graphql.json \
+ *   -H "Content-Type: application/json" \
+ *   -d '{"query": "{ serverInfo { version } }"}'
+ * </pre>
  */
 @Component(
         service = SlingDataFetcher.class,
         property = {"name=slingcms/serverInfo"})
 public class ServerInfoDataFetcher implements SlingDataFetcher<Map<String, Object>> {
 
+    @Reference
+    private GraphQLSecurityService securityService;
+
     @Override
     public Map<String, Object> get(SlingDataFetcherEnvironment environment) throws Exception {
+        // Validate access - this query requires authentication
+        ResourceResolver resolver = environment.getCurrentResource().getResourceResolver();
+        securityService.validateAccess(resolver, "serverInfo");
+
         Map<String, Object> serverInfo = new HashMap<>();
 
         serverInfo.put("version", "1.1.9-SNAPSHOT");

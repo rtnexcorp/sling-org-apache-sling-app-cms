@@ -86,6 +86,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Jackrabbit API for UserManager -->
+        <dependency>
+            <groupId>org.apache.jackrabbit</groupId>
+            <artifactId>oak-jackrabbit-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Servlet API -->
         <dependency>
             <groupId>javax.servlet</groupId>
