@@ -38,8 +38,17 @@ public class SlingCmsSchemaProvider implements SchemaProvider {
 
     private static final Logger log = LoggerFactory.getLogger(SlingCmsSchemaProvider.class);
 
-    private static final String SCHEMA =
-            "type Query {\n" + "  hello: String @fetcher(name: \"slingcms/hello\")\n" + "}\n";
+    private static final String SCHEMA = "type Query {\n"
+            + "  hello: String @fetcher(name: \"slingcms/hello\")\n"
+            + "  serverInfo: ServerInfo @fetcher(name: \"slingcms/serverInfo\")\n"
+            + "}\n"
+            + "\n"
+            + "type ServerInfo {\n"
+            + "  version: String\n"
+            + "  timestamp: String\n"
+            + "  environment: String\n"
+            + "  graphqlVersion: String\n"
+            + "}\n";
 
     @Override
     public String getSchema(@NotNull Resource schemaResource, String[] selectors) throws IOException {

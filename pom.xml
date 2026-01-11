@@ -120,7 +120,7 @@
         <sling-engine-version>2.15.6</sling-engine-version>
         <sling-event-version>1.0.4</sling-event-version>
         <sling-fileoptim-version>0.9.4</sling-fileoptim-version>
-        <sling-graphql-core-version>0.0.22</sling-graphql-core-version>
+        <sling-graphql-core-version>0.0.24</sling-graphql-core-version>
         <sling-i18n-version>2.6.2</sling-i18n-version>
         <sling-jcr-resource-version>3.3.6</sling-jcr-resource-version>
         <sling-johnzon-version>2.0.0</sling-johnzon-version>

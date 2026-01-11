@@ -23,4 +23,14 @@ type Query {
   # Test query to verify GraphQL is working
   # Uses Java data fetcher to avoid HTL recursion
   hello: String @fetcher(name: "slingcms/hello")
+
+  # Server information query (provided by ServerInfoDataFetcher)
+  serverInfo: ServerInfo @fetcher(name: "slingcms/serverInfo")
+}
+
+type ServerInfo {
+  version: String
+  timestamp: String
+  environment: String
+  graphqlVersion: String
 }

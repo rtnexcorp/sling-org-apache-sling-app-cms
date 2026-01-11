@@ -21,7 +21,7 @@
       "start-order": "15"
     },
     {
-      "id": "org.apache.sling:org.apache.sling.graphql.core:0.0.22",
+      "id": "org.apache.sling:org.apache.sling.graphql.core:0.0.24",
       "start-order": "20"
     }
   ],
