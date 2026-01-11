@@ -16,4 +16,4 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-"Hello from Sling CMS GraphQL!"
+Apache Sling CMS GraphQL API - Version 1.1.9 | Ready to serve content queries | Use this endpoint to access CMS content, pages, assets, and metadata through GraphQL queries.

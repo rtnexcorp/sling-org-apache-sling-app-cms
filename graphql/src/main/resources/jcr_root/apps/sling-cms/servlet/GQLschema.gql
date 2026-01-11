@@ -21,5 +21,6 @@ schema {
 
 type Query {
   # Test query to verify GraphQL is working
-  hello: String
+  # Uses Java data fetcher to avoid HTL recursion
+  hello: String @fetcher(name: "slingcms/hello")
 }
