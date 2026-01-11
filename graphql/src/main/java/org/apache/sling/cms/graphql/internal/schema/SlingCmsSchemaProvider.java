@@ -19,6 +19,7 @@
 package org.apache.sling.cms.graphql.internal.schema;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.graphql.api.SchemaProvider;
@@ -52,7 +53,14 @@ public class SlingCmsSchemaProvider implements SchemaProvider {
 
     @Override
     public String getSchema(@NotNull Resource schemaResource, String[] selectors) throws IOException {
-        log.debug("Providing schema for resource: {} with selectors: {}", schemaResource.getPath(), selectors);
-        return SCHEMA;
+        try {
+            // selectors can be null depending on invocation
+            String selectorLog = selectors == null ? "[]" : Arrays.toString(selectors);
+            log.debug("Providing schema for resource: {} with selectors: {}", schemaResource.getPath(), selectorLog);
+            return SCHEMA;
+        } catch (RuntimeException e) {
+            log.error("Failed to provide GraphQL schema for resource: {}", schemaResource.getPath(), e);
+            throw new IOException("Unable to load GraphQL schema");
+        }
     }
 }

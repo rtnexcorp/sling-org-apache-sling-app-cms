@@ -24,6 +24,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -84,42 +85,60 @@ public class GraphQLSecurityFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        if (!config.enabled()) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        if (!(request instanceof SlingHttpServletRequest)) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        SlingHttpServletRequest slingRequest = (SlingHttpServletRequest) request;
-        String requestUri = slingRequest.getRequestURI();
-
-        // Check if this request is for a GraphQL endpoint
-        if (!isGraphQLRequest(requestUri)) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        log.debug("Processing GraphQL security for request: {}", requestUri);
-
-        ResourceResolver resolver = slingRequest.getResourceResolver();
-
-        // Perform basic authentication check at the filter level
-        // Individual data fetchers will perform query-specific authorization
-        if (!securityService.isAuthenticated(resolver)) {
-            // Check if authentication is required (may be disabled in config)
-            if (securityService.requiresAuthentication("graphql")) {
-                log.warn("Unauthenticated access attempt to GraphQL endpoint: {}", requestUri);
-                sendUnauthorizedResponse((HttpServletResponse) response);
+        try {
+            if (!config.enabled()) {
+                chain.doFilter(request, response);
                 return;
             }
-        }
 
-        log.debug("GraphQL request authorized for user: {}", resolver.getUserID());
-        chain.doFilter(request, response);
+            if (!(request instanceof SlingHttpServletRequest)) {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            SlingHttpServletRequest slingRequest = (SlingHttpServletRequest) request;
+            String requestUri = slingRequest.getRequestURI();
+
+            // Check if this request is for a GraphQL endpoint
+            if (!isGraphQLRequest(requestUri)) {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            if (!(response instanceof HttpServletResponse)) {
+                log.warn("GraphQL security filter invoked with non-HTTP response for request {}", requestUri);
+                chain.doFilter(request, response);
+                return;
+            }
+
+            ResourceResolver resolver = slingRequest.getResourceResolver();
+
+            log.debug("Processing GraphQL security for request: {} (userId={})", requestUri, resolver.getUserID());
+
+            // Perform basic authentication check at the filter level
+            // Individual data fetchers will perform query-specific authorization
+            if (!securityService.isAuthenticated(resolver)) {
+                // Check if authentication is required (may be disabled in config)
+                if (securityService.requiresAuthentication("graphql")) {
+                    log.warn("Unauthenticated access attempt to GraphQL endpoint: {}", requestUri);
+                    sendUnauthorizedResponse((HttpServletResponse) response);
+                    return;
+                }
+            }
+
+            chain.doFilter(request, response);
+
+        } catch (RuntimeException e) {
+            String uri = request instanceof HttpServletRequest
+                    ? ((HttpServletRequest) request).getRequestURI()
+                    : "<unknown>";
+            log.error("Unexpected error in GraphQL security filter for request {}", uri, e);
+            if (response instanceof HttpServletResponse) {
+                sendServerErrorResponse((HttpServletResponse) response);
+                return;
+            }
+            throw e;
+        }
     }
 
     private boolean isGraphQLRequest(String requestUri) {
@@ -139,6 +158,12 @@ public class GraphQLSecurityFilter implements Filter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.getWriter().write("{\"errors\":[{\"message\":\"Authentication required\"}]}");
+    }
+
+    private void sendServerErrorResponse(HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"errors\":[{\"message\":\"Internal server error\"}]}");
     }
 
     @Override

@@ -21,6 +21,8 @@ package org.apache.sling.cms.graphql.internal.fetchers;
 import org.apache.sling.graphql.api.SlingDataFetcher;
 import org.apache.sling.graphql.api.SlingDataFetcherEnvironment;
 import org.osgi.service.component.annotations.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Data fetcher for the hello GraphQL query.
@@ -46,9 +48,18 @@ import org.osgi.service.component.annotations.Component;
         property = {"name=slingcms/hello"})
 public class HelloDataFetcher implements SlingDataFetcher<String> {
 
+    private static final Logger log = LoggerFactory.getLogger(HelloDataFetcher.class);
+
     @Override
     public String get(SlingDataFetcherEnvironment environment) throws Exception {
-        return "Apache Sling CMS GraphQL API - Version 1.1.9 | Ready to serve content queries | "
-                + "Use this endpoint to access CMS content, pages, assets, and metadata through GraphQL queries.";
+        try {
+            log.debug("Handling GraphQL query 'hello'");
+            return "Apache Sling CMS GraphQL API - Version 1.1.9 | Ready to serve content queries | "
+                    + "Use this endpoint to access CMS content, pages, assets, and metadata through GraphQL queries.";
+        } catch (RuntimeException e) {
+            // Keep message generic for clients; log full error server-side.
+            log.error("Unexpected error while handling GraphQL query 'hello'", e);
+            throw new Exception("Failed to process hello query");
+        }
     }
 }
