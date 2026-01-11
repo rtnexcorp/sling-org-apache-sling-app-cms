@@ -21,6 +21,7 @@
         <module>ai</module>
         <module>asset</module>
         <module>core</module>
+        <module>graphql</module>
         <module>login</module>
         <module>frontend</module>
         <module>ui</module>

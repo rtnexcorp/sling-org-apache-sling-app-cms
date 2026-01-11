@@ -3,26 +3,6 @@
     {
       "id": "org.apache.sling:org.apache.sling.cms.personalization:${cms-version}",
       "start-order": "20"
-    },
-    {
-      "id": "org.reactivestreams:reactive-streams:1.0.3",
-      "start-order": "15"
-    },
-    {
-      "id": "com.graphql-java:java-dataloader:3.2.0",
-      "start-order": "15"
-    },
-    {
-      "id": "com.graphql-java:graphql-java:20.1",
-      "start-order": "15"
-    },
-    {
-      "id": "org.apache.johnzon:johnzon-mapper:1.2.8",
-      "start-order": "15"
-    },
-    {
-      "id": "org.apache.sling:org.apache.sling.graphql.core:0.0.20",
-      "start-order": "20"
     }
   ],
   "configurations": {
@@ -55,15 +35,6 @@
     "# Grant read access for anonymous users to segments (for client-side evaluation if needed)",
     "set ACL for anonymous",
     "  allow jcr:read on /etc/personalization",
-    "end",
-
-    "",
-    "# Create /graphql mount point used by Sling GraphQL core sample patterns",
-    "create path (sling:Folder) /graphql",
-    "",
-    "# Allow public read access to /graphql so clients can POST queries",
-    "set ACL for everyone",
-    "  allow jcr:read on /graphql",
     "end"
   ]
 }

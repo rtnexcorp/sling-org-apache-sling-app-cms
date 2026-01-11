@@ -1,0 +1,18 @@
+Bundle-Category: sling
+Bundle-Name: Apache Sling - CMS GraphQL
+Bundle-Description: GraphQL infrastructure for Apache Sling CMS
+Bundle-Vendor: The Apache Software Foundation
+
+Export-Package: \
+    org.apache.sling.cms.graphql;version=1.0.0
+
+Sling-Model-Packages: \
+    org.apache.sling.cms.graphql.internal.models
+
+Sling-Initial-Content: jcr_root/apps/sling-cms;overwrite:=true;path:=/apps/sling-cms
+
+-snapshot: SNAPSHOT
+
+-includeresource: \
+    META-INF/LICENSE=../LICENSE,\
+    META-INF/NOTICE=../NOTICE
