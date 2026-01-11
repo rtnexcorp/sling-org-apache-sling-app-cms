@@ -1,0 +1,14 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "jcr:title": "Welcome to Sling CMS",
+  "schema": "article",
+  "title": "Welcome to Sling CMS",
+  "summary": "A quick introduction to the Apache Sling CMS reference project.",
+  "body": "<p>Apache Sling CMS is a reference CMS built on Apache Sling.</p><p>This is a sample article content fragment created from the <strong>Article</strong> schema.</p>",
+  "publishDate": "2026-01-12",
+  "category": "technology",
+  "featured": true,
+  "viewCount": 0,
+  "rating": 4.5
+}

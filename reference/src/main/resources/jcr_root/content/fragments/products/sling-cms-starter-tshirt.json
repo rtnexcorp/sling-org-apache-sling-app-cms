@@ -1,0 +1,13 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "sling:resourceType": "sling-cms/components/cms/contentfragment",
+  "jcr:title": "Sling CMS Starter T-Shirt",
+  "schema": "/conf/global/site/schemas/product",
+  "productName": "Sling CMS Starter T-Shirt",
+  "sku": "SCMS-TSHIRT-001",
+  "description": "<p>Soft, comfortable t-shirt with Sling CMS branding.</p>",
+  "price": 19.99,
+  "stockQuantity": 100,
+  "category": "clothing",
+  "featured": true
+}
