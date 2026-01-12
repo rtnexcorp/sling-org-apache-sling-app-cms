@@ -113,10 +113,13 @@
                 <sly data-sly-test="${field.type == 'RICHTEXT' || field.type == 'richtext'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
-                        <textarea class="textarea richtext-editor" name="${field.name}" id="${field.name}" 
-                                  required="${field.required}" 
-                                  placeholder="${field.description}" 
+                        <div class="rte">
+                            <sly data-sly-resource="${'/libs/sling-cms/components/editor/fields/richtext/toolbar/default' @ resourceType='sling-cms/components/editor/fields/richtext/toolbar'}"></sly>
+                            <textarea class="rte-editor textarea" name="${field.name}" id="${field.name}"
+                                  required="${field.required}"
+                                  placeholder="${field.description}"
                                   rows="10">${fragmentEditor.properties[field.name]}</textarea>
+                        </div>
                     </div>
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
@@ -147,6 +150,8 @@
                 <sly data-sly-test="${field.type == 'TAG' || field.type == 'tag'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
+                        <input type="hidden" name="${field.name}@TypeHint" value="String[]" />
+                        <input type="hidden" name="${field.name}@Delete" value="delete" />
                         <input class="input tagfield" type="text" name="${field.name}" id="${field.name}"
                                value="${fragmentEditor.properties[field.name] @ context='attribute'}"
                                required="${field.required}"
