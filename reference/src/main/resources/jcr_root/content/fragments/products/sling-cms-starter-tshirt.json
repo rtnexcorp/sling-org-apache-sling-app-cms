@@ -8,10 +8,10 @@
   "productName": "Sling CMS Starter T-Shirt",
   "sku": "SCMS-TSHIRT-001",
   "description": "<p>Soft, comfortable t-shirt with Sling CMS branding.</p>",
-  "price": "19.99",
-  "stockQuantity": "100",
+  "price": 19.99,
+  "stockQuantity": 100,
   "category": "clothing",
-  "featured": "true",
+  "featured": true,
 
   "fields": {
     "productName": {

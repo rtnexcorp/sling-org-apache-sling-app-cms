@@ -56,6 +56,12 @@
                 <sly data-sly-test="${field.type == 'INTEGER' || field.type == 'integer' || field.type == 'DECIMAL' || field.type == 'decimal'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
+                        <sly data-sly-test="${field.type == 'INTEGER' || field.type == 'integer'}">
+                            <input type="hidden" name="${field.name}@TypeHint" value="Long" />
+                        </sly>
+                        <sly data-sly-test="${field.type == 'DECIMAL' || field.type == 'decimal'}">
+                            <input type="hidden" name="${field.name}@TypeHint" value="Double" />
+                        </sly>
                         <input class="input" type="number" name="${field.name}" id="${field.name}" 
                                value="${fragmentEditor.properties[field.name]}" 
                                required="${field.required}" 
@@ -68,6 +74,7 @@
                 <sly data-sly-test="${field.type == 'DATE' || field.type == 'date'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
+                        <input type="hidden" name="${field.name}@TypeHint" value="Date" />
                         <input class="input" type="date" name="${field.name}" id="${field.name}" 
                                value="${fragmentEditor.properties[field.name]}" 
                                required="${field.required}"/>
@@ -78,6 +85,7 @@
                 <sly data-sly-test="${field.type == 'DATETIME' || field.type == 'datetime'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
+                        <input type="hidden" name="${field.name}@TypeHint" value="Date" />
                         <input class="input" type="datetime-local" name="${field.name}" id="${field.name}" 
                                value="${fragmentEditor.properties[field.name]}" 
                                required="${field.required}"/>
