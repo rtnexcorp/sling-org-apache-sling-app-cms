@@ -1,25 +1,19 @@
 {
   "jcr:primaryType": "nt:unstructured",
-  "jcr:title": "Welcome to Sling CMS",
+  "jcr:title": "My Article",
   "sling:resourceType": "sling-cms/components/cms/fragment",
-
-  "schemaId": "article",
-
-  "title": "Welcome to Sling CMS",
-  "summary": "A quick introduction to the Apache Sling CMS reference project.",
-  "body": "<p>Apache Sling CMS is a reference CMS built on Apache Sling.</p><p>This is a sample article content fragment created from the <strong>Article</strong> schema.</p>",
-
-  "author": "",
-  "publishDate": "2026-01-12",
-  "expiryDate": "",
-  "category": "technology",
-  "tags": "Apache Sling, CMS, Content Management, AI, Open Source",
-
+  "author": "Jane Developer",
+  "body": "This is about sling cms summery for sling",
+  "category": "business",
+  "expiryDate": "2026-01-14",
   "featuredImage": "#",
-  "featured": "true",
-  "viewCount": "0",
-  "rating": "4.5",
-
+  "publishDate": "2026-01-22",
+  "rating": "4",
+  "schemaId": "article",
+  "summary": "This is about sling cms summery for sling",
+  "tags": "Apache Sling, CMS, Content Management, AI, Open Source",
+  "title": "This is about sling cms",
+  "viewCount": "2",
   "fields": {
     "title": {
       "jcr:primaryType": "nt:unstructured",
@@ -71,5 +65,5 @@
       "jcr:primaryType": "nt:unstructured",
       "fieldType": "DECIMAL"
     }
-  }
+}
 }
