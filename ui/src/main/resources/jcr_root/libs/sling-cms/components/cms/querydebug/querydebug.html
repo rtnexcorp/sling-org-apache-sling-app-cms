@@ -1,0 +1,131 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements. See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership. The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<sly data-sly-use.queryDebugger="org.apache.sling.cms.core.models.QueryDebugger"></sly>
+
+<div id="query-debug" class="scroll-container reload-container">
+  <br />
+  <hr />
+  <br />
+
+  <dl>
+    <sly data-sly-test="${queryDebugger.statement}">
+      <dt>${'Query Statement' @ i18n}</dt>
+      <dd>${queryDebugger.statement}</dd>
+    </sly>
+
+    <sly data-sly-test="${queryDebugger.plan}">
+      <dt>${'Plan' @ i18n}</dt>
+      <dd>${queryDebugger.plan}</dd>
+    </sly>
+
+    <sly data-sly-test="${queryDebugger.exception}">
+      <dt>${'Exception' @ i18n}</dt>
+      <dd>${queryDebugger.exception}</dd>
+    </sly>
+
+    <sly data-sly-test="${queryDebugger.executionEnabled}">
+      <dt>${'Duration' @ i18n}</dt>
+      <dd>${queryDebugger.duration}</dd>
+
+      <dt>${'Size' @ i18n}</dt>
+      <dd>${queryDebugger.estimatedSize}</dd>
+
+      <dt>${'Results' @ i18n}</dt>
+      <dd>
+        <nav class="panel fixed-box">
+          <a class="panel-block" data-sly-repeat.result="${queryDebugger.results}"
+            href="/bin/browser.html${result.path @ context='uri'}" target="_blank">
+            ${result.path} [${result.resourceType}]
+          </a>
+        </nav>
+      </dd>
+    </sly>
+  </dl>
+
+  <br />
+  <hr />
+  <br />
+
+  <h2 id="popular-queries-header">${'Popular Queries' @ i18n}</h2>
+  <div class="table-container">
+    <table class="table popular-queries-table" aria-labelledby="popular-queries-header">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">${'Query Statement' @ i18n}</th>
+          <th scope="col">${'Query Language' @ i18n}</th>
+          <th scope="col">${'Count' @ i18n}</th>
+          <th scope="col">${'Last Thread' @ i18n}</th>
+          <th scope="col">${'Duration' @ i18n}</th>
+          <th scope="col">${'Max Rows Scanned' @ i18n}</th>
+          <th scope="col">${'Rows Scanned / Read' @ i18n}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-sly-repeat.query="${queryDebugger.popularQueries}">
+          <td>${query.position}</td>
+          <td>${query.statement}</td>
+          <td>${query.language}</td>
+          <td>${query.executeCount}</td>
+          <td>${query.lastThread}</td>
+          <td>${query.totalTimeMillis}</td>
+          <td>${query.maxRowsScanned}</td>
+          <td>${query.rowsScanned} / ${query.rowsRead}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <sly data-sly-test="${queryDebugger.slowQueries && queryDebugger.slowQueries.size > 0}">
+    <h2 id="slow-queries-header">${'Slow Queries' @ i18n}</h2>
+    <div class="table-container">
+      <table class="table popular-queries-table" aria-labelledby="slow-queries-header">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">${'Query Statement' @ i18n}</th>
+            <th scope="col">${'Query Language' @ i18n}</th>
+            <th scope="col">${'Count' @ i18n}</th>
+            <th scope="col">${'Last Thread' @ i18n}</th>
+            <th scope="col">${'Duration' @ i18n}</th>
+            <th scope="col">${'Max Rows Scanned' @ i18n}</th>
+            <th scope="col">${'Rows Scanned / Read' @ i18n}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-sly-repeat.query="${queryDebugger.slowQueries}">
+            <td>${query.position}</td>
+            <td>${query.statement}</td>
+            <td>${query.language}</td>
+            <td>${query.executeCount}</td>
+            <td>${query.lastThread}</td>
+            <td>${query.totalTimeMillis}</td>
+            <td>${query.maxRowsScanned}</td>
+            <td>${query.rowsScanned} / ${query.rowsRead}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </sly>
+
+  <br />
+  <br />
+  <br />
+</div>

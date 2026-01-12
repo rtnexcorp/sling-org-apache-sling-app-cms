@@ -40,6 +40,7 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -151,10 +152,19 @@ public class QueryDebugger {
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         ObjectName mbeanName = ObjectName.getInstance(MBEAN_NAME);
         TabularData data = (TabularData) mBeanServer.getAttribute(mbeanName, attributeName);
-        data.values().stream()
-                .map(CompositeData.class::cast)
-                .forEach(compositeData -> target.add(compositeData.getCompositeType().keySet().stream()
-                        .collect(Collectors.toMap(k -> k, compositeData::get))));
+        if (data == null) {
+            return;
+        }
+
+        data.values().stream().map(CompositeData.class::cast).forEach(compositeData -> {
+            if (compositeData == null || compositeData.getCompositeType() == null) {
+                return;
+            }
+            target.add(compositeData.getCompositeType().keySet().stream()
+                    .filter(Objects::nonNull)
+                    .filter(k -> compositeData.get(k) != null)
+                    .collect(Collectors.toMap(k -> k, compositeData::get)));
+        });
     }
 
     /**

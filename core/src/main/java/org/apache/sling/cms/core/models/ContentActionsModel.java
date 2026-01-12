@@ -122,6 +122,9 @@ public class ContentActionsModel {
      * @return the suffix or empty string if none
      */
     public String getRequestSuffix() {
+        if (request == null || request.getRequestPathInfo() == null) {
+            return "";
+        }
         String suffix = request.getRequestPathInfo().getSuffix();
         return suffix != null ? suffix : "";
     }
