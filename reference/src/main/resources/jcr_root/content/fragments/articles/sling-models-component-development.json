@@ -1,0 +1,70 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "Sling Models and Component Development",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "author": "cms-admin",
+  "body": "<p>Sling Models provide a powerful way to map JCR resources to Java objects in Apache Sling. They use annotations to inject resource properties and adapt resources to strongly-typed model objects that can be used in HTL templates.</p><p>The @Model annotation marks a class as a Sling Model, while @Inject annotations automatically populate fields from resource properties. Sling Models support inheritance, validation, and custom injection strategies.</p><p>In component development, Sling Models separate business logic from presentation, making components more testable and maintainable. They work seamlessly with HTL templates and support features like resource adaptation and post-construction processing.</p>",
+  "category": "technology",
+  "expiryDate": "2026-12-31",
+  "featuredImage": "#",
+  "publishDate": "2026-01-18",
+  "rating": 4.5,
+  "schemaId": "article",
+  "summary": "How Sling Models enable clean component development and resource adaptation in Sling.",
+  "tags": "Sling Models, Component Development, HTL, Resource Adaptation, Dependency Injection",
+  "title": "Sling Models and Component Development",
+  "viewCount": 0,
+  "featured": false,
+  "fields": {
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TEXT"
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "REFERENCE"
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TAG",
+      "multiple": true
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "ASSET"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    }
+  }
+}

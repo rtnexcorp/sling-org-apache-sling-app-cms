@@ -1,0 +1,47 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "Apache Sling Developer Guide",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+
+  "schemaId": "product",
+
+  "productName": "Apache Sling Developer Guide",
+  "sku": "SCMS-BOOK-001",
+  "description": "<p>Comprehensive guide to developing applications with Apache Sling. Covers resource resolution, Sling Models, HTL templating, and best practices for building content-centric applications.</p>",
+  "price": 49.99,
+  "stockQuantity": 250,
+  "category": "books",
+  "featured": true,
+
+  "fields": {
+    "productName": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "sku": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "description": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "price": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    },
+    "stockQuantity": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    }
+  }
+}

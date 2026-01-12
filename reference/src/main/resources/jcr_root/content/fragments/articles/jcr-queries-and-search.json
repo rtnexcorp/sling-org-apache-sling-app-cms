@@ -1,0 +1,70 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "JCR Queries and Search",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "author": "cms-admin",
+  "body": "<p>JCR provides powerful querying capabilities for searching content in Apache Sling applications. The JCR Query API supports multiple query languages including JCR-SQL2, JCR-SQL, and XPath, allowing developers to find content based on various criteria.</p><p>Queries can search by property values, node types, paths, and full-text content. The QueryResult interface provides access to search results with support for ordering, limiting, and pagination.</p><p>Sling extends JCR querying with resource-based queries and integration with search indexes. Understanding query optimization, indexing strategies, and search result processing is crucial for building performant content applications.</p>",
+  "category": "technology",
+  "expiryDate": "2026-12-31",
+  "featuredImage": "#",
+  "publishDate": "2026-01-20",
+  "rating": 4,
+  "schemaId": "article",
+  "summary": "Searching and querying content in JCR repositories within Sling applications.",
+  "tags": "JCR Queries, JCR-SQL2, XPath, Full-text Search, Query Optimization",
+  "title": "JCR Queries and Search",
+  "viewCount": 0,
+  "featured": false,
+  "fields": {
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TEXT"
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "REFERENCE"
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TAG",
+      "multiple": true
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "ASSET"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    }
+  }
+}
