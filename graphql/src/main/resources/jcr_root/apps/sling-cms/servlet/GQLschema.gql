@@ -32,6 +32,32 @@ type Query {
 
   # Returns server time in ISO-8601 format
   now: String @fetcher(name: "slingcms/now")
+
+  # Fetch a single content fragment by id (path)
+  fragment(id: String!): ContentFragment @fetcher(name: "slingcms/fragment")
+
+  # List content fragments with filtering, sorting, and pagination
+  fragments(
+    schemaType: String
+    path: String
+    filters: [ContentFragmentFilterInput!]
+    sortField: String
+    sortDirection: SortDirection
+    limit: Int
+    offset: Int
+    cursor: String
+  ): ContentFragmentConnection @fetcher(name: "slingcms/fragments")
+
+  # Full-text search across fragments
+  fragmentSearch(
+    searchTerm: String!
+    schemaType: String
+    limit: Int
+    offset: Int
+  ): ContentFragmentConnection @fetcher(name: "slingcms/fragmentSearch")
+
+  # Schema introspection (enabled schemas)
+  schemas: [Schema] @fetcher(name: "slingcms/schemas")
 }
 
 type ServerInfo {
@@ -39,4 +65,77 @@ type ServerInfo {
   timestamp: String
   environment: String
   graphqlVersion: String
+}
+
+type ContentFragment {
+  id: String
+  name: String
+  schemaId: String
+  title: String
+  created: String
+  modified: String
+  createdBy: String
+  modifiedBy: String
+  fields: [FieldValue]
+}
+
+type FieldValue {
+  name: String
+  type: String
+  multiple: Boolean
+  value: String
+  values: [String]
+}
+
+type ContentFragmentConnection {
+  nodes: [ContentFragment]
+  pageInfo: PageInfo
+  totalCount: Int
+}
+
+type PageInfo {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  startCursor: String
+  endCursor: String
+}
+
+input ContentFragmentFilterInput {
+  fieldName: String!
+  operator: FilterOperator!
+  value: String
+}
+
+enum FilterOperator {
+  EQ
+  NE
+  CONTAINS
+  GT
+  GTE
+  LT
+  LTE
+  IS_NULL
+  IS_NOT_NULL
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+type Schema {
+  id: String
+  title: String
+  description: String
+  enabled: Boolean
+  fields: [SchemaField]
+}
+
+type SchemaField {
+  name: String
+  title: String
+  description: String
+  type: String
+  multiple: Boolean
+  required: Boolean
 }
