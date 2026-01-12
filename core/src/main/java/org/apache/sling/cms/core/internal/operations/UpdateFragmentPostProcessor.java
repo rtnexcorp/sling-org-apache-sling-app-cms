@@ -107,7 +107,21 @@ public class UpdateFragmentPostProcessor implements SlingPostProcessor {
 
             // Get the value from request parameters
             RequestParameter param = request.getRequestParameter(fieldName);
+
+            // Handle boolean fields specially - unchecked checkboxes don't send a parameter
             if (param == null) {
+                if (field.getType() == org.apache.sling.cms.schema.FieldType.BOOLEAN) {
+                    // Checkbox was unchecked, set to false
+                    Node fieldNode;
+                    if (fragmentNode.hasNode(fieldName)) {
+                        fieldNode = fragmentNode.getNode(fieldName);
+                    } else {
+                        fieldNode = fragmentNode.addNode(fieldName, "nt:unstructured");
+                        fieldNode.setProperty("fieldType", field.getType().name());
+                    }
+                    fieldNode.setProperty("value", false);
+                    log.debug("Set unchecked boolean field {} to false", fieldName);
+                }
                 continue; // Field not in this request
             }
 
@@ -167,7 +181,7 @@ public class UpdateFragmentPostProcessor implements SlingPostProcessor {
                 }
                 break;
             case DATE:
-                // Expect yyyy-MM-dd (matches example fragments)
+                // Expect yyyy-MM-dd (matches HTML date input)
                 if (!setCalendarValue(fieldNode, fieldValue, "yyyy-MM-dd")) {
                     // If parsing fails, fall back to String rather than losing user input
                     fieldNode.setProperty("value", fieldValue);

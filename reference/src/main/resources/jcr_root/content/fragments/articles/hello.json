@@ -8,12 +8,12 @@
   "expiryDate": "2026-01-14",
   "featuredImage": "#",
   "publishDate": "2026-01-22",
-  "rating": "4",
+  "rating": 4,
   "schemaId": "article",
   "summary": "This is about sling cms summery for sling",
   "tags": "Apache Sling, CMS, Content Management, AI, Open Source",
   "title": "This is about sling cms",
-  "viewCount": "2",
+  "viewCount": 2,
   "fields": {
     "title": {
       "jcr:primaryType": "nt:unstructured",
