@@ -40,7 +40,8 @@ public class IndexCreator implements RepositoryInitializer {
     private static final String VAL_NODE_NAME = ":nodeName";
     private static final String PN_NODE_NAME = "nodeName";
     private static final String PN_JCR_TITLE = "jcrTitle";
-    private static final String[] CONTENT_PATHS = new String[] {"/content/reference", "/static"};
+    private static final String[] CONTENT_PATHS = new String[] {"/content", "/static"};
+    private static final String[] FRAGMENT_PATHS = new String[] {"/content/fragments"};
     private static final String JCR_CONTENT_PROPERTIES = "jcr:content/*";
     private static final String SLINGCMS = "slingcms";
 
@@ -231,17 +232,15 @@ public class IndexCreator implements RepositoryInitializer {
         IndexDefinitionBuilder builder = new IndexDefinitionBuilder(index, true);
         builder.async(IndexConstants.ASYNC_PROPERTY_NAME, IndexConstants.INDEXING_MODE_NRT);
         builder.evaluatePathRestrictions();
-        builder.includedPaths(CONTENT_PATHS);
+        builder.includedPaths(FRAGMENT_PATHS);
         builder.tags(SLINGCMS, "slingcms-fragments");
 
         // Index nt:unstructured nodes under /content/fragments path
         IndexRule indexRule = builder.indexRule(JcrConstants.NT_UNSTRUCTURED);
         indexRule.indexNodeName();
-        // Filter by sling:resourceType property - only nodes with this value will match queries
-        indexRule
-                .property("slingResourceType", "sling:resourceType", false)
-                .propertyIndex()
-                .valuePattern("sling-cms/components/cms/fragment");
+
+        // Index sling:resourceType for query filtering
+        indexRule.property("slingResourceType", "sling:resourceType", false).propertyIndex();
 
         // Property fulltext fields (explicit)
         indexRule.property("title", "title", false).analyzed().propertyIndex();
