@@ -40,7 +40,7 @@ public class IndexCreator implements RepositoryInitializer {
     private static final String VAL_NODE_NAME = ":nodeName";
     private static final String PN_NODE_NAME = "nodeName";
     private static final String PN_JCR_TITLE = "jcrTitle";
-    private static final String[] CONTENT_PATHS = new String[] {"/content", "/static"};
+    private static final String[] CONTENT_PATHS = new String[] {"/content/reference", "/static"};
     private static final String JCR_CONTENT_PROPERTIES = "jcr:content/*";
     private static final String SLINGCMS = "slingcms";
 
@@ -54,6 +54,7 @@ public class IndexCreator implements RepositoryInitializer {
         ensureSlingEventJobIndex(indexRoot);
         ensureSlingFileIndex(indexRoot);
         ensureSlingPageIndex(indexRoot);
+        ensureFragmentsIndex(indexRoot);
         ensureSlingTaxonomyIndex(indexRoot);
         log.info("Indexes initialized");
     }
@@ -221,6 +222,41 @@ public class IndexCreator implements RepositoryInitializer {
                 .analyzed()
                 .propertyIndex()
                 .ordered();
+    }
+
+    private void ensureFragmentsIndex(NodeBuilder indexRoot) {
+        log.info("ensureFragmentsIndex");
+        NodeBuilder index = ensureNode(indexRoot, "slingFragments", IndexConstants.INDEX_DEFINITIONS_NODE_TYPE);
+
+        IndexDefinitionBuilder builder = new IndexDefinitionBuilder(index, true);
+        builder.async(IndexConstants.ASYNC_PROPERTY_NAME, IndexConstants.INDEXING_MODE_NRT);
+        builder.evaluatePathRestrictions();
+        builder.includedPaths(CONTENT_PATHS);
+        builder.tags(SLINGCMS, "slingcms-fragments");
+
+        // Index nt:unstructured nodes under /content/fragments path
+        IndexRule indexRule = builder.indexRule(JcrConstants.NT_UNSTRUCTURED);
+        indexRule.indexNodeName();
+        // Filter by sling:resourceType property - only nodes with this value will match queries
+        indexRule
+                .property("slingResourceType", "sling:resourceType", false)
+                .propertyIndex()
+                .valuePattern("sling-cms/components/cms/fragment");
+
+        // Property fulltext fields (explicit)
+        indexRule.property("title", "title", false).analyzed().propertyIndex();
+        indexRule.property("summary", "summary", false).analyzed().propertyIndex();
+        indexRule.property("body", "body", false).analyzed().propertyIndex();
+
+        // Common metadata fields often used for filtering/sorting
+        indexRule
+                .property(PN_JCR_TITLE, "jcr:title", false)
+                .analyzed()
+                .propertyIndex()
+                .ordered();
+
+        // Enable fulltext queries like CONTAINS(n.*, 'term')
+        indexRule.property("allContent", ".", false).nodeScopeIndex();
     }
 
     private void ensureCommonSlingProperties(IndexRule indexRule) {
