@@ -20,6 +20,7 @@
 * [Editor Field Types](editor-field-types.md)
 * [Extending Sling CMS](extending.md)
 * [Multifield](multifield.md)
+* [Oak Indexing](oak-indexing.md)
 * [Project Archetype](project-archetype.md)
 * [Reference Project](reference.md)
 * [User Generated Content](user-generated-content.md)
