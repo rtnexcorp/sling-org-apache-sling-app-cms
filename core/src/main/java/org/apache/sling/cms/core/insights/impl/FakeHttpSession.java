@@ -76,7 +76,7 @@ public class FakeHttpSession implements HttpSession {
     }
 
     @Override
-    public Enumeration<?> getAttributeNames() {
+    public Enumeration<String> getAttributeNames() {
         throw new UnsupportedOperationException();
     }
 

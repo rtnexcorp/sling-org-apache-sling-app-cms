@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>sling-bundle-parent</artifactId>
-        <version>64</version>
+        <version>65</version>
     </parent>
     <artifactId>org.apache.sling.cms</artifactId>
     <version>1.1.9-SNAPSHOT</version>
@@ -111,7 +111,8 @@
         <poi-version>5.5.1</poi-version>
         <reactive-streams-version>1.0.3</reactive-streams-version>
         <!-- CVE-2025-31672 fix -->
-        <servlet-api-version>3.0-alpha-1</servlet-api-version>
+        <!-- NOTE: javax.servlet:servlet-api:4.0.1 does not exist in Maven Central; use javax.servlet:javax.servlet-api instead -->
+        <javax-servlet-api-version>4.0.1</javax-servlet-api-version>
         <sling-api-version>2.27.2</sling-api-version>
         <sling-caconfig-version>1.3.0</sling-caconfig-version>
         <sling-classloader-version>1.4.4</sling-classloader-version>
@@ -390,8 +391,8 @@
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>${servlet-api-version}</version>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax-servlet-api-version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.management.j2ee</groupId>

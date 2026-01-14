@@ -18,11 +18,20 @@
  */
 package org.apache.sling.cms.core.insights.impl;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
+import javax.servlet.http.Part;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -78,7 +87,7 @@ public class FakeRequest implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration<?> getAttributeNames() {
+    public Enumeration<String> getAttributeNames() {
         return Collections.enumeration(attributes.keySet());
     }
 
@@ -95,6 +104,11 @@ public class FakeRequest implements HttpServletRequest {
     @Override
     public int getContentLength() {
         return 0;
+    }
+
+    @Override
+    public long getContentLengthLong() {
+        return 0L;
     }
 
     @Override
@@ -123,13 +137,13 @@ public class FakeRequest implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration<?> getHeaderNames() {
-        return null;
+    public Enumeration<String> getHeaderNames() {
+        return Collections.emptyEnumeration();
     }
 
     @Override
-    public Enumeration<?> getHeaders(String name) {
-        return null;
+    public Enumeration<String> getHeaders(String name) {
+        return Collections.emptyEnumeration();
     }
 
     @Override
@@ -153,7 +167,7 @@ public class FakeRequest implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration<?> getLocales() {
+    public Enumeration<Locale> getLocales() {
         return Collections.enumeration(Collections.singleton(Locale.getDefault()));
     }
 
@@ -187,12 +201,21 @@ public class FakeRequest implements HttpServletRequest {
     }
 
     @Override
-    public Map<String, Object> getParameterMap() {
-        return parameters;
+    public Map<String, String[]> getParameterMap() {
+        Map<String, String[]> map = new HashMap<>();
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof String[]) {
+                map.put(entry.getKey(), (String[]) value);
+            } else if (value != null) {
+                map.put(entry.getKey(), new String[] {value.toString()});
+            }
+        }
+        return map;
     }
 
     @Override
-    public Enumeration<?> getParameterNames() {
+    public Enumeration<String> getParameterNames() {
         return Collections.enumeration(parameters.keySet());
     }
 
@@ -349,5 +372,76 @@ public class FakeRequest implements HttpServletRequest {
     @Override
     public void setCharacterEncoding(String s) throws UnsupportedEncodingException {
         // do nothing
+    }
+
+    @Override
+    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String changeSessionId() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+        return false;
+    }
+
+    @Override
+    public void login(String username, String password) throws ServletException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void logout() throws ServletException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Part getPart(String name) throws IOException, ServletException {
+        return null;
+    }
+
+    @Override
+    public java.util.Collection<Part> getParts() throws IOException, ServletException {
+        return java.util.Collections.emptyList();
+    }
+
+    @Override
+    public ServletContext getServletContext() {
+        return null;
+    }
+
+    @Override
+    public AsyncContext startAsync() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
+            throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isAsyncStarted() {
+        return false;
+    }
+
+    @Override
+    public boolean isAsyncSupported() {
+        return false;
+    }
+
+    @Override
+    public AsyncContext getAsyncContext() {
+        return null;
+    }
+
+    @Override
+    public DispatcherType getDispatcherType() {
+        return DispatcherType.REQUEST;
     }
 }

@@ -30,6 +30,8 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -52,6 +54,16 @@ public class FakeResponse implements HttpServletResponse {
         md = MessageDigest.getInstance("MD5");
 
         outputStream = new ServletOutputStream() {
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setWriteListener(javax.servlet.WriteListener writeListener) {
+                // no async IO support
+            }
 
             @Override
             public void write(int b) throws IOException {
@@ -205,6 +217,11 @@ public class FakeResponse implements HttpServletResponse {
     }
 
     @Override
+    public void setContentLengthLong(long len) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void setContentType(String type) {
         contentType = type;
     }
@@ -237,5 +254,25 @@ public class FakeResponse implements HttpServletResponse {
     @Override
     public void setStatus(int i, String s) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getHeader(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public int getStatus() {
+        return 0;
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        return Collections.emptyList();
     }
 }
