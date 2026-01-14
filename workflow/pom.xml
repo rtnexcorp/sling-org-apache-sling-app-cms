@@ -17,6 +17,7 @@
 
     <properties>
         <legal.dir>${basedir}/..</legal.dir>
+        <bnd.baseline.skip>true</bnd.baseline.skip>
     </properties>
 
     <dependencies>

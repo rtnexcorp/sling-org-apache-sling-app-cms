@@ -242,17 +242,12 @@ public class IndexCreator implements RepositoryInitializer {
         // Index sling:resourceType for query filtering
         indexRule.property("slingResourceType", "sling:resourceType", false).propertyIndex();
 
-        // Property fulltext fields (explicit)
-        indexRule.property("title", "title", false).analyzed().propertyIndex();
-        indexRule.property("summary", "summary", false).analyzed().propertyIndex();
-        indexRule.property("body", "body", false).analyzed().propertyIndex();
+        // Exact-match/sort fields
+        indexRule.property(PN_JCR_TITLE, "jcr:title", false).propertyIndex().ordered();
 
-        // Common metadata fields often used for filtering/sorting
-        indexRule
-                .property(PN_JCR_TITLE, "jcr:title", false)
-                .analyzed()
-                .propertyIndex()
-                .ordered();
+        // Fulltext fields used by fragment search
+        indexRule.property("summary", "summary", false).propertyIndex();
+        indexRule.property("body", "body", false).propertyIndex();
 
         // Enable fulltext queries like CONTAINS(n.*, 'term')
         indexRule.property("allContent", ".", false).nodeScopeIndex();

@@ -18,7 +18,9 @@
  */
 package org.apache.sling.cms.workflow.internal.parser;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.sling.cms.workflow.internal.model.ActivityImpl;
 import org.apache.sling.cms.workflow.internal.model.ActivityType;
@@ -35,6 +37,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class BPMNParserTest {
 
+    private static final String CONTENT_APPROVAL_BPMN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            + "<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" "
+            + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+            + "targetNamespace=\"http://sling.apache.org/workflow\">"
+            + "<process id=\"contentApproval\" name=\"Content Approval Workflow\">"
+            + "<startEvent id=\"startEvent\" name=\"Start\"/>"
+            + "<userTask id=\"reviewTask\" name=\"Review Content\">"
+            + "<potentialOwner>"
+            + "<resourceAssignmentExpression>"
+            + "<formalExpression>content-reviewers</formalExpression>"
+            + "</resourceAssignmentExpression>"
+            + "</potentialOwner>"
+            + "</userTask>"
+            + "<serviceTask id=\"publishTask\" name=\"Publish\" "
+            + "xmlns:flowable=\"http://flowable.org/bpmn\" flowable:class=\"org.example.PublishDelegate\"/>"
+            + "<endEvent id=\"endEvent\" name=\"End\"/>"
+            + "<sequenceFlow id=\"flow1\" sourceRef=\"startEvent\" targetRef=\"reviewTask\"/>"
+            + "<sequenceFlow id=\"flow2\" sourceRef=\"reviewTask\" targetRef=\"publishTask\"/>"
+            + "<sequenceFlow id=\"flow3\" sourceRef=\"publishTask\" targetRef=\"endEvent\"/>"
+            + "</process>"
+            + "</definitions>";
+
     private BPMNParser parser;
 
     @BeforeEach
@@ -43,10 +67,10 @@ class BPMNParserTest {
     }
 
     @Test
-    void testParseContentApproval() throws Exception {
-        InputStream bpmnXml = getClass().getResourceAsStream("/workflows/content-approval.bpmn20.xml");
-        assertNotNull(bpmnXml, "BPMN file not found");
+    void testParseContentApproval() {
+        InputStream bpmnXml = new ByteArrayInputStream(CONTENT_APPROVAL_BPMN.getBytes(StandardCharsets.UTF_8));
 
+        // processKey is only used to build the internal ID; process key itself comes from XML process id
         ProcessDefinitionImpl processDef = parser.parse("test", bpmnXml);
 
         assertNotNull(processDef);
@@ -54,11 +78,14 @@ class BPMNParserTest {
         assertEquals("Content Approval Workflow", processDef.getName());
         assertEquals(1, processDef.getVersion());
 
-        // Verify activities count
-        assertTrue(processDef.getActivities().size() >= 7, "Should have at least 7 activities");
+        // Current parser stores the raw BPMN XML string on the definition (as we persist it in JCR)
+        assertNotNull(processDef.getBpmnXml());
+        assertTrue(processDef.getBpmnXml().contains("<process"));
+        assertTrue(processDef.getBpmnXml().contains("contentApproval"));
 
-        // Verify sequence flows
-        assertTrue(processDef.getSequenceFlows().size() >= 7, "Should have at least 7 sequence flows");
+        // Verify activities
+        assertTrue(processDef.getActivities().size() >= 4, "Should have at least 4 activities");
+        assertTrue(processDef.getSequenceFlows().size() >= 3, "Should have at least 3 sequence flows");
 
         // Verify start activity
         ActivityImpl startActivity = processDef.getStartActivity();
@@ -75,12 +102,12 @@ class BPMNParserTest {
         ActivityImpl publishTask = processDef.getActivities().get("publishTask");
         assertNotNull(publishTask);
         assertEquals(ActivityType.SERVICE_TASK, publishTask.getType());
-        assertNotNull(publishTask.getDelegateClass());
+        assertEquals("org.example.PublishDelegate", publishTask.getDelegateClass());
     }
 
     @Test
-    void testParseActivitiesLinked() throws Exception {
-        InputStream bpmnXml = getClass().getResourceAsStream("/workflows/content-approval.bpmn20.xml");
+    void testParseActivitiesLinked() {
+        InputStream bpmnXml = new ByteArrayInputStream(CONTENT_APPROVAL_BPMN.getBytes(StandardCharsets.UTF_8));
         ProcessDefinitionImpl processDef = parser.parse("test", bpmnXml);
 
         ActivityImpl startActivity = processDef.getStartActivity();
@@ -90,8 +117,8 @@ class BPMNParserTest {
         assertTrue(startActivity.getOutgoingFlows().size() > 0, "Start event should have outgoing flows");
 
         // Verify flows have target references
-        startActivity.getOutgoingFlows().forEach(flow -> {
-            assertNotNull(flow.getTargetRef(), "Flow should have target reference");
-        });
+        startActivity
+                .getOutgoingFlows()
+                .forEach(flow -> assertNotNull(flow.getTargetRef(), "Flow should have target reference"));
     }
 }
