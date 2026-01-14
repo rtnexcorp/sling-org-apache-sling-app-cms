@@ -1,97 +1,62 @@
 # GraphQL API Reference - Apache Sling CMS
 
-> **Module:** `org.apache.sling.cms.graphql`  
-> **Version:** 1.1.9-SNAPSHOT  
-> **GraphQL Core:** Apache Sling GraphQL Core 0.0.24  
-> **Last Updated:** January 11, 2026
+> **Module:** `org.apache.sling.cms.graphql`
 
 ## Overview
 
-The GraphQL module provides a GraphQL API for querying Apache Sling CMS content. This reference documents the current production schema and query capabilities.
+The GraphQL module exposes a Sling GraphQL Core endpoint backed by Sling CMS-specific schema providers and Java data fetchers.
 
-## Endpoint Information
+## Endpoints
 
-| Property | Value |
-|----------|-------|
-| **Base URL** | `http://localhost:8082/graphql.json` |
-| **GraphiQL UI** | `http://localhost:8082/graphql` (HTML) |
-| **Methods** | `GET`, `POST` |
-| **Content-Type** | `application/json` |
-| **Authentication** | Required for protected queries (configurable) |
+| Endpoint | Purpose |
+|---|---|
+| `http://localhost:8082/graphql.json` | GraphQL JSON endpoint (GET/POST) |
+| `http://localhost:8082/graphql` | GraphiQL UI (HTML) |
 
-## Current Schema (v1.0)
+## Current schema
+
+> Source of truth: `graphql/src/main/resources/jcr_root/apps/sling-cms/servlet/GQLschema.gql`
 
 ```graphql
 type Query {
-  # Returns a welcome message for API discovery
-  # Use this to verify the GraphQL API is working
-  hello: String @fetcher(name: "slingcms/hello")
-  
-  # Returns server information and metadata
-  # Useful for health checks and version detection
-  serverInfo: ServerInfo @fetcher(name: "slingcms/serverInfo")
-}
+  hello: String
+  serverInfo: ServerInfo
+  ping: String
+  now: String
 
-# Server metadata and version information
-type ServerInfo {
-  # CMS version (e.g., "1.1.9-SNAPSHOT")
-  version: String
-  
-  # Current server timestamp in ISO 8601 format
-  # Example: "2026-01-11T10:30:45-08:00"
-  timestamp: String
-  
-  # Environment name (e.g., "development", "production")
-  environment: String
-  
-  # GraphQL Core library version (e.g., "0.0.24")
-  graphqlVersion: String
+  fragment(id: String!): ContentFragment
+  fragments(
+    schemaType: String
+    path: String
+    filters: [ContentFragmentFilterInput!]
+    sortField: String
+    sortDirection: SortDirection
+    limit: Int
+    offset: Int
+    cursor: String
+  ): ContentFragmentConnection
+
+  fragmentSearch(searchTerm: String!, schemaType: String, limit: Int, offset: Int): ContentFragmentConnection
+  schemas: [Schema]
 }
 ```
 
-## Query Examples
+## Query examples
 
-### 1. Hello Query (Health Check) - Anonymous Access
+### 1) `hello` (health check)
 
-**Purpose:** Verify GraphQL API is accessible and operational
-**Authentication:** Not required (anonymous access allowed)
-
-**Query:**
 ```graphql
-{
-  hello
-}
+{ hello }
 ```
 
-**cURL Request (no authentication needed):**
 ```bash
 curl -X POST http://localhost:8082/graphql.json \
   -H "Content-Type: application/json" \
-  -d '{"query": "{ hello }"}'
+  -d '{"query":"{ hello }"}'
 ```
 
-**Response:**
-```json
-{
-  "data": {
-    "hello": "Apache Sling CMS GraphQL API - Version 1.1.9 | Ready to serve content queries | Use this endpoint to access CMS content, pages, assets, and metadata through GraphQL queries."
-  }
-}
-```
+### 2) `serverInfo`
 
-**Status Codes:**
-- `200 OK` - API is functional
-- `404 Not Found` - GraphQL module not deployed
-- `500 Internal Server Error` - Configuration issue
-
----
-
-### 2. Server Info Query - Authenticated Access
-
-**Purpose:** Get server metadata, version, and environment information
-**Authentication:** Required (HTTP 401 returned if not authenticated)
-
-**Query:**
 ```graphql
 {
   serverInfo {
@@ -103,829 +68,297 @@ curl -X POST http://localhost:8082/graphql.json \
 }
 ```
 
-**cURL Request (with authentication):**
-```bash
-# Authenticated request with basic auth
-curl -u admin:admin -X POST http://localhost:8082/graphql.json \
-  -H "Content-Type: application/json" \
-  -d '{"query": "{ serverInfo { version timestamp environment graphqlVersion } }"}'
-```
-
-**cURL Request (without authentication - will fail):**
-```bash
-# Unauthenticated request - returns 401 Unauthorized
-curl -X POST http://localhost:8082/graphql.json \
-  -H "Content-Type: application/json" \
-  -d '{"query": "{ serverInfo { version } }"}'
-```
-
-**Response (authenticated):**
-```json
-{
-  "data": {
-    "serverInfo": {
-      "version": "1.1.9-SNAPSHOT",
-      "timestamp": "2026-01-11T18:45:30.123Z",
-      "environment": "development",
-      "graphqlVersion": "0.0.24"
-    }
-  }
-}
-```
-
-**Response (unauthenticated - 401):**
-```json
-{
-  "errors": [
-    {
-      "message": "Authentication required"
-    }
-  ]
-}
-```
-
-**Field Details:**
-
-| Field | Type | Description | Example |
-|-------|------|-------------|---------|
-| `version` | String | CMS version from pom.xml | `"1.1.9-SNAPSHOT"` |
-| `timestamp` | String | Current server time (ISO 8601) | `"2026-01-11T18:45:30Z"` |
-| `environment` | String | Runtime environment | `"development"` |
-| `graphqlVersion` | String | Sling GraphQL Core version | `"0.0.24"` |
-
----
-
-### 3. Partial Field Selection
-
-**Purpose:** Request only specific fields to reduce response size
-
-**Query:**
-```graphql
-{
-  serverInfo {
-    version
-    timestamp
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "data": {
-    "serverInfo": {
-      "version": "1.1.9-SNAPSHOT",
-      "timestamp": "2026-01-11T18:45:30.123Z"
-    }
-  }
-}
-```
-
----
-
-### 4. Multiple Queries in One Request
-
-**Purpose:** Fetch multiple data points in a single HTTP request
-
-**Query:**
-```graphql
-{
-  hello
-  serverInfo {
-    version
-    environment
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "data": {
-    "hello": "Apache Sling CMS GraphQL API - Version 1.1.9 | Ready to serve content queries...",
-    "serverInfo": {
-      "version": "1.1.9-SNAPSHOT",
-      "environment": "development"
-    }
-  }
-}
-```
-
----
-
-### 5. GET Request (URL-Encoded Query)
-
-**Purpose:** Use GET method for caching and browser bookmarks
-
-**cURL Request:**
-```bash
-curl -G http://localhost:8082/graphql.json \
-  --data-urlencode "query={ serverInfo { version } }"
-```
-
-**Browser URL:**
-```
-http://localhost:8082/graphql.json?query=%7B%20serverInfo%20%7B%20version%20%7D%20%7D
-```
-
-**Response:** (same as POST)
-
----
-
-## Error Responses
-
-### Syntax Error
-
-**Query:**
-```graphql
-{
-  hello(
-}
-```
-
-**Response:**
-```json
-{
-  "errors": [
-    {
-      "message": "Invalid Syntax : offending token '}'",
-      "locations": [
-        {
-          "line": 2,
-          "column": 3
-        }
-      ],
-      "extensions": {
-        "classification": "InvalidSyntax"
-      }
-    }
-  ]
-}
-```
-
-### Unknown Field
-
-**Query:**
-```graphql
-{
-  unknownField
-}
-```
-
-**Response:**
-```json
-{
-  "errors": [
-    {
-      "message": "Validation error of type FieldUndefined: Field 'unknownField' in type 'Query' is undefined",
-      "locations": [
-        {
-          "line": 2,
-          "column": 3
-        }
-      ],
-      "extensions": {
-        "classification": "ValidationError"
-      }
-    }
-  ]
-}
-```
-
-### Data Fetcher Exception
-
-**Scenario:** Data fetcher throws an exception
-
-**Response:**
-```json
-{
-  "errors": [
-    {
-      "message": "Exception while fetching data (/serverInfo) : NullPointerException",
-      "path": ["serverInfo"],
-      "locations": [
-        {
-          "line": 2,
-          "column": 3
-        }
-      ],
-      "extensions": {
-        "classification": "DataFetchingException"
-      }
-    }
-  ],
-  "data": {
-    "serverInfo": null
-  }
-}
-```
-
-## Authentication & Authorization
-
-The GraphQL API uses a configurable security system with per-query authentication requirements.
-
-### Security Architecture
-
-The security is implemented through:
-
-1. **GraphQLSecurityFilter** - Servlet filter that intercepts GraphQL requests
-2. **GraphQLSecurityService** - OSGi service providing authentication/authorization checks
-3. **Per-query validation** - Data fetchers can enforce query-specific security
-
-### Query Security Levels
-
-| Query | Authentication | Description |
-|-------|----------------|-------------|
-| `hello` | **Not required** | Anonymous access allowed (health check) |
-| `serverInfo` | **Required** | Must be authenticated |
-
-### OSGi Configuration
-
-#### GraphQL Security Service Configuration
-
-Configure via OSGi console or `.cfg.json` file:
-
-**Service PID:** `org.apache.sling.cms.graphql.internal.security.GraphQLSecurityService`
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `enableAuthentication` | `true` | Require authentication for GraphQL queries |
-| `allowedAnonymousQueries` | `["hello"]` | Queries that don't require authentication |
-| `requiredGroups` | `[]` | User groups with API access (empty = all authenticated users) |
-
-**Example Configuration:**
-```json
-{
-  "enableAuthentication": true,
-  "allowedAnonymousQueries": ["hello", "healthCheck"],
-  "requiredGroups": ["graphql-users", "administrators"]
-}
-```
-
-#### GraphQL Security Filter Configuration
-
-**Service PID:** `org.apache.sling.cms.graphql.internal.filters.GraphQLSecurityFilter`
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `enabled` | `true` | Enable the security filter |
-| `graphqlPaths` | `["/graphql"]` | URL patterns to protect |
-
-### Authentication Examples
-
-#### Authenticated Request (Basic Auth)
-
-```bash
-# Using basic authentication
-curl -u admin:admin -X POST http://localhost:8082/graphql.json \
-  -H "Content-Type: application/json" \
-  -d '{"query": "{ serverInfo { version timestamp } }"}'
-```
-
-#### Authenticated Request (Session Cookie)
-
-```bash
-# First, login to get session cookie
-curl -c cookies.txt -X POST http://localhost:8080/system/sling/form/login \
-  -d "j_username=admin&j_password=admin"
-
-# Then use session cookie for GraphQL requests
-curl -b cookies.txt -X POST http://localhost:8082/graphql.json \
-  -H "Content-Type: application/json" \
-  -d '{"query": "{ serverInfo { version } }"}'
-```
-
-#### Anonymous Request (Allowed Queries Only)
-
-```bash
-# No authentication needed for 'hello' query
-curl -X POST http://localhost:8082/graphql.json \
-  -H "Content-Type: application/json" \
-  -d '{"query": "{ hello }"}'
-```
-
-### Error Responses
-
-#### 401 Unauthorized
-
-Returned when authentication is required but not provided:
-
-```json
-{
-  "errors": [
-    {
-      "message": "Authentication required"
-    }
-  ]
-}
-```
-
-#### 403 Forbidden
-
-Returned when user is authenticated but lacks required group membership:
-
-```json
-{
-  "errors": [
-    {
-      "message": "Insufficient permissions to access GraphQL API"
-    }
-  ]
-}
-```
-
-### Group-Based Access Control
-
-To restrict API access to specific groups:
-
-1. Configure `requiredGroups` in GraphQL Security Service
-2. Add users to one of the specified groups
-3. Only users in those groups can access protected queries
-
-**Example:** Restrict to `graphql-api-users` group:
-```json
-{
-  "enableAuthentication": true,
-  "requiredGroups": ["graphql-api-users"]
-}
-```
-
-### Query Complexity Limiting
-
-The GraphQL API includes query complexity analysis to prevent denial-of-service attacks through deeply nested or overly complex queries.
-
-#### Query Complexity Analyzer Configuration
-
-**Service PID:** `org.apache.sling.cms.graphql.internal.security.QueryComplexityAnalyzer`
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `enabled` | `true` | Enable query complexity analysis |
-| `maxComplexity` | `100` | Maximum allowed complexity score (0 = unlimited) |
-| `maxDepth` | `10` | Maximum allowed query nesting depth (0 = unlimited) |
-| `depthMultiplier` | `1.5` | Multiplier applied per nesting level |
-| `fieldBaseCost` | `1` | Base cost per field |
-| `listFieldMultiplier` | `10` | Multiplier for list-returning fields |
-
-#### How Complexity is Calculated
-
-1. **Field Count**: Each field in the query adds to the base complexity
-2. **Depth Factor**: Nested queries multiply complexity by `depthMultiplier^(depth-1)`
-3. **List Fields**: Fields returning lists (e.g., `items`, `edges`, `nodes`) multiply by `listFieldMultiplier`
-
-**Example:**
-```graphql
-# Simple query - Low complexity (~2)
-{ hello }
-
-# Nested query - Higher complexity
-{
-  serverInfo {      # depth 1
-    version         # depth 2
-    timestamp
-    environment
-  }
-}
-```
-
-#### Complexity Error Response
-
-When a query exceeds limits, a 400 Bad Request is returned:
-
-```json
-{
-  "errors": [
-    {
-      "message": "Query complexity 150 exceeds maximum allowed complexity of 100"
-    }
-  ]
-}
-```
-
-#### Example Configuration
-
-To allow more complex queries:
-```json
-{
-  "enabled": true,
-  "maxComplexity": 200,
-  "maxDepth": 15,
-  "depthMultiplier": 1.2
-}
-```
-
-To disable complexity limiting:
-```json
-{
-  "enabled": false
-}
-```
-
-## GraphiQL Interface
-
-### Access
-
-Open in browser: `http://localhost:8082/graphql`
-
-### Features
-
-- 🔍 **Autocomplete** - Press `Ctrl+Space` for suggestions
-- 📖 **Docs Explorer** - View schema documentation
-- 💾 **History** - Access previous queries
-- ✨ **Prettify** - Format queries automatically
-- ▶️ **Execute** - Run queries with `Ctrl+Enter`
-
-### Sample Session
-
-1. Open GraphiQL: `http://localhost:8082/graphql`
-2. Type in the editor:
-   ```graphql
-   {
-     serverInfo {
-       version
-     }
-   }
-   ```
-3. Click "Execute Query" (or press `Ctrl+Enter`)
-4. View response in right panel
-
-## Client Examples
-
-### JavaScript (Fetch API)
-
-```javascript
-async function queryGraphQL(query) {
-  const response = await fetch('http://localhost:8082/graphql.json', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ query })
-  });
-  
-  const data = await response.json();
-  return data;
-}
-
-// Usage
-const result = await queryGraphQL('{ serverInfo { version } }');
-console.log(result.data.serverInfo.version);
-```
-
-### JavaScript (Axios)
-
-```javascript
-const axios = require('axios');
-
-async function queryGraphQL(query) {
-  const response = await axios.post('http://localhost:8082/graphql.json', {
-    query: query
-  });
-  
-  return response.data;
-}
-
-// Usage
-const result = await queryGraphQL('{ hello }');
-console.log(result.data.hello);
-```
-
-### Java (OkHttp)
-
-```java
-import okhttp3.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class GraphQLClient {
-    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-    private final OkHttpClient client = new OkHttpClient();
-    private final ObjectMapper mapper = new ObjectMapper();
-    
-    public Map<String, Object> query(String query) throws IOException {
-        Map<String, String> body = Map.of("query", query);
-        String json = mapper.writeValueAsString(body);
-        
-        Request request = new Request.Builder()
-            .url("http://localhost:8082/graphql.json")
-            .post(RequestBody.create(json, JSON))
-            .build();
-        
-        try (Response response = client.newCall(request).execute()) {
-            return mapper.readValue(response.body().string(), Map.class);
-        }
-    }
-}
-
-// Usage
-GraphQLClient client = new GraphQLClient();
-Map<String, Object> result = client.query("{ serverInfo { version } }");
-```
-
-### Python (Requests)
-
-```python
-import requests
-
-def query_graphql(query):
-    response = requests.post(
-        'http://localhost:8082/graphql.json',
-        json={'query': query}
-    )
-    return response.json()
-
-# Usage
-result = query_graphql('{ serverInfo { version environment } }')
-print(result['data']['serverInfo']['version'])
-```
-
-## Schema Introspection
-
-### Get Full Schema
-
-**Query:**
-```graphql
-{
-  __schema {
-    types {
-      name
-      kind
-      description
-    }
-  }
-}
-```
-
-### Get Query Type
-
-**Query:**
-```graphql
-{
-  __schema {
-    queryType {
-      name
-      fields {
-        name
-        type {
-          name
-          kind
-        }
-      }
-    }
-  }
-}
-```
-
-### Get Type Details
-
-**Query:**
-```graphql
-{
-  __type(name: "ServerInfo") {
-    name
-    kind
-    fields {
-      name
-      type {
-        name
-        kind
-      }
-    }
-  }
-}
-```
-
-## Performance Considerations
-
-### Response Times (Expected)
-
-| Query | Size | Time (ms) | Notes |
-|-------|------|-----------|-------|
-| `{ hello }` | ~100 bytes | < 50ms | Constant string |
-| `{ serverInfo {...} }` | ~200 bytes | < 100ms | Timestamp generation |
-
-### Optimization Tips
-
-1. **Request only needed fields** - GraphQL allows field selection
-2. **Use GET for cacheable queries** - Browser/CDN caching
-3. **Batch queries** - Multiple queries in one request
-4. **Monitor query complexity** - Avoid deep nesting (when available)
-
-## Limitations
-
-### Current Version (1.0) Limitations
-
-1. **No Mutations** - Read-only API (queries only)
-2. **No Subscriptions** - Real-time updates not supported
-3. **No CMS Data** - Only sample queries (hello, serverInfo)
-4. **No Pagination** - List queries return all results
-5. **No Filtering** - No built-in filter arguments
-6. **No DataLoader** - No N+1 query optimization
-
-### Planned Features (Future Versions)
-
-- Page queries (by path, type, template)
-- Asset queries (by path, mimetype, metadata)
-- Navigation queries
-- Search integration
-- Mutations for content updates
-- Subscriptions for live updates
-
-## Extending the API
-
-See [graphql-current-implementation.md](./graphql-current-implementation.md) for how to add custom queries and types.
-
-## Troubleshooting
-
-### Common Issues
-
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| `404 Not Found` | GraphQL module not deployed | Deploy `graphql` module |
-| `500 Server Error` | Data fetcher exception | Check logs at `logs/error.log` |
-| `Empty response` | Wrong endpoint | Use `/graphql.json` not `/graphql` |
-| `CORS error` | Cross-origin request blocked | Configure CORS in servlet |
-
-### Debug Mode
-
-Enable debug logging:
-
-```
-org.apache.sling.cms.graphql=DEBUG
-org.apache.sling.graphql.core=DEBUG
-```
-
-Add to `sling/logs/org.apache.sling.commons.log.LogManager.factory.config-graphql.cfg.json`
-
-## Related Documentation
-
-- [graphql-module-review.md](./graphql-module-review.md) - Architecture review
-- [graphql-current-implementation.md](./graphql-current-implementation.md) - Implementation guide
-- [Apache Sling GraphQL Core Docs](https://github.com/apache/sling-org-apache-sling-graphql-core)
-
----
-
-**Document Version:** 2.0  
-**Last Updated:** January 11, 2026  
-**Status:** ✅ Reflects Current Implementation
-```graphql
-{
-  segments(filter: { active: true }) {
-    id
-    name
-    active
-  }
-}
-```
-
-**Request:**
 ```bash
 curl -u admin:admin -X POST http://localhost:8082/graphql.json \
   -H "Content-Type: application/json" \
-  -d '{
-    "query": "{ segments(filter: { active: true }) { id name active } }"
-  }'
+  -d '{"query":"{ serverInfo { version timestamp environment graphqlVersion } }"}'
 ```
 
-### 5. Filter Segments by Evaluator Type
+### 3) `ping` (demo)
 
-**Query:**
 ```graphql
-{
-  segments(filter: { evaluatorType: "device" }) {
-    id
-    name
-    evaluatorType
-  }
-}
+{ ping }
 ```
-
-**Request:**
-```bash
-curl -u admin:admin -X POST http://localhost:8082/graphql.json \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "{ segments(filter: { evaluatorType: \"device\" }) { id name evaluatorType } }"
-  }'
-```
-
-### 6. Evaluate Personalization for Content Path
-
-**Query:**
-```graphql
-{
-  evaluate(path: "/content/my-site/home") {
-    path
-    matchedSegments
-    selectedVariant {
-      path
-      name
-      segments
-    }
-  }
-}
-```
-
-**Request:**
-```bash
-curl -u admin:admin -X POST http://localhost:8082/graphql.json \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "{ evaluate(path: \"/content/my-site/home\") { path matchedSegments selectedVariant { path name segments } } }"
-  }'
-```
-
-**Response:**
-```json
-{
-  "data": {
-    "evaluate": {
-      "path": "/content/my-site/home",
-      "matchedSegments": ["mobile-users", "returning-visitors"],
-      "selectedVariant": {
-        "path": "/content/my-site/home/variants/mobile",
-        "name": "mobile",
-        "segments": ["mobile-users"]
-      }
-    }
-  }
-}
-```
-
-## GraphQL Introspection
-
-You can introspect the GraphQL schema using the special `__schema` query:
 
 ```bash
 curl -u admin:admin -X POST http://localhost:8082/graphql.json \
   -H "Content-Type: application/json" \
-  -d '{
-    "query": "{ __schema { types { name } } }"
-  }'
+  -d '{"query":"{ ping }"}'
 ```
 
-## Error Handling
+### 4) `now` (server time)
 
-GraphQL returns errors in the response:
+```graphql
+{ now }
+```
 
-```json
-{
-  "data": null,
-  "errors": [
-    {
-      "message": "Resource not found: /content/invalid-path",
-      "locations": [{"line": 1, "column": 3}],
-      "path": ["evaluate"]
-    }
-  ]
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ now }"}'
+```
+
+### 5) Content fragments
+
+See: `docs/graphql-content-fragement.md`
+
+## Authentication & authorization
+
+Security is implemented via:
+
+1. `GraphQLSecurityFilter` (request-level filter)
+2. `GraphQLSecurityService` (per-query access checks)
+3. `QueryComplexityAnalyzer` (depth/complexity limits)
+
+### Anonymous access
+
+By default, anonymous access is allowed only for queries listed in:
+
+- OSGi PID: `org.apache.sling.cms.graphql.internal.security.GraphQLSecurityService`
+- Property: `allowedAnonymousQueries`
+
+Default includes:
+
+- `hello`
+
+All other queries require authentication unless configured otherwise.
+
+### Group-based access control
+
+Use `requiredGroups` to restrict access to specific groups (empty = any authenticated user).
+
+### Query complexity limiting
+
+OSGi PID: `org.apache.sling.cms.graphql.internal.security.QueryComplexityAnalyzer`
+
+- `maxComplexity` (default `100`)
+- `maxDepth` (default `10`)
+
+When exceeded, the endpoint returns a 400 with an error message describing the limit violation.
+
+# Summary
+
+The GraphQL module provides queries for **Content Fragments** and **Content Schemas**.
+
+This document focuses on:
+
+- Fetching a single fragment (`fragment`)
+- Listing fragments with filtering/sorting/pagination (`fragments`)
+- Full-text search (`fragmentSearch`)
+- Listing enabled schemas (`schemas`)
+
+## How to test
+
+### 1) Deploy the GraphQL bundle
+
+If you're running the author instance on port **8082**:
+
+```bash
+mvn clean install -P autoInstallBundle -pl graphql -DskipTests -Dbnd.baseline.skip=true
+```
+
+### 2) Send queries to `/graphql.json`
+
+All examples below use the default author credentials (`admin:admin`) and POST JSON payloads.
+
+**Endpoint**
+
+`http://localhost:8082/graphql.json`
+
+## Queries
+
+### A) Fetch a single fragment by id/path
+
+Query name: `fragment`
+
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragment(id: \"/content/fragments/articles/introduction-to-apache-sling\") { id schemaId title created modified fields { name type multiple value values } } }"}'
+```
+
+### B) List fragments (schemaType/path/filters/sort/pagination)
+
+Query name: `fragments`
+
+#### Minimal example
+
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragments(schemaType: \"article\", limit: 5, offset: 0) { totalCount nodes { id title } pageInfo { hasNextPage endCursor } } }"}'
+```
+
+#### Restrict by path
+
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragments(schemaType: \"article\", path: \"/content/fragments/articles\", limit: 5) { totalCount nodes { id title } } }"}'
+```
+
+#### Sort
+
+> `sortField` is a JCR property name (examples: `jcr:title`, `jcr:created`, `jcr:lastModified`).
+
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragments(schemaType: \"article\", sortField: \"jcr:title\", sortDirection: DESC, limit: 5) { nodes { id title } } }"}'
+```
+
+#### Pagination using `offset`
+
+```bash
+# page 1
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragments(schemaType: \"article\", limit: 5, offset: 0) { nodes { id title } pageInfo { hasNextPage endCursor } } }"}'
+
+# page 2
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragments(schemaType: \"article\", limit: 5, offset: 5) { nodes { id title } pageInfo { hasNextPage endCursor } } }"}'
+```
+
+#### Filtering
+
+Filtering uses `ContentFragmentFilterInput`:
+
+- `fieldName`: fragment field name
+- `operator`: one of `EQ`, `NE`, `CONTAINS`, `GT`, `GTE`, `LT`, `LTE`, `IS_NULL`, `IS_NOT_NULL`
+- `value`: string value (not used for null operators)
+
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragments(schemaType: \"article\", filters: [{ fieldName: \"category\", operator: EQ, value: \"technology\" }], limit: 10) { totalCount nodes { id title } } }"}'
+```
+
+### C) Full-text search fragments
+
+Query name: `fragmentSearch`
+
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ fragmentSearch(searchTerm: \"apache sling\", schemaType: \"article\", limit: 5, offset: 0) { totalCount nodes { id title } } }"}'
+```
+
+**Notes**
+
+- If `searchTerm` is blank, the fetcher returns an empty connection and skips auth checks.
+
+### D) List available content schemas
+
+Query name: `schemas`
+
+```bash
+curl -u admin:admin -X POST http://localhost:8082/graphql.json \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ schemas { id title description enabled fields { name title type multiple required } } }"}'
+```
+
+## Schema reference
+
+> Source of truth: `graphql/src/main/resources/jcr_root/apps/sling-cms/servlet/GQLschema.gql`
+
+```graphql
+type Query {
+  fragment(id: String!): ContentFragment
+
+  fragments(
+    schemaType: String
+    path: String
+    filters: [ContentFragmentFilterInput!]
+    sortField: String
+    sortDirection: SortDirection
+    limit: Int
+    offset: Int
+    cursor: String
+  ): ContentFragmentConnection
+
+  fragmentSearch(
+    searchTerm: String!
+    schemaType: String
+    limit: Int
+    offset: Int
+  ): ContentFragmentConnection
+
+  schemas: [Schema]
+}
+
+type ContentFragment {
+  id: String
+  name: String
+  schemaId: String
+  title: String
+  created: String
+  modified: String
+  createdBy: String
+  modifiedBy: String
+  fields: [FieldValue]
+}
+
+type FieldValue {
+  name: String
+  type: String
+  multiple: Boolean
+  value: String
+  values: [String]
+}
+
+type ContentFragmentConnection {
+  nodes: [ContentFragment]
+  pageInfo: PageInfo
+  totalCount: Int
+}
+
+type PageInfo {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  startCursor: String
+  endCursor: String
+}
+
+input ContentFragmentFilterInput {
+  fieldName: String!
+  operator: FilterOperator!
+  value: String
+}
+
+enum FilterOperator {
+  EQ
+  NE
+  CONTAINS
+  GT
+  GTE
+  LT
+  LTE
+  IS_NULL
+  IS_NOT_NULL
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+type Schema {
+  id: String
+  title: String
+  description: String
+  enabled: Boolean
+  fields: [SchemaField]
+}
+
+type SchemaField {
+  name: String
+  title: String
+  description: String
+  type: String
+  multiple: Boolean
+  required: Boolean
 }
 ```
 
-## GET Requests (Optional)
-
-For simple queries, you can use GET requests with the query as a URL parameter:
-
-```bash
-curl -u admin:admin -G http://localhost:8082/graphql.json \
-  --data-urlencode 'query={ evaluators { type } }'
-```
-
-## Integration with GraphQL Clients
-
-### Apollo Client (JavaScript)
-
-```javascript
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
-
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: 'http://localhost:8082/graphql.json',
-    headers: {
-      authorization: 'Basic ' + btoa('admin:admin')
-    }
-  }),
-  cache: new InMemoryCache()
-});
-```
-
-### GraphQL Code Generator
-
-Use GraphQL Code Generator to generate TypeScript types from the schema:
-
-```bash
-npx graphql-codegen init
-```
-
-## Testing with GraphQL Playground
-
-You can use GraphQL Playground or GraphiQL for interactive testing. Add these as browser bookmarks:
-
-- **GraphiQL:** https://github.com/graphql/graphiql
-- **GraphQL Playground:** https://github.com/graphql/graphql-playground
-
-Configure them to point to `http://localhost:8082/graphql.json` with Basic Auth.
-
-## See Also
-
-- [REST API Reference](./personalization-rest-api.md) - Alternative REST API
-- [GraphQL Integration Plan](./graphql-integration-plan.md) - Implementation details
-- [GraphQL Quick Start](./graphql-quick-start.md) - 10-minute setup guide
