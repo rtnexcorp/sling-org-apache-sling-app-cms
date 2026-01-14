@@ -37,7 +37,7 @@ These are platform features you can leverage to implement personalisation cleanl
 - ✅ Component-based page composition (variants can be modeled as child resources)
 - ✅ Sling Models to evaluate request context and select variants during rendering
 - ✅ Author/Renderer topology + publish workflow (targeting rules can be authored on author, published to renderer)
-- ✅ Apache Dispatcher for full page caching with segment-aware fragment APIs
+- ✅ HTTP caching proxy (Nginx, Varnish, or Apache HTTP Server with mod_cache) for full page caching with segment-aware fragment APIs
 - ✅ Frontend build system (Vite) for bundling Web Components and personalization JavaScript
 - ✅ OSGi R7/R8 service framework for pluggable segment evaluators
 
@@ -50,7 +50,7 @@ These are platform features you can leverage to implement personalisation cleanl
 **Why Zero-Cost Solutions:**
 - No external CDN edge functions required (Cloudflare Workers, Lambda@Edge cost $50-500+/month)
 - Self-hosted GraphQL server as OSGi bundle (no external service costs)
-- Apache Dispatcher handles all caching (included in Apache Sling)
+- HTTP caching proxy (Nginx, Varnish, or Apache mod_cache) handles all caching
 - Web Components with lazy hydration (~2KB JavaScript footprint)
 - Works with any hosting (VPS, on-premise, cloud)
 
@@ -110,7 +110,7 @@ These are platform features you can leverage to implement personalisation cleanl
 - **Hybrid**: Static shell with island placeholders for dynamic content
 
 **Caching Strategy:**
-- Full page cached by Apache Dispatcher (static HTML)
+- Full page cached by HTTP caching proxy (static HTML)
 - Personalized islands fetch fragments via API: `/api/personalization/{component}?segment={id}`
 - Fragment responses cached by segment parameter
 - No cache explosion (single page, multiple fragments)
@@ -237,7 +237,7 @@ These are platform features you can leverage to implement personalisation cleanl
   - Fetch API integration for fragment loading
   - Shadow DOM for component isolation
 - Fragment API servlet: `GET /api/personalization/{component}?segment={id}`
-- Apache Dispatcher configuration for fragment caching
+- HTTP caching proxy configuration for fragment caching
 - Frontend JavaScript (~2KB gzipped) for Web Components
 - Add variant management UI in CMS authoring interface
 
@@ -249,9 +249,9 @@ These are platform features you can leverage to implement personalisation cleanl
 5. Fragment renders in Shadow DOM
 
 **Caching Strategy:**
-- Full page cached by Dispatcher (contains island placeholders)
+- Full page cached by HTTP proxy (contains island placeholders)
 - Fragment API responses cached per segment: `?segment=mobile_user`
-- Apache Dispatcher `ignoreUrlParams` configured for segment parameter
+- Cache proxy configured to vary cache by segment parameter
 - Cache headers: `Cache-Control: public, max-age=300`
 - Vary header: `Vary: segment`
 
@@ -334,8 +334,8 @@ These are platform features you can leverage to implement personalisation cleanl
 - Self-hosted endpoint: `POST /api/graphql`
 - APQ: Client sends query hash instead of full query
 - Server caches queries in memory by hash
-- Apache Dispatcher caches responses by hash + segment
-- Triple-layer caching: APQ + Dispatcher + client
+- HTTP caching proxy caches responses by hash + segment
+- Triple-layer caching: APQ + HTTP proxy + client
 
 **Dashboard Features:**
 - Segment overview table (title, user count, conversion rate)
@@ -446,7 +446,8 @@ These are platform features you can leverage to implement personalisation cleanl
 ## Zero-Cost Implementation Verification
 
 ### Infrastructure Components (All Free)
-- ✅ Apache Sling + Dispatcher (included)
+- ✅ Apache Sling (included)
+- ✅ HTTP caching proxy (Nginx, Varnish, or Apache mod_cache - all free/open source)
 - ✅ GraphQL server (self-hosted OSGi bundle)
 - ✅ APQ implementation (in-memory cache)
 - ✅ Web Components (native browser standard)
@@ -462,14 +463,14 @@ These are platform features you can leverage to implement personalisation cleanl
 
 ### Cost Analysis
 - Hosting: $0 additional (use existing infrastructure)
-- CDN: $0 (Apache Dispatcher sufficient, optional free CDN tier)
+- CDN: $0 (HTTP caching proxy sufficient, optional free CDN tier)
 - Edge functions: $0 (not required)
 - External services: $0 (everything self-hosted)
 - **Total monthly cost: $0**
 
 ### Scalability (Zero-Cost)
 For higher traffic, add free components:
-- Nginx/Varnish in front of Dispatcher (free)
+- Additional Nginx/Varnish caching layers (free)
 - Redis for fragment cache (free, open source)
 - HTTP/2 Server Push (free, protocol feature)
 - Brotli compression (free, better than gzip)
@@ -554,7 +555,7 @@ This implementation roadmap provides a **zero-cost, production-ready personaliza
 
 - **Islands Architecture** for efficient client-side personalization
 - **GraphQL with APQ** for complex multi-source queries
-- **Apache Dispatcher** for caching without external CDN costs
+- **HTTP caching proxy** (Nginx, Varnish, or Apache mod_cache) for caching without external CDN costs
 - **Web Components** for progressive enhancement
 - **Self-hosted** infrastructure with no external dependencies
 

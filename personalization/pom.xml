@@ -17,6 +17,9 @@
 
     <properties>
         <legal.dir>${basedir}/..</legal.dir>
+
+        <!-- Skip baseline check for this new module (no previous released artifact to compare against) -->
+        <bnd.baseline.skip>true</bnd.baseline.skip>
     </properties>
 
     <dependencies>
@@ -86,6 +89,18 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Sling Models -->
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.models.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

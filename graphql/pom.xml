@@ -17,6 +17,8 @@
 
     <properties>
         <legal.dir>${basedir}/..</legal.dir>
+        <!-- Skip baseline check for this new module (no previous released artifact to compare against) -->
+        <bnd.baseline.skip>true</bnd.baseline.skip>
     </properties>
 
     <dependencies>
