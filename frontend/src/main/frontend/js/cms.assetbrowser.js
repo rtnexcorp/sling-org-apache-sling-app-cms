@@ -20,6 +20,13 @@
 /**
  * Asset Browser Module
  * Handles filtering, searching, and view toggling for the asset grid
+ * 
+ * Integration with Filter System:
+ * - Works in conjunction with cms.contentfilter.js for the assetfilter component
+ * - cms.contentfilter.js: Handles the filter dropdown UI (MIME type, date filters)
+ * - cms.assetbrowser.js: Handles asset-specific filtering, search, and view modes
+ * 
+ * Used by: assetfilter component in asset browser views
  */
 const Sling = window.Sling || {};
 
@@ -29,6 +36,8 @@ Sling.CMS.AssetBrowser = {
   
   /**
    * Initialize all asset browsers on the page
+   * Called when: Asset browser page loads or content is dynamically loaded
+   * Used by: assetfilter component
    */
   init: function() {
     document.querySelectorAll('[data-component="asset-browser"]').forEach(browser => {
@@ -38,6 +47,13 @@ Sling.CMS.AssetBrowser = {
 
   /**
    * Initialize a single asset browser
+   * Sets up event listeners for:
+   * - Search input: Real-time search with debouncing
+   * - Type filter: MIME type filtering (image/, video/, document/, etc.)
+   * - Tag filter: Taxonomy-based filtering
+   * - View toggle: Grid/list view switching
+   * 
+   * Used by: assetfilter component
    * @param {HTMLElement} browser - The browser container element
    */
   initBrowser: function(browser) {
@@ -61,6 +77,7 @@ Sling.CMS.AssetBrowser = {
     }
 
     // Search functionality
+    // Used by: assetfilter - text search input with 300ms debounce
     if (searchInput) {
       let debounceTimer;
       searchInput.addEventListener('input', (e) => {
@@ -72,6 +89,7 @@ Sling.CMS.AssetBrowser = {
     }
 
     // Type filter
+    // Used by: assetfilter - MIME type dropdown (image/, video/, document/, etc.)
     if (typeFilter) {
       typeFilter.addEventListener('change', () => {
         this.filterAssets(browser);
@@ -79,6 +97,7 @@ Sling.CMS.AssetBrowser = {
     }
 
     // Tag filter
+    // Used by: assetfilter - Taxonomy/tag dropdown for categorization
     if (tagFilter) {
       tagFilter.addEventListener('change', () => {
         this.filterAssets(browser);
@@ -86,6 +105,8 @@ Sling.CMS.AssetBrowser = {
     }
 
     // View toggle
+    // Used by: assetfilter - switches between grid/list view for assets
+    // Persists preference in localStorage
     viewButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const view = btn.dataset.view;

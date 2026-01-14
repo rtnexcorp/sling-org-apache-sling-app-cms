@@ -1,0 +1,69 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "My Article",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "author": "Jane Developer",
+  "body": "This is about sling cms summery for sling",
+  "category": "business",
+  "expiryDate": "2026-01-14",
+  "featuredImage": "#",
+  "publishDate": "2026-01-22",
+  "rating": 4,
+  "schemaId": "article",
+  "summary": "This is about sling cms summery for sling",
+  "tags": "Apache Sling, CMS, Content Management, AI, Open Source",
+  "title": "This is about sling cms",
+  "viewCount": 2,
+  "fields": {
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TEXT"
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "REFERENCE"
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TAG",
+      "multiple": true
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "ASSET"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    }
+}
+}

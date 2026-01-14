@@ -320,6 +320,77 @@
         return;
       }
 
+      // Build published content info section if available
+      let publishInfoHTML = '';
+      if (data.publishInfo) {
+        const info = data.publishInfo;
+
+        // Build status badge HTML
+        let statusBadgeHTML = '';
+        if (info.publishStatus) {
+          const statusClass = info.publishStatus === 'SUCCESS' ? 'success' :
+                             info.publishStatus === 'PARTIAL' ? 'warning' : 'danger';
+          statusBadgeHTML = `<span class="cms-badge cms-badge--${statusClass}">${info.publishStatus}</span>`;
+        }
+
+        // Build deep publish badge
+        let deepBadgeHTML = '';
+        if (info.deepPublish === true) {
+          deepBadgeHTML = '<span class="cms-badge cms-badge--info">Recursive</span>';
+        }
+
+        publishInfoHTML = `
+          <div class="cms-detail-section">
+            <h3 class="cms-detail-section__title">Published Content</h3>
+            ${info.contentPath ? `
+              <div class="cms-detail-row">
+                <label>Content Path:</label>
+                <code>${info.contentPath}</code>
+              </div>
+            ` : ''}
+            ${info.authorUrl ? `
+              <div class="cms-detail-row">
+                <label>View on Author:</label>
+                <a href="${info.authorUrl}" target="_blank" class="cms-link cms-link--primary">
+                  <span class="icon"><em class="jam jam-external-link"></em></span>
+                  ${info.authorUrl}
+                </a>
+              </div>
+            ` : ''}
+            ${info.publishedUrl ? `
+              <div class="cms-detail-row">
+                <label>Published URL (Renderer):</label>
+                <a href="${info.publishedUrl}" target="_blank" class="cms-link">${info.publishedUrl}</a>
+              </div>
+            ` : ''}
+            ${info.publishCount !== undefined ? `
+              <div class="cms-detail-row">
+                <label>Resources Published:</label>
+                <span class="cms-badge cms-badge--info">${info.publishCount}</span>
+              </div>
+            ` : ''}
+            ${info.failureCount !== undefined && info.failureCount > 0 ? `
+              <div class="cms-detail-row">
+                <label>Failures:</label>
+                <span class="cms-badge cms-badge--danger">${info.failureCount}</span>
+              </div>
+            ` : ''}
+            ${info.publishedTo ? `
+              <div class="cms-detail-row">
+                <label>Published To:</label>
+                <span class="cms-badge cms-badge--secondary">${info.publishedTo}</span>
+              </div>
+            ` : ''}
+            ${statusBadgeHTML || deepBadgeHTML ? `
+              <div class="cms-detail-row">
+                <label>Status:</label>
+                <span>${statusBadgeHTML} ${deepBadgeHTML}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+
       content.innerHTML = `
         <div class="cms-task-details">
           <div class="cms-detail-row">
@@ -354,6 +425,7 @@
             <label>Candidate Group:</label>
             <span>${data.candidateGroup || "-"}</span>
           </div>
+          ${publishInfoHTML}
         </div>
       `;
     } catch (error) {

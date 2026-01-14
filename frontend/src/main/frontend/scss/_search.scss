@@ -25,7 +25,11 @@
 // - Advanced search form (start page)
 // - Search results display
 // - Taxonomy badges and quick search
+// Note: Content search component is in _contentsearch.scss
 // =============================================================================
+
+@use "sass:color";
+@use "variables" as *;
 
 // -----------------------------------------------------------------------------
 // Global Search Component (Navbar)
@@ -50,14 +54,14 @@
     height: 2em;
     padding: calc(0.5em - 1px) calc(0.75em - 1px);
     padding-left: 2rem;
-    border: 1px solid #dbdbdb;
+    border: 1px solid $grey-lighter;
     border-radius: 4px;
     min-width: 200px;
     outline: none;
 
     &:focus {
-      border-color: #485fc7;
-      box-shadow: 0 0 0 0.125em rgba(72, 95, 199, 0.25);
+      border-color: $link;
+      box-shadow: 0 0 0 0.125em rgba($link, 0.25);
     }
   }
 
@@ -67,7 +71,7 @@
     display: flex;
     align-items: center;
     pointer-events: none;
-    color: #7a7a7a;
+    color: $grey;
     font-size: 0.75rem;
   }
 
@@ -75,17 +79,17 @@
     font-size: 0.75rem;
     height: 2em;
     padding: calc(0.5em - 1px) 0.75em;
-    background-color: #485fc7;
+    background-color: $link;
     border: 1px solid transparent;
     border-radius: 4px;
-    color: #fff;
+    color: $white;
     cursor: pointer;
     margin-left: -1px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 
     &:hover {
-      background-color: #3e56c4;
+      background-color: $link-hover;
     }
   }
 
@@ -108,7 +112,7 @@
   // Collapsible Filters Section
   .advanced-search-filters {
     padding: 0.75rem;
-    background: hsl(0, 0%, 86%); // $grey-lighter
+    background: $grey-lighter;
     border-radius: 4px;
     margin-bottom: 0.75rem;
 
@@ -151,7 +155,7 @@
   transition: background-color 0.15s ease;
 
   &:hover {
-    background-color: hsl(0, 0%, 86%); // $grey-lighter
+    background-color: $grey-lighter;
   }
 
   .search-result-content {
@@ -166,7 +170,7 @@
 
   .search-result-title {
     font-weight: 500;
-    color: hsl(0, 0%, 21%); // $grey-darker
+    color: $grey-darker;
   }
 
   .search-result-path {

@@ -36,8 +36,38 @@
             </div>
         </div>
     </div>
-    <sly data-sly-test="${properties.includeSwitcher}">
-        <div class="level-right">
+    <div class="level-right">
+        <!--/* Content Search */-->
+        <sly data-sly-test="${properties.includeSearch}">
+            <div class="level-item">
+                <sly data-sly-resource="${'contentsearch' @ resourceType='sling-cms/components/cms/contentsearch'}"></sly>
+            </div>
+        </sly>
+        
+        <!--/* Content Filter */-->
+        <sly data-sly-test="${properties.filterMode == 'workflow'}">
+            <div class="level-item">
+                <sly data-sly-resource="${'workflowfilter' @ resourceType='sling-cms/components/cms/workflowfilter'}"></sly>
+            </div>
+        </sly>
+        <sly data-sly-test="${properties.filterMode == 'assets'}">
+            <div class="level-item">
+                <sly data-sly-resource="${'assetfilter' @ resourceType='sling-cms/components/cms/assetfilter'}"></sly>
+            </div>
+        </sly>
+        <sly data-sly-test="${properties.filterMode == 'sites'}">
+            <div class="level-item">
+                <sly data-sly-resource="${'sitefilter' @ resourceType='sling-cms/components/cms/sitefilter'}"></sly>
+            </div>
+        </sly>
+        <sly data-sly-test="${properties.filterMode == 'content'}">
+            <div class="level-item">
+                <sly data-sly-resource="${'contentfilter' @ resourceType='sling-cms/components/cms/contentfilter'}"></sly>
+            </div>
+        </sly>
+        
+        <!--/* Layout Switcher */-->
+        <sly data-sly-test="${properties.includeSwitcher}">
             <div class="level-item">
                 <div class="field">
                     <div class="control has-icons-left">
@@ -61,7 +91,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </sly>
+        </sly>
+    </div>
 </nav>
 </sly>

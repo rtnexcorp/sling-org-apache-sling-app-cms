@@ -8,6 +8,19 @@
 .card-footer-group {
   display: flex !important;
   flex-direction: column;
+
+  // In flex layouts, children can overflow unless the container allows shrinking.
+  min-width: 0;
+}
+
+// Keep the title on a single line; if it would overflow, truncate with an ellipsis.
+.card-footer-group > span {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-footer-group small {
@@ -26,7 +39,7 @@
 }
 
 .card-image {
-  background-color: #b3b4b5;
+  background-color: $grey-lighter;
 }
 
 small.card-footer-item {

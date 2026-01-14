@@ -300,53 +300,17 @@ The CMS search system consists of:
 
 ## Oak Lucene Indexes
 
-The CMS creates several Lucene indexes at repository initialization via `IndexCreator`:
+The CMS uses Oak Lucene indexes for efficient search queries. Key indexes include:
 
-### slingPage Index
+| Index | Node Type | Purpose |
+|-------|-----------|---------|
+| `slingPage` | `sling:Page` | Page content with aggregated jcr:content |
+| `slingFile` | `sling:File` | Assets with metadata |
+| `ntHierarchyNode` | `nt:hierarchyNode` | All hierarchy nodes |
+| `slingTaxonomy` | `sling:Taxonomy` | Taxonomy items |
+| `slingFragments` | `nt:unstructured` | Content fragments |
 
-Indexes `sling:Page` nodes with aggregated content from `jcr:content` descendants.
-
-**Indexed Properties:**
-| Property | Path | Features |
-|----------|------|----------|
-| `jcrTitle` | `jcr:content/jcr:title` | Analyzed, Ordered, Boost: 2.0 |
-| `jcrDescription` | `jcr:content/jcr:description` | Analyzed |
-| `nodeName` | `:nodeName` | Analyzed, Ordered |
-| `jcrLastModified` | `jcr:content/jcr:lastModified` | Ordered, Date |
-| `slingPublished` | `jcr:content/sling:published` | Boolean, NullCheck |
-| `slingTaxonomy` | `jcr:content/sling:taxonomy` | Analyzed |
-| `slingTemplate` | `jcr:content/sling:template` | Property Index |
-| `allProperties` | `jcr:content/.*` | Regex, Analyzed |
-| `allContent` | `.` | NodeScopeIndex (fulltext) |
-
-**Aggregation:** Content from `jcr:content/*`, `jcr:content/*/*`, `jcr:content/*/*/*`, `jcr:content/*/*/*/*` is aggregated into the page node for fulltext search.
-
-**Path Restrictions:** `/content`, `/static`
-
-### slingFile Index
-
-Indexes `sling:File` nodes (assets) with metadata.
-
-**Indexed Properties:**
-- Same common properties as slingPage
-- `metadata` - `jcr:content/metadata/.*` (regex, analyzed)
-- `allContent` - NodeScopeIndex for fulltext
-
-**Aggregation:** `jcr:content/*`, `jcr:content/metadata/*`
-
-### ntHierarchyNode Index
-
-General index for all `nt:hierarchyNode` types (pages, files, folders).
-
-**Path Restrictions:** `/content`, `/static`
-
-### slingTaxonomy Index
-
-Indexes taxonomy items under `/etc/taxonomy`.
-
-**Indexed Properties:**
-- `jcr:title` - Analyzed, Ordered
-- `:nodeName` - Analyzed, Ordered
+For detailed information on index definitions, creating custom indexes, and the IndexDefinitionBuilder API, see [Oak Indexing](oak-indexing.md).
 
 ## SearchResults Model
 
@@ -444,28 +408,7 @@ The reference Search model uses similar query patterns but is designed for site 
 
 ## Index Management
 
-### Viewing Index Status
-
-Access the Oak index definitions via:
-```
-http://localhost:8080/oak:index.tidy.1.json
-```
-
-### Triggering Reindex
-
-To rebuild an index (e.g., after schema changes):
-
-```bash
-curl -u admin:admin -X POST "http://localhost:8080/oak:index/slingPage" \
-  -F "reindex=true" \
-  -F "reindex@TypeHint=Boolean"
-```
-
-### Index Health Check
-
-The CMS includes a health check for Lucene indexes:
-- Name: `Jackrabbit Oak - Lucene Index`
-- MBean: `org.apache.jackrabbit.oak:name=Lucene Index statistics,type=LuceneIndex`
+For index management tasks including viewing index status, triggering reindex, and troubleshooting, see the [Oak Indexing](oak-indexing.md) documentation.
 
 ## Troubleshooting
 
@@ -516,30 +459,7 @@ The CMS includes a health check for Lucene indexes:
 
 ### Adding Custom Properties to Index
 
-To index additional properties, extend `IndexCreator` or create a new `RepositoryInitializer`:
-
-```java
-@Component(service = RepositoryInitializer.class)
-public class CustomIndexCreator implements RepositoryInitializer {
-    
-    @Override
-    public void initialize(NodeBuilder builder) {
-        NodeBuilder indexRoot = builder.child("oak:index");
-        NodeBuilder slingPage = indexRoot.child("slingPage");
-        NodeBuilder properties = slingPage
-            .child("indexRules")
-            .child("sling:Page")
-            .child("properties");
-        
-        // Add custom property
-        NodeBuilder customProp = properties.child("customField");
-        customProp.setProperty("jcr:primaryType", "nt:unstructured", Type.NAME);
-        customProp.setProperty("name", "jcr:content/customField");
-        customProp.setProperty("propertyIndex", true);
-        customProp.setProperty("analyzed", true);
-    }
-}
-```
+To index additional properties for search, see [Oak Indexing - Creating Custom Indexes](oak-indexing.md#creating-custom-indexes).
 
 ### Creating Custom Search Component
 
@@ -582,6 +502,7 @@ public class CustomSearch {
 
 ## Related Documentation
 
+- [Oak Indexing](oak-indexing.md) - Index definitions, custom indexes, and management
 - [Digital Asset Management](digital-asset-management.md) - Asset search and filtering
 - [Managing Taxonomy](managing-taxonomy.md) - Taxonomy search
 - [Technology Stack](technology-stack.md) - Oak Lucene details

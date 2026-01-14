@@ -145,7 +145,7 @@ public class WorkflowStartServlet extends SlingAllMethodsServlet {
     /**
      * Collect process variables from request parameters.
      * Parameters prefixed with "var_" are treated as process variables.
-     * Additionally, "contentPath" is always included as a variable if provided.
+     * Additionally, "contentPath" and "deep" are always included as variables if provided.
      */
     private Map<String, Object> collectVariables(SlingHttpServletRequest request) {
         Map<String, Object> variables = new HashMap<>();
@@ -154,6 +154,12 @@ public class WorkflowStartServlet extends SlingAllMethodsServlet {
         String contentPath = request.getParameter(PARAM_CONTENT_PATH);
         if (contentPath != null && !contentPath.isEmpty()) {
             variables.put("contentPath", contentPath);
+        }
+
+        // Include deep flag for recursive publishing
+        String deep = request.getParameter("deep");
+        if (deep != null && !deep.isEmpty()) {
+            variables.put("deep", "true".equalsIgnoreCase(deep));
         }
 
         Enumeration<String> paramNames = request.getParameterNames();

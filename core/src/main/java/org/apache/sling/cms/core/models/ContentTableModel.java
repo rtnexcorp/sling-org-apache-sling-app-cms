@@ -23,14 +23,14 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.cms.core.beans.TableColumn;
+import org.apache.sling.cms.core.beans.TableRow;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -155,139 +155,5 @@ public class ContentTableModel {
             }
         }
         return rows;
-    }
-
-    public static class TableColumn {
-        private final Resource resource;
-        private final ValueMap properties;
-
-        public TableColumn(Resource resource) {
-            this.resource = resource;
-            this.properties = resource.getValueMap();
-        }
-
-        public String getName() {
-            return resource.getName();
-        }
-
-        public String getTitle() {
-            return properties.get("title", String.class);
-        }
-
-        public boolean isActionsColumn() {
-            return "actions".equals(resource.getName());
-        }
-    }
-
-    public static class TableRow {
-        private final Resource resource;
-        private final Resource typeConfig;
-        private final int rowNumber;
-        private final ValueMap properties;
-
-        public TableRow(Resource resource, Resource typeConfig, int rowNumber) {
-            this.resource = resource;
-            this.typeConfig = typeConfig;
-            this.rowNumber = rowNumber;
-            this.properties = resource.getValueMap();
-        }
-
-        public String getPath() {
-            return resource.getPath();
-        }
-
-        public String getTypePath() {
-            return typeConfig.getPath();
-        }
-
-        public int getRowNumber() {
-            return rowNumber;
-        }
-
-        public String getRowNumberFormatted() {
-            return String.format("%04d", rowNumber);
-        }
-
-        public String getMimeType() {
-            Resource contentResource = resource.getChild("jcr:content");
-            return contentResource != null ? contentResource.getValueMap().get("jcr:mimeType", "") : "";
-        }
-
-        public boolean isFolder() {
-            String type = properties.get("jcr:primaryType", String.class);
-            return "sling:OrderedFolder".equals(type) || "sling:Folder".equals(type) || "nt:folder".equals(type);
-        }
-
-        public String getTaxonomyString() {
-            Resource contentResource = resource.getChild("jcr:content");
-            if (contentResource == null) {
-                return "";
-            }
-
-            Object taxonomy = contentResource.getValueMap().get("sling:taxonomy");
-            if (taxonomy == null) {
-                return "";
-            }
-
-            if (taxonomy instanceof String[]) {
-                return String.join(",", (String[]) taxonomy);
-            } else if (taxonomy instanceof String) {
-                return (String) taxonomy;
-            }
-            return "";
-        }
-
-        public List<ColumnConfig> getColumnConfigs() {
-            Resource columnsResource = typeConfig.getChild("columns");
-            if (columnsResource != null) {
-                return StreamSupport.stream(columnsResource.getChildren().spliterator(), false)
-                        .map(ColumnConfig::new)
-                        .collect(Collectors.toList());
-            }
-            return new ArrayList<>();
-        }
-    }
-
-    public static class ColumnConfig {
-        private final Resource resource;
-        private final ValueMap properties;
-        private final ValueMap enhancedProperties;
-
-        public ColumnConfig(Resource resource) {
-            this.resource = resource;
-            this.properties = resource.getValueMap();
-            // Create enhanced properties map with resource path for HTL components
-            this.enhancedProperties =
-                    new org.apache.sling.api.wrappers.ValueMapDecorator(new java.util.HashMap<>(properties));
-            ((java.util.Map<String, Object>) enhancedProperties).put("colConfigPath", resource.getPath());
-        }
-
-        public String getName() {
-            return resource.getName();
-        }
-
-        public String getResourceType() {
-            return properties.get("sling:resourceType", String.class);
-        }
-
-        public boolean hasResourceType() {
-            return StringUtils.isNotBlank(getResourceType());
-        }
-
-        public Resource getResource() {
-            return resource;
-        }
-
-        public boolean isLink() {
-            return properties.get("link", false);
-        }
-
-        public String getPrefix() {
-            return properties.get("prefix", "");
-        }
-
-        public ValueMap getProperties() {
-            return enhancedProperties;
-        }
     }
 }

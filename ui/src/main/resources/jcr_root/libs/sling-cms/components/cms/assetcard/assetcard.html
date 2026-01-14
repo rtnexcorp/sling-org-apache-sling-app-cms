@@ -1,0 +1,75 @@
+<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
+<sly data-sly-use.model="org.apache.sling.cms.core.models.AssetCardModel">
+    <div class="asset-card card is-linked" 
+         title="${model.assetTitle}" 
+         data-value="${model.assetPath}" 
+         data-mime-type="${model.mimeType}">
+        
+        <div class="card-image">
+            <figure class="image is-5by4">
+                <img src="${model.thumbnailPath}" 
+                     loading="lazy" 
+                     alt="${model.assetTitle}" 
+                     class="asset-thumbnail">
+                
+                <!--/* Video Badge */-->
+                <sly data-sly-test="${model.video}">
+                    <span class="asset-badge asset-badge--video">
+                        <i class="jam jam-video-camera"></i>
+                    </span>
+                </sly>
+                
+                <!--/* PDF Badge */-->
+                <sly data-sly-test="${model.pdf}">
+                    <span class="asset-badge asset-badge--pdf">PDF</span>
+                </sly>
+            </figure>
+            
+            <!--/* Action Overlay */-->
+            <div class="asset-card__overlay is-vhidden">
+                <div class="asset-card__actions">
+                    <sly data-sly-list.actionConfig="${model.actionConfigs}">
+                        <sly data-sly-resource="${model.assetPath @ resourceType=actionConfig.valueMap.resourceType}"></sly>
+                    </sly>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-content asset-card__info">
+            <p class="asset-card__title" title="${model.assetTitle}">
+                ${model.assetTitle}
+            </p>
+            
+            <div class="asset-card__meta">
+                <sly data-sly-test="${model.fileExtension}">
+                    <span class="tag is-light is-small">${model.fileExtension}</span>
+                </sly>
+                
+                <sly data-sly-test="${model.formattedFileSize}">
+                    <span class="asset-card__size">${model.formattedFileSize}</span>
+                </sly>
+            </div>
+            
+            <sly data-sly-test="${model.formattedLastModified}">
+                <small class="asset-card__date">${model.formattedLastModified}</small>
+            </sly>
+        </div>
+    </div>
+</sly>

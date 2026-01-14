@@ -18,6 +18,7 @@
 */-->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.ContentTableModel">
 <div class="reload-container table__wrapper scroll-container contentnav" 
+     data-filterable-container
      data-path="${resource.path @ context='attribute'}.table.html${model.requestSuffix @ context='attribute'}">
     <table class="table is-fullwidth is-striped sortable cms-table cms-table--sortable">
         <thead>
@@ -35,11 +36,16 @@
         <tbody>
             <sly data-sly-list.row="${model.rows}">
                 <tr class="contentnav__item"
+                    data-filterable-item
                     data-resource="${row.path @ context='attribute'}"
                     data-type="${row.typePath @ context='attribute'}"
                     data-mime-type="${row.mimeType @ context='attribute'}"
+                    data-asset-type="${row.mimeType @ context='attribute'}"
                     data-is-folder="${row.folder}"
-                    data-taxonomy="${row.taxonomyString @ context='attribute'}">
+                    data-taxonomy="${row.taxonomyString @ context='attribute'}"
+                    data-page-status="${row.pageStatus @ context='attribute'}"
+                    data-template="${row.template @ context='attribute'}"
+                    data-modified-date="${row.modifiedDate @ context='attribute'}">
                     <td class="Cell-Static cms-table__cell--static"
                         title="# ${row.rowNumber}"
                         data-sort-value="${row.rowNumberFormatted}">

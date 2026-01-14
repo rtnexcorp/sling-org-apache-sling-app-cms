@@ -97,10 +97,11 @@ rava.bind('.pathbrowser-container', {
           if (filterType) {
             const types = filterType.split(',').map(t => t.trim());
             // Map common types to PathSuggestionServlet keys
-            if (types.some(t => t.includes('Folder'))) {
-              typeParam = 'folder';
-            } else if (types.includes('sling:Page')) {
+            // Check for pages first - the 'page' filter includes folders too
+            if (types.includes('sling:Page')) {
               typeParam = 'page';
+            } else if (types.some(t => t.includes('Folder'))) {
+              typeParam = 'folder';
             } else if (types.some(t => t.includes('File') || t.includes('file'))) {
               typeParam = 'file';
             }

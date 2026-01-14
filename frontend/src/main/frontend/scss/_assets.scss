@@ -19,11 +19,13 @@
 
 /* Asset Browser Styles */
 
-// Variables
+@use "sass:color";
+@use "variables" as *;
+
+// Local component-specific variables
 $asset-card-gap: 1rem;
 $asset-card-radius: 6px;
 $asset-badge-bg: rgba(0, 0, 0, 0.7);
-$asset-badge-color: #fff;
 
 /* Filter Bar */
 .asset-filter-bar {
@@ -32,7 +34,7 @@ $asset-badge-color: #fff;
   gap: 1rem;
   align-items: center;
   padding: 1rem;
-  background: #f5f5f5;
+  background: $white-ter;
   border-radius: $asset-card-radius;
   margin-bottom: 1rem;
 
@@ -54,16 +56,16 @@ $asset-badge-color: #fff;
     
     .asset-view-btn {
       &.is-selected {
-        background-color: #3273dc;
-        border-color: #3273dc;
-        color: #fff;
+        background-color: $link;
+        border-color: $link;
+        color: $white;
       }
     }
   }
 
   &__count {
     font-size: 0.875rem;
-    color: #666;
+    color: $grey;
     margin-left: auto;
   }
 }
@@ -155,10 +157,17 @@ $asset-badge-color: #fff;
   }
 
   &__empty {
-    color: #999;
+    color: $grey-light;
     
     .icon {
-      color: #ccc;
+      color: $grey-lighter;
+    }
+  }
+
+  // Filter support - hide filtered items
+  .asset-item {
+    &.cms-filtered-out {
+      display: none !important;
     }
   }
 }
@@ -181,7 +190,7 @@ $asset-badge-color: #fff;
 
   .card-image {
     position: relative;
-    background: #f0f0f0;
+    background: $white-ter;
 
     .image img {
       object-fit: cover;
@@ -227,7 +236,7 @@ $asset-badge-color: #fff;
     gap: 0.5rem;
     align-items: center;
     font-size: 0.75rem;
-    color: #666;
+    color: $grey;
     margin-bottom: 0.25rem;
 
     .tag {
@@ -237,13 +246,13 @@ $asset-badge-color: #fff;
   }
 
   &__size {
-    color: #888;
+    color: $grey-light;
   }
 
   &__date {
     display: block;
     font-size: 0.75rem;
-    color: #999;
+    color: $grey-light;
   }
 }
 
@@ -253,7 +262,7 @@ $asset-badge-color: #fff;
   bottom: 8px;
   right: 8px;
   background: $asset-badge-bg;
-  color: $asset-badge-color;
+  color: $white;
   padding: 2px 6px;
   border-radius: 3px;
   font-size: 0.7rem;
@@ -263,11 +272,11 @@ $asset-badge-color: #fff;
   gap: 4px;
 
   &--video {
-    background: #e91e63;
+    background: $code-color-alt;
   }
 
   &--pdf {
-    background: #f44336;
+    background: $danger;
   }
 
   &--large {
@@ -286,7 +295,7 @@ $asset-badge-color: #fff;
     top: 1rem;
 
     .image {
-      background: #f0f0f0;
+      background: $white-ter;
       border-radius: $asset-card-radius;
       overflow: hidden;
       display: flex;
@@ -328,7 +337,7 @@ $asset-badge-color: #fff;
     .title {
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid $grey-lighter;
     }
   }
 }
@@ -339,11 +348,11 @@ $asset-badge-color: #fff;
   font-weight: 500;
 
   &__published {
-    color: #48c774;
+    color: $success;
   }
 
   &__unpublished {
-    color: #ffdd57;
+    color: $warning;
   }
 }
 

@@ -1,0 +1,47 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "Sling CMS Developer Hoodie",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+
+  "schemaId": "product",
+
+  "productName": "Sling CMS Developer Hoodie",
+  "sku": "SCMS-HOODIE-001",
+  "description": "<p>Comfortable hoodie featuring Sling CMS logo and developer-themed design. Made from premium cotton blend with kangaroo pocket. Perfect for developers, conferences, and casual coding sessions.</p>",
+  "price": 45.99,
+  "stockQuantity": 75,
+  "category": "clothing",
+  "featured": true,
+
+  "fields": {
+    "productName": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "sku": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "description": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "price": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    },
+    "stockQuantity": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    }
+  }
+}

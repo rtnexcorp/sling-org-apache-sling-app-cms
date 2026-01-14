@@ -1,0 +1,271 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+@use "variables" as *;
+
+// Icon Component Abstraction
+// This file provides framework-agnostic icon classes
+// Currently maps to Jam Icons, but can be easily swapped out
+
+// Icon Abstraction - maps to Jam Icons
+.cms-icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+
+  &--small {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  &--large {
+    height: 3rem;
+    width: 3rem;
+  }
+
+  // Icon mappings (currently using Jam Icons)
+  // When changing icon library, only update these font-family and content codes
+  
+  &--check,
+  &--chevron-down,
+  &--close,
+  &--code,
+  &--cog,
+  &--download,
+  &--edit,
+  &--external-link,
+  &--eye,
+  &--files,
+  &--filter,
+  &--folder,
+  &--folder-open,
+  &--grid,
+  &--list,
+  &--pencil,
+  &--plus,
+  &--refresh,
+  &--screen,
+  &--search,
+  &--trash,
+  &--upload,
+  &--users,
+  &--video {
+    font-family: "jam-icons";
+    font-style: normal;
+    font-weight: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    text-align: center;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  &--check::before {
+    content: "\e90f";
+  }
+
+  &--chevron-down::before {
+    content: "\e910";
+  }
+
+  &--close::before {
+    content: "\e914";
+  }
+
+  &--code::before {
+    content: "\e916";
+  }
+
+  &--cog::before {
+    content: "\e917";
+  }
+
+  &--download::before {
+    content: "\e924";
+  }
+
+  &--edit::before {
+    content: "\e9ba";
+  }
+
+  &--external-link::before {
+    content: "\e92c";
+  }
+
+  &--eye::before {
+    content: "\ea5d";
+  }
+
+  &--files::before {
+    content: "\e934";
+  }
+
+  &--filter::before {
+    content: "\e935";
+  }
+
+  &--folder::before {
+    content: "\e93d";
+  }
+
+  &--folder-open::before {
+    content: "\e93d";
+  }
+
+  &--grid::before {
+    content: "\e94b";
+  }
+
+  &--list::before {
+    content: "\e9a5";
+  }
+
+  &--pencil::before {
+    content: "\e967";
+  }
+
+  &--plus::before {
+    content: "\e96f";
+  }
+
+  &--refresh::before {
+    content: "\e97d";
+  }
+
+  &--screen::before {
+    content: "\e981";
+  }
+
+  &--search::before {
+    content: "\ebab";
+  }
+
+  &--trash::before {
+    content: "\ec1f";
+  }
+
+  &--upload::before {
+    content: "\e9a8";
+  }
+
+  &--users::before {
+    content: "\e9ab";
+  }
+
+  &--video::before {
+    content: "\e9b2";
+  }
+}
+
+// =============================================================================
+// LEGACY JAM ICONS USAGE - TO BE REFACTORED
+// =============================================================================
+// The following selectors use direct Jam Icons classes (.jam, .jam-*)
+// TODO: Refactor to use cms-icon abstraction pattern for framework independence
+// =============================================================================
+
+// RTE Toolbar Icon Sizing
+// TODO: Refactor RTE toolbar to use .cms-icon classes
+.rte-toolbar .jam:before {
+  font-size: x-large;
+}
+
+// Path Browser Icon Colors
+// TODO: Refactor path browser to use .cms-icon--folder and .cms-icon--document
+.pathbrowser-field,
+.pathbrowser-item {
+  .jam-folder {
+    color: $link;
+  }
+
+  .jam-document {
+    color: $grey;
+  }
+}
+
+.pathbrowser-toggle .jam {
+  transition: transform 0.2s ease;
+}
+
+// Table Sorting Icons
+// TODO: Refactor table sorting to use .cms-icon--* classes
+table thead .sorting:after,
+table thead .sorting_asc:after,
+table thead .sorting_asc_disabled:after,
+table thead .sorting_desc:after,
+table thead .sorting_desc_disabled:after {
+  font-family: "jam-icons";
+}
+
+table thead .sorting:after {
+  content: "\e943";
+}
+
+table thead .sorting_asc:after {
+  content: "\e93f";
+}
+
+table thead .sorting_desc:after {
+  content: "\e92a";
+}
+
+// =============================================================================
+// CONTROL WITH ICONS
+// =============================================================================
+
+.cms-control {
+  box-sizing: border-box;
+  clear: both;
+  font-size: 1rem;
+  position: relative;
+  text-align: inherit;
+
+  &--has-icons-left {
+    .cms-input {
+      padding-left: 2.5em;
+    }
+
+    .cms-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 2.5em;
+    }
+  }
+
+  &--has-icons-right {
+    .cms-input {
+      padding-right: 2.5em;
+    }
+
+    .cms-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 2.5em;
+    }
+  }
+}

@@ -16,30 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */-->
-<sly data-sly-use.filter="org.apache.sling.cms.core.models.ContentFilter"/>
+<sly data-sly-use.model="org.apache.sling.cms.core.models.ContentFilter"/>
 
-<div class="content-filter" data-component="content-filter">
+<div data-component="content-filter">
     <div class="content-filter__controls">
-        <!--/* Type Filter */-->
-        <div class="select is-small">
-            <select data-content-type-filter aria-label="${'Filter by type' @ i18n}">
-                <option value="">${'All Types' @ i18n}</option>
-                <option value="image/">${'Images' @ i18n}</option>
-                <option value="video/">${'Videos' @ i18n}</option>
-                <option value="application/pdf,application/msword,application/vnd">${'Documents' @ i18n}</option>
-                <option value="folder">${'Folders' @ i18n}</option>
-            </select>
-        </div>
-        
-        <!--/* Taxonomy Filter */-->
-        <sly data-sly-test="${filter.hasTaxonomyOptions}">
-            <div class="select is-small">
-                <select data-content-tag-filter aria-label="${'Filter by tag' @ i18n}">
-                    <option value="">${'All Tags' @ i18n}</option>
-                    <sly data-sly-list.option="${filter.taxonomyOptions}">
-                        <option value="${option.path}">${option.title}</option>
-                    </sly>
-                </select>
+        <sly data-sly-list.filter="${model.filterConfigs}">
+            <div>
+                <div class="cms-select">
+                    <select id="${filter.id}"
+                            data-filter="${filter.dataAttribute}"
+                            class="cms-select__input"
+                            data-dynamic-options="${filter.dynamicOptions}"
+                            aria-label="${filter.label @ i18n}">
+                        <sly data-sly-list.option="${filter.options}">
+                            <option value="${option.value}">${option.label @ i18n}</option>
+                        </sly>
+                    </select>
+                </div>
             </div>
         </sly>
     </div>

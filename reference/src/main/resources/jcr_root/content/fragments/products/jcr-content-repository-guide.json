@@ -1,0 +1,47 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "JCR Content Repository Guide",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+
+  "schemaId": "product",
+
+  "productName": "JCR Content Repository Guide",
+  "sku": "SCMS-BOOK-002",
+  "description": "<p>In-depth guide to Java Content Repository (JCR) API and Apache Jackrabbit. Learn node types, content modeling, querying, versioning, and observation patterns for building robust content management solutions.</p>",
+  "price": 39.99,
+  "stockQuantity": 150,
+  "category": "books",
+  "featured": false,
+
+  "fields": {
+    "productName": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "sku": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "description": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "price": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    },
+    "stockQuantity": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    }
+  }
+}

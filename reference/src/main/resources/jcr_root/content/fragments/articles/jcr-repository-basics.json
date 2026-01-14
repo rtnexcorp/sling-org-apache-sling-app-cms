@@ -1,0 +1,70 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "JCR Repository Basics",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "author": "cms-admin",
+  "body": "<p>The Java Content Repository (JCR) API is the foundation for content storage in Apache Sling. JCR provides a standardized way to access content repositories, with Apache Jackrabbit being the most common implementation.</p><p>JCR treats content as a hierarchical tree of nodes, where each node can have properties and child nodes. This tree structure maps naturally to web URLs, making JCR ideal for content management systems.</p><p>Key concepts include nodes (content items), properties (name-value pairs), and workspaces (separate content trees). JCR also supports versioning, observation (event listening), and querying capabilities.</p>",
+  "category": "technology",
+  "expiryDate": "2026-12-31",
+  "featuredImage": "#",
+  "publishDate": "2026-01-14",
+  "rating": 4,
+  "schemaId": "article",
+  "summary": "Exploring the Java Content Repository, the data storage layer of Apache Sling.",
+  "tags": "JCR, Java Content Repository, Jackrabbit, Content Storage, Node Hierarchy",
+  "title": "JCR Repository Basics",
+  "viewCount": 0,
+  "featured": false,
+  "fields": {
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TEXT"
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "REFERENCE"
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TAG",
+      "multiple": true
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "ASSET"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    }
+  }
+}

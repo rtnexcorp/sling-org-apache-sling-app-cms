@@ -24,22 +24,22 @@ fieldset {
   }
 
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: $scrollbar-track;
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: $scrollbar-thumb;
     border-radius: 4px;
 
     &:hover {
-      background: #555;
+      background: $scrollbar-thumb-hover;
     }
   }
 
   // Firefox scrollbar
   scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
+  scrollbar-color: $scrollbar-thumb $scrollbar-track;
 }
 
 // Forms in modals should not have max-height restrictions
@@ -57,10 +57,10 @@ fieldset {
 .form-wrapper[disabled] .input,
 .form-wrapper[disabled] .textarea,
 .form-wrapper[disabled] select {
-  background-color: #f5f5f5;
-  border-color: #f5f5f5;
+  background-color: $white-ter;
+  border-color: $white-ter;
   box-shadow: none;
-  color: #7a7a7a;
+  color: $grey;
   cursor: not-allowed;
 }
 
@@ -70,10 +70,6 @@ fieldset {
 
 .rte-form .buttons {
   margin: 0.5em 0;
-}
-
-.rte-toolbar .jam:before {
-  font-size: x-large;
 }
 
 .rte-toolbar .level {

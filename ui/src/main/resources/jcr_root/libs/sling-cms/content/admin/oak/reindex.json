@@ -1,0 +1,66 @@
+{
+  "jcr:primaryType": "sling:Page",
+  "jcr:content": {
+    "sling:resourceType": "sling-cms/components/pages/modal",
+    "jcr:title": "Reindex",
+    "jcr:primaryType": "nt:unstructured",
+
+    "container": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "sling-cms/components/general/container",
+
+      "slingform": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "sling-cms/components/editor/slingform",
+        "button": "Reindex",
+        "fields": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "sling-cms/components/general/container",
+
+          "indexPath": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/editor/fields/select",
+            "label": "Index",
+            "name": "indexPath",
+            "options": {
+              "slingComponent": {
+                "label": "slingComponentLucene",
+                "value": "/oak:index/slingComponentLucene"
+              },
+              "slingeventJob": {
+                "label": "slingeventJobLucene",
+                "value": "/oak:index/slingeventJobLucene"
+              },
+              "slingFile": {
+                "label": "slingFileLucene",
+                "value": "/oak:index/slingFileLucene"
+              },
+              "slingPage": {
+                "label": "slingPageLucene",
+                "value": "/oak:index/slingPageLucene"
+              },
+              "slingTaxonomy": {
+                "label": "slingTaxonomyLucene",
+                "value": "/oak:index/slingTaxonomyLucene"
+              },
+              "ntFolder": {
+                "label": "ntFolder",
+                "value": "/oak:index/ntFolder"
+              },
+              "ntHierarchyNode": {
+                "label": "ntHierarchyNode",
+                "value": "/oak:index/ntHierarchyNode"
+              }
+            }
+          },
+
+          "warning": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/richtext",
+            "text": "<div class=\"field\"><p><strong>Warning</strong>: Reindexing can cause high load. Use during maintenance windows.</p></div>"
+          }
+        }
+      }
+    }
+  }
+}

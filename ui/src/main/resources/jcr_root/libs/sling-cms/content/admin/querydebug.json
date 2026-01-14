@@ -14,88 +14,153 @@
         "level": "h3",
         "text": "Query Debugger"
       },
-      "getform": {
+
+      "tabs": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "sling-cms/components/cms/getform",
-        "button": "Debug Query",
-        "load": "#query-debug",
-        "target": "#query-debug",
-        "action": "/libs/sling-cms/content/admin/querydebug/jcr:content/container/querydebug.html",
-        "skipcancel": true,
-        "fields": {
+        "sling:resourceType": "sling-cms/components/editor/fields/tabs",
+
+        "runQuery": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "sling-cms/components/general/container",
-          "statement": {
+          "title": "Run Query",
+
+          "getform": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/textarea",
-            "label": "Query Statement",
-            "name": "statement"
-          },
-          "language": {
-            "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/select",
-            "label": "Query Language",
-            "name": "language",
-            "options": {
-              "JCR-SQL2": {
-                "label": "JCR-SQL2",
-                "value": "JCR-SQL2"
+            "sling:resourceType": "sling-cms/components/cms/getform",
+            "button": "Debug Query",
+            "load": "#query-debug",
+            "target": "#query-debug",
+            "action": "/libs/sling-cms/content/admin/querydebug/jcr:content/container/tabs/runQuery/querydebug.html",
+            "skipcancel": true,
+            "fields": {
+              "jcr:primaryType": "nt:unstructured",
+              "sling:resourceType": "sling-cms/components/general/container",
+              "statement": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/fields/textarea",
+                "label": "Query Statement",
+                "name": "statement"
               },
-              "xpath": {
-                "label": "xpath",
-                "value": "xpath"
+              "language": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/fields/select",
+                "label": "Query Language",
+                "name": "language",
+                "options": {
+                  "JCR-SQL2": {
+                    "label": "JCR-SQL2",
+                    "value": "JCR-SQL2"
+                  },
+                  "xpath": {
+                    "label": "xpath",
+                    "value": "xpath"
+                  },
+                  "JCR-JQOM": {
+                    "label": "JCR-JQOM",
+                    "value": "JCR-JQOM"
+                  },
+                  "sql": {
+                    "label": "SQL",
+                    "value": "sql"
+                  }
+                }
               },
-              "JCR-JQOM": {
-                "label": "JCR-JQOM",
-                "value": "JCR-JQOM"
-              },
-              "sql": {
-                "label": "SQL",
-                "value": "sql"
+              "sampleResults": {
+                "jcr:primaryType": "nt:unstructured",
+                "sling:resourceType": "sling-cms/components/editor/fields/select",
+                "label": "Sample Results",
+                "name": "sample",
+                "options": {
+                  "none": {
+                    "label": "None",
+                    "value": "0"
+                  },
+                  "100": {
+                    "label": "100",
+                    "value": "100"
+                  },
+                  "1000": {
+                    "label": "1000",
+                    "value": "1000"
+                  },
+                  "10000": {
+                    "label": "10000",
+                    "value": "10000"
+                  },
+                  "100000": {
+                    "label": "100000",
+                    "value": "100000"
+                  },
+                  "1000000": {
+                    "label": "1000000",
+                    "value": "1000000"
+                  },
+                  "2147483647": {
+                    "label": "MAX",
+                    "value": "2147483647"
+                  }
+                }
               }
             }
           },
-          "sampleResults": {
+
+          "querydebug": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "sling-cms/components/editor/fields/select",
-            "label": "Sample Results",
-            "name": "sample",
-            "options": {
-              "none": {
-                "label": "None",
-                "value": "0"
-              },
-              "100": {
-                "label": "100",
-                "value": "100"
-              },
-              "1000": {
-                "label": "1000",
-                "value": "1000"
-              },
-              "10000": {
-                "label": "10000",
-                "value": "10000"
-              },
-              "100000": {
-                "label": "100000",
-                "value": "100000"
-              },
-              "1000000": {
-                "label": "1000000",
-                "value": "1000000"
-              },
-              "2147483647": {
-                "label": "MAX",
-                "value": "2147483647"
-              }
-            }
+            "sling:resourceType": "sling-cms/components/cms/querydebug"
+          }
+        },
+
+        "activity": {
+          "jcr:primaryType": "nt:unstructured",
+          "title": "Activity",
+
+          "help": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/richtext",
+            "i18n": true,
+            "text": "<p>Review <strong>popular</strong> and <strong>slow</strong> queries captured by Oak QueryStats.</p><ul><li>Use this tab to identify expensive statements and validate indexing changes.</li><li>If tables are empty, ensure QueryStats is enabled and the Oak MBean is available.</li></ul>"
+          },
+
+          "popularHeader": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/textelement",
+            "i18n": true,
+            "level": "h4",
+            "text": "Popular Queries"
+          },
+
+          "querydebug": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/cms/querydebug"
+          },
+
+          "slowHeader": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/textelement",
+            "i18n": true,
+            "level": "h4",
+            "text": "Slow Queries"
+          }
+        },
+
+        "indexing": {
+          "jcr:primaryType": "nt:unstructured",
+          "title": "Indexing",
+
+          "reindexAction": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/cms/actions/modal",
+            "title": "Reindex",
+            "icon": "refresh",
+            "prefix": "/cms/admin/oak/reindex.html/bin/cms/oak/reindex"
+          },
+
+          "suggestions": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "sling-cms/components/general/richtext",
+            "i18n": true,
+            "text": "<p><strong>Indexing suggestions</strong></p><ul><li>Use <code>EXPLAIN</code> / <code>explain</code> (SQL2) to confirm an index is used and keep <code>traversal</code> very low.</li><li>Prefer restricting by path (<code>ISDESCENDANTNODE</code>) and property constraints to reduce scanned rows.</li><li>Create or tune Oak indexes for common predicates (property, fulltext, nodeType), and add <code>includedPaths</code>/<code>excludedPaths</code> appropriately.</li><li>For fulltext queries, favor dedicated Lucene indexes with correct <code>indexRules</code>, and avoid leading wildcards.</li><li>After changing indexes, trigger reindex and monitor completion in the Oak console.</li></ul><p><strong>Run indexing / reindex</strong></p><p>Open the Oak Index Manager to create or reindex indexes:</p><ul><li><a href=\"/system/console/jmx\" target=\"_blank\">JMX Console</a> (reindex operations vary by Oak version)</li><li><a href=\"/oak/index\" target=\"_blank\">Oak Indexes</a> (if available in your distribution)</li></ul><p><strong>Other helpful tools</strong></p><ul><li>Check repository health: <a href=\"/system/console/status-slingsettings\" target=\"_blank\">Sling Settings</a></li><li>Review logs and slow query warnings in <a href=\"/system/console/slinglog\" target=\"_blank\">Sling Log Support</a></li><li>Inspect content paths and nodes using <a href=\"/bin/browser.html\" target=\"_blank\">Node Browser</a></li></ul>"
           }
         }
-      },
-      "querydebug": {
-        "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "sling-cms/components/cms/querydebug"
       }
     }
   }

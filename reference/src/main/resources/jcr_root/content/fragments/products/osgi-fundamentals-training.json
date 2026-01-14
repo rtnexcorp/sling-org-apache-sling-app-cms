@@ -1,0 +1,47 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "OSGi Fundamentals Training Course",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+
+  "schemaId": "product",
+
+  "productName": "OSGi Fundamentals Training Course",
+  "sku": "SCMS-TRAINING-001",
+  "description": "<p>Complete online training course covering OSGi fundamentals, bundle development, service registry, and Declarative Services. Includes hands-on exercises and real-world examples for building modular Java applications.</p>",
+  "price": 299.99,
+  "stockQuantity": 1000,
+  "category": "training",
+  "featured": true,
+
+  "fields": {
+    "productName": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "sku": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "description": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "price": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    },
+    "stockQuantity": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    }
+  }
+}

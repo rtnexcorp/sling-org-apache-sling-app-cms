@@ -27,13 +27,17 @@
 
 // Framework abstraction layer
 @use "grid-abstraction";
+@use "icons";
 
 // Feature-specific styles (alphabetically ordered)
 @use "ai-suggest";
 @use "ai-taxonomy";
 @use "assets";
+@use "assettable";
 @use "cards";
 @use "contentfilter";
+@use "contentsearch";
+@use "fieldsets";
 @use "forms";
 @use "fragment";
 @use "layout";
@@ -46,6 +50,7 @@
 @use "publication";
 @use "search";
 @use "tables";
+@use "tabs";
 @use "tiles";
 @use "tiptap";
 @use "toggle";

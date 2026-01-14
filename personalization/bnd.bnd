@@ -1,0 +1,19 @@
+Bundle-Category: sling
+Bundle-Name: Apache Sling - CMS Personalization
+Bundle-Description: Personalization framework for Apache Sling CMS
+Bundle-Vendor: The Apache Software Foundation
+
+Export-Package: \
+    org.apache.sling.cms.personalization;version=1.0.0
+
+Sling-Model-Packages: \
+    org.apache.sling.cms.personalization.models
+
+-snapshot: SNAPSHOT
+
+-exportcontents: \
+    org.apache.sling.cms.personalization;version=1.0.0
+
+-includeresource: \
+    META-INF/LICENSE=../LICENSE,\
+    META-INF/NOTICE=../NOTICE

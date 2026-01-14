@@ -44,9 +44,12 @@
                 
                 <sly data-sly-test="${field.type == 'BOOLEAN' || field.type == 'boolean'}">
                     <div class="field">
+                        <input type="hidden" name="${field.name}@TypeHint" value="Boolean" />
+                        <input type="hidden" name="${field.name}@DefaultValue" value="false" />
+                        <input type="hidden" name="${field.name}@UseDefaultWhenMissing" value="true" />
                         <label class="checkbox">
-                            <input type="checkbox" name="${field.name}" value="true" 
-                                   checked="${fragmentEditor.properties[field.name] == 'true' || fragmentEditor.properties[field.name] == true}" />
+                            <input type="checkbox" name="${field.name}" value="true"
+                                   checked="${fragmentEditor.properties[field.name]}" />
                             ${field.label || field.name}
                         </label>
                         <p class="help" data-sly-test="${field.description}">${field.description}</p>
@@ -56,6 +59,12 @@
                 <sly data-sly-test="${field.type == 'INTEGER' || field.type == 'integer' || field.type == 'DECIMAL' || field.type == 'decimal'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
+                        <sly data-sly-test="${field.type == 'INTEGER' || field.type == 'integer'}">
+                            <input type="hidden" name="${field.name}@TypeHint" value="Long" />
+                        </sly>
+                        <sly data-sly-test="${field.type == 'DECIMAL' || field.type == 'decimal'}">
+                            <input type="hidden" name="${field.name}@TypeHint" value="Double" />
+                        </sly>
                         <input class="input" type="number" name="${field.name}" id="${field.name}" 
                                value="${fragmentEditor.properties[field.name]}" 
                                required="${field.required}" 
@@ -68,18 +77,20 @@
                 <sly data-sly-test="${field.type == 'DATE' || field.type == 'date'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
-                        <input class="input" type="date" name="${field.name}" id="${field.name}" 
-                               value="${fragmentEditor.properties[field.name]}" 
+                        <input type="hidden" name="${field.name}@TypeHint" value="Date" />
+                        <input class="input" type="date" name="${field.name}" id="${field.name}"
+                               value="${fragmentEditor.properties[field.name]}"
                                required="${field.required}"/>
                     </div>
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
-                
+
                 <sly data-sly-test="${field.type == 'DATETIME' || field.type == 'datetime'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
-                        <input class="input" type="datetime-local" name="${field.name}" id="${field.name}" 
-                               value="${fragmentEditor.properties[field.name]}" 
+                        <input type="hidden" name="${field.name}@TypeHint" value="Date" />
+                        <input class="input" type="datetime-local" name="${field.name}" id="${field.name}"
+                               value="${fragmentEditor.properties[field.name]}"
                                required="${field.required}"/>
                     </div>
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
@@ -105,10 +116,13 @@
                 <sly data-sly-test="${field.type == 'RICHTEXT' || field.type == 'richtext'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
-                        <textarea class="textarea richtext-editor" name="${field.name}" id="${field.name}" 
-                                  required="${field.required}" 
-                                  placeholder="${field.description}" 
+                        <div class="rte">
+                            <sly data-sly-resource="${'/libs/sling-cms/components/editor/fields/richtext/toolbar/default' @ resourceType='sling-cms/components/editor/fields/richtext/toolbar'}"></sly>
+                            <textarea class="rte-editor textarea" name="${field.name}" id="${field.name}"
+                                  required="${field.required}"
+                                  placeholder="${field.description}"
                                   rows="10">${fragmentEditor.properties[field.name]}</textarea>
+                        </div>
                     </div>
                     <p class="help" data-sly-test="${field.description}">${field.description}</p>
                 </sly>
@@ -139,6 +153,8 @@
                 <sly data-sly-test="${field.type == 'TAG' || field.type == 'tag'}">
                     <label class="label" for="${field.name}">${field.label || field.name}</label>
                     <div class="control">
+                        <input type="hidden" name="${field.name}@TypeHint" value="String[]" />
+                        <input type="hidden" name="${field.name}@Delete" value="delete" />
                         <input class="input tagfield" type="text" name="${field.name}" id="${field.name}"
                                value="${fragmentEditor.properties[field.name] @ context='attribute'}"
                                required="${field.required}"
@@ -161,10 +177,7 @@
             <p>No schema found for this fragment. Please set the 'schemaId' property.</p>
         </div>
 
-        <div class="notification is-info" data-sly-test="${fragmentEditor.schema}">
-            <p><strong>Debug Info:</strong></p>
-            <p>Schema: ${fragmentEditor.schema.title} (${fragmentEditor.schema.id})</p>
-            <p>Total fields: ${fragmentEditor.fields.size}</p>
-        </div>
+       
+        <p></p>
     </div>
 </sly>

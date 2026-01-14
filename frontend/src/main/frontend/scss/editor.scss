@@ -20,12 +20,7 @@
 @use "fonts";
 @use "overrides";
 @use "fieldsets";
-
-// Bulma breakpoint
-$tablet: 769px;
-
-// Brand color used in loader
-$primary: #9E2165;
+@use "variables" as *;
 
 .sling-cms-editor {
   font-family: "Open Sans", sans-serif;
@@ -129,17 +124,17 @@ $primary: #9E2165;
 }
 
 .sling-cms-component__is-active {
-  border-color: hsl(0, 0%, 86%);
+  border-color: $grey-lighter;
 }
 
 .sling-cms-droptarget__is-active {
   height: 2em;
-  border: 1px solid hsl(0, 0%, 71%);
-  background-color: hsl(0, 0%, 96%);
+  border: 1px solid $grey-light;
+  background-color: $white-ter;
 }
 
 .sling-cms-droptarget__is-over {
   height: 2em;
-  border: 1px solid hsl(0, 0%, 96%);
-  background-color: hsl(0, 0%, 71%);
+  border: 1px solid $white-ter;
+  background-color: $grey-light;
 }

@@ -19,10 +19,8 @@
 // Provides AI-powered taxonomy suggestions for content tagging
 // Follows the labelfield pattern used by existing taxonomy fields
 
-@import 'variables';
-
-// Brand color from _bulma-config.scss
-$magenta: #9E2165;
+@use "sass:color";
+@use "variables" as *;
 
 .cms-ai-taxonomy-field {
   margin-bottom: 1rem;
@@ -32,16 +30,16 @@ $magenta: #9E2165;
     margin-bottom: 0.5rem;
 
     .has-text-danger {
-      color: #ff3860;
+      color: $danger;
       margin-left: 0.25rem;
     }
   }
 
   // AI Suggest button styling
   .cms-ai-suggest-btn {
-    border: 1px solid $magenta;
+    border: 1px solid $primary;
     background: transparent;
-    color: $magenta;
+    color: $primary;
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
     cursor: pointer;
@@ -62,13 +60,13 @@ $magenta: #9E2165;
     }
 
     &:hover {
-      background-color: lighten($magenta, 45%);
-      color: darken($magenta, 10%);
-      border-color: darken($magenta, 10%);
+      background-color: color.scale($primary, $lightness: 45%);
+      color: color.scale($primary, $lightness: -10%);
+      border-color: color.scale($primary, $lightness: -10%);
     }
 
     &:focus {
-      outline: 2px solid $magenta;
+      outline: 2px solid $primary;
       outline-offset: 2px;
     }
 
@@ -92,7 +90,7 @@ $magenta: #9E2165;
         transition: color 0.2s ease;
 
         &:hover {
-          color: $magenta;
+          color: $primary;
         }
 
         .jam-chevron-down {
@@ -117,7 +115,7 @@ $magenta: #9E2165;
   .help {
     margin-top: 0.5rem;
     font-size: 0.875rem;
-    color: #666;
+    color: $grey;
   }
 }
 

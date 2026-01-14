@@ -3,11 +3,13 @@
 // Content Fragment Component
 // Displays content fragment data in the CMS
 
+@use "variables" as *;
+
 .cms-fragment {
-  border: 1px solid #e0e0e0;
+  border: 1px solid $grey-lighter;
   border-radius: 4px;
   padding: 1rem;
-  background-color: #fafafa;
+  background-color: $white-ter;
 
   &__header {
     display: flex;
@@ -15,20 +17,20 @@
     align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid $grey-lighter;
   }
 
   &__title {
     margin: 0;
     font-size: 1.25rem;
     font-weight: 600;
-    color: #333;
+    color: $grey-darker;
   }
 
   &__schema {
     font-size: 0.875rem;
-    color: #666;
-    background-color: #e8e8e8;
+    color: $grey;
+    background-color: $grey-lighter;
     padding: 0.25rem 0.5rem;
     border-radius: 3px;
   }
@@ -43,19 +45,19 @@
     display: flex;
     gap: 0.5rem;
     padding: 0.5rem;
-    background-color: #fff;
+    background-color: $white;
     border-radius: 3px;
-    border: 1px solid #eee;
+    border: 1px solid $white-ter;
   }
 
   &__field-label {
     font-weight: 600;
-    color: #555;
+    color: $grey-dark;
     min-width: 120px;
   }
 
   &__field-value {
-    color: #333;
+    color: $grey-darker;
     word-break: break-word;
   }
 }

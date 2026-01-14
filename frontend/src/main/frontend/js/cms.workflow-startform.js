@@ -50,6 +50,8 @@ rava.bind('[data-component="workflow-start-form"]', {
         // Add processKey and businessKey
         const processKey = form.querySelector('[name="processKey"]');
         const businessKey = form.querySelector('[name="businessKey"]');
+        const contentPath = form.querySelector('[name="contentPath"]');
+        const deep = form.querySelector('[name="deep"]');
 
         if (processKey && processKey.value) {
           formData.append('processKey', processKey.value);
@@ -57,6 +59,14 @@ rava.bind('[data-component="workflow-start-form"]', {
 
         if (businessKey && businessKey.value) {
           formData.append('businessKey', businessKey.value);
+        }
+
+        if (contentPath && contentPath.value) {
+          formData.append('contentPath', contentPath.value);
+        }
+
+        if (deep && deep.checked) {
+          formData.append('deep', 'true');
         }
 
         // Add variables with var_ prefix

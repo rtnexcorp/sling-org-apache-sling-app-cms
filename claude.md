@@ -295,14 +295,14 @@ String parentPath = ResourceUtil.getParent(path);
 
 **New Component File Structure**:
 When creating a new component, always create:
-1. `.content.xml` - Component definition
-2. `<componentname>.html` - HTL template (NOT `.jsp`)
-3. Sling Model in appropriate module for business logic
+1. `<componentname>.html` - HTL template (NOT `.jsp`)
+2. Sling Model in appropriate module for business logic
+
+**❌ IMPORTANT: Do NOT create `.content.xml` files** - This project does not use `.content.xml` files for component definitions. Component metadata and configuration is handled through other mechanisms in the Sling CMS architecture.
 
 **Example - Creating a new component**:
 ```
 ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/mycomponent/
-├── .content.xml          # Component definition
 └── mycomponent.html      # HTL template (REQUIRED - not JSP!)
 ```
 
@@ -528,24 +528,23 @@ $cms-spacing-unit: 0.5rem !default;
 **File Structure:**
 ```
 ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/mycomponent/
-├── .content.xml          # Component definition
 └── mycomponent.html      # HTL template (NEVER .jsp!)
 ```
 
+**❌ IMPORTANT: Do NOT create `.content.xml` files** - This project does not use `.content.xml` files for component definitions.
+
 **Steps:**
 1. Create component directory in `ui/src/main/resources/jcr_root/libs/sling-cms/components/cms/`
-2. Add `.content.xml` with `jcr:primaryType=sling:Component`
-3. Create HTL template (`.html` file, never JSP)
-4. Create Sling Model in appropriate module if needed
-5. Create separate SCSS file in `frontend/src/main/frontend/scss/_mycomponent.scss`
-6. Import SCSS in `cms.scss`
-7. Use semantic CSS classes (e.g., `cms-mycomponent`, not Bulma classes directly)
+2. Create HTL template (`.html` file, never JSP)
+3. Create Sling Model in appropriate module if needed
+4. Create separate SCSS file in `frontend/src/main/frontend/scss/_mycomponent.scss`
+5. Import SCSS in `cms.scss`
+6. Use semantic CSS classes (e.g., `cms-mycomponent`, not Bulma classes directly)
 
 ### Working with Content
 
 **JCR Content Location:**
 - UI content: `ui/src/main/resources/jcr_root/`
-- Content structure defined in `.content.xml` files
 - Component definitions in `libs/sling-cms/components/`
 - CMS content lives under `/libs/sling-cms/content` (mapped to `/cms` URL)
 - Can be overlaid via `/apps/sling-cms/content` (Sling Resource Merger)
@@ -721,10 +720,10 @@ When modifying or extending this project:
 ### When Working with Content
 
 1. Content structure is JCR-based (hierarchical)
-2. `.content.xml` files define node structure
-3. Properties and node types follow JCR specifications
-4. Content lives under `/libs/sling-cms/content` → `/cms` URL
-5. Can be overlaid via `/apps/sling-cms/content`
+2. Properties and node types follow JCR specifications
+3. Content lives under `/libs/sling-cms/content` → `/cms` URL
+4. Can be overlaid via `/apps/sling-cms/content`
+5. **Do NOT create `.content.xml` files** - Not used in this project
 
 ### When Adding Dependencies
 

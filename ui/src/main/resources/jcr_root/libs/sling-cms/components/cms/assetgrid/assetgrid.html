@@ -17,20 +17,24 @@
  * under the License.
 -->
 <sly data-sly-use.model="org.apache.sling.cms.core.models.AssetGridModel">
-    <div class="asset-browser" data-component="asset-browser" data-path="${model.dataPath}">
+    <div class="asset-grid-wrapper">
 
-        <!-- Filter Bar -->
-        <sly data-sly-resource="${'.' @ resourceType='sling-cms/components/cms/assetfilterbar'}"></sly>
-
-        <!-- Asset Grid Container -->
-        <div class="asset-grid reload-container scroll-container contentnav" data-view="grid">
+        
+        <!--/* Asset Grid Container */-->
+        <div class="asset-grid reload-container scroll-container contentnav" data-view="grid" data-filterable-container>
             <div class="asset-grid__items cms-grid cms-grid--multiline">
                 <sly data-sly-list.item="${model.items}">
                     <div class="cms-grid__item cms-grid__item--half-tablet cms-grid__item--third-widescreen cms-grid__item--quarter-fullhd contentnav__item asset-item"
+                         data-filterable-item
+                         data-asset-item
                          data-name="${item.nameLowercase}"
                          data-mime-type="${item.mimeType}"
+                         data-asset-type="${item.mimeType @ context='attribute'}"
+                         data-asset-size="${item.assetSize @ context='attribute'}"
+                         data-modified-date="${item.modifiedDate @ context='attribute'}"
                          data-is-folder="${item.folder}"
-                         data-taxonomy="${item.taxonomyStr}">
+                         data-taxonomy="${item.taxonomyStr}"
+                         data-value="${item.path}">
                         <div class="card is-linked asset-card" title="${item.title}" data-value="${item.path}">
                             <div class="card-image">
                                 <figure class="image is-5by4">

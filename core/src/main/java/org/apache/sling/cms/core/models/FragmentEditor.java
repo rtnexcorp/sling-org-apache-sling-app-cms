@@ -20,8 +20,12 @@ package org.apache.sling.cms.core.models;
 
 import javax.annotation.PostConstruct;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -50,9 +54,13 @@ public class FragmentEditor {
     @OSGiService
     private SchemaManager schemaManager;
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
     private ContentSchema schema;
     private ValueMap properties;
     private Resource fragmentResource;
+    private Map<String, Object> formattedProperties;
 
     @PostConstruct
     protected void init() {
@@ -75,6 +83,35 @@ public class FragmentEditor {
         if (schemaId != null && schemaManager != null) {
             schema = schemaManager.getSchema(fragmentResource, schemaId);
         }
+
+        // Build formatted properties map
+        formattedProperties = new HashMap<>();
+        for (String key : properties.keySet()) {
+            Object value = properties.get(key);
+            formattedProperties.put(key, formatValue(value));
+        }
+    }
+
+    /**
+     * Format a value for display in form fields.
+     * Converts Calendar objects to ISO date strings.
+     */
+    private Object formatValue(Object value) {
+        if (value instanceof Calendar) {
+            Calendar cal = (Calendar) value;
+            synchronized (DATETIME_FORMAT) {
+                // Check if time component is set (non-midnight)
+                if (cal.get(Calendar.HOUR_OF_DAY) == 0
+                        && cal.get(Calendar.MINUTE) == 0
+                        && cal.get(Calendar.SECOND) == 0) {
+                    synchronized (DATE_FORMAT) {
+                        return DATE_FORMAT.format(cal.getTime());
+                    }
+                }
+                return DATETIME_FORMAT.format(cal.getTime());
+            }
+        }
+        return value;
     }
 
     /**
@@ -132,12 +169,13 @@ public class FragmentEditor {
     }
 
     /**
-     * Get the properties ValueMap for direct access in HTL templates.
+     * Get the properties map for direct access in HTL templates.
      * HTL can access this via ${fragmentEditor.properties['fieldName']}.
+     * Date/Calendar values are automatically formatted as ISO strings.
      *
-     * @return the resource's ValueMap
+     * @return map of property names to formatted values
      */
-    public ValueMap getProperties() {
-        return properties;
+    public Map<String, Object> getProperties() {
+        return formattedProperties;
     }
 }

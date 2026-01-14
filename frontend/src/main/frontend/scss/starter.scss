@@ -16,6 +16,7 @@
  */
 @use 'fonts';
 @use 'grid';
+@use 'variables' as *;
 
 * {
     box-sizing: border-box;
@@ -25,7 +26,7 @@ body {
     margin: 0;
     font-family: 'Open Sans', Helvetica, Arial;
     font-weight: 300;
-    color: rgb(128,128,128);
+    color: $grey;
     position: relative;
     height: 100%;
 }
@@ -33,13 +34,13 @@ body {
 h1 {
     font-weight: 300;
     font-size: 2.4em;
-    color: rgb(96,96,96);
+    color: $grey-dark;
 }
 
 h2 {
     font-weight: 400;
     font-size: 2em;
-    color: rgb(96,96,96);
+    color: $grey-dark;
 }
 
 p {
@@ -47,7 +48,7 @@ p {
 }
 
 a {
-    color: rgb(0,103,140);
+    color: $link;
     text-decoration: none;
 
     &:hover {

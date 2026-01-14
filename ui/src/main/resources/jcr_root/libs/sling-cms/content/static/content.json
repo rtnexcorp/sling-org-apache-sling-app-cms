@@ -11,6 +11,8 @@
                 "jcr:primaryType": "nt:unstructured",
                 "sling:resourceType": "sling-cms/components/cms/contentactions",
                 "includeSwitcher": true,
+                "includeSearch": true,
+                "filterMode": "assets",
                 "actions": {
                     "file": {
                         "jcr:primaryType": "nt:unstructured",

@@ -1,0 +1,70 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "JCR Node Types and Content Modeling",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "author": "cms-admin",
+  "body": "<p>JCR Node Types define the structure and constraints for content in a repository. They specify what properties a node can have, what child nodes are allowed, and inheritance relationships between different content types.</p><p>In Apache Sling, content modeling is crucial for building maintainable CMS applications. Node types can be defined using CND (Compact Namespace and Node Type Definition) files or programmatically through the JCR API.</p><p>Common node types include nt:unstructured (flexible content), nt:folder (hierarchical containers), and custom types for specific content structures. Understanding node type inheritance and mixin types is essential for effective content modeling.</p>",
+  "category": "technology",
+  "expiryDate": "2026-12-31",
+  "featuredImage": "#",
+  "publishDate": "2026-01-17",
+  "rating": 4,
+  "schemaId": "article",
+  "summary": "Understanding JCR node types and how to model content structures in Sling applications.",
+  "tags": "JCR Node Types, Content Modeling, CND, Node Type Definition, Mixin Types",
+  "title": "JCR Node Types and Content Modeling",
+  "viewCount": 0,
+  "featured": true,
+  "fields": {
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TEXT"
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "REFERENCE"
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TAG",
+      "multiple": true
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "ASSET"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "OSGi Configuration Management",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "author": "cms-admin",
+  "body": "<p>OSGi Configuration Management allows runtime configuration of services and components in Apache Sling. The Configuration Admin service provides a centralized way to manage configuration data that can be updated without restarting the application.</p><p>Configurations are stored as key-value pairs and can be managed through the OSGi web console, configuration files, or programmatically. The @Designate annotation links configuration interfaces to components, while @ObjectClassDefinition defines the configuration properties.</p><p>Sling extends OSGi configuration with features like run modes, configuration targeting, and integration with repository-based configuration storage. This enables environment-specific configurations and dynamic reconfiguration.</p>",
+  "category": "technology",
+  "expiryDate": "2026-12-31",
+  "featuredImage": "#",
+  "publishDate": "2026-01-19",
+  "rating": 4,
+  "schemaId": "article",
+  "summary": "Managing runtime configuration in OSGi-based Sling applications.",
+  "tags": "OSGi Configuration, Configuration Admin, Run Modes, Configuration Targeting, Runtime Configuration",
+  "title": "OSGi Configuration Management",
+  "viewCount": 0,
+  "featured": true,
+  "fields": {
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TEXT"
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "REFERENCE"
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TAG",
+      "multiple": true
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "ASSET"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    }
+  }
+}

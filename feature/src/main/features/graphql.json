@@ -1,0 +1,57 @@
+{
+  "bundles": [
+    {
+      "id": "org.apache.sling:org.apache.sling.cms.graphql:${cms-version}",
+      "start-order": "20"
+    },
+    {
+      "id": "org.reactivestreams:reactive-streams:1.0.3",
+      "start-order": "15"
+    },
+    {
+      "id": "com.graphql-java:java-dataloader:3.2.0",
+      "start-order": "15"
+    },
+    {
+      "id": "com.graphql-java:graphql-java:20.1",
+      "start-order": "15"
+    },
+    {
+      "id": "org.apache.johnzon:johnzon-mapper:1.2.8",
+      "start-order": "15"
+    },
+    {
+      "id": "org.apache.sling:org.apache.sling.graphql.core:0.0.24",
+      "start-order": "20"
+    }
+  ],
+  "configurations": {
+    "org.apache.sling.graphql.core.GraphQLServlet~cms": {
+      "sling.servlet.resourceTypes": "sling-cms/servlet",
+      "sling.servlet.extensions": "json",
+      "sling.servlet.methods": [
+        "GET",
+        "POST"
+      ]
+    }
+  },
+  "repoinit:TEXT|true": [
+    "# GraphQL Module Configuration",
+    "",
+    "# Create GraphQL endpoint with sling:resourceType for GraphQL servlet",
+    "create path (nt:unstructured) /graphql",
+    "set properties on /graphql",
+    "  set sling:resourceType{String} to sling-cms/servlet",
+    "end",
+    "",
+    "# Allow public read access to /graphql endpoint",
+    "set ACL for everyone",
+    "  allow jcr:read on /graphql",
+    "end",
+    "",
+    "# Create schema storage paths",
+    "create path (sling:Folder) /apps/sling-cms",
+    "create path (sling:Folder) /apps/sling-cms/graphql",
+    "create path (sling:Folder) /apps/sling-cms/servlet"
+  ]
+}

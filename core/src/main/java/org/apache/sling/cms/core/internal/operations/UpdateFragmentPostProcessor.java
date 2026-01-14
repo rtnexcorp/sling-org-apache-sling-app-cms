@@ -19,8 +19,14 @@
 package org.apache.sling.cms.core.internal.operations;
 
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.request.RequestParameter;
@@ -101,7 +107,21 @@ public class UpdateFragmentPostProcessor implements SlingPostProcessor {
 
             // Get the value from request parameters
             RequestParameter param = request.getRequestParameter(fieldName);
+
+            // Handle boolean fields specially - unchecked checkboxes don't send a parameter
             if (param == null) {
+                if (field.getType() == org.apache.sling.cms.schema.FieldType.BOOLEAN) {
+                    // Checkbox was unchecked, set to false
+                    Node fieldNode;
+                    if (fragmentNode.hasNode(fieldName)) {
+                        fieldNode = fragmentNode.getNode(fieldName);
+                    } else {
+                        fieldNode = fragmentNode.addNode(fieldName, "nt:unstructured");
+                        fieldNode.setProperty("fieldType", field.getType().name());
+                    }
+                    fieldNode.setProperty("value", false);
+                    log.debug("Set unchecked boolean field {} to false", fieldName);
+                }
                 continue; // Field not in this request
             }
 
@@ -118,7 +138,7 @@ public class UpdateFragmentPostProcessor implements SlingPostProcessor {
 
             // Update the value property
             if (fieldValue != null && !fieldValue.isEmpty()) {
-                fieldNode.setProperty("value", fieldValue);
+                setTypedValue(fieldNode, field, fieldValue);
                 log.debug("Updated field {} with value: {}", fieldName, fieldValue);
             } else {
                 // Remove value property if empty
@@ -130,5 +150,75 @@ public class UpdateFragmentPostProcessor implements SlingPostProcessor {
 
         session.save();
         log.info("Updated fragment fields: {}", fragmentResource.getPath());
+    }
+
+    private void setTypedValue(Node fieldNode, SchemaField field, String fieldValue) throws RepositoryException {
+        // Ensure we don't keep an old String-typed property around.
+        // Removing first forces JCR to store the new value with the correct type.
+        if (fieldNode.hasProperty("value")) {
+            Property existing = fieldNode.getProperty("value");
+            if (existing.getDefinition() == null || existing.getType() == javax.jcr.PropertyType.STRING) {
+                existing.remove();
+            }
+        }
+
+        switch (field.getType()) {
+            case BOOLEAN:
+                fieldNode.setProperty("value", Boolean.parseBoolean(fieldValue));
+                break;
+            case INTEGER:
+                try {
+                    fieldNode.setProperty("value", Long.parseLong(fieldValue));
+                } catch (NumberFormatException nfe) {
+                    fieldNode.setProperty("value", fieldValue);
+                }
+                break;
+            case DECIMAL:
+                try {
+                    fieldNode.setProperty("value", new BigDecimal(fieldValue));
+                } catch (NumberFormatException nfe) {
+                    fieldNode.setProperty("value", fieldValue);
+                }
+                break;
+            case DATE:
+                // Expect yyyy-MM-dd (matches HTML date input)
+                if (!setCalendarValue(fieldNode, fieldValue, "yyyy-MM-dd")) {
+                    // If parsing fails, fall back to String rather than losing user input
+                    fieldNode.setProperty("value", fieldValue);
+                }
+                break;
+            case DATETIME:
+                // Accept ISO-ish formats commonly produced by date/time widgets
+                // (yyyy-MM-dd'T'HH:mm or yyyy-MM-dd'T'HH:mm:ss)
+                if (!setCalendarValue(fieldNode, fieldValue, "yyyy-MM-dd'T'HH:mm:ss")
+                        && !setCalendarValue(fieldNode, fieldValue, "yyyy-MM-dd'T'HH:mm")) {
+                    fieldNode.setProperty("value", fieldValue);
+                }
+                break;
+            default:
+                fieldNode.setProperty("value", fieldValue);
+                break;
+        }
+
+        if (fieldNode.hasProperty("value")) {
+            log.debug(
+                    "Stored fragment field {} as JCR type {}",
+                    field.getName(),
+                    javax.jcr.PropertyType.nameFromValue(
+                            fieldNode.getProperty("value").getType()));
+        }
+    }
+
+    private boolean setCalendarValue(Node fieldNode, String value, String pattern) throws RepositoryException {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        sdf.setLenient(false);
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(sdf.parse(value));
+            fieldNode.setProperty("value", cal);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 }

@@ -1,0 +1,47 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "Sling CMS Premium Support Subscription",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+
+  "schemaId": "product",
+
+  "productName": "Sling CMS Premium Support Subscription",
+  "sku": "SCMS-SUPPORT-001",
+  "description": "<p>Annual premium support subscription for Sling CMS. Includes priority bug fixes, security updates, technical support via email and chat, access to exclusive documentation, and quarterly webinars. Perfect for production deployments.</p>",
+  "price": 999.99,
+  "stockQuantity": 100,
+  "category": "services",
+  "featured": true,
+
+  "fields": {
+    "productName": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "sku": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "description": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "price": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    },
+    "stockQuantity": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    }
+  }
+}

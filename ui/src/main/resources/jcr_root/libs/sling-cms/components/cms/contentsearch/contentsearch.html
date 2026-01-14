@@ -17,11 +17,13 @@
   ~ under the License.
   */-->
 <div class="contentnav-search">
-    <p class="control has-icons-left">
-        <label class="is-sr-only" for="search-term">${'Search' @ i18n}</label>
-        <input class="input is-small" type="text" name="search" id="search-term" />
-        <span class="icon is-small is-left">
-            <i class="jam jam-search" aria-hidden="true"></i>
-        </span>
-    </p>
+    <div class="cms-control cms-control--has-icons-left">
+        <input class="cms-input cms-input--small" 
+               type="text" 
+               name="search" 
+               id="search-term"
+               placeholder="${'Search content...' @ i18n}" 
+               aria-label="${'Search' @ i18n}" />
+        <span class="cms-icon cms-icon--small cms-icon--search"></span>
+    </div>
 </div>

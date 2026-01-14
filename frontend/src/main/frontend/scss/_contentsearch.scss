@@ -1,0 +1,140 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Content Search Component
+// Provides search input UI for content navigation
+
+@use "sass:color";
+@use "variables" as *;
+
+// Inline search within level bar (no label)
+.contentnav-search {
+  display: inline-flex;
+  align-items: center;
+
+  .cms-control {
+    position: relative;
+    margin: 0;
+  }
+
+  .cms-input {
+    font-size: 0.875rem;
+    height: 2.25em;
+    padding-left: 2.5em;
+    padding-right: 0.75em;
+    border: 1px solid $grey-lighter;
+    border-radius: 4px;
+    min-width: 200px;
+
+    &:hover {
+      border-color: $grey-light;
+    }
+
+    &:focus {
+      border-color: $primary;
+      outline: none;
+      box-shadow: 0 0 0 0.125em rgba($primary, 0.25);
+    }
+
+    &--small {
+      font-size: 0.875rem;
+      height: 2.25em;
+    }
+  }
+
+  .cms-control--has-icons-left {
+    .cms-icon {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: $grey;
+      width: 2.5em;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+
+      &::before {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Full-width search with label (sidebar/panel context)
+.cms-content-search {
+  margin-bottom: 1rem;
+
+  .cms-control {
+    position: relative;
+  }
+
+  .cms-form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $grey-darker;
+    margin-bottom: 0.5rem;
+
+    .cms-icon {
+      color: $primary;
+      font-size: 1rem;
+    }
+  }
+
+  .cms-input {
+    padding-left: 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  .cms-control--has-icons-left {
+    .cms-icon {
+      position: absolute;
+      top: 50%;
+      left: 0.75rem;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: $grey-light;
+      margin-top: 1.25rem; // Offset for label
+    }
+  }
+}
+
+// Integration with level component
+.level-right {
+  .level-item {
+    .contentnav-search {
+      margin: 0;
+    }
+  }
+}
+
+// Responsive adjustments
+@media screen and (max-width: $mobile-max) {
+  .contentnav-search {
+    .cms-input {
+      min-width: 150px;
+    }
+  }
+}

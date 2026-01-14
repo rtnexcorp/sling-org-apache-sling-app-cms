@@ -1,0 +1,141 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Sling CMS GraphQL Schema - Main Entry Point
+
+schema {
+  query: Query
+}
+
+type Query {
+  # Test query to verify GraphQL is working
+  # Uses Java data fetcher to avoid HTL recursion
+  hello: String @fetcher(name: "slingcms/hello")
+
+  # Server information query (provided by ServerInfoDataFetcher)
+  serverInfo: ServerInfo @fetcher(name: "slingcms/serverInfo")
+
+  # Demo queries
+  ping: String @fetcher(name: "slingcms/ping")
+
+  # Returns server time in ISO-8601 format
+  now: String @fetcher(name: "slingcms/now")
+
+  # Fetch a single content fragment by id (path)
+  fragment(id: String!): ContentFragment @fetcher(name: "slingcms/fragment")
+
+  # List content fragments with filtering, sorting, and pagination
+  fragments(
+    schemaType: String
+    path: String
+    filters: [ContentFragmentFilterInput!]
+    sortField: String
+    sortDirection: SortDirection
+    limit: Int
+    offset: Int
+    cursor: String
+  ): ContentFragmentConnection @fetcher(name: "slingcms/fragments")
+
+  # Full-text search across fragments
+  fragmentSearch(
+    searchTerm: String!
+    schemaType: String
+    limit: Int
+    offset: Int
+  ): ContentFragmentConnection @fetcher(name: "slingcms/fragmentSearch")
+
+  # Schema introspection (enabled schemas)
+  schemas: [Schema] @fetcher(name: "slingcms/schemas")
+}
+
+type ServerInfo {
+  version: String
+  timestamp: String
+  environment: String
+  graphqlVersion: String
+}
+
+type ContentFragment {
+  id: String
+  name: String
+  schemaId: String
+  title: String
+  created: String
+  modified: String
+  createdBy: String
+  modifiedBy: String
+  fields: [FieldValue]
+}
+
+type FieldValue {
+  name: String
+  type: String
+  multiple: Boolean
+  value: String
+  values: [String]
+}
+
+type ContentFragmentConnection {
+  nodes: [ContentFragment]
+  pageInfo: PageInfo
+  totalCount: Int
+}
+
+type PageInfo {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  startCursor: String
+  endCursor: String
+}
+
+input ContentFragmentFilterInput {
+  fieldName: String!
+  operator: FilterOperator!
+  value: String
+}
+
+enum FilterOperator {
+  EQ
+  NE
+  CONTAINS
+  GT
+  GTE
+  LT
+  LTE
+  IS_NULL
+  IS_NOT_NULL
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+type Schema {
+  id: String
+  title: String
+  description: String
+  enabled: Boolean
+  fields: [SchemaField]
+}
+
+type SchemaField {
+  name: String
+  title: String
+  description: String
+  type: String
+  multiple: Boolean
+  required: Boolean
+}

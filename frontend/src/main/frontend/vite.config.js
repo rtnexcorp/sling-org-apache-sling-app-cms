@@ -118,7 +118,8 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern-compiler',
-        silenceDeprecations: ['legacy-js-api'],
+        silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin'],
+        quietDeps: true, // Suppress warnings from dependencies (like Bulma)
       },
     },
   },

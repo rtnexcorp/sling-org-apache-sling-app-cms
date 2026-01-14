@@ -1,0 +1,70 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "Welcome to Sling CMS",
+  "sling:resourceType": "sling-cms/components/cms/fragment",
+  "author": "ddd",
+  "body": "<p>Apache Sling CMS is a reference CMS built on Apache Sling.</p><p>This is a sample article content fragment created from the <strong>Article</strong> schema.</p>",
+  "category": "technology",
+  "expiryDate": "2026-01-14",
+  "featuredImage": "#",
+  "publishDate": "2026-01-12",
+  "rating": 4,
+  "schemaId": "article",
+  "summary": "A quick introduction to the Apache Sling CMS reference project.",
+  "tags": "Apache Sling, CMS, Content Management, AI, Open Source",
+  "title": "Welcome to Sling CMS",
+  "viewCount": 0,
+  "featured": true,
+  "fields": {
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "STRING"
+    },
+    "summary": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TEXT"
+    },
+    "body": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "RICHTEXT"
+    },
+    "author": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "REFERENCE"
+    },
+    "publishDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "expiryDate": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DATE"
+    },
+    "category": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "SELECT"
+    },
+    "tags": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "TAG",
+      "multiple": true
+    },
+    "featuredImage": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "ASSET"
+    },
+    "featured": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "BOOLEAN"
+    },
+    "viewCount": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "INTEGER",
+      "value": "0"
+    },
+    "rating": {
+      "jcr:primaryType": "nt:unstructured",
+      "fieldType": "DECIMAL"
+    }
+}
+}

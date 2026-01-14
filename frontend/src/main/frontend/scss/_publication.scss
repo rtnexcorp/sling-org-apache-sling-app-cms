@@ -3,11 +3,13 @@
 // Publication Component Styles
 // Provides styling for the publication dashboard and related components
 
+@use "variables" as *;
+
 // Publication Info - Dashboard mode indicator
 .cms-publication-info {
   padding: 0.5rem 0 1rem;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid $grey-lighter;
 
   dl {
     display: flex;
@@ -19,7 +21,7 @@
 
   dt {
     font-weight: 600;
-    color: #363636;
+    color: $grey-darker;
     margin: 0;
     font-size: 0.95rem;
   }
@@ -27,7 +29,7 @@
   dd {
     padding: 0.4rem 1rem;
     background: linear-gradient(135deg, #9E2165 0%, #7a1950 100%);
-    color: white;
+    color: $white;
     border-radius: 20px;
     font-family: 'Open Sans', sans-serif;
     font-size: 0.875rem;
@@ -41,7 +43,7 @@
 .cms-publication-status {
   dt {
     font-weight: 600;
-    color: #4a4a4a;
+    color: $grey-darker;
     margin-bottom: 0.25rem;
     font-size: 0.875rem;
   }
@@ -49,7 +51,7 @@
   dd {
     margin-bottom: 1rem;
     margin-left: 0;
-    color: #363636;
+    color: $grey-darker;
     font-size: 0.9rem;
 
     &:last-child {
@@ -63,7 +65,7 @@
   dl {
     dt {
       font-weight: 600;
-      color: #4a4a4a;
+      color: $grey-darker;
       margin-bottom: 0.25rem;
       font-size: 0.875rem;
     }
@@ -71,7 +73,7 @@
     dd {
       margin-bottom: 1rem;
       margin-left: 0;
-      color: #363636;
+      color: $grey-darker;
       font-size: 0.9rem;
       word-break: break-all;
 

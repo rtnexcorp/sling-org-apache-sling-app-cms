@@ -41,14 +41,84 @@
 
             <!--/* Content Path - primary variable for content-based workflows */-->
             <div class="cms-form__group">
-                <label for="contentPath" class="cms-form__label">${'Content Path' @ i18n} *</label>
-                <input type="text"
-                       id="contentPath"
+                <label class="cms-form__label" for="contentPath">${'Content Path' @ i18n} *</label>
+
+                <!--/* Path Browser Component */-->
+                <input type="hidden"
                        name="contentPath"
-                       class="cms-form__control"
-                       required
-                       placeholder="${'e.g., /content/mysite/page' @ i18n}"/>
-                <p class="cms-form__help">${'Path to the content this workflow will process' @ i18n}</p>
+                       id="contentPath"
+                       value=""
+                       class="pathbrowser-input"
+                       required="required" />
+
+                <div class="pathbrowser-container"
+                     data-field-name="contentPath"
+                     data-base-path="/content"
+                     data-filter-type="sling:Page,sling:Folder,sling:OrderedFolder,sling:File,nt:file"
+                     data-initial-value="">
+
+                    <!-- Selected Path Display -->
+                    <div class="pathbrowser-selected">
+                        <div class="pathbrowser-selected__display">
+                            <span class="icon is-small">
+                                <span class="jam jam-folder"></span>
+                            </span>
+                            <span class="pathbrowser-selected__path">${'No content selected' @ i18n}</span>
+                        </div>
+                        <button type="button" class="button is-small pathbrowser-toggle" title="${'Browse content' @ i18n}">
+                            <span class="icon">
+                                <span class="jam jam-chevron-down"></span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Folder Browser Panel (initially hidden) -->
+                    <div class="pathbrowser-panel is-hidden">
+                        <!-- Breadcrumb Navigation -->
+                        <nav class="breadcrumb pathbrowser-breadcrumb" aria-label="breadcrumbs">
+                            <ul class="pathbrowser-breadcrumb__list">
+                                <!-- Populated by JavaScript -->
+                            </ul>
+                        </nav>
+
+                        <!-- Folder List -->
+                        <div class="pathbrowser-list">
+                            <!-- Loading state -->
+                            <div class="pathbrowser-loading">
+                                <div class="loader is-loading"></div>
+                                <p>${'Loading content...' @ i18n}</p>
+                            </div>
+
+                            <!-- Folder items (populated by JavaScript) -->
+                            <div class="pathbrowser-items">
+                                <!-- Items will be added here -->
+                            </div>
+
+                            <!-- Empty state -->
+                            <div class="pathbrowser-empty is-hidden">
+                                <p class="has-text-grey">${'No content found' @ i18n}</p>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="pathbrowser-actions">
+                            <button type="button" class="button is-small pathbrowser-cancel">${'Cancel' @ i18n}</button>
+                            <button type="button" class="button is-small is-primary pathbrowser-select" disabled>${'Select' @ i18n}</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="cms-form__help">${'Browse and select the content this workflow will process' @ i18n}</p>
+            </div>
+
+            <!--/* Deep Publishing Option */-->
+            <div class="cms-form__group">
+                <label class="toggle-switch">
+                    <input type="checkbox" name="deep" id="deep" value="true" />
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-text">${'Include child pages (recursive publishing)' @ i18n}</span>
+                </label>
+                <p class="cms-form__help">${'When enabled, all child pages and content under the selected path will be published' @ i18n}</p>
             </div>
 
             <!--/* Business Key (optional) */-->
